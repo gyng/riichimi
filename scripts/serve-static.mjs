@@ -1,0 +1,80 @@
+import { createReadStream } from "node:fs";
+import { stat } from "node:fs/promises";
+import { createServer } from "node:http";
+import { extname, resolve, sep } from "node:path";
+
+const root = resolve(process.cwd(), "apps/client/dist");
+const host = process.env.RICHII_HOST ?? "127.0.0.1";
+const port = Number(process.env.RICHII_PORT ?? "41731");
+
+const contentTypes = new Map([
+  [".css", "text/css; charset=utf-8"],
+  [".html", "text/html; charset=utf-8"],
+  [".ico", "image/x-icon"],
+  [".js", "text/javascript; charset=utf-8"],
+  [".json", "application/json; charset=utf-8"],
+  [".map", "application/json; charset=utf-8"],
+  [".png", "image/png"],
+  [".svg", "image/svg+xml"],
+  [".wasm", "application/wasm"],
+]);
+
+function candidatePaths(pathname) {
+  const decoded = decodeURIComponent(pathname);
+  const relative = decoded.replace(/^\/+|\/+$/g, "") || "index.html";
+  const direct = resolve(root, relative);
+  if (direct !== root && !direct.startsWith(`${root}${sep}`)) {
+    return [];
+  }
+  return extname(direct) === ""
+    ? [direct, `${direct}.html`, resolve(direct, "index.html")]
+    : [direct];
+}
+
+async function findFile(pathname) {
+  for (const candidate of candidatePaths(pathname)) {
+    try {
+      if ((await stat(candidate)).isFile()) {
+        return candidate;
+      }
+    } catch (error) {
+      if (!(error instanceof Error) || !("code" in error) || error.code !== "ENOENT") {
+        throw error;
+      }
+    }
+  }
+  return null;
+}
+
+async function handleRequest(request, response) {
+  try {
+    const pathname = new URL(request.url ?? "/", `http://${host}:${port}`).pathname;
+    const file = await findFile(pathname);
+    if (file === null) {
+      response.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+      response.end("Not found");
+      return;
+    }
+
+    response.writeHead(200, {
+      "Content-Type": contentTypes.get(extname(file)) ?? "application/octet-stream",
+      "X-Content-Type-Options": "nosniff",
+    });
+    if (request.method === "HEAD") {
+      response.end();
+      return;
+    }
+    createReadStream(file).pipe(response);
+  } catch {
+    response.writeHead(500, { "Content-Type": "text/plain; charset=utf-8" });
+    response.end("Internal server error");
+  }
+}
+
+const server = createServer((request, response) => {
+  void handleRequest(request, response);
+});
+
+server.listen(port, host, () => {
+  process.stdout.write(`Richii static export: http://${host}:${port}\n`);
+});

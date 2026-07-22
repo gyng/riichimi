@@ -1,0 +1,12 @@
+node_modules/
+.expo/
+dist/
+coverage/
+playwright-report/
+test-results/
+*.log
+.DS_Store
+apps/client/web-build/
+apps/client/.expo/
+apps/client/expo-env.d.ts
+*.tsbuildinfo

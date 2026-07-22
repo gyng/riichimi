@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500">
+  <rect width="1200" height="500" fill="#27594a"/>
+  <rect x="34" y="42" width="1132" height="416" rx="28" fill="#1d4639" stroke="#89b5a3" stroke-width="3"/>
+  <text x="60" y="95" fill="#faf6ea" font-family="serif" font-size="26" font-weight="700">Guided winning-hand layout</text>
+  <text x="60" y="128" fill="#b8d3c7" font-family="monospace" font-size="16" letter-spacing="2">WINNING TILE SLIGHTLY APART · DORA AT RIGHT</text>
+  <g font-family="serif" font-weight="700" text-anchor="middle">
+    <g transform="translate(60 170)"><rect width="66" height="150" rx="8" fill="#fffdf7"/><text x="33" y="58" font-size="38" fill="#171916">1</text><text x="33" y="112" font-size="34" fill="#b63824">萬</text></g>
+    <g transform="translate(134 170)"><rect width="66" height="150" rx="8" fill="#fffdf7"/><text x="33" y="58" font-size="38" fill="#171916">2</text><text x="33" y="112" font-size="34" fill="#b63824">萬</text></g>
+    <g transform="translate(208 170)"><rect width="66" height="150" rx="8" fill="#fffdf7"/><text x="33" y="58" font-size="38" fill="#171916">3</text><text x="33" y="112" font-size="34" fill="#b63824">萬</text></g>
+    <g transform="translate(282 170)"><rect width="66" height="150" rx="8" fill="#fffdf7"/><text x="33" y="58" font-size="38" fill="#171916">4</text><text x="33" y="112" font-size="34" fill="#b63824">萬</text></g>
+    <g transform="translate(356 170)"><rect width="66" height="150" rx="8" fill="#fffdf7"/><text x="33" y="58" font-size="38" fill="#171916">5</text><text x="33" y="112" font-size="34" fill="#b63824">萬</text></g>
+    <g transform="translate(430 170)"><rect width="66" height="150" rx="8" fill="#fffdf7"/><text x="33" y="58" font-size="38" fill="#171916">6</text><text x="33" y="112" font-size="34" fill="#b63824">萬</text></g>
+    <g transform="translate(504 170)"><rect width="66" height="150" rx="8" fill="#fffdf7"/><text x="33" y="58" font-size="38" fill="#171916">7</text><text x="33" y="112" font-size="34" fill="#27594a">筒</text></g>
+    <g transform="translate(578 170)"><rect width="66" height="150" rx="8" fill="#fffdf7"/><text x="33" y="58" font-size="38" fill="#171916">8</text><text x="33" y="112" font-size="34" fill="#27594a">筒</text></g>
+    <g transform="translate(652 170)"><rect width="66" height="150" rx="8" fill="#fffdf7"/><text x="33" y="58" font-size="38" fill="#171916">9</text><text x="33" y="112" font-size="34" fill="#27594a">筒</text></g>
+    <g transform="translate(726 170)"><rect width="66" height="150" rx="8" fill="#fffdf7"/><text x="33" y="58" font-size="38" fill="#171916">2</text><text x="33" y="112" font-size="34" fill="#27594a">索</text></g>
+    <g transform="translate(800 170)"><rect width="66" height="150" rx="8" fill="#fffdf7"/><text x="33" y="58" font-size="38" fill="#171916">3</text><text x="33" y="112" font-size="34" fill="#27594a">索</text></g>
+    <g transform="translate(892 170)"><rect width="66" height="150" rx="8" fill="#fffdf7" stroke="#b63824" stroke-width="6"/><text x="33" y="58" font-size="38" fill="#171916">4</text><text x="33" y="112" font-size="34" fill="#27594a">索</text></g>
+    <g transform="translate(966 170)"><rect width="66" height="150" rx="8" fill="#fffdf7"/><text x="33" y="58" font-size="38" fill="#171916">5</text><text x="33" y="112" font-size="34" fill="#27594a">筒</text></g>
+    <g transform="translate(1040 170)"><rect width="66" height="150" rx="8" fill="#fffdf7"/><text x="33" y="58" font-size="38" fill="#171916">5</text><text x="33" y="112" font-size="34" fill="#27594a">筒</text></g>
+  </g>
+  <g transform="translate(1062 350) rotate(8)">
+    <rect width="66" height="86" rx="8" fill="#fffdf7" stroke="#ded1b7" stroke-width="3"/>
+    <text x="33" y="38" text-anchor="middle" font-family="serif" font-size="28" font-weight="700" fill="#171916">9</text>
+    <text x="33" y="68" text-anchor="middle" font-family="serif" font-size="22" font-weight="700" fill="#27594a">索</text>
+  </g>
+  <text x="60" y="390" fill="#faf6ea" font-family="serif" font-size="22">Closed example · dora indicator set apart</text>
+</svg>

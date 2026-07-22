@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "files": [],
+  "references": [
+    { "path": "./apps/client" },
+    { "path": "./packages/score-core" },
+    { "path": "./packages/rules" },
+    { "path": "./packages/vision" },
+    { "path": "./packages/ui" }
+  ]
+}

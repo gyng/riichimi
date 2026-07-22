@@ -1,0 +1,17 @@
+{
+  "extends": ["expo/tsconfig.base", "../../tsconfig.base.json"],
+  "compilerOptions": {
+    "moduleSuffixes": [".native", ""],
+    "noEmit": true,
+    "types": ["jest", "react", "webmcp-types"]
+  },
+  "include": [
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    ".expo/types/**/*.ts"
+  ]
+}

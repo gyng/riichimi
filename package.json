@@ -1,0 +1,44 @@
+{
+  "name": "richii",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Local-first riichi mahjong recognition and scoring for mobile and web.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "android": "npm run android --workspace @richii/client",
+    "build:web": "npm run build:web --workspace @richii/client",
+    "check": "npm run format:check && npm run lint && npm run test:coverage && npm run test:ui",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
+    "ios": "npm run ios --workspace @richii/client",
+    "lint": "oxlint --deny-warnings --report-unused-disable-directives",
+    "lint:fix": "oxlint --fix --deny-warnings --report-unused-disable-directives",
+    "serve:web": "node scripts/serve-static.mjs",
+    "start": "npm run start --workspace @richii/client",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "node scripts/run-e2e.mjs",
+    "test:ui": "npm run test --workspace @richii/client",
+    "test:unit": "vitest run",
+    "test:watch": "vitest",
+    "web": "npm run web --workspace @richii/client"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.1",
+    "@types/node": "26.1.1",
+    "@vitest/coverage-v8": "4.1.10",
+    "oxfmt": "0.60.0",
+    "oxlint": "1.75.0",
+    "oxlint-tsgolint": "7.0.2001",
+    "typescript": "7.0.2",
+    "vitest": "4.1.10",
+    "webmcp-types": "0.1.3"
+  },
+  "engines": {
+    "node": ">=22.13.0",
+    "npm": ">=11.0.0"
+  },
+  "packageManager": "npm@12.0.1"
+}

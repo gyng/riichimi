@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "Richii",
+    "slug": "richii",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "richii",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "bundleIdentifier": "app.richii.calculator",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "app.richii.calculator"
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Richii to scan a winning mahjong hand."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Richii to open a mahjong hand photo for local scoring."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
