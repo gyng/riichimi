@@ -76,6 +76,8 @@ Three rules keep it there:
 - **A suit is one row.** The tile picker sizes tiles to the available width so
   nine ranks fit on a single line. Its label sits above the tiles: beside them it
   took 86px of width and wrapped every suit onto three lines.
+- **Width earns columns.** Past 700 logical pixels the play surfaces go
+  two-column instead of running a single column down a short screen.
 
 No route may scroll horizontally at that width. Both are cheap to re-measure in
 the browser, and a regression shows up as a screen count rather than an opinion.

@@ -26,6 +26,7 @@ import {
   Text,
   TextInput,
   View,
+  useWindowDimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -53,6 +54,10 @@ function toggle(current: readonly number[], index: number): readonly number[] {
 
 export function SessionScreen() {
   const { t } = useLocale();
+  // Landscape and desktop have width to spare; the seats and the action panels
+  // read better side by side than stacked down a short screen.
+  const { width: viewportWidth } = useWindowDimensions();
+  const wideLayout = viewportWidth >= 700;
   const session = useSession();
   const [names, setNames] = useState(["Player 1", "Player 2", "Player 3", "Player 4"]);
   const [tenpai, setTenpai] = useState<readonly number[]>([]);
@@ -337,61 +342,63 @@ export function SessionScreen() {
           })}
         </View>
 
-        <View style={styles.actionPanel}>
-          <View style={styles.actionCopy}>
+        <View style={wideLayout ? styles.panelRow : undefined}>
+          <View style={[styles.actionPanel, wideLayout && styles.panelInRow]}>
+            <View style={styles.actionCopy}>
+              <Text accessibilityRole="header" style={styles.panelTitle}>
+                {t("Record the next result")}
+              </Text>
+              <Text style={styles.muted}>
+                {t("The calculator inherits this round\u2019s context and applies every transfer.")}
+              </Text>
+            </View>
+            <ActionButton
+              label={t("Score a winning hand")}
+              onPress={() => router.push("/manual")}
+              variant="vermilion"
+            />
+          </View>
+
+          <View style={[styles.panel, wideLayout && styles.panelInRow]}>
             <Text accessibilityRole="header" style={styles.panelTitle}>
-              {t("Record the next result")}
+              {t("Exhaustive draw")}
             </Text>
             <Text style={styles.muted}>
-              {t("The calculator inherits this round\u2019s context and applies every transfer.")}
+              Select tenpai players. The 3,000-point noten payment and dealer continuation are
+              automatic.
             </Text>
-          </View>
-          <ActionButton
-            label={t("Score a winning hand")}
-            onPress={() => router.push("/manual")}
-            variant="vermilion"
-          />
-        </View>
-
-        <View style={styles.panel}>
-          <Text accessibilityRole="header" style={styles.panelTitle}>
-            {t("Exhaustive draw")}
-          </Text>
-          <Text style={styles.muted}>
-            Select tenpai players. The 3,000-point noten payment and dealer continuation are
-            automatic.
-          </Text>
-          <View style={styles.tenpaiRow}>
-            {table.players.map((player, index) => {
-              const selected = tenpai.includes(index);
-              return (
-                <Pressable
-                  accessibilityRole="checkbox"
-                  aria-checked={selected}
-                  accessibilityState={{ checked: selected }}
-                  key={player.id}
-                  onPress={() => toggleTenpai(index)}
-                  style={[styles.tenpaiChip, selected && styles.selectedChip]}
-                >
-                  <Text style={[styles.tenpaiText, selected && styles.selectedChipText]}>
-                    {player.name}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </View>
-          <View style={styles.primaryAction}>
-            <ActionButton
-              label={t("Record draw & advance")}
-              onPress={() => {
-                session.recordDraw({
-                  ...createRoundCommandMetadata(),
-                  tenpaiPlayerIndices: tenpai,
-                });
-                setTenpai([]);
-              }}
-              variant="paper"
-            />
+            <View style={styles.tenpaiRow}>
+              {table.players.map((player, index) => {
+                const selected = tenpai.includes(index);
+                return (
+                  <Pressable
+                    accessibilityRole="checkbox"
+                    aria-checked={selected}
+                    accessibilityState={{ checked: selected }}
+                    key={player.id}
+                    onPress={() => toggleTenpai(index)}
+                    style={[styles.tenpaiChip, selected && styles.selectedChip]}
+                  >
+                    <Text style={[styles.tenpaiText, selected && styles.selectedChipText]}>
+                      {player.name}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+            <View style={styles.primaryAction}>
+              <ActionButton
+                label={t("Record draw & advance")}
+                onPress={() => {
+                  session.recordDraw({
+                    ...createRoundCommandMetadata(),
+                    tenpaiPlayerIndices: tenpai,
+                  });
+                  setTenpai([]);
+                }}
+                variant="paper"
+              />
+            </View>
           </View>
         </View>
 
@@ -959,6 +966,9 @@ const styles = StyleSheet.create({
     minWidth: 150,
     padding: space.x3,
   },
+  // Only inside the row: in a column these would stretch and overlap.
+  panelInRow: { flexBasis: 0, flexGrow: 1 },
+  panelRow: { alignItems: "flex-start", flexDirection: "row", gap: space.x3 },
   playerGrid: { flexDirection: "row", flexWrap: "wrap", gap: space.x2, marginBottom: space.x3 },
   playerName: { color: color.ink, fontFamily: "serif", fontSize: 16, fontWeight: "700" },
   playerScore: {

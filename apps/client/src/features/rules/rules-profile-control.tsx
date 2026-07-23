@@ -102,6 +102,8 @@ const styles = StyleSheet.create({
   },
   note: { color: color.inkMuted, fontFamily: "serif", fontSize: 13, lineHeight: 19, marginTop: 3 },
   root: {
+    flexBasis: 320,
+    flexGrow: 1,
     alignItems: "center",
     backgroundColor: color.paper,
     borderColor: color.line,

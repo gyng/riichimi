@@ -55,6 +55,8 @@ const styles = StyleSheet.create({
   label: { color: color.ink, flex: 1, fontFamily: "serif", fontSize: 15 },
   note: { color: color.inkMuted, fontFamily: "serif", fontSize: 13, lineHeight: 19 },
   root: {
+    flexBasis: 320,
+    flexGrow: 1,
     backgroundColor: color.paper,
     borderColor: color.line,
     borderRadius: 12,

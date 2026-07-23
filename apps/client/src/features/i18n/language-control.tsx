@@ -43,6 +43,8 @@ const styles = StyleSheet.create({
     marginTop: space.x2,
   },
   root: {
+    flexBasis: 320,
+    flexGrow: 1,
     backgroundColor: color.paper,
     borderColor: color.line,
     borderRadius: 12,

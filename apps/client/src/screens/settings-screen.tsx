@@ -1,5 +1,5 @@
 import { color, space } from "@riichimi/ui";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { bodyEdges } from "../components/screen-insets";
@@ -17,6 +17,10 @@ import { useLocale } from "../state/locale-context";
 export function SettingsScreen() {
   const { t } = useLocale();
   const session = useSession();
+  // Width to spare and little height (a landscape phone, or any desktop) means
+  // the setup cards read better beside each other than stacked.
+  const { width } = useWindowDimensions();
+  const wide = width >= 700;
 
   return (
     <SafeAreaView edges={bodyEdges} style={styles.safeArea}>
@@ -24,7 +28,7 @@ export function SettingsScreen() {
         <Text accessibilityRole="header" style={styles.title}>
           {t("Setup")}
         </Text>
-        <View style={styles.section}>
+        <View style={[styles.section, wide && styles.sectionWide]}>
           <RulesProfileControl lockedProfileId={session.state?.table.rulesProfileId} />
           <TileLabelControl />
           <LanguageControl />
@@ -44,6 +48,7 @@ const styles = StyleSheet.create({
   },
   safeArea: { backgroundColor: color.canvas, flex: 1 },
   section: { marginTop: space.x4 },
+  sectionWide: { alignItems: "flex-start", flexDirection: "row", flexWrap: "wrap", gap: space.x4 },
   title: {
     color: color.ink,
     fontFamily: "serif",
