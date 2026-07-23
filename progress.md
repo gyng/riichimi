@@ -1,6 +1,6 @@
 # Progress
 
-Last updated: **2026-07-23T23:31:42+08:00**
+Last updated: **2026-07-24T03:13:42+08:00**
 
 ## Current state
 
@@ -109,6 +109,17 @@ Richii is a polished, local-first scoring and table-session app on mobile-width 
 - Added `--mode hand` phase-2 scaffolding: 14+winning+dora layout emitting per-tile label/role/2D-bounding-box JSON (projection verified — boxes tightly bound each tile). It targets a future learned localizer and is not yet consumed. The single-tile crop path is the higher-fidelity glossy generator.
 - Fixed phase-2 hand imagery end to end (all 15 tiles render their glyphs, 3/3 sample hands at 15/15). Root causes, found by live-Blender iteration and pixel measurement: the factory startup cube was never removed and occluded the row; face-on glossy tiles reflected the light into the camera (now matte faces + a wide front light sized to the row); and EEVEE raytraced GI bounced the bright faces into a pale wash (disabled for hand mode). Also modelled real two-tone tiles — bone-white face, warm yellow/amber back and sides — which improves crop realism too.
 
+### 2026-07-24T03:13:42+08:00 — scoring cross-check, game summary, and editable rounds
+
+- Cross-checked the scoring engine against the published payment table (exhaustive han×fu×seat×method×kiriage + honba) and canonical worked hands (closed, open, and ambiguous-decomposition), plus open-hand fu/kuipinfu and interpretation-selection. No discrepancy found; vitest grew to exhaustive, externally-anchored regression coverage.
+- Added a read-only game-summary export (final standings with tie-breaks, win/draw tally, shareable text), wired into the session screen with a copyable panel; browser-dogfooded.
+- Delivered **editable completed rounds** end to end (design by a Fable architect pass; implementation delegated phase-by-phase and reviewed/gated on `npm run check` before each commit):
+  - Phase 1: event-sourced the session model (behavior-preserving) — replay equivalence proven.
+  - Phase 2: stored-session v2 with a lossless, replay-verified v1→v2 migration reconstructed from the existing undo snapshots (v1 retained until a successful v2 save); ADR 0004.
+  - Phase 3: pure edit-operations domain — delete/replace/set-hand-riichi with the hand-segment rule, and stale-honba/dealer _warnings_ (the ledger never silently recomputes scores).
+  - Phase 4a/4b: the session-screen inline editor with a mandatory signed-score-change confirmation, and win re-scoring through the calculator in edit mode (honba/context seeded but manually editable).
+- Browser-dogfooded the full edit flow including a real v1→v2 migration on load; edits are undoable. Final gate: `npm run check` at 214 domain + 50 UI tests, `build:web` passing.
+
 ## Visual evidence
 
 - [Mobile landing](docs/checkpoints/2026-07-23-01-home-mobile.png)
@@ -125,6 +136,8 @@ Richii is a polished, local-first scoring and table-session app on mobile-width 
 - [V1 recognition review completed](docs/checkpoints/2026-07-23-12-v1-recognition-complete-desktop.png)
 - [V1 photograph-backed recognized draft](docs/checkpoints/2026-07-23-13-v1-recognized-draft-desktop.png)
 - [Blur-specific recovery guidance](docs/checkpoints/2026-07-23-14-blur-recovery-guidance-desktop.png)
+- [Copyable game summary](docs/checkpoints/2026-07-24-15-game-summary-desktop.png)
+- [Editing a completed round](docs/checkpoints/2026-07-24-16-edit-round-desktop.png)
 
 ## Verification commands
 
