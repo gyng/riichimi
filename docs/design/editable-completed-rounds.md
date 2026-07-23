@@ -16,7 +16,7 @@ value that is only ever auto-derived from the log.
 Consequences for this design:
 
 - When re-scoring an edited round (Phase 4b), the calculator seeds honba/sticks/wind
-  from `tableBeforeRound(...)` as *defaults* but leaves them **user-editable** — the
+  from `tableBeforeRound(...)` as _defaults_ but leaves them **user-editable** — the
   user can correct honba by hand, which is the intended fix for a `stale-honba-payment`
   warning.
 - The `stale-honba-payment` / `stale-dealer-payment` warnings (§2.3) stand: they tell
@@ -45,9 +45,10 @@ Confirmed against the current code:
     means dealer winner). `applyWin` maps `fromDealer` onto whoever is
     `table.dealerIndex` at apply time.
 
-  So if an edit shifts a downstream round's honba or dealer, that round's *stored
-  payments are stale* — replay cannot silently "fix" them because han/fu/basePoints
+  So if an edit shifts a downstream round's honba or dealer, that round's _stored
+  payments are stale_ — replay cannot silently "fix" them because han/fu/basePoints
   are not stored. The design surfaces this rather than silently corrupting or guessing.
+
 - One crucial migration asset: `undoStack` contains **every prior `TableState`, one
   per action, never trimmed** (`withUndo`). The chronological sequence
   `[...undoStack, table]` is a complete action trace, so riichi declarations in old
@@ -55,7 +56,7 @@ Confirmed against the current code:
   Migration can be lossless, and verifiably so.
 - Persistence: `richii.session.v1` stores raw `JSON.stringify(SessionState)`;
   `stored-session.ts` validates/migrates `rulesProfileId`. The legacy fixture in
-  `stored-session.test.ts` shows player ids are *not* always derivable from the table
+  `stored-session.test.ts` shows player ids are _not_ always derivable from the table
   id (`player-0` vs `table-1-player-1`) — so migration must never re-derive the base
   via `createSession`; it must keep the initial `TableState` snapshot as the replay base.
 
@@ -93,7 +94,7 @@ export type SessionEvent = DrawEvent | RiichiEvent | WinEvent;
 Notes:
 
 - `WinEvent`/`DrawEvent` are exactly `WinCommand`/`DrawCommand` plus a `kind`
-  discriminant — events store *inputs*, never derived outcomes. `deltas`, `honba`,
+  discriminant — events store _inputs_, never derived outcomes. `deltas`, `honba`,
   `roundWind`, `handNumber` on `RoundRecord` remain **derived** and are recomputed on
   replay; `RoundRecord` stays as-is (it is the projection the UI renders).
 - Riichi events get ids (`newId("riichi")` from the client, as rounds do today) so
@@ -121,7 +122,7 @@ sidesteps the player-id derivation hazard noted above. Replay always folds `even
 over `base`.
 
 Why `undoStack` holds event arrays, not `TableState` snapshots: it makes undo uniform
-across *append* actions and *edit* actions (an edit rewrites the middle of the log; a
+across _append_ actions and _edit_ actions (an edit rewrites the middle of the log; a
 snapshot of the log is the only faithful thing to restore). Entries share structure in
 memory (array prefixes for appends), and replay is deterministic, so popping reproduces
 the exact prior table.
@@ -147,8 +148,7 @@ export type ReplayFailure =
   | { readonly eventId: string; readonly kind: "riichi-underfunded"; readonly playerIndex: number };
 
 export type ReplayResult =
-  | { readonly kind: "replayed"; readonly table: TableState }
-  | ReplayFailure;
+  { readonly kind: "replayed"; readonly table: TableState } | ReplayFailure;
 
 export function replaySessionEvents(
   base: TableState,
@@ -163,10 +163,10 @@ Semantics, matching current reducers exactly:
   replayed score `< 1000`; otherwise −1000, +1 stick, add to declared set.
 - `win`/`draw`: identical math to today, including `riichiSticks * 1000` payout,
   `advanceHand`, honba rules, and clearing `declaredRiichiPlayerIndices`. The produced
-  `WinRecord`/`DrawRecord` uses the event's `id`/`occurredAt` and the *replayed*
+  `WinRecord`/`DrawRecord` uses the event's `id`/`occurredAt` and the _replayed_
   context, so an untouched log replays to a byte-identical `history`.
 - Shape violations (out-of-range indices, ron with null/self discarder, tsumo with
-  discarder) become `invalid-event` results — validated *before* applying, so the
+  discarder) become `invalid-event` results — validated _before_ applying, so the
   existing throwing helpers stay throw-for-programmer-error only.
 
 ### 1.4 Existing reducers keep their signatures
@@ -213,7 +213,7 @@ the last round event belong to the **current, in-progress hand**.
 
 - **Replace** a round → its segment's riichi events are kept (same hand, corrected outcome).
 - **Delete** a round → its segment's riichi events are deleted with it (they were
-  declarations *in that hand*; reassigning them to the following hand would be wrong).
+  declarations _in that hand_; reassigning them to the following hand would be wrong).
   This is a documented decision.
 
 ### 2.2 Commands and results
@@ -235,7 +235,11 @@ export type SessionEditCommand =
       current hand when roundId is null. Needs riichi metadata for added events. */
   | {
       readonly kind: "set-hand-riichi";
-      readonly declarations: readonly { readonly id: string; readonly occurredAt: string; readonly playerIndex: number }[];
+      readonly declarations: readonly {
+        readonly id: string;
+        readonly occurredAt: string;
+        readonly playerIndex: number;
+      }[];
       readonly roundId: string | null;
     };
 
@@ -246,15 +250,30 @@ export type SessionEditError =
   | { readonly eventId: string; readonly kind: "riichi-underfunded"; readonly playerIndex: number };
 
 export interface RoundContextChange {
-  readonly after: { readonly deltas: readonly number[]; readonly handNumber: number; readonly honba: number; readonly roundWind: Wind };
-  readonly before: { readonly deltas: readonly number[]; readonly handNumber: number; readonly honba: number; readonly roundWind: Wind };
+  readonly after: {
+    readonly deltas: readonly number[];
+    readonly handNumber: number;
+    readonly honba: number;
+    readonly roundWind: Wind;
+  };
+  readonly before: {
+    readonly deltas: readonly number[];
+    readonly handNumber: number;
+    readonly honba: number;
+    readonly roundWind: Wind;
+  };
   readonly roundId: string;
 }
 
 export type EditWarning =
   /** A later win's replayed honba differs from before; its entered payment
       embeds the old honba bonus and needs human review. */
-  | { readonly afterHonba: number; readonly beforeHonba: number; readonly kind: "stale-honba-payment"; readonly roundId: string }
+  | {
+      readonly afterHonba: number;
+      readonly beforeHonba: number;
+      readonly kind: "stale-honba-payment";
+      readonly roundId: string;
+    }
   /** A later tsumo's winner-is-dealer status flipped; its dealer/non-dealer
       payment split was computed for the old seating. */
   | { readonly kind: "stale-dealer-payment"; readonly roundId: string };
@@ -269,8 +288,14 @@ export type SessionEditResult =
   | { readonly kind: "edited"; readonly review: EditReview; readonly state: SessionState }
   | { readonly error: SessionEditError; readonly kind: "rejected" };
 
-export function editSessionRound(state: SessionState, command: SessionEditCommand): SessionEditResult;
-export function previewSessionEdit(state: SessionState, command: SessionEditCommand): SessionEditResult;
+export function editSessionRound(
+  state: SessionState,
+  command: SessionEditCommand,
+): SessionEditResult;
+export function previewSessionEdit(
+  state: SessionState,
+  command: SessionEditCommand,
+): SessionEditResult;
 ```
 
 `previewSessionEdit` and `editSessionRound` share one implementation (everything is
@@ -304,7 +329,7 @@ flow: preview → confirm → commit.
 **Why warnings instead of automatic payment correction:** payments cannot be recomputed
 (no han/fu stored), and the user may have deliberately overridden honba in the
 calculator. Verbatim replay + explicit, blocking-until-acknowledged warnings means
-scores are never *silently* wrong — the ledger tells the user exactly which later rounds
+scores are never _silently_ wrong — the ledger tells the user exactly which later rounds
 need re-entry. Automatic honba adjustment (storing honba-free base payments or
 `basePoints` on new `WinEvent`s) is a clean future enhancement (Phase 5) and the event
 model leaves room for it additively.
@@ -319,7 +344,7 @@ export function tableBeforeRound(state: SessionState, roundId: string): TableSta
 
 ### 2.4 Undo/redo coexistence
 
-- Every mutation — append (riichi/win/draw) *and* edit/delete — pushes the previous
+- Every mutation — append (riichi/win/draw) _and_ edit/delete — pushes the previous
   `events` array onto `undoStack`. "Undo last change" therefore uniformly reverts the
   most recent action, including an edit, restoring the exact prior table (deterministic
   replay). This satisfies "destructive actions need undo" without new UI.
@@ -390,7 +415,7 @@ Algorithm:
 Because v1 `undoStack` is complete and untrimmed, virtually all real sessions take the
 verified path.
 
-Persisted `undoStack` size: cap the *persisted* stack at the most recent 50 entries
+Persisted `undoStack` size: cap the _persisted_ stack at the most recent 50 entries
 (in-memory stays unbounded, as today). Worst-case JSON stays comfortably inside
 localStorage limits; decision recorded in the ADR.
 
@@ -421,11 +446,11 @@ not call `commit`.
   before this update can't be edited."
 - **Edit surface:** an inline expanding editor under the row (matches the existing inline
   `confirmEnd` pattern; no modal dependency):
-  - *Draw rounds:* tenpai chips (same checkbox chips as the live draw panel) + riichi
+  - _Draw rounds:_ tenpai chips (same checkbox chips as the live draw panel) + riichi
     chips for that hand + "Delete this round".
-  - *Win rounds, phase 4a:* winner and discarder reassignment (chips), riichi chips, and
+  - _Win rounds, phase 4a:_ winner and discarder reassignment (chips), riichi chips, and
     "Delete this round". Payment amounts display read-only.
-  - *Win rounds, phase 4b:* "Re-score this hand" pushes the manual calculator with
+  - _Win rounds, phase 4b:_ "Re-score this hand" pushes the manual calculator with
     `?editRound=<id>`; the calculator seeds honba/sticks/riichi from
     `tableBeforeRound(...)` and, on save, calls `editRound({ kind: "replace-round", ... })`
     instead of `recordWin`.
@@ -470,7 +495,7 @@ Domain (`session-core`, Vitest, TDD):
 
 Migration (`apps/client`, extend `stored-session.test.ts`):
 
-7. **Round-trip with riichi:** a *frozen v1 JSON fixture* (built once from the old
+7. **Round-trip with riichi:** a _frozen v1 JSON fixture_ (built once from the old
    reducers, including riichi declarations, a carried stick draw, and an undo) parses to
    v2; replay equals the fixture's `table`; then an edit on the migrated session produces
    correct scores — proving riichi events were reconstructed at the right positions, not
@@ -491,16 +516,16 @@ UI (Jest Expo) and E2E:
 
 ## 6. Risks and explicit decisions
 
-| Risk / decision | Resolution |
-|---|---|
-| Honba bonus baked into stored payments | Replay verbatim + `stale-honba-payment` warning; never auto-adjust (user may have overridden honba). Phase 5 may store `basePoints` on new `WinEvent`s additively. |
-| Dealer/non-dealer tsumo split baked into payments | `stale-dealer-payment` warning; re-score via calculator edit mode. |
-| Migration fidelity | Snapshot-diff reconstruction is *verified* by replay-equality; unverifiable traces degrade to a lossless read-only baseline. v1 key preserved until first successful v2 save. |
-| Later riichi becoming unaffordable after an edit | Typed rejection, actionable message; never a throw, never partial application. |
-| `declareRiichi` signature change | Single call site + two tests; keeps domain clock-free. |
-| Persisted undo growth (O(n²) event copies) | Cap persisted undo depth at 50; in-memory unchanged. |
-| Redo | Out of scope; representation supports adding it later. ADR notes both. |
-| Replay cost | O(events) pure arithmetic on undo/edit only; appends stay incremental. |
+| Risk / decision                                   | Resolution                                                                                                                                                                    |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Honba bonus baked into stored payments            | Replay verbatim + `stale-honba-payment` warning; never auto-adjust (user may have overridden honba). Phase 5 may store `basePoints` on new `WinEvent`s additively.            |
+| Dealer/non-dealer tsumo split baked into payments | `stale-dealer-payment` warning; re-score via calculator edit mode.                                                                                                            |
+| Migration fidelity                                | Snapshot-diff reconstruction is _verified_ by replay-equality; unverifiable traces degrade to a lossless read-only baseline. v1 key preserved until first successful v2 save. |
+| Later riichi becoming unaffordable after an edit  | Typed rejection, actionable message; never a throw, never partial application.                                                                                                |
+| `declareRiichi` signature change                  | Single call site + two tests; keeps domain clock-free.                                                                                                                        |
+| Persisted undo growth (O(n²) event copies)        | Cap persisted undo depth at 50; in-memory unchanged.                                                                                                                          |
+| Redo                                              | Out of scope; representation supports adding it later. ADR notes both.                                                                                                        |
+| Replay cost                                       | O(events) pure arithmetic on undo/edit only; appends stay incremental.                                                                                                        |
 
 ## 7. Phased delivery
 

@@ -50,7 +50,7 @@ Exit gate: representative guided scans meet documented accuracy and latency targ
   - EMA (European Mahjong Association) competition rules.
   - M.League rules.
   - JPML (Japan Professional Mahjong League, rulebook A) rules.
-  These differ across aka dora, open tanyao (kuitan), kiriage mangan, kazoe cap (sanbaiman vs yonbaiman), double-wind-pair fu, uma/oka, starting/return points, tobi/busting, and nagashi mangan — so `ScoringRules` and the session model must grow beyond the current WRC-only shape (e.g. `countedLimit` is presently fixed to `"yonbaiman"`, double-wind pair fu is fixed at +2). Expand the scoring cross-check corpus per profile as each lands.
+    These differ across aka dora, open tanyao (kuitan), kiriage mangan, kazoe cap (sanbaiman vs yonbaiman), double-wind-pair fu, uma/oka, starting/return points, tobi/busting, and nagashi mangan — so `ScoringRules` and the session model must grow beyond the current WRC-only shape (e.g. `countedLimit` is presently fixed to `"yonbaiman"`, double-wind pair fu is fixed at +2). Expand the scoring cross-check corpus per profile as each lands.
 - **House-rule editor** — let users compose and persist a custom ruleset profile from the same option set, with validation, sensible presets, and immutable per-table pinning.
 - Expand WebMCP only for proven high-value tasks; preserve visible effects, schema validation, and human control.
 
