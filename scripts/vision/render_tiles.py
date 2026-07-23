@@ -70,6 +70,10 @@ GLYPH_FILES: dict[str, str] = {
 
 IVORY = (0.93, 0.90, 0.82, 1.0)
 IVORY_DARK = (0.85, 0.81, 0.71, 1.0)
+# Real riichi tiles are two-tone: a bone-white glyph face bonded to a warm
+# yellow/amber back and sides. The body material carries that backing colour.
+BACKING = (0.87, 0.70, 0.30, 1.0)
+BACKING_DARK = (0.80, 0.62, 0.24, 1.0)
 # Tile proportions in metres: face 19x25 mm, 15 mm thick (matches glyph 3:4).
 TILE_W, TILE_H, TILE_T = 0.19, 0.25, 0.15
 
@@ -107,11 +111,11 @@ def build_body_material() -> bpy.types.Material:
     tree.links.new(coord.outputs["Object"], tint.inputs["Vector"])
     mix = tree.nodes.new("ShaderNodeMixRGB")
     mix.inputs["Fac"].default_value = 0.12
-    mix.inputs["Color1"].default_value = IVORY
-    mix.inputs["Color2"].default_value = IVORY_DARK
+    mix.inputs["Color1"].default_value = BACKING
+    mix.inputs["Color2"].default_value = BACKING_DARK
     tree.links.new(tint.outputs["Fac"], mix.inputs["Fac"])
     tree.links.new(mix.outputs["Color"], bsdf.inputs["Base Color"])
-    bsdf.inputs["Roughness"].default_value = 0.22
+    bsdf.inputs["Roughness"].default_value = 0.30
     _coat(bsdf)
     return material
 
@@ -212,26 +216,44 @@ def make_tile(name: str, body: bpy.types.Material, face: bpy.types.Material) -> 
 
 
 def face_material_for(label: str, glyph_root: str, cache: dict) -> bpy.types.Material:
-    """A per-label face material with its glyph loaded (cached by label)."""
+    """A per-label MATTE face material for hand mode (cached by label).
+
+    Hand tiles are viewed near head-on across a row, so any specular reflects the
+    front light into the camera and washes the face-on glyph. This is a simple
+    matte ivory + glyph material (no coat, no specular, no engraving), which reads
+    evenly from every angle — verified against a live 5-tile row. Crop mode is
+    unaffected; it uses the glossier build_face_material directly.
+    """
     if label in cache:
         return cache[label]
-    material = build_face_material()
-    material.name = f"Face_{label}"
-    image = bpy.data.images.load(f"{glyph_root}/{GLYPH_FILES[label]}", check_existing=True)
-    material.node_tree.nodes["Glyph"].image = image
-    # Hand tiles are viewed nearer head-on across a row; a strong coat throws a
-    # broad specular reflection of the key into the camera and washes the glyph.
-    # Soften the coat for hand mode only. Crop mode is unaffected because it never
-    # routes through face_material_for.
-    bsdf = material.node_tree.nodes["Principled BSDF"]
+    material = bpy.data.materials.new(f"Face_{label}")
+    material.use_nodes = True
+    tree = material.node_tree
+    nodes, links = tree.nodes, tree.links
+    bsdf = nodes["Principled BSDF"]
+    bsdf.inputs["Roughness"].default_value = 0.55
     if "Coat Weight" in bsdf.inputs:
-        bsdf.inputs["Coat Weight"].default_value = 0.12
+        bsdf.inputs["Coat Weight"].default_value = 0.0
+    if "Specular IOR Level" in bsdf.inputs:
+        bsdf.inputs["Specular IOR Level"].default_value = 0.0
+    coord = nodes.new("ShaderNodeTexCoord")
+    glyph = nodes.new("ShaderNodeTexImage")
+    glyph.image = bpy.data.images.load(f"{glyph_root}/{GLYPH_FILES[label]}", check_existing=True)
+    glyph.extension = "CLIP"
+    glyph.interpolation = "Cubic"
+    links.new(coord.outputs["UV"], glyph.inputs["Vector"])
+    mix = nodes.new("ShaderNodeMixRGB")
+    mix.inputs["Color1"].default_value = IVORY
+    links.new(glyph.outputs["Color"], mix.inputs["Color2"])
+    links.new(glyph.outputs["Alpha"], mix.inputs["Fac"])
+    links.new(mix.outputs["Color"], bsdf.inputs["Base Color"])
     cache[label] = material
     return material
 
 
 def build_environment() -> tuple[bpy.types.Object, bpy.types.Object, list[bpy.types.Object]]:
     _reset("Light", "object")  # drop the factory 1000 W point light; we light explicitly
+    _reset("Cube", "object")   # drop the factory cube; it dwarfs and occludes the tiles
     _reset("Table", "object")
     bpy.ops.mesh.primitive_plane_add(size=4.0, location=(0, 0, 0.0))
     table = bpy.context.active_object
@@ -441,38 +463,42 @@ def render_hands(args: argparse.Namespace) -> None:
     cache: dict = {}
     # Fifteen reusable tile objects; face material + transform swap per hand.
     slots = [make_tile(f"Tile_{i:02d}", body, face_material_for("1m", glyph_root, cache)) for i in range(15)]
-    _, camera, softboxes = build_environment()
+    _, camera, _ = build_environment()  # crop-mode softboxes are removed below
     # Widen the table for the ~2.9-unit row.
     bpy.data.objects["Table"].scale = (2.5, 2.5, 1.0)
-    # The row spans ~2.8 units; the crop-mode key light is too local. Broaden it
-    # into an overhead softlight that rakes the whole row of faces from the front.
-    # A sun lights the whole 2.8-unit row evenly (an area light at row centre
-    # falls off, blowing out the middle while the ends stay dark). Keep the area
-    # Key as a soft frontal fill.
-    key = bpy.data.objects["Key"]
-    key.data.size = 3.5
-    key.data.energy = 3.0  # gentle frontal fill only; the sun is the even key
-    key.location = (0.0, -1.3, 1.4)
-    key.rotation_euler = (Vector((0, 0, TILE_H * 0.5)) - key.location).to_track_quat("-Z", "Y").to_euler()
-    key["base_energy"] = key.data.energy
-    _reset("Sun", "object")
-    sun_data = bpy.data.lights.new("Sun", "SUN")
-    sun_data.energy = 2.0
-    sun_data.angle = math.radians(4)
-    sun = bpy.data.objects.new("Sun", sun_data)
-    bpy.context.collection.objects.link(sun)
-    # Standing tiles have VERTICAL faces; a high sun rakes them and lights only
-    # the table. Aim the rays low and frontal (into +Y, slightly down and to the
-    # side) so they strike the faces near head-on while grazing the table — bright
-    # ivory faces, dark felt. Slightly off-axis keeps specular out of the camera.
-    ray_dir = Vector((0.25, 1.0, -0.5)).normalized()  # sun sits front-left-low
-    sun.rotation_euler = ray_dir.to_track_quat("-Z", "Y").to_euler()
-    # The crop-mode softboxes sit ~0.5u from the row centre and flood the middle
-    # tiles while the ends stay dark; the sun covers the whole row evenly instead.
-    for box in softboxes:
-        box.hide_render = True
+    # Lighting for a row of standing tiles (verified against a live 5-tile row):
+    # the faces are matte (see face_material_for), so a single WIDE front area
+    # light spanning the whole row gives even, specular-free illumination on every
+    # face — a point/sun light either falls off across the row or reflects into the
+    # camera and washes the face-on middle tiles. The crop-mode Key and softboxes
+    # are disabled here.
+    # Remove (not just hide) the crop-mode Key and softboxes: an emissive mesh can
+    # still contribute light in EEVEE when only hide_render is set, and the
+    # softboxes sit right in front of the centre tiles and flood them.
+    for name in ("Key", "Softbox_key", "Softbox_fill"):
+        obj = bpy.data.objects.get(name)
+        if obj:
+            bpy.data.objects.remove(obj, do_unlink=True)
+    _reset("FrontLight", "object")
+    fl_data = bpy.data.lights.new("FrontLight", "AREA")
+    fl_data.shape = "RECTANGLE"
+    fl_data.size = 6.0          # far wider than the ~2.8 row so coverage is even
+    fl_data.size_y = 1.8
+    fl_data.energy = 45.0
+    front = bpy.data.objects.new("FrontLight", fl_data)
+    bpy.context.collection.objects.link(front)
+    front.location = (0.0, -2.2, 0.9)  # farther back: even irradiance, no hot centre
+    front.rotation_euler = (
+        Vector((0, 0, TILE_H * 0.45)) - front.location
+    ).to_track_quat("-Z", "Y").to_euler()
+    front["base_energy"] = fl_data.energy
     configure_render(args.width_hand, args.height_hand, args.render_samples)
     scene = bpy.context.scene
+    # Matte tiles need no raytraced reflections, and EEVEE's raytraced GI bounces
+    # the bright faces and front light across the scene into a pale wash that
+    # swallows the glyphs. Disable it for hand mode (crop mode keeps it).
+    if hasattr(scene.eevee, "use_raytracing"):
+        scene.eevee.use_raytracing = False
     background = scene.world.node_tree.nodes.get("Background")
     if background:  # hand mode never calls jitter_scene, so set world level here
         background.inputs["Strength"].default_value = 0.30
@@ -505,15 +531,14 @@ def render_hands(args: argparse.Namespace) -> None:
         dora_tile.rotation_euler = Euler((0.0, 0.0, math.radians(rng.uniform(-3, 3))))
         records.append((dora_tile, dora, "dora"))
 
-        # Front camera framing the full ~2.8-unit row; DoF focuses on the row.
-        target = Vector((0.0, 0.0, TILE_H * 0.5))
-        camera.location = (rng.uniform(-0.06, 0.06), -3.2 + rng.uniform(-0.15, 0.15), 1.05 + rng.uniform(-0.08, 0.15))
+        # Near-top-down front camera (~26° elevation) framing the full row with
+        # margin, so tiles read as separated faces rather than one merged wall.
+        target = Vector((0.0, 0.0, TILE_H * 0.42))
+        camera.location = (rng.uniform(-0.05, 0.05), -2.9 + rng.uniform(-0.12, 0.12), 1.45 + rng.uniform(-0.08, 0.12))
         camera.rotation_euler = (target - camera.location).to_track_quat("-Z", "Y").to_euler()
-        camera.data.lens = rng.uniform(34, 42)
-        camera.data.dof.use_dof = True
-        camera.data.dof.focus_distance = (target - camera.location).length
-        camera.data.dof.aperture_fstop = rng.uniform(8.0, 16.0)
-        sun.data.energy = 2.0 * rng.uniform(0.85, 1.2)  # mild exposure variation
+        camera.data.lens = rng.uniform(33, 39)
+        camera.data.dof.use_dof = False  # flat row; DoF only muddies the far tiles
+        front.data.energy = front["base_energy"] * rng.uniform(0.9, 1.15)  # mild exposure variation
         bpy.context.view_layer.update()
         scene.render.filepath = f"{args.output}/hands/hand-{hand_index:03d}.png"
         bpy.ops.render.render(write_still=True)

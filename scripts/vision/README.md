@@ -43,7 +43,7 @@ blender -b -P scripts/vision/render_tiles.py -- \
   --samples-per-class 8 --seed 1234
 ```
 
-Output is `<output>/train/<label>/*.png`, the exact layout `train-tile-classifier.py --real-crops` already consumes, so the renders act as a third training source alongside the 2D-synthetic and real-photo crops. Randomization covers camera pose, focal length, depth of field, camera roll, studio lighting, white-balance drift, and per-tile surface imperfection. `tile_base.blend` is a self-contained reference scene for visual inspection; `render_tiles.py` is the authoritative, procedural generator.
+Output is `<output>/train/<label>/*.png`, the exact layout `train-tile-classifier.py --real-crops` already consumes, so the renders act as a third training source alongside the 2D-synthetic and real-photo crops. Tiles are modelled two-tone like real riichi tiles — a bone-white glyph face with a warm yellow/amber back and sides. Randomization covers camera pose, focal length, depth of field, camera roll, studio lighting, white-balance drift, and per-tile surface imperfection. `tile_base.blend` is a self-contained reference scene for visual inspection; `render_tiles.py` is the authoritative, procedural generator.
 
 These renders are **training-side only**. They are written to the `train` partition and must never enter `eval` — held-out evaluation stays real, source-separated physical photos. Their worth is measured solely by lift on the real held-out crops via `evaluate-physical-crops.py`, never as release evidence. Two controlled A/B runs to date show renders are harmless-to-marginal, not a promotion lever (see the recognition audit). A sample render is in `docs/recognition-render-sample.png`.
 
@@ -56,7 +56,7 @@ blender -b -P scripts/vision/render_tiles.py -- --mode hand \
   --glyphs /tmp/richii-tiles-source/Export/Regular --output /tmp/richii-hands --hands 8
 ```
 
-This is scaffolding for a **future learned localizer**; the shipped recognizer still uses the deterministic connected-component locator, so nothing consumes it yet. The layout, roles, and box projection are implemented and verified (boxes tightly bound each tile). Hand-scene lighting and framing are still rough — the near-top-down row exposes tile faces unevenly — and want tuning before the images are training-grade. The single-tile crop path above is the production-ready generator.
+This is scaffolding for a **future learned localizer**; the shipped recognizer still uses the deterministic connected-component locator, so nothing consumes it yet. The layout, roles, box projection, lighting, and framing are all implemented and verified: every tile renders its glyph clearly with a tight bounding box (`docs/recognition-hand-sample.png`). Hand mode uses matte faces under a wide front light so face-on tiles do not wash out; it disables raytraced GI (which otherwise bounces the bright faces into a pale wash). The single-tile crop path is the higher-fidelity, glossy generator.
 
 ## License and release status
 

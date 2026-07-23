@@ -1,6 +1,6 @@
 # Progress
 
-Last updated: **2026-07-23T19:57:19+08:00**
+Last updated: **2026-07-23T23:31:42+08:00**
 
 ## Current state
 
@@ -106,7 +106,8 @@ Richii is a polished, local-first scoring and table-session app on mobile-width 
 - Discipline held: renders are training-side only, written to `train`, never `eval`; worth is measured solely by lift on the real held-out crops via `evaluate-physical-crops.py`, never as release evidence. The shipped model and the 500-hand production gate are unchanged. Phase 2 (full-hand layouts with per-tile boxes for a future localizer) is scoped but not built.
 - Ran the first controlled A/B through the full training/eval harness: 296 renders (8/class) added to 107 real train crops, identical settings, evaluated on the 46 held-out real crops. Result was within noise — top-1 93.48%→91.30% (−1 crop), accepted coverage 73.91%→78.26% (+2 crops), accepted accuracy 100% unchanged. No lift established; the treatment model was not promoted. The harness working end to end is the real gain. See the audit's "Initial measurement" note.
 - Improved renderer realism (depth of field, white-balance drift, camera roll, stronger engraving, tighter azimuth) and re-ran the A/B down-weighted to ~1:1 (111 renders, 3/class). Down-weighting removed the top-1 regression (back to 93.48% parity) with a one-crop coverage gain (76.09%) — still within noise. Two runs now agree: renders are harmless-to-marginal, not a promotion lever; the real blocker is the 46-crop measurement resolution, not synthetic tuning.
-- Added `--mode hand` phase-2 scaffolding: 14+winning+dora layout emitting per-tile label/role/2D-bounding-box JSON (projection verified — boxes tightly bound each tile). It targets a future learned localizer and is not yet consumed; hand-scene lighting/framing remain rough and are documented as WIP. The single-tile crop path is the production-ready generator.
+- Added `--mode hand` phase-2 scaffolding: 14+winning+dora layout emitting per-tile label/role/2D-bounding-box JSON (projection verified — boxes tightly bound each tile). It targets a future learned localizer and is not yet consumed. The single-tile crop path is the higher-fidelity glossy generator.
+- Fixed phase-2 hand imagery end to end (all 15 tiles render their glyphs, 3/3 sample hands at 15/15). Root causes, found by live-Blender iteration and pixel measurement: the factory startup cube was never removed and occluded the row; face-on glossy tiles reflected the light into the camera (now matte faces + a wide front light sized to the row); and EEVEE raytraced GI bounced the bright faces into a pale wash (disabled for hand mode). Also modelled real two-tone tiles — bone-white face, warm yellow/amber back and sides — which improves crop realism too.
 
 ## Visual evidence
 
