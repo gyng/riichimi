@@ -15,6 +15,33 @@ function meldOrder(detection: DetectedTile): readonly [number, number] {
   return [Number(match?.[1] ?? 0), Number(match?.[2] ?? 0)];
 }
 
+interface MeldGroup {
+  readonly index: number;
+  readonly tiles: readonly DetectedTile[];
+}
+
+// Reassemble the meld-role detections into their called sets, in group order and
+// left-to-right within a group. Used so the structure — not just each tile's
+// identity — can be reviewed and corrected before scoring.
+function meldGroupsOf(result: RecognitionResult): readonly MeldGroup[] {
+  const groups = new Map<number, DetectedTile[]>();
+  for (const detection of result.detections) {
+    if (detection.role !== "meld") {
+      continue;
+    }
+    const [group] = meldOrder(detection);
+    const tiles = groups.get(group) ?? [];
+    tiles.push(detection);
+    groups.set(group, tiles);
+  }
+  return [...groups.entries()]
+    .toSorted(([left], [right]) => left - right)
+    .map(([index, tiles]) => ({
+      index,
+      tiles: tiles.toSorted((left, right) => meldOrder(left)[1] - meldOrder(right)[1]),
+    }));
+}
+
 function orderedDetections(result: RecognitionResult): readonly DetectedTile[] {
   const hand = result.detections
     .filter(({ role }) => role === "concealed" || role === "winning")
@@ -58,16 +85,44 @@ function uniqueChoices(detection: DetectedTile): readonly TileId[] {
 export interface RecognitionReviewPanelProps {
   readonly initialReviewCount: number;
   readonly onChange: (result: RecognitionResult) => void;
+  /** When set, the concealed/called split is a parser guess (e.g. the natural
+      single-row layout) and must be explicitly confirmed before scoring. */
+  readonly requireStructureConfirmation?: boolean;
+  readonly structureConfirmed?: boolean;
+  readonly onConfirmStructureChange?: (confirmed: boolean) => void;
   readonly result: RecognitionResult;
 }
 
 export function RecognitionReviewPanel({
   initialReviewCount,
   onChange,
+  onConfirmStructureChange,
+  requireStructureConfirmation = false,
+  structureConfirmed = false,
   result,
 }: RecognitionReviewPanelProps) {
   const review = reviewRecognition(result, recognitionReviewThreshold);
   const detections = orderedDetections(result);
+  const meldGroups = meldGroupsOf(result);
+  const concealedCount = result.detections.filter(
+    ({ role }) => role === "concealed" || role === "winning",
+  ).length;
+  // Surface the structure whenever the parser guessed one (a called set present)
+  // or the capture mode makes the split ambiguous. A fully concealed guided hand
+  // needs no structure step.
+  const showStructure = meldGroups.length > 0 || requireStructureConfirmation;
+
+  function foldMeldIntoHand(group: MeldGroup) {
+    let corrected = result;
+    for (const detection of group.tiles) {
+      corrected = correctDetection(corrected, detection.id, {
+        role: "concealed",
+        tile: detection.tile ?? detection.alternatives[0]?.tile ?? null,
+      });
+    }
+    onConfirmStructureChange?.(false);
+    onChange(corrected);
+  }
   const [selectedId, setSelectedId] = useState<string | null>(
     review.reviewDetectionIds[0] ?? detections[0]?.id ?? null,
   );
@@ -127,6 +182,55 @@ export function RecognitionReviewPanel({
           ? "All flagged reads have been explicitly confirmed or corrected. Continue with the reviewed draft when the row matches the photo."
           : "Red outlines need attention. Select one, compare it with the photo, then confirm the proposal or replace it. Scoring stays locked until every issue is resolved."}
       </Text>
+
+      {showStructure ? (
+        <View accessibilityLabel="Hand structure" style={styles.structure}>
+          <Text style={styles.structureKicker}>HAND STRUCTURE</Text>
+          <Text accessibilityRole="header" style={styles.structureTitle}>
+            {`${concealedCount} concealed ${concealedCount === 1 ? "tile" : "tiles"} · ${meldGroups.length} called ${meldGroups.length === 1 ? "set" : "sets"}`}
+          </Text>
+          <Text style={styles.structureCopy}>
+            Called sets are read as open. Confirm the split matches the photo, then set open or
+            closed — or fix a mis-split — in the calculator.
+          </Text>
+          {meldGroups.map((group) => (
+            <View key={group.index} style={styles.structureGroup}>
+              <View style={styles.structureGroupTiles}>
+                {group.tiles.map((detection) => {
+                  const tile = proposedTile(detection);
+                  return tile === null ? null : <MahjongTile key={detection.id} tile={tile} />;
+                })}
+              </View>
+              <ActionButton
+                label={`Called set ${group.index + 1} isn't a call — move to hand`}
+                onPress={() => foldMeldIntoHand(group)}
+                variant="paper"
+              />
+            </View>
+          ))}
+          {requireStructureConfirmation && meldGroups.length === 0 ? (
+            <Text style={styles.structureCopy}>
+              If any concealed tile is actually part of a called set, add that set in the
+              calculator.
+            </Text>
+          ) : null}
+          {requireStructureConfirmation ? (
+            <Pressable
+              accessibilityRole="checkbox"
+              accessibilityState={{ checked: structureConfirmed }}
+              onPress={() => onConfirmStructureChange?.(!structureConfirmed)}
+              style={styles.structureConfirm}
+            >
+              <View style={[styles.checkbox, structureConfirmed && styles.checkboxChecked]}>
+                <Text style={styles.checkmark}>{structureConfirmed ? "✓" : ""}</Text>
+              </View>
+              <Text style={styles.structureConfirmLabel}>
+                This concealed and called split matches the photo
+              </Text>
+            </Pressable>
+          ) : null}
+        </View>
+      ) : null}
 
       <View accessibilityLabel="Recognized tiles" style={styles.detections}>
         {detections.map((detection, index) => {
@@ -226,6 +330,18 @@ export function RecognitionReviewPanel({
 
 const styles = StyleSheet.create({
   allTiles: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: space.x4 },
+  checkbox: {
+    alignItems: "center",
+    backgroundColor: color.paper,
+    borderColor: color.ink,
+    borderRadius: 4,
+    borderWidth: 1,
+    height: 22,
+    justifyContent: "center",
+    width: 22,
+  },
+  checkboxChecked: { backgroundColor: color.ink },
+  checkmark: { color: color.white, fontSize: 13, fontWeight: "800" },
   confidence: {
     color: color.inkMuted,
     fontFamily: "monospace",
@@ -294,6 +410,50 @@ const styles = StyleSheet.create({
     marginBottom: space.x4,
     padding: space.x4,
   },
+  structure: {
+    backgroundColor: color.canvasDeep,
+    borderColor: color.line,
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: space.x2,
+    marginTop: space.x4,
+    padding: space.x4,
+  },
+  structureConfirm: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: space.x2,
+    marginTop: space.x3,
+  },
+  structureConfirmLabel: {
+    color: color.ink,
+    flex: 1,
+    fontFamily: "serif",
+    fontSize: 14,
+    fontWeight: "700",
+  },
+  structureCopy: {
+    color: color.inkMuted,
+    fontFamily: "serif",
+    fontSize: 13,
+    lineHeight: 19,
+  },
+  structureGroup: {
+    alignItems: "center",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: space.x3,
+    marginTop: space.x2,
+  },
+  structureGroupTiles: { flexDirection: "row", gap: 4 },
+  structureKicker: {
+    color: color.accent,
+    fontFamily: "monospace",
+    fontSize: 9,
+    fontWeight: "800",
+    letterSpacing: 1,
+  },
+  structureTitle: { color: color.ink, fontFamily: "serif", fontSize: 17, fontWeight: "700" },
   suggestion: { alignItems: "center", gap: 3 },
   suggestionLabel: {
     color: color.jade,
