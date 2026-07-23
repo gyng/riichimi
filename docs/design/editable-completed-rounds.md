@@ -6,6 +6,25 @@ pass and reviewed. Implementation is delegated and gated phase-by-phase on
 every recompute is auditable, warned about when a stored payment becomes stale,
 and reversible via undo.
 
+## Product clarification (honba is a manual, defaulted input)
+
+Not every round arrives through the session event log — the manual calculator is
+also used standalone. So **honba (and the rest of the win context: seat/round wind,
+riichi sticks) must be a manually-editable field with a sensible default**, never a
+value that is only ever auto-derived from the log.
+
+Consequences for this design:
+
+- When re-scoring an edited round (Phase 4b), the calculator seeds honba/sticks/wind
+  from `tableBeforeRound(...)` as *defaults* but leaves them **user-editable** — the
+  user can correct honba by hand, which is the intended fix for a `stale-honba-payment`
+  warning.
+- The `stale-honba-payment` / `stale-dealer-payment` warnings (§2.3) stand: they tell
+  the user a stored payment was entered for a now-changed context. The resolution is
+  re-scoring with the honba field the user sets manually — not silent recomputation.
+- Phase 1 is unaffected (it changes no honba handling). This note governs Phases 4b/5
+  and any manual-calculator work.
+
 ## 0. Diagnosis verification
 
 Confirmed against the current code:
