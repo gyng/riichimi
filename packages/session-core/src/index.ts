@@ -1,4 +1,19 @@
 export {
+  editableRoundIds,
+  editSessionRound,
+  previewSessionEdit,
+  tableBeforeRound,
+} from "./application/edit-session";
+export type {
+  EditReview,
+  EditWarning,
+  RoundContextChange,
+  RoundRevision,
+  SessionEditCommand,
+  SessionEditError,
+  SessionEditResult,
+} from "./application/edit-session";
+export {
   applyDraw,
   applyWin,
   createSession,
