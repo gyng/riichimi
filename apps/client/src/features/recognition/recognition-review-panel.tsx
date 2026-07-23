@@ -10,17 +10,35 @@ export const recognitionReviewThreshold = 0.75;
 
 const allTileChoices: readonly TileId[] = [...canonicalTileIds, ...redFiveIds];
 
+function meldOrder(detection: DetectedTile): readonly [number, number] {
+  const match = /^meld-(\d+)-(\d+)$/.exec(detection.id);
+  return [Number(match?.[1] ?? 0), Number(match?.[2] ?? 0)];
+}
+
 function orderedDetections(result: RecognitionResult): readonly DetectedTile[] {
   const hand = result.detections
     .filter(({ role }) => role === "concealed" || role === "winning")
     .toSorted((left, right) => left.bounds.x - right.bounds.x);
+  // Called melds are reviewed too, grouped in order, so the confirm gate covers
+  // every recognized tile — not just the concealed hand.
+  const melds = result.detections
+    .filter(({ role }) => role === "meld")
+    .toSorted((left, right) => {
+      const [leftGroup, leftTile] = meldOrder(left);
+      const [rightGroup, rightTile] = meldOrder(right);
+      return leftGroup - rightGroup || leftTile - rightTile;
+    });
   const dora = result.detections.filter(({ role }) => role === "dora");
-  return [...hand, ...dora];
+  return [...hand, ...melds, ...dora];
 }
 
 function detectionLabel(detection: DetectedTile, index: number): string {
   if (detection.role === "dora") {
     return "Dora indicator";
+  }
+  if (detection.role === "meld") {
+    const [group, tile] = meldOrder(detection);
+    return `Meld ${group + 1} tile ${tile + 1}`;
   }
   if (detection.role === "winning") {
     return `Winning tile ${index + 1}`;
@@ -173,7 +191,7 @@ export function RecognitionReviewPanel({
               onPress={() => setShowAllTiles((visible) => !visible)}
               variant="paper"
             />
-            {selected.role === "dora" ? null : (
+            {selected.role === "dora" || selected.role === "meld" ? null : (
               <ActionButton
                 disabled={selected.role === "winning"}
                 label={

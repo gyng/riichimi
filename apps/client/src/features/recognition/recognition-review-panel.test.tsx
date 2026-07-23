@@ -50,6 +50,60 @@ describe("RecognitionReviewPanel", () => {
     );
   });
 
+  it("shows a called meld tile in review and keeps its meld role when corrected", async () => {
+    const onChange = jest.fn();
+    await render(
+      <RecognitionReviewPanel
+        initialReviewCount={1}
+        onChange={onChange}
+        result={{
+          detections: [
+            {
+              alternatives: [{ confidence: 0.95, tile: "5m" }],
+              bounds: { height: 0.4, width: 0.1, x: 0.1, y: 0.2 },
+              confidence: 0.95,
+              id: "hand-0",
+              role: "winning",
+              tile: "5m",
+            },
+            {
+              alternatives: [
+                { confidence: 0.5, tile: "2p" },
+                { confidence: 0.4, tile: "3p" },
+              ],
+              bounds: { height: 0.4, width: 0.1, x: 0.2, y: 0.6 },
+              confidence: 0.5,
+              id: "meld-0-0",
+              role: "meld",
+              tile: "2p",
+            },
+            {
+              alternatives: [{ confidence: 0.98, tile: "9s" }],
+              bounds: { height: 0.4, width: 0.1, x: 0.8, y: 0.9 },
+              confidence: 0.98,
+              id: "dora-0",
+              role: "dora",
+              tile: "9s",
+            },
+          ],
+          modelVersion: "test",
+        }}
+      />,
+    );
+
+    // The low-confidence called-meld tile is flagged and reviewable.
+    expect(screen.getByText("1 tile needs confirmation")).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole("button", { name: "Use 3 circles for selected tile" }));
+
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detections: expect.arrayContaining([
+          expect.objectContaining({ id: "meld-0-0", role: "meld", tile: "3p" }),
+        ]),
+      }),
+    );
+  });
+
   it("allows the winner to be reassigned without creating two winning tiles", async () => {
     const onChange = jest.fn();
     await render(

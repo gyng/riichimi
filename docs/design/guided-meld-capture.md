@@ -1,8 +1,17 @@
 # Design: Guided meld/kan capture for the camera recognizer
 
-Status: **plan + phase 1 in progress.** Expands the guided recognizer from a
-closed-hand-only guide to one that also captures called melds (chi/pon) and kans,
-while keeping the deliberately-narrow, review-gated philosophy.
+Status: **phases 1–4 complete.** The guided recognizer now localizes called melds
+and kans, infers their type, feeds them into a scoreable draft, and reviews them
+tile-by-tile behind the confirm-before-score gate — while keeping the
+deliberately-narrow, review-gated philosophy.
+
+Placement decision: **open-vs-closed is set in the calculator, not the review
+desk.** The recognizer defaults every meld to open (rotation/face-down cues are
+data-gated) and the review desk confirms tile _identity_; the calculator already
+models open vs closed (including closed-kan / ankan) and lets the user adjust a
+seeded meld there. A one-tap open/closed toggle on the calculator's meld card and
+a "this group isn't a legal meld" review flag are noted refinements, not blockers
+— an illegal misread degrades to a clear handoff failure today.
 
 ## Honest scope boundary
 

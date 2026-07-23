@@ -254,9 +254,10 @@ export function ScanScreen() {
               {photoSource === "camera" ? "Capture ready for review" : "Photo ready for review"}
             </Text>
             <Text style={styles.reviewBody}>
-              Beta recognition runs entirely on this device. It expects exactly 14 upright,
-              separated tiles on a dark plain surface, the winning tile after a larger gap, and one
-              dora indicator below the hand. Every result still needs your confirmation.
+              Beta recognition runs entirely on this device. Place the concealed hand upright and
+              separated on a dark plain surface with the winning tile after a larger gap, any called
+              melds or kans on a second row below it, and one dora indicator on the bottom row.
+              Every result still needs your confirmation.
             </Text>
             {recognition.kind === "running" ? (
               <View accessibilityLiveRegion="polite" style={styles.recognitionStatus}>
@@ -349,7 +350,7 @@ export function ScanScreen() {
         <SafeAreaView style={styles.cameraChrome}>
           <View style={styles.cameraHeader}>
             <ActionButton label="Close" onPress={() => router.back()} variant="paper" />
-            <Text style={styles.guideLabel}>ALIGN 14 TILES + INDICATORS</Text>
+            <Text style={styles.guideLabel}>ALIGN HAND · MELDS · DORA</Text>
           </View>
           <View accessibilityLabel="Tile alignment guide" style={styles.guide}>
             <View style={styles.guideCornerTopLeft} />
