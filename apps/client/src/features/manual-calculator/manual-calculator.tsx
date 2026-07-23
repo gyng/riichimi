@@ -340,6 +340,23 @@ export function ManualCalculator({
     setRiichi(before.declaredRiichiPlayerIndices.includes(winner) ? "riichi" : "none");
   }, [editContext, editRoundId]);
 
+  // A confirmed scan already carries every input the scorer needs, so it scores
+  // on arrival rather than asking for one more tap to say "yes, now do it".
+  const scoredDraft = useRef(false);
+  useEffect(() => {
+    if (
+      recognitionDraft === undefined ||
+      scoredDraft.current ||
+      concealedTiles.length !== concealedCapacity ||
+      winningIndex === null ||
+      doraIndicators.length === 0
+    ) {
+      return;
+    }
+    scoredDraft.current = true;
+    calculate();
+  });
+
   function resetResult() {
     setResult(null);
     setEditReview(null);

@@ -161,15 +161,12 @@ describe("RecognitionReviewPanel", () => {
     expect(folded.detections.some((d: { role: string }) => d.role === "meld")).toBe(false);
   });
 
-  it("requires an explicit structure confirmation for an ambiguous single-row capture", async () => {
-    const onConfirmStructureChange = jest.fn();
+  it("shows the concealed and called split for an ambiguous single-row capture", async () => {
     await render(
       <RecognitionReviewPanel
         initialReviewCount={0}
         onChange={jest.fn()}
-        onConfirmStructureChange={onConfirmStructureChange}
         requireStructureConfirmation
-        structureConfirmed={false}
         result={{
           detections: [
             {
@@ -200,10 +197,8 @@ describe("RecognitionReviewPanel", () => {
         "If any concealed tile is actually part of a called set, add that set in the calculator.",
       ),
     ).toBeOnTheScreen();
-    await fireEvent.press(
-      screen.getByRole("checkbox", { name: /concealed and called split matches the photo/ }),
-    );
-    expect(onConfirmStructureChange).toHaveBeenCalledWith(true);
+    // The split is stated so the confirm action names what it is confirming.
+    expect(screen.getByText("1 concealed tile · 0 called sets")).toBeOnTheScreen();
   });
 
   it("allows the winner to be reassigned without creating two winning tiles", async () => {

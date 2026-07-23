@@ -1,4 +1,4 @@
-import { scoringRulesProfile, wrc2025Rules } from "@riichimi/rules";
+import { scoringRulesProfile, tenhouRules } from "@riichimi/rules";
 import type { RulesPreference } from "../features/rules/rules-preference";
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
@@ -28,7 +28,7 @@ interface RulesContextValue {
 export type RulesProfileSelection = RulesPreference;
 
 const RulesContext = createContext<RulesContextValue>({
-  activeRules: wrc2025Rules,
+  activeRules: tenhouRules,
   houseRules: defaultHouseRules,
   loading: false,
   saveHouseRules: () => {},
@@ -38,7 +38,7 @@ const RulesContext = createContext<RulesContextValue>({
 
 export function RulesProvider({ children }: { readonly children: ReactNode }) {
   const changedDuringLoad = useRef(false);
-  const [profileId, setProfileId] = useState<RulesProfileSelection>(wrc2025Rules.id);
+  const [profileId, setProfileId] = useState<RulesProfileSelection>(tenhouRules.id);
   const [houseRules, setHouseRules] = useState<HouseRules>(defaultHouseRules);
   const [loading, setLoading] = useState(true);
   const [storageError, setStorageError] = useState<string | null>(null);

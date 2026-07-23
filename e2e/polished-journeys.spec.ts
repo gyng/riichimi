@@ -103,7 +103,7 @@ test("dogfoods the polished mobile scoring and table flows through WebMCP", asyn
         {
           hand: { winningTile: "4s" },
           result: { fu: 20, han: 2, totalGain: 1500 },
-          rules: { id: "wrc-2025" },
+          rules: { id: "tenhou-hanchan" },
         },
       ],
     },
@@ -245,7 +245,7 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   // These fixtures stage the hand as separate rows, so read them with the guided
   // layout (persists across the retake below).
   await page.getByRole("radio", { name: "Guided" }).click();
-  await page.getByRole("button", { name: "Read 14 tiles offline" }).click();
+  // Reading starts on its own; selecting a layout re-reads the same photo.
   await expect(page.getByText(/photo is too blurry to read safely/)).toBeVisible();
   await page.screenshot({
     path: "docs/checkpoints/2026-07-23-14-blur-recovery-guidance-desktop.png",
@@ -257,7 +257,6 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   await replacementChooser.setFiles("e2e/fixtures/guided-hand.png");
   await expect(page.getByText("Photo ready for review")).toBeVisible();
   await page.screenshot({ path: "docs/checkpoints/2026-07-23-06-gallery-review-desktop.png" });
-  await page.getByRole("button", { name: "Read 14 tiles offline" }).click();
   await expect(page.getByText("15 tiles read · 2 need review")).toBeVisible({ timeout: 30_000 });
   await expect(
     page.getByRole("button", { name: /^Hand tile 1, 1 characters, \d+ percent confidence$/ }),
@@ -306,6 +305,5 @@ test("reviews the scan flow on a desktop without a camera", async ({ page }) => 
   // The bundled sample is staged as rows, so it selects the guided layout.
   await expect(page.getByRole("radio", { name: "Guided" })).toBeChecked();
 
-  await page.getByRole("button", { name: "Read 14 tiles offline" }).click();
   await expect(page.getByText(/tiles read · \d+ need review/)).toBeVisible({ timeout: 30_000 });
 });

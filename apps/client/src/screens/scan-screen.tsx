@@ -82,8 +82,10 @@ export function ScanScreen() {
   // table. Its concealed/called split is a guess, so it demands a structure
   // confirmation at review; guided keeps melds and dora on their own rows.
   const [captureLayout, setCaptureLayout] = useState<CaptureLayout>("natural");
-  const [structureConfirmed, setStructureConfirmed] = useState(false);
   const camera = useRef<CameraView>(null);
+  // Reading a photo was never a judgement call, so it starts on its own; the
+  // review gate is where the user's judgement actually belongs.
+  const readPhotoUri = useRef<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -149,8 +151,8 @@ export function ScanScreen() {
     if (photoUri === null) {
       return;
     }
+    readPhotoUri.current = photoUri;
     setRecognition({ kind: "running" });
-    setStructureConfirmed(false);
     try {
       const result = await tileRecognition.recognize({
         height: 1,
@@ -172,6 +174,12 @@ export function ScanScreen() {
       });
     }
   }
+
+  useEffect(() => {
+    if (photoUri !== null && readPhotoUri.current !== photoUri) {
+      void recognizePhoto();
+    }
+  });
 
   function reviewRecognizedTiles(result: RecognitionResult, reviewedCount: number) {
     if (photoUri === null) {
@@ -228,12 +236,11 @@ export function ScanScreen() {
       : null;
   const requireStructureConfirmation = captureLayout === "natural";
   const tilesReady = currentRecognitionReview?.readyToConfirm === true;
-  const structureReady = !requireStructureConfirmation || structureConfirmed;
   const continueLabel = !tilesReady
     ? `Resolve ${currentRecognitionReview?.reviewDetectionIds.length ?? 0} tiles to continue`
-    : structureReady
-      ? "Continue with reviewed tiles"
-      : "Confirm the hand structure to continue";
+    : requireStructureConfirmation
+      ? "Confirm split & continue"
+      : "Continue with reviewed tiles";
 
   if (permission === null) {
     return (
@@ -314,10 +321,11 @@ export function ScanScreen() {
                 <SegmentedControl
                   accessibilityLabel="Capture layout"
                   onChange={(value) => {
+                    // A different layout is a different parse, so the photo is
+                    // read again rather than leaving a stale result on screen.
                     setCaptureLayout(value);
-                    setRecognition((current) =>
-                      current.kind === "failure" ? { kind: "idle" } : current,
-                    );
+                    readPhotoUri.current = null;
+                    setRecognition({ kind: "idle" });
                   }}
                   options={layoutOptions}
                   value={captureLayout}
@@ -361,10 +369,8 @@ export function ScanScreen() {
                     result,
                   })
                 }
-                onConfirmStructureChange={setStructureConfirmed}
                 requireStructureConfirmation={requireStructureConfirmation}
                 result={recognition.result}
-                structureConfirmed={structureConfirmed}
               />
             ) : null}
             <View style={styles.reviewActions}>
@@ -382,7 +388,7 @@ export function ScanScreen() {
               />
               {recognition.kind === "complete" ? (
                 <ActionButton
-                  disabled={!tilesReady || !structureReady}
+                  disabled={!tilesReady}
                   label={continueLabel}
                   onPress={() =>
                     reviewRecognizedTiles(recognition.result, recognition.initialReviewCount)
@@ -418,17 +424,37 @@ export function ScanScreen() {
       <CameraView ref={camera} facing="back" style={styles.camera}>
         <SafeAreaView edges={bodyEdges} style={styles.cameraChrome}>
           <View style={styles.cameraHeader}>
-            <Text style={styles.guideLabel}>ALIGN HAND · MELDS · DORA</Text>
+            <SegmentedControl
+              accessibilityLabel="Capture layout"
+              onChange={setCaptureLayout}
+              options={layoutOptions}
+              value={captureLayout}
+            />
           </View>
           <View accessibilityLabel="Tile alignment guide" style={styles.guide}>
-            <View style={styles.guideCornerTopLeft} />
-            <View style={styles.guideCornerTopRight} />
-            <View style={styles.guideCornerBottomLeft} />
-            <View style={styles.guideCornerBottomRight} />
+            {captureLayout === "natural" ? (
+              <View style={[styles.guideBand, styles.guideBandWide]}>
+                <Text style={styles.guideBandLabel}>HAND · MELDS · DORA LAST</Text>
+              </View>
+            ) : (
+              <>
+                <View style={[styles.guideBand, styles.guideBandWide]}>
+                  <Text style={styles.guideBandLabel}>HAND</Text>
+                </View>
+                <View style={[styles.guideBand, styles.guideBandWide]}>
+                  <Text style={styles.guideBandLabel}>MELDS · IF ANY</Text>
+                </View>
+                <View style={[styles.guideBand, styles.guideBandNarrow]}>
+                  <Text style={styles.guideBandLabel}>DORA</Text>
+                </View>
+              </>
+            )}
           </View>
           <View style={styles.shutterArea}>
             <Text style={styles.cameraHint}>
-              Separate 14 upright tiles; leave a larger gap before the winner. Put one dora below.
+              {captureLayout === "natural"
+                ? "One row: hand, a larger gap before the winner, then any called sets, then one dora."
+                : "Hand on the top line, any called sets on the middle line, one dora on the bottom."}
             </Text>
             <View style={styles.captureActions}>
               <ActionButton
@@ -497,55 +523,30 @@ const styles = StyleSheet.create({
   error: { color: color.accent, fontFamily: "serif", fontSize: 14, marginTop: space.x4 },
   guide: {
     alignSelf: "center",
-    aspectRatio: 2.8,
-    maxHeight: 300,
-    position: "relative",
+    gap: 10,
+    justifyContent: "center",
+    maxHeight: 330,
     width: "92%",
   },
-  guideCornerBottomLeft: {
-    borderBottomColor: color.white,
-    borderBottomWidth: 3,
-    borderLeftColor: color.white,
-    borderLeftWidth: 3,
-    bottom: 0,
-    height: 28,
-    left: 0,
-    position: "absolute",
-    width: 28,
+  guideBand: {
+    alignItems: "flex-start",
+    borderColor: "rgba(255,253,247,0.85)",
+    borderRadius: 6,
+    borderStyle: "dashed",
+    borderWidth: 2,
+    justifyContent: "flex-end",
+    paddingBottom: 3,
+    paddingHorizontal: 6,
   },
-  guideCornerBottomRight: {
-    borderBottomColor: color.white,
-    borderBottomWidth: 3,
-    borderRightColor: color.white,
-    borderRightWidth: 3,
-    bottom: 0,
-    height: 28,
-    position: "absolute",
-    right: 0,
-    width: 28,
+  guideBandLabel: {
+    color: "rgba(255,253,247,0.92)",
+    fontFamily: "monospace",
+    fontSize: 8,
+    fontWeight: "800",
+    letterSpacing: 1,
   },
-  guideCornerTopLeft: {
-    borderLeftColor: color.white,
-    borderLeftWidth: 3,
-    borderTopColor: color.white,
-    borderTopWidth: 3,
-    height: 28,
-    left: 0,
-    position: "absolute",
-    top: 0,
-    width: 28,
-  },
-  guideCornerTopRight: {
-    borderRightColor: color.white,
-    borderRightWidth: 3,
-    borderTopColor: color.white,
-    borderTopWidth: 3,
-    height: 28,
-    position: "absolute",
-    right: 0,
-    top: 0,
-    width: 28,
-  },
+  guideBandNarrow: { alignSelf: "flex-end", height: 58, width: "24%" },
+  guideBandWide: { height: 74, width: "100%" },
   guideLabel: {
     color: color.white,
     fontFamily: "monospace",

@@ -88,17 +88,13 @@ export interface RecognitionReviewPanelProps {
   /** When set, the concealed/called split is a parser guess (e.g. the natural
       single-row layout) and must be explicitly confirmed before scoring. */
   readonly requireStructureConfirmation?: boolean;
-  readonly structureConfirmed?: boolean;
-  readonly onConfirmStructureChange?: (confirmed: boolean) => void;
   readonly result: RecognitionResult;
 }
 
 export function RecognitionReviewPanel({
   initialReviewCount,
   onChange,
-  onConfirmStructureChange,
   requireStructureConfirmation = false,
-  structureConfirmed = false,
   result,
 }: RecognitionReviewPanelProps) {
   const review = reviewRecognition(result, recognitionReviewThreshold);
@@ -120,7 +116,6 @@ export function RecognitionReviewPanel({
         tile: detection.tile ?? detection.alternatives[0]?.tile ?? null,
       });
     }
-    onConfirmStructureChange?.(false);
     onChange(corrected);
   }
   const [selectedId, setSelectedId] = useState<string | null>(
@@ -213,22 +208,6 @@ export function RecognitionReviewPanel({
               If any concealed tile is actually part of a called set, add that set in the
               calculator.
             </Text>
-          ) : null}
-          {requireStructureConfirmation ? (
-            <Pressable
-              accessibilityRole="checkbox"
-              aria-checked={structureConfirmed}
-              accessibilityState={{ checked: structureConfirmed }}
-              onPress={() => onConfirmStructureChange?.(!structureConfirmed)}
-              style={styles.structureConfirm}
-            >
-              <View style={[styles.checkbox, structureConfirmed && styles.checkboxChecked]}>
-                <Text style={styles.checkmark}>{structureConfirmed ? "✓" : ""}</Text>
-              </View>
-              <Text style={styles.structureConfirmLabel}>
-                This concealed and called split matches the photo
-              </Text>
-            </Pressable>
           ) : null}
         </View>
       ) : null}

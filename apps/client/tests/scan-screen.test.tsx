@@ -41,7 +41,6 @@ describe("ScanScreen", () => {
     });
 
     expect(await screen.findByText("Photo ready for review")).toBeOnTheScreen();
-    expect(screen.getByRole("button", { name: "Read 14 tiles offline" })).toBeOnTheScreen();
   });
 
   it("opens an existing photo and carries it into manual correction", async () => {
@@ -139,24 +138,16 @@ describe("ScanScreen", () => {
     await act(async () => {
       await fireEvent.press(screen.getByRole("button", { name: "Choose an existing photo" }));
     });
-    await act(async () => {
-      await fireEvent.press(screen.getByRole("button", { name: "Read 14 tiles offline" }));
-    });
+    // Reading starts on its own once a photo exists; no extra tap to begin.
     expect(await screen.findByText("15 tiles read · 1 need review")).toBeOnTheScreen();
     expect(screen.getByRole("button", { name: "Resolve 1 tiles to continue" })).toBeDisabled();
     await fireEvent.press(
       screen.getByRole("button", { name: "Use 2 characters for selected tile" }),
     );
     expect(await screen.findByText("Recognition review complete")).toBeOnTheScreen();
-    // The natural (default) layout also requires the concealed/called split to be
-    // explicitly confirmed before the reviewed draft can continue.
-    expect(
-      screen.getByRole("button", { name: "Confirm the hand structure to continue" }),
-    ).toBeDisabled();
-    await fireEvent.press(
-      screen.getByRole("checkbox", { name: /concealed and called split matches the photo/ }),
-    );
-    await fireEvent.press(screen.getByRole("button", { name: "Continue with reviewed tiles" }));
+    // The natural (default) layout still confirms the concealed/called split, but
+    // the confirmation is the continue action itself rather than an extra tap.
+    await fireEvent.press(screen.getByRole("button", { name: "Confirm split & continue" }));
 
     expect(router.push).toHaveBeenCalledWith({
       params: {

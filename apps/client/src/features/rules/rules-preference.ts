@@ -1,4 +1,4 @@
-import { isScoringRulesProfileId, wrc2025Rules } from "@riichimi/rules";
+import { isScoringRulesProfileId, tenhouRules } from "@riichimi/rules";
 import type { ScoringRulesProfileId } from "@riichimi/rules";
 
 import { houseRulesProfileId } from "./house-rules";
@@ -9,5 +9,6 @@ export function parseRulesPreference(value: string | null): RulesPreference {
   if (value === houseRulesProfileId) {
     return houseRulesProfileId;
   }
-  return value !== null && isScoringRulesProfileId(value) ? value : wrc2025Rules.id;
+  // Tenhou is the default a new device starts on; a stored choice always wins.
+  return value !== null && isScoringRulesProfileId(value) ? value : tenhouRules.id;
 }
