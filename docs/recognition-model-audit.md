@@ -65,6 +65,18 @@ This is a **training-side augmentation source only**, held to the same disciplin
 
 The renderer does not change the shipped model or the production acceptance contract below. Any promotion still requires the real 500-hand representative set.
 
+### Initial measurement (2026-07-23)
+
+A first controlled A/B added 296 renders (8 per class, uniform weight) to the 107 real training crops, identical hyperparameters, evaluated on the same 46 source-separated held-out real crops:
+
+| Metric | real only | + renders | Δ |
+| --- | --- | --- | --- |
+| top-1 | 93.48% | 91.30% | −2.17pp |
+| accepted accuracy @0.75 | 100% | 100% | 0 |
+| accepted coverage @0.75 | 73.91% (34/46) | 78.26% (36/46) | +4.35pp |
+
+Every delta is one to two crops on a 46-crop set — inside the noise floor. This does **not** establish lift; raw top-1 slipped while confident coverage rose slightly. Renders were ~53% of physical variants at this ratio. Conclusion: the renderer is not yet a promotion lever; it needs render:real ratio tuning, more realism, and — decisively — a far larger real held-out set before any effect is measurable. The shipped model is unchanged.
+
 ## Alternatives investigated
 
 - `pjura/mahjong_vision` is useful classifier prior art but targets Mahjong Soul screenshots, not physical tiles.

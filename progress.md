@@ -104,6 +104,7 @@ Richii is a polished, local-first scoring and table-session app on mobile-width 
 - Verified end to end: headless run produced correctly labeled, well-exposed, pose/lighting-varied crops across man/pin/sou and red-five classes. Fixed two authoring defects found by the smoke test (front-face material index orphaned by `materials.clear()`; compounding light jitter across samples).
 - Committed the authoritative generator, a self-contained `tile_base.blend` reference scene, `docs/recognition-render-sample.png`, and provenance/discipline docs.
 - Discipline held: renders are training-side only, written to `train`, never `eval`; worth is measured solely by lift on the real held-out crops via `evaluate-physical-crops.py`, never as release evidence. The shipped model and the 500-hand production gate are unchanged. Phase 2 (full-hand layouts with per-tile boxes for a future localizer) is scoped but not built.
+- Ran the first controlled A/B through the full training/eval harness: 296 renders (8/class) added to 107 real train crops, identical settings, evaluated on the 46 held-out real crops. Result was within noise — top-1 93.48%→91.30% (−1 crop), accepted coverage 73.91%→78.26% (+2 crops), accepted accuracy 100% unchanged. No lift established; the treatment model was not promoted. The harness working end to end is the real gain. See the audit's "Initial measurement" note.
 
 ## Visual evidence
 
