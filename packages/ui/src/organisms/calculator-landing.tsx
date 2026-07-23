@@ -29,24 +29,14 @@ export function CalculatorLanding({
 
   return (
     <View style={styles.root}>
-      <View style={styles.masthead}>
-        <View style={styles.brandMark} accessibilityElementsHidden>
-          <Text style={styles.brandGlyph}>立</Text>
-        </View>
-        <View>
-          <Text style={styles.brand}>RICHII</Text>
-          <Text style={styles.brandNote}>RIICHI, READ CLEARLY</Text>
-        </View>
-      </View>
-
       <View style={styles.hero}>
         <SectionLabel>Winning hand calculator</SectionLabel>
         <Text accessibilityRole="header" style={styles.headline}>
-          Read the table.{"\n"}Not a form.
+          Score a winning hand
         </Text>
         <Text style={styles.intro}>
-          Frame the winning hand once. Richii identifies the tiles, asks only what the table cannot
-          show, and explains every point.
+          Scan the tiles or enter them by hand. Richii asks only what the table cannot show and
+          explains every point — locally, on this device.
         </Text>
       </View>
 
@@ -110,59 +100,25 @@ export function CalculatorLanding({
         </View>
         <Text style={styles.sessionArrow}>→</Text>
       </Pressable>
-
-      <View style={styles.trustRow}>
-        <Text style={styles.trustItem}>LOCAL BY DEFAULT</Text>
-        <Text style={styles.trustItem}>UNCERTAINTY SHOWN</Text>
-        <Text style={styles.trustItem}>SCORE EXPLAINED</Text>
-      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  brand: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 17,
-    fontWeight: "900",
-    letterSpacing: 2.4,
-  },
-  brandGlyph: {
-    color: color.white,
-    fontFamily: "serif",
-    fontSize: 21,
-    fontWeight: "700",
-  },
-  brandMark: {
-    alignItems: "center",
-    backgroundColor: color.accent,
-    borderRadius: 4,
-    height: 40,
-    justifyContent: "center",
-    width: 32,
-  },
-  brandNote: {
-    color: color.inkMuted,
-    fontFamily: "monospace",
-    fontSize: 8,
-    letterSpacing: 1.3,
-    marginTop: 2,
-  },
   headline: {
     color: color.ink,
     fontFamily: "serif",
-    fontSize: 54,
-    fontWeight: "700",
-    letterSpacing: -2.1,
-    lineHeight: 57,
-    marginBottom: space.x4,
-    marginTop: space.x3,
+    fontSize: 34,
+    fontWeight: "800",
+    letterSpacing: -1,
+    lineHeight: 38,
+    marginBottom: space.x3,
+    marginTop: space.x2,
     maxWidth: 680,
   },
   hero: {
-    marginBottom: space.x7,
-    marginTop: space.x7,
+    marginBottom: space.x6,
+    marginTop: space.x4,
   },
   intro: {
     color: color.inkMuted,
@@ -209,11 +165,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     marginTop: 2,
-  },
-  masthead: {
-    alignItems: "center",
-    flexDirection: "row",
-    gap: space.x3,
   },
   methodSlot: {
     flex: 1,
@@ -268,21 +219,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     marginTop: 3,
-  },
-  trustItem: {
-    color: color.jade,
-    fontFamily: "monospace",
-    fontSize: 10,
-    fontWeight: "700",
-    letterSpacing: 1,
-  },
-  trustRow: {
-    borderTopColor: color.line,
-    borderTopWidth: 1,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: space.x5,
-    marginTop: space.x6,
-    paddingTop: space.x4,
   },
 });

@@ -66,7 +66,7 @@ test("dogfoods the polished mobile scoring and table flows through WebMCP", asyn
   await installWebMcpHarness(page);
   await page.goto("/");
 
-  await expect(page.getByRole("heading", { name: /Read the table/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Score a winning hand/ })).toBeVisible();
   await expect
     .poll(() => page.evaluate(() => window.richiiWebMcpTest.names()))
     .toEqual(
@@ -286,4 +286,23 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
     fullPage: true,
     path: "docs/checkpoints/2026-07-23-13-v1-recognized-draft-desktop.png",
   });
+});
+
+// The reviewer's path on a desktop with no camera: the bundled sample must resolve
+// as a loadable asset on web and run the real offline recognizer. A regression here
+// previously broke the whole /scan route.
+test("reviews the scan flow on a desktop without a camera", async ({ page }) => {
+  await page.setViewportSize({ height: 900, width: 1280 });
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Scan" }).click();
+  await expect(page).toHaveURL(/\/scan$/);
+
+  await page.getByRole("button", { name: "Try a sample hand" }).click();
+  await expect(page.getByText("Photo ready for review")).toBeVisible();
+  // The bundled sample is staged as rows, so it selects the guided layout.
+  await expect(page.getByRole("radio", { name: "Guided" })).toBeChecked();
+
+  await page.getByRole("button", { name: "Read 14 tiles offline" }).click();
+  await expect(page.getByText(/tiles read · \d+ need review/)).toBeVisible({ timeout: 30_000 });
 });

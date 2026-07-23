@@ -33,6 +33,17 @@ describe("ScanScreen", () => {
     expect(router.replace).toHaveBeenCalledWith("/manual");
   });
 
+  it("loads a bundled sample hand so the flow works without a camera", async () => {
+    await render(<ScanScreen />);
+
+    await act(async () => {
+      await fireEvent.press(screen.getByRole("button", { name: "Try a sample hand" }));
+    });
+
+    expect(await screen.findByText("Photo ready for review")).toBeOnTheScreen();
+    expect(screen.getByRole("button", { name: "Read 14 tiles offline" })).toBeOnTheScreen();
+  });
+
   it("opens an existing photo and carries it into manual correction", async () => {
     jest.mocked(ImagePicker.launchImageLibraryAsync).mockResolvedValueOnce({
       assets: [

@@ -2,6 +2,7 @@ import type { TileId } from "@richii/score-core";
 import { ActionButton, SegmentedControl, color, space } from "@richii/ui";
 import { reviewRecognition } from "@richii/vision";
 import type { CaptureLayout, DetectedTile, RecognitionResult } from "@richii/vision";
+import { Asset } from "expo-asset";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
@@ -9,6 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import sampleHandImage from "../../assets/samples/guided-sample-hand.png";
 import { tileRecognition } from "../infrastructure/tile-recognition";
 import {
   RecognitionReviewPanel,
@@ -47,6 +49,16 @@ const layoutOptions: readonly { label: string; value: CaptureLayout }[] = [
   { label: "Natural", value: "natural" },
   { label: "Guided", value: "guided" },
 ];
+
+// A bundled example hand so the whole scan → recognize → review flow can be
+// exercised without a camera (desktop review, or a first look before capturing).
+// It is staged as separate rows, so it pairs with the guided layout.
+// `Asset.fromModule` is the universal way to get a loadable URL for a bundled
+// asset; `Image.resolveAssetSource` does not exist on react-native-web.
+const sampleHand = {
+  layout: "guided" as const,
+  uri: Asset.fromModule(sampleHandImage).uri,
+};
 
 type RecognitionState =
   | { readonly kind: "idle" }
@@ -121,6 +133,14 @@ export function ScanScreen() {
         "That photo could not be opened. Try another image or enter the tiles manually.",
       );
     }
+  }
+
+  function loadSampleHand() {
+    setImportError(null);
+    setPhotoSource("library");
+    setCaptureLayout(sampleHand.layout);
+    setPhotoUri(sampleHand.uri);
+    setRecognition({ kind: "idle" });
   }
 
   async function recognizePhoto() {
@@ -254,7 +274,12 @@ export function ScanScreen() {
             }}
             variant="paper"
           />
+          <ActionButton label="Try a sample hand" onPress={loadSampleHand} variant="paper" />
         </View>
+        <Text style={styles.permissionSampleNote}>
+          No camera on this device? “Try a sample hand” runs the offline recognizer on a bundled
+          example.
+        </Text>
         {importError === null ? null : (
           <Text accessibilityLiveRegion="polite" style={styles.error}>
             {importError}
@@ -419,6 +444,7 @@ export function ScanScreen() {
                 }}
                 variant="paper"
               />
+              <ActionButton label="Try a sample hand" onPress={loadSampleHand} variant="paper" />
             </View>
             {importError === null ? null : (
               <Text accessibilityLiveRegion="polite" style={styles.cameraError}>
@@ -559,6 +585,14 @@ const styles = StyleSheet.create({
     lineHeight: 28,
     marginBottom: space.x6,
     maxWidth: 660,
+  },
+  permissionSampleNote: {
+    color: color.inkMuted,
+    fontFamily: "serif",
+    fontSize: 13,
+    lineHeight: 19,
+    marginTop: space.x4,
+    maxWidth: 520,
   },
   permissionScreen: {
     backgroundColor: color.canvas,
