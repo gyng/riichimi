@@ -9,6 +9,7 @@ import type { ScoringRules } from "@riichimi/score-core";
 import { HouseRulesEditor } from "./house-rules-editor";
 import { houseRulesProfileId, houseScoringRules } from "./house-rules";
 import { parseRulesPreference } from "./rules-preference";
+import { useLocale } from "../../state/locale-context";
 
 const options = [
   ...scoringRulesProfiles.map((profile) => ({ label: profile.label, value: profile.id })),
@@ -19,14 +20,14 @@ const options = [
  * Describe a profile from its actual options rather than prose, so the summary
  * cannot drift from what the scorer does.
  */
-function describeProfile(profile: ScoringRules): string {
+function describeProfile(profile: ScoringRules, t: (source: string) => string): string {
   return [
-    profile.redFives ? "red fives" : "no red fives",
-    profile.allowOpenTanyao ? "open tanyao" : "closed tanyao only",
-    profile.kiriageMangan ? "round-up mangan" : "no round-up mangan",
-    profile.countedLimit === "yonbaiman" ? "kazoe yakuman" : "counted hands cap at sanbaiman",
-    profile.uraDora ? "ura-dora" : "no ura-dora",
-    profile.yakumanStacking === "single" ? "yakuman never combine" : null,
+    profile.redFives ? t("red fives") : t("no red fives"),
+    profile.allowOpenTanyao ? t("open tanyao") : t("closed tanyao only"),
+    profile.kiriageMangan ? t("round-up mangan") : t("no round-up mangan"),
+    profile.countedLimit === "yonbaiman" ? t("kazoe yakuman") : t("counted hands cap at sanbaiman"),
+    profile.uraDora ? t("ura-dora") : t("no ura-dora"),
+    profile.yakumanStacking === "single" ? t("yakuman never combine") : null,
   ]
     .filter((part): part is string => part !== null)
     .join(" · ");
@@ -37,6 +38,7 @@ export function RulesProfileControl({
 }: {
   readonly lockedProfileId?: string | undefined;
 }) {
+  const { t } = useLocale();
   const rules = useRules();
   const activeId = lockedProfileId ?? rules.activeRules.id;
   const isHouse = activeId === houseRulesProfileId;
@@ -47,15 +49,15 @@ export function RulesProfileControl({
     <View style={styles.root}>
       <View style={styles.copy}>
         <Text style={styles.kicker}>
-          SCORING RULES · {locked ? "PINNED TO TABLE" : "SAVED LOCALLY"}
+          {locked ? t("SCORING RULES · PINNED TO TABLE") : t("SCORING RULES · SAVED LOCALLY")}
         </Text>
         <Text accessibilityRole="header" style={styles.title}>
           {selected.label}
         </Text>
         <Text style={styles.note}>
           {locked
-            ? "This table keeps the profile chosen at East 1, including through undo and reload."
-            : describeProfile(selected)}
+            ? t("This table keeps the profile chosen at East 1, including through undo and reload.")
+            : describeProfile(selected, t)}
         </Text>
       </View>
       {locked ? null : (

@@ -3,34 +3,44 @@ import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 import { useRules } from "../../state/rules-context";
 import type { HouseRules } from "./house-rules";
+import { useLocale } from "../../state/locale-context";
 
-const limitOptions = [
-  { label: "Kazoe yakuman", value: "yonbaiman" },
-  { label: "Cap at sanbaiman", value: "sanbaiman" },
-] as const;
+type Translate = (source: string) => string;
+
+const limitOptionsFor = (t: Translate) =>
+  [
+    { label: t("Kazoe yakuman"), value: "yonbaiman" },
+    { label: t("Cap at sanbaiman"), value: "sanbaiman" },
+  ] as const;
 
 const windFuOptions = [
   { label: "2 fu", value: "2" },
   { label: "4 fu", value: "4" },
 ] as const;
 
-const stackingOptions = [
-  { label: "Add up", value: "additive" },
-  { label: "Never combine", value: "single" },
-] as const;
+const stackingOptionsFor = (t: Translate) =>
+  [
+    { label: t("Add up"), value: "additive" },
+    { label: t("Never combine"), value: "single" },
+  ] as const;
 
-const toggles = [
-  { key: "redFives", label: "Red fives count as dora" },
-  { key: "allowOpenTanyao", label: "Open tanyao (kuitan)" },
-  { key: "kiriageMangan", label: "Round-up mangan" },
-  { key: "uraDora", label: "Ura-dora" },
-] as const satisfies readonly { key: keyof HouseRules; label: string }[];
+const togglesFor = (t: Translate) =>
+  [
+    { key: "redFives", label: t("Red fives count as dora") },
+    { key: "allowOpenTanyao", label: t("Open tanyao (kuitan)") },
+    { key: "kiriageMangan", label: t("Round-up mangan") },
+    { key: "uraDora", label: t("Ura-dora") },
+  ] as const satisfies readonly { key: keyof HouseRules; label: string }[];
 
 /**
  * Lets a table state its own rules. Editing is blocked while a table is pinned
  * to this profile: a running table's scoring must not change under it.
  */
 export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
+  const { t } = useLocale();
+  const limitOptions = limitOptionsFor(t);
+  const stackingOptions = stackingOptionsFor(t);
+  const toggles = togglesFor(t);
   const rules = useRules();
   const house = rules.houseRules;
 
@@ -42,15 +52,19 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
     <View style={styles.root}>
       <Text style={styles.kicker}>HOUSE RULES · THIS DEVICE</Text>
       <Text accessibilityRole="header" style={styles.title}>
-        Rules your table plays by
+        {t("Rules your table plays by")}
       </Text>
       <Text style={styles.note}>
         {locked
-          ? "A table is using these rules. End it before changing them, so a hand already scored cannot be re-valued underneath the table."
-          : "Not a published ruleset. Everything not listed here follows World Riichi Rules 2025."}
+          ? t(
+              "A table is using these rules. End it before changing them, so a hand already scored cannot be re-valued underneath the table.",
+            )
+          : t(
+              "Not a published ruleset. Everything not listed here follows World Riichi Rules 2025.",
+            )}
       </Text>
 
-      <Text style={styles.fieldLabel}>NAME</Text>
+      <Text style={styles.fieldLabel}>{t("NAME")}</Text>
       <TextInput
         accessibilityLabel="House rules name"
         editable={!locked}
@@ -77,7 +91,7 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
         </Pressable>
       ))}
 
-      <Text style={styles.fieldLabel}>13+ HAN WITHOUT A YAKUMAN</Text>
+      <Text style={styles.fieldLabel}>{t("13+ HAN WITHOUT A YAKUMAN")}</Text>
       <SegmentedControl
         accessibilityLabel="Counted limit"
         onChange={(countedLimit) => {
@@ -89,7 +103,7 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
         value={house.countedLimit}
       />
 
-      <Text style={styles.fieldLabel}>COMBINED YAKUMAN</Text>
+      <Text style={styles.fieldLabel}>{t("COMBINED YAKUMAN")}</Text>
       <SegmentedControl
         accessibilityLabel="Combined yakuman"
         onChange={(yakumanStacking) => {
@@ -101,7 +115,7 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
         value={house.yakumanStacking}
       />
 
-      <Text style={styles.fieldLabel}>PAIR THAT IS BOTH WINDS</Text>
+      <Text style={styles.fieldLabel}>{t("PAIR THAT IS BOTH WINDS")}</Text>
       <SegmentedControl
         accessibilityLabel="Double wind pair fu"
         onChange={(value) => {

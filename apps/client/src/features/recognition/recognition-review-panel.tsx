@@ -5,6 +5,7 @@ import { chooseWinningDetection, correctDetection, reviewRecognition } from "@ri
 import type { DetectedTile, RecognitionResult } from "@riichimi/vision";
 import { useEffect, useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useLocale } from "../../state/locale-context";
 
 export const recognitionReviewThreshold = 0.75;
 
@@ -97,6 +98,7 @@ export function RecognitionReviewPanel({
   requireStructureConfirmation = false,
   result,
 }: RecognitionReviewPanelProps) {
+  const { t } = useLocale();
   const review = reviewRecognition(result, recognitionReviewThreshold);
   const detections = orderedDetections(result);
   const meldGroups = meldGroupsOf(result);
@@ -160,7 +162,7 @@ export function RecognitionReviewPanel({
     <View style={styles.root}>
       <View style={styles.headingRow}>
         <View style={styles.headingCopy}>
-          <Text style={styles.kicker}>TILE-BY-TILE REVIEW</Text>
+          <Text style={styles.kicker}>{t("TILE-BY-TILE REVIEW")}</Text>
           <Text accessibilityRole="header" style={styles.title}>
             {review.reviewDetectionIds.length === 0
               ? "Recognition review complete"
@@ -180,7 +182,7 @@ export function RecognitionReviewPanel({
 
       {showStructure ? (
         <View accessibilityLabel="Hand structure" style={styles.structure}>
-          <Text style={styles.structureKicker}>HAND STRUCTURE</Text>
+          <Text style={styles.structureKicker}>{t("HAND STRUCTURE")}</Text>
           <Text accessibilityRole="header" style={styles.structureTitle}>
             {`${concealedCount} concealed ${concealedCount === 1 ? "tile" : "tiles"} · ${meldGroups.length} called ${meldGroups.length === 1 ? "set" : "sets"}`}
           </Text>
@@ -252,7 +254,7 @@ export function RecognitionReviewPanel({
           <Text style={styles.editorKicker}>
             SELECTED · {detectionLabel(selected, detections.indexOf(selected))}
           </Text>
-          <Text style={styles.editorTitle}>Confirm or replace this tile</Text>
+          <Text style={styles.editorTitle}>{t("Confirm or replace this tile")}</Text>
           <View style={styles.suggestions}>
             {uniqueChoices(selected).map((tile) => (
               <Pressable

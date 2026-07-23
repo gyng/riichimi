@@ -8,6 +8,7 @@ import { bodyEdges } from "../components/screen-insets";
 
 import type { ScoreHistoryEntry } from "../features/score-history/score-history";
 import { useScoreHistory } from "../state/score-history-context";
+import { useLocale } from "../state/locale-context";
 
 function points(value: number): string {
   return new Intl.NumberFormat("en-US").format(value);
@@ -35,6 +36,7 @@ function calculatedTime(value: string): string {
 }
 
 export function ScoreHistoryScreen() {
+  const { t } = useLocale();
   const history = useScoreHistory();
   const [confirmClear, setConfirmClear] = useState(false);
 
@@ -51,13 +53,13 @@ export function ScoreHistoryScreen() {
     <SafeAreaView edges={bodyEdges} style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.topBar}>
-          <Text style={styles.rules}>SAVED LOCALLY · LAST 20</Text>
+          <Text style={styles.rules}>{t("SAVED LOCALLY \u00b7 LAST 20")}</Text>
         </View>
 
         <View style={styles.header}>
-          <Text style={styles.kicker}>SCORE FOLIO</Text>
+          <Text style={styles.kicker}>{t("SCORE FOLIO")}</Text>
           <Text accessibilityRole="header" style={styles.title}>
-            Every answer leaves a trail.
+            {t("Every answer leaves a trail.")}
           </Text>
           <Text style={styles.intro}>
             Revisit the hand, context, yaku, and exact transfer behind recent standalone scores.
@@ -70,7 +72,7 @@ export function ScoreHistoryScreen() {
             <Text style={styles.emptyNumber}>零</Text>
             <View style={styles.emptyCopy}>
               <Text accessibilityRole="header" style={styles.emptyTitle}>
-                No saved scores yet
+                {t("No saved scores yet")}
               </Text>
               <Text style={styles.muted}>
                 A successful standalone calculation appears here automatically. Table results stay
@@ -78,7 +80,7 @@ export function ScoreHistoryScreen() {
               </Text>
               <View style={styles.emptyAction}>
                 <ActionButton
-                  label="Score a hand"
+                  label={t("Score a hand")}
                   onPress={() => router.push("/manual")}
                   variant="vermilion"
                 />
@@ -131,11 +133,11 @@ export function ScoreHistoryScreen() {
 
                   <View style={styles.resultStrip}>
                     <View>
-                      <Text style={styles.resultKicker}>PAYMENT</Text>
+                      <Text style={styles.resultKicker}>{t("PAYMENT")}</Text>
                       <Text style={styles.payment}>{paymentLabel(entry)}</Text>
                     </View>
                     <View style={styles.totalBlock}>
-                      <Text style={styles.resultKicker}>TOTAL GAIN</Text>
+                      <Text style={styles.resultKicker}>{t("TOTAL GAIN")}</Text>
                       <Text style={styles.total}>{points(entry.result.totalGain)}</Text>
                     </View>
                   </View>
@@ -159,7 +161,7 @@ export function ScoreHistoryScreen() {
                       onPress={() => history.remove(entry.id)}
                       style={styles.removeButton}
                     >
-                      <Text style={styles.removeText}>Remove</Text>
+                      <Text style={styles.removeText}>{t("Remove")}</Text>
                     </Pressable>
                   </View>
                 </View>
@@ -177,16 +179,16 @@ export function ScoreHistoryScreen() {
         {history.entries.length === 0 ? null : confirmClear ? (
           <View style={styles.clearConfirm}>
             <Text style={styles.clearTitle}>
-              Erase every saved standalone score on this device?
+              {t("Erase every saved standalone score on this device?")}
             </Text>
             <View style={styles.clearActions}>
               <ActionButton
-                label="Keep scores"
+                label={t("Keep scores")}
                 onPress={() => setConfirmClear(false)}
                 variant="paper"
               />
               <ActionButton
-                label="Erase score folio"
+                label={t("Erase score folio")}
                 onPress={() => {
                   history.clear();
                   setConfirmClear(false);
@@ -201,7 +203,7 @@ export function ScoreHistoryScreen() {
             onPress={() => setConfirmClear(true)}
             style={styles.clearLink}
           >
-            <Text style={styles.clearLinkText}>Clear score folio</Text>
+            <Text style={styles.clearLinkText}>{t("Clear score folio")}</Text>
           </Pressable>
         )}
       </ScrollView>

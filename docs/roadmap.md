@@ -38,12 +38,14 @@ Status vocabulary: **Shipped** · **In progress** · **Planned** · **Blocked**.
   a named local profile beside the published ones. Stored rules are parsed as
   untrusted input, and editing is blocked while a table is pinned to them so a
   hand already scored cannot be re-valued underneath the table.
-- **Internationalisation.** User-facing copy moved behind a translation
-  boundary, with English, Japanese, and Simplified Chinese. A per-device
-  language control switches and persists the choice, and CJK rendering is
-  verified on a phone viewport: no horizontal overflow and no clipped text.
-  Scoring terminology (han, fu, yakuman) stays in its usual form in every
-  locale, because translating it would make an audit harder to check.
+- **Internationalisation.** English, Japanese, Simplified Chinese, and
+  Traditional Chinese across every screen. Translations are keyed by their
+  English source, so an unwired string falls back to readable English rather
+  than a missing-key placeholder. Chinese resolves by script and region, and the
+  interface follows the device language unless a choice is stored. Scoring
+  terminology keeps the form players use — ツモ, 立直, 嶺上開花 and the Chinese
+  equivalents — because translating it literally would make an audit harder to
+  check.
 - **Win announcer.** `announceWin` produces structured announcement data, a
   narrow `SpeechPort` carries the device capability (Web Speech today, native
   reporting unavailable), and an opt-in per-device toggle speaks the result
@@ -51,17 +53,13 @@ Status vocabulary: **Shipped** · **In progress** · **Planned** · **Blocked**.
 
 ## Planned
 
-### 1. Translate the remaining screens
+### 1. Review the translations with players
 
-The boundary, four locales, and the language control ship, and the app shell,
-home, setup, scan, and calculator are translated. The table and folio screens
-are still English — the language control says so rather than implying complete
-coverage.
-
-Two things follow the last screen being translated: device-language detection
-should replace the current explicit-choice-only default (until then a Japanese
-phone would get a half-translated interface), and the copy in `messages.ts`
-should be reviewed by someone who plays in those languages.
+Every screen is translated and the interface follows the device language, but
+the copy has not been read by someone who plays in Japanese or Chinese. Machine
+translation gets terminology right more often than register: a phrase can be
+correct and still read oddly at a table. Worth a pass from a player in each
+language.
 
 ## Recognizer follow-ups
 

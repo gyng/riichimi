@@ -40,7 +40,16 @@ import {
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { bodyEdges } from "../../components/screen-insets";
@@ -201,14 +210,16 @@ function contextFromState(input: {
 function Section({
   children,
   description,
+  style,
   title,
 }: {
   readonly children: ReactNode;
   readonly description?: string | undefined;
+  readonly style?: StyleProp<ViewStyle>;
   readonly title: string;
 }) {
   return (
-    <View style={styles.section}>
+    <View style={[styles.section, style]}>
       <Text accessibilityRole="header" style={styles.sectionTitle}>
         {title}
       </Text>
@@ -228,6 +239,10 @@ export function ManualCalculator({
   readonly referencePhoto?: string | undefined;
 }) {
   const { t } = useLocale();
+  // A landscape phone or a desktop has width to spare and little height, so the
+  // hand and the picker sit side by side instead of stacking.
+  const { width: viewportWidth } = useWindowDimensions();
+  const wideLayout = viewportWidth >= 700;
   const methodOptions = methodOptionsFor(t);
   const windOptions = windOptionsFor(t);
   const riichiOptions = riichiOptionsFor(t);
@@ -859,158 +874,164 @@ export function ManualCalculator({
           </View>
         )}
 
-        <Section
-          description={`${concealedTiles.length}/${concealedCapacity} · ${t("tap a tile to mark the winner")}`}
-          title={t("Hand")}
-        >
-          <View accessibilityLabel="Concealed hand" style={styles.handRow}>
-            {concealedTiles.length === 0 ? (
-              <View style={styles.emptyHand}>
-                <Text style={styles.empty}>{t("Add tiles below.")}</Text>
-                <ActionButton
-                  label={t("Try a scored example")}
-                  onPress={loadExample}
-                  variant="paper"
-                />
-              </View>
-            ) : (
-              concealedTiles.map((tile, index) => (
-                <View key={`${tile}-${index}`} style={styles.tileWithRemove}>
-                  <MahjongTile
-                    onPress={() => {
-                      setWinningIndex(index);
-                      resetResult();
-                    }}
-                    selected={winningIndex === index}
-                    tile={tile}
+        <View style={wideLayout ? styles.columns : undefined}>
+          <Section
+            style={wideLayout ? styles.column : undefined}
+            description={`${concealedTiles.length}/${concealedCapacity} · ${t("tap a tile to mark the winner")}`}
+            title={t("Hand")}
+          >
+            <View accessibilityLabel="Concealed hand" style={styles.handRow}>
+              {concealedTiles.length === 0 ? (
+                <View style={styles.emptyHand}>
+                  <Text style={styles.empty}>{t("Add tiles below.")}</Text>
+                  <ActionButton
+                    label={t("Try a scored example")}
+                    onPress={loadExample}
+                    variant="paper"
                   />
-                  <Pressable
-                    accessibilityLabel={`Remove ${tileAccessibleName(tile)} from hand`}
-                    accessibilityRole="button"
-                    onPress={() => removeConcealed(index)}
-                    style={styles.removeButton}
-                  >
-                    <Text style={styles.removeText}>×</Text>
-                  </Pressable>
                 </View>
-              ))
-            )}
-          </View>
-
-          {melds.length === 0 ? null : (
-            <View style={styles.meldList}>
-              {melds.map((meld, index) => (
-                <View key={`${meld.kind}-${index}`} style={styles.meldCard}>
-                  <View style={styles.meldHeader}>
-                    <Text style={styles.meldLabel}>
-                      {meld.open ? "OPEN" : "CLOSED"} {meld.kind.toUpperCase()}
-                    </Text>
+              ) : (
+                concealedTiles.map((tile, index) => (
+                  <View key={`${tile}-${index}`} style={styles.tileWithRemove}>
+                    <MahjongTile
+                      onPress={() => {
+                        setWinningIndex(index);
+                        resetResult();
+                      }}
+                      selected={winningIndex === index}
+                      tile={tile}
+                    />
                     <Pressable
-                      accessibilityLabel={`Remove ${meld.kind}`}
+                      accessibilityLabel={`Remove ${tileAccessibleName(tile)} from hand`}
                       accessibilityRole="button"
-                      onPress={() => removeMeld(index)}
+                      onPress={() => removeConcealed(index)}
+                      style={styles.removeButton}
                     >
-                      <Text style={styles.removeLink}>{t("Remove")}</Text>
+                      <Text style={styles.removeText}>×</Text>
                     </Pressable>
                   </View>
-                  <View style={styles.meldTiles}>
-                    {meldTiles(meld).map((tile, tileIndex) => (
-                      <MahjongTile key={`${tile}-${tileIndex}`} tile={tile} />
-                    ))}
-                  </View>
-                </View>
-              ))}
+                ))
+              )}
             </View>
-          )}
-          <Text style={styles.fieldLabel}>{t("DORA INDICATORS")}</Text>
-          <View style={styles.indicatorRow}>
-            {doraIndicators.length === 0 ? (
-              <Text style={styles.empty}>{t("Add at least one dora indicator.")}</Text>
-            ) : null}
-            {doraIndicators.map((tile, index) => (
-              <Pressable
-                accessibilityLabel={`Remove dora indicator ${tileAccessibleName(tile)}`}
-                accessibilityRole="button"
-                key={`${tile}-${index}`}
-                onPress={() => {
-                  setDoraIndicators((tiles) => tiles.filter((_, tileIndex) => tileIndex !== index));
-                  resetResult();
-                }}
-              >
-                <MahjongTile tile={tile} />
-              </Pressable>
-            ))}
-          </View>
-          {riichi === "none" ? null : (
-            <>
-              <Text style={styles.fieldLabel}>{t("URA-DORA INDICATORS")}</Text>
-              <View style={styles.indicatorRow}>
-                {uraDoraIndicators.length === 0 ? (
-                  <Text style={styles.empty}>{t("Optional")}</Text>
-                ) : null}
-                {uraDoraIndicators.map((tile, index) => (
-                  <Pressable
-                    accessibilityLabel={`Remove ura-dora indicator ${tileAccessibleName(tile)}`}
-                    accessibilityRole="button"
-                    key={`${tile}-${index}`}
-                    onPress={() => {
-                      setUraDoraIndicators((tiles) =>
-                        tiles.filter((_, tileIndex) => tileIndex !== index),
-                      );
-                      resetResult();
-                    }}
-                  >
-                    <MahjongTile tile={tile} />
-                  </Pressable>
+
+            {melds.length === 0 ? null : (
+              <View style={styles.meldList}>
+                {melds.map((meld, index) => (
+                  <View key={`${meld.kind}-${index}`} style={styles.meldCard}>
+                    <View style={styles.meldHeader}>
+                      <Text style={styles.meldLabel}>
+                        {meld.open ? "OPEN" : "CLOSED"} {meld.kind.toUpperCase()}
+                      </Text>
+                      <Pressable
+                        accessibilityLabel={`Remove ${meld.kind}`}
+                        accessibilityRole="button"
+                        onPress={() => removeMeld(index)}
+                      >
+                        <Text style={styles.removeLink}>{t("Remove")}</Text>
+                      </Pressable>
+                    </View>
+                    <View style={styles.meldTiles}>
+                      {meldTiles(meld).map((tile, tileIndex) => (
+                        <MahjongTile key={`${tile}-${tileIndex}`} tile={tile} />
+                      ))}
+                    </View>
+                  </View>
                 ))}
               </View>
-            </>
-          )}
-        </Section>
-
-        <Section
-          description={
-            pickerTarget === "chi"
-              ? t("For chi, choose the lowest tile in the sequence.")
-              : undefined
-          }
-          title={t("Tiles")}
-        >
-          <View accessibilityLabel="Tile destination" style={styles.chipRow}>
-            {pickerOptions.map((option) => {
-              const selected = pickerTarget === option.value;
-              const closedOnlyDisabled = option.value === "ura" && riichi === "none";
-              return (
+            )}
+            <Text style={styles.fieldLabel}>{t("DORA INDICATORS")}</Text>
+            <View style={styles.indicatorRow}>
+              {doraIndicators.length === 0 ? (
+                <Text style={styles.empty}>{t("Add at least one dora indicator.")}</Text>
+              ) : null}
+              {doraIndicators.map((tile, index) => (
                 <Pressable
-                  accessibilityRole="radio"
-                  accessibilityState={{ checked: selected, disabled: closedOnlyDisabled }}
-                  disabled={closedOnlyDisabled}
-                  key={option.value}
-                  onPress={() => setPickerTarget(option.value)}
-                  style={[
-                    styles.chip,
-                    selected && styles.selectedChip,
-                    closedOnlyDisabled && styles.disabledChip,
-                  ]}
+                  accessibilityLabel={`Remove dora indicator ${tileAccessibleName(tile)}`}
+                  accessibilityRole="button"
+                  key={`${tile}-${index}`}
+                  onPress={() => {
+                    setDoraIndicators((tiles) =>
+                      tiles.filter((_, tileIndex) => tileIndex !== index),
+                    );
+                    resetResult();
+                  }}
                 >
-                  <Text style={[styles.chipText, selected && styles.selectedChipText]}>
-                    {option.label}
-                  </Text>
+                  <MahjongTile tile={tile} />
                 </Pressable>
-              );
-            })}
-          </View>
-          <TilePicker
-            isDisabled={isPickerTileDisabled}
-            onSelect={addTile}
-            showRedFives={activeRules.redFives}
-          />
-          {inventory.issues.length === 0 ? null : (
-            <Text accessibilityLiveRegion="polite" style={styles.warning}>
-              {t("A tile cannot appear more than four times.")}
-            </Text>
-          )}
-        </Section>
+              ))}
+            </View>
+            {riichi === "none" ? null : (
+              <>
+                <Text style={styles.fieldLabel}>{t("URA-DORA INDICATORS")}</Text>
+                <View style={styles.indicatorRow}>
+                  {uraDoraIndicators.length === 0 ? (
+                    <Text style={styles.empty}>{t("Optional")}</Text>
+                  ) : null}
+                  {uraDoraIndicators.map((tile, index) => (
+                    <Pressable
+                      accessibilityLabel={`Remove ura-dora indicator ${tileAccessibleName(tile)}`}
+                      accessibilityRole="button"
+                      key={`${tile}-${index}`}
+                      onPress={() => {
+                        setUraDoraIndicators((tiles) =>
+                          tiles.filter((_, tileIndex) => tileIndex !== index),
+                        );
+                        resetResult();
+                      }}
+                    >
+                      <MahjongTile tile={tile} />
+                    </Pressable>
+                  ))}
+                </View>
+              </>
+            )}
+          </Section>
+
+          <Section
+            description={
+              pickerTarget === "chi"
+                ? t("For chi, choose the lowest tile in the sequence.")
+                : undefined
+            }
+            style={wideLayout ? styles.column : undefined}
+            title={t("Tiles")}
+          >
+            <View accessibilityLabel="Tile destination" style={styles.chipRow}>
+              {pickerOptions.map((option) => {
+                const selected = pickerTarget === option.value;
+                const closedOnlyDisabled = option.value === "ura" && riichi === "none";
+                return (
+                  <Pressable
+                    accessibilityRole="radio"
+                    accessibilityState={{ checked: selected, disabled: closedOnlyDisabled }}
+                    disabled={closedOnlyDisabled}
+                    key={option.value}
+                    onPress={() => setPickerTarget(option.value)}
+                    style={[
+                      styles.chip,
+                      selected && styles.selectedChip,
+                      closedOnlyDisabled && styles.disabledChip,
+                    ]}
+                  >
+                    <Text style={[styles.chipText, selected && styles.selectedChipText]}>
+                      {option.label}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+            <TilePicker
+              isDisabled={isPickerTileDisabled}
+              onSelect={addTile}
+              showRedFives={activeRules.redFives}
+            />
+            {inventory.issues.length === 0 ? null : (
+              <Text accessibilityLiveRegion="polite" style={styles.warning}>
+                {t("A tile cannot appear more than four times.")}
+              </Text>
+            )}
+          </Section>
+        </View>
 
         <Section title={t("Context")}>
           <View style={styles.contextGrid}>
@@ -1269,6 +1290,8 @@ export function ManualCalculator({
 }
 
 const styles = StyleSheet.create({
+  column: { flexBasis: 0, flexGrow: 1, minWidth: 320 },
+  columns: { alignItems: "flex-start", flexDirection: "row", gap: space.x3 },
   disclosure: {
     alignItems: "center",
     borderColor: color.line,

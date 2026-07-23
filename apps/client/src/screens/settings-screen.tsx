@@ -7,6 +7,7 @@ import { LanguageControl } from "../features/i18n/language-control";
 import { RulesProfileControl } from "../features/rules/rules-profile-control";
 import { TileLabelControl } from "../features/rules/tile-label-control";
 import { useSession } from "../state/session-context";
+import { useLocale } from "../state/locale-context";
 
 /**
  * Setup lives here rather than on the play surfaces. Rules and language are
@@ -14,13 +15,14 @@ import { useSession } from "../state/session-context";
  * costs scrolling during a hand.
  */
 export function SettingsScreen() {
+  const { t } = useLocale();
   const session = useSession();
 
   return (
     <SafeAreaView edges={bodyEdges} style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
         <Text accessibilityRole="header" style={styles.title}>
-          Setup
+          {t("Setup")}
         </Text>
         <View style={styles.section}>
           <RulesProfileControl lockedProfileId={session.state?.table.rulesProfileId} />

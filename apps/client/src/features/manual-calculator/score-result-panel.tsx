@@ -1,6 +1,7 @@
 import type { ScoreHandResult } from "@riichimi/score-core";
 import { color, space } from "@riichimi/ui";
 import { StyleSheet, Text, View } from "react-native";
+import { useLocale } from "../../state/locale-context";
 
 export interface ScoreResultPanelProps {
   readonly result: ScoreHandResult;
@@ -11,11 +12,12 @@ function points(value: number): string {
 }
 
 export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
+  const { t } = useLocale();
   if (result.kind === "invalid") {
     return (
       <View accessibilityLiveRegion="polite" style={[styles.panel, styles.errorPanel]}>
         <Text accessibilityRole="header" style={styles.errorTitle}>
-          Check the hand
+          {t("Check the hand")}
         </Text>
         {result.issues.map((issue) => (
           <Text key={`${issue.code}-${issue.message}`} style={styles.errorItem}>
@@ -50,7 +52,7 @@ export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
 
   return (
     <View accessibilityLiveRegion="polite" style={[styles.panel, styles.successPanel]}>
-      <Text style={styles.kicker}>MAXIMUM-VALUE INTERPRETATION</Text>
+      <Text style={styles.kicker}>{t("MAXIMUM-VALUE INTERPRETATION")}</Text>
       <Text accessibilityRole="header" style={styles.scoreTitle}>
         {title}
       </Text>
@@ -73,7 +75,7 @@ export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
       {result.dora.total > 0 ? (
         <View style={styles.lineItem}>
           <View style={styles.lineCopy}>
-            <Text style={styles.lineTitle}>Dora</Text>
+            <Text style={styles.lineTitle}>{t("Dora")}</Text>
             <Text style={styles.lineNote}>
               Visible {result.dora.dora} · Ura {result.dora.uraDora} · Red {result.dora.redDora}
             </Text>
@@ -85,7 +87,7 @@ export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
       {result.fu !== null ? (
         <>
           <View style={styles.divider} />
-          <Text style={styles.sectionTitle}>Fu audit</Text>
+          <Text style={styles.sectionTitle}>{t("Fu audit")}</Text>
           {result.fu.items.map((item, index) => (
             <View key={`${item.reason}-${index}`} style={styles.fuRow}>
               <Text style={styles.lineNote}>{item.reason}</Text>

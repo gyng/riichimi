@@ -2,13 +2,15 @@ import { color, space } from "@riichimi/ui";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { useTileLabels } from "../../state/tile-display-context";
+import { useLocale } from "../../state/locale-context";
 
 export function TileLabelControl() {
+  const { t } = useLocale();
   const { setShowRankLabels, showRankLabels } = useTileLabels();
 
   return (
     <View style={styles.root}>
-      <Text style={styles.kicker}>TILES · THIS DEVICE</Text>
+      <Text style={styles.kicker}>{t("TILES \u00b7 THIS DEVICE")}</Text>
       <Pressable
         accessibilityRole="checkbox"
         accessibilityState={{ checked: showRankLabels }}
@@ -19,10 +21,12 @@ export function TileLabelControl() {
         <View style={[styles.checkbox, showRankLabels && styles.checked]}>
           <Text style={styles.checkmark}>{showRankLabels ? "✓" : ""}</Text>
         </View>
-        <Text style={styles.label}>Show the rank in the tile corner</Text>
+        <Text style={styles.label}>{t("Show the rank in the tile corner")}</Text>
       </Pressable>
       <Text style={styles.note}>
-        Adds a small 5p or 3s to each tile face. Useful while you are still reading tiles by sight.
+        {t(
+          "Adds a small 5p or 3s to each tile face. Useful while you are still reading tiles by sight.",
+        )}
       </Text>
     </View>
   );

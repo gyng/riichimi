@@ -33,6 +33,7 @@ import { bodyEdges } from "../components/screen-insets";
 
 import { createRoundCommandMetadata, useSession } from "../state/session-context";
 import { RulesProfileControl } from "../features/rules/rules-profile-control";
+import { useLocale } from "../state/locale-context";
 
 const windNames: Record<Wind, string> = {
   east: "East",
@@ -51,6 +52,7 @@ function toggle(current: readonly number[], index: number): readonly number[] {
 }
 
 export function SessionScreen() {
+  const { t } = useLocale();
   const session = useSession();
   const [names, setNames] = useState(["Player 1", "Player 2", "Player 3", "Player 4"]);
   const [tenpai, setTenpai] = useState<readonly number[]>([]);
@@ -80,9 +82,9 @@ export function SessionScreen() {
     return (
       <SafeAreaView edges={bodyEdges} style={styles.safeArea}>
         <ScrollView contentContainerStyle={styles.content}>
-          <Text style={styles.kicker}>LOCAL TABLE SESSION</Text>
+          <Text style={styles.kicker}>{t("LOCAL TABLE SESSION")}</Text>
           <Text accessibilityRole="header" style={styles.title}>
-            Let the round remember itself.
+            {t("Let the round remember itself.")}
           </Text>
           <Text style={styles.intro}>
             Start at 25,000 points. Riichimi carries the dealer, winds, honba, riichi pool, score
@@ -91,7 +93,7 @@ export function SessionScreen() {
           <RulesProfileControl />
           <View style={styles.panel}>
             <Text accessibilityRole="header" style={styles.panelTitle}>
-              Four players
+              {t("Four players")}
             </Text>
             <View style={styles.nameGrid}>
               {names.map((name, index) => (
@@ -118,7 +120,7 @@ export function SessionScreen() {
             <View style={styles.primaryAction}>
               <ActionButton
                 disabled={names.some((name) => name.trim().length === 0)}
-                label="Start East 1"
+                label={t("Start East 1")}
                 onPress={() => session.createTable(names)}
                 variant="vermilion"
               />
@@ -338,14 +340,14 @@ export function SessionScreen() {
         <View style={styles.actionPanel}>
           <View style={styles.actionCopy}>
             <Text accessibilityRole="header" style={styles.panelTitle}>
-              Record the next result
+              {t("Record the next result")}
             </Text>
             <Text style={styles.muted}>
-              The calculator inherits this round’s context and applies every transfer.
+              {t("The calculator inherits this round\u2019s context and applies every transfer.")}
             </Text>
           </View>
           <ActionButton
-            label="Score a winning hand"
+            label={t("Score a winning hand")}
             onPress={() => router.push("/manual")}
             variant="vermilion"
           />
@@ -353,7 +355,7 @@ export function SessionScreen() {
 
         <View style={styles.panel}>
           <Text accessibilityRole="header" style={styles.panelTitle}>
-            Exhaustive draw
+            {t("Exhaustive draw")}
           </Text>
           <Text style={styles.muted}>
             Select tenpai players. The 3,000-point noten payment and dealer continuation are
@@ -380,7 +382,7 @@ export function SessionScreen() {
           </View>
           <View style={styles.primaryAction}>
             <ActionButton
-              label="Record draw & advance"
+              label={t("Record draw & advance")}
               onPress={() => {
                 session.recordDraw({
                   ...createRoundCommandMetadata(),
@@ -396,11 +398,11 @@ export function SessionScreen() {
         <View style={styles.panel}>
           <View style={styles.historyHeader}>
             <Text accessibilityRole="header" style={styles.panelTitle}>
-              Round history
+              {t("Round history")}
             </Text>
             <ActionButton
               disabled={session.state.undoStack.length === 0}
-              label="Undo last change"
+              label={t("Undo last change")}
               onPress={() => {
                 session.undo();
                 setEditStatus(null);
@@ -414,7 +416,7 @@ export function SessionScreen() {
             </Text>
           )}
           {table.history.length === 0 ? (
-            <Text style={styles.muted}>No completed rounds yet.</Text>
+            <Text style={styles.muted}>{t("No completed rounds yet.")}</Text>
           ) : (
             table.history.toReversed().map((record) => {
               const editable = editableIds.has(record.id);
@@ -463,7 +465,7 @@ export function SessionScreen() {
                       </Text>
                       {record.kind === "draw" ? (
                         <>
-                          <Text style={styles.label}>TENPAI PLAYERS</Text>
+                          <Text style={styles.label}>{t("TENPAI PLAYERS")}</Text>
                           <View style={styles.tenpaiRow}>
                             {table.players.map((player, index) => {
                               const selected = draftTenpai.includes(index);
@@ -488,7 +490,7 @@ export function SessionScreen() {
                               );
                             })}
                           </View>
-                          <Text style={styles.label}>RIICHI DECLARED THIS HAND</Text>
+                          <Text style={styles.label}>{t("RIICHI DECLARED THIS HAND")}</Text>
                           <View style={styles.tenpaiRow}>
                             {table.players.map((player, index) => {
                               const selected = draftRiichi.includes(index);
@@ -515,28 +517,32 @@ export function SessionScreen() {
                           </View>
                           <View style={styles.editorActions}>
                             <ActionButton
-                              label="Apply"
+                              label={t("Apply")}
                               onPress={() => previewOutcome(record)}
                               variant="vermilion"
                             />
                             <ActionButton
-                              label="Apply riichi change"
+                              label={t("Apply riichi change")}
                               onPress={() => previewRiichi(record)}
                               variant="paper"
                             />
                             <ActionButton
-                              label="Delete this round"
+                              label={t("Delete this round")}
                               onPress={() =>
                                 runPreview({ kind: "delete-round", roundId: record.id })
                               }
                               variant="paper"
                             />
-                            <ActionButton label="Cancel" onPress={closeEditor} variant="paper" />
+                            <ActionButton
+                              label={t("Cancel")}
+                              onPress={closeEditor}
+                              variant="paper"
+                            />
                           </View>
                         </>
                       ) : (
                         <>
-                          <Text style={styles.label}>WINNER</Text>
+                          <Text style={styles.label}>{t("WINNER")}</Text>
                           <View style={styles.tenpaiRow}>
                             {table.players.map((player, index) => {
                               const selected = draftWinner === index;
@@ -561,7 +567,7 @@ export function SessionScreen() {
                           </View>
                           {record.payments.kind === "ron" ? (
                             <>
-                              <Text style={styles.label}>DISCARDER</Text>
+                              <Text style={styles.label}>{t("DISCARDER")}</Text>
                               <View style={styles.tenpaiRow}>
                                 {table.players.map((player, index) => {
                                   if (index === draftWinner) {
@@ -593,7 +599,7 @@ export function SessionScreen() {
                             </>
                           ) : (
                             <Text style={styles.muted}>
-                              Tsumo — the win is self-drawn, so there is no discarder.
+                              {t("Tsumo \u2014 the win is self-drawn, so there is no discarder.")}
                             </Text>
                           )}
                           <Text style={styles.muted}>
@@ -607,12 +613,12 @@ export function SessionScreen() {
                           </Text>
                           <View style={styles.editorActions}>
                             <ActionButton
-                              label="Apply"
+                              label={t("Apply")}
                               onPress={() => previewOutcome(record)}
                               variant="vermilion"
                             />
                             <ActionButton
-                              label="Re-score this hand"
+                              label={t("Re-score this hand")}
                               onPress={() =>
                                 router.push({
                                   params: { editRound: record.id },
@@ -622,13 +628,17 @@ export function SessionScreen() {
                               variant="paper"
                             />
                             <ActionButton
-                              label="Delete this round"
+                              label={t("Delete this round")}
                               onPress={() =>
                                 runPreview({ kind: "delete-round", roundId: record.id })
                               }
                               variant="paper"
                             />
-                            <ActionButton label="Cancel" onPress={closeEditor} variant="paper" />
+                            <ActionButton
+                              label={t("Cancel")}
+                              onPress={closeEditor}
+                              variant="paper"
+                            />
                           </View>
                         </>
                       )}
@@ -639,8 +649,8 @@ export function SessionScreen() {
                       ) : null}
                       {pendingReview !== null ? (
                         <View accessibilityLiveRegion="polite" style={styles.editConfirm}>
-                          <Text style={styles.endTitle}>Confirm this correction</Text>
-                          <Text style={styles.confirmSubhead}>Final score changes</Text>
+                          <Text style={styles.endTitle}>{t("Confirm this correction")}</Text>
+                          <Text style={styles.confirmSubhead}>{t("Final score changes")}</Text>
                           {pendingReview.scoreChanges.map((change, index) => (
                             <Text key={index} style={styles.confirmScoreLine}>
                               {playerName(index)}: {signedPoints(change)}
@@ -648,7 +658,9 @@ export function SessionScreen() {
                           ))}
                           {laterChanges.length > 0 ? (
                             <>
-                              <Text style={styles.confirmSubhead}>Later rounds that shift</Text>
+                              <Text style={styles.confirmSubhead}>
+                                {t("Later rounds that shift")}
+                              </Text>
                               {laterChanges.map((change) => (
                                 <Text key={change.roundId} style={styles.muted}>
                                   {describeChangedRound(change)}
@@ -663,12 +675,12 @@ export function SessionScreen() {
                           ))}
                           <View style={styles.endActions}>
                             <ActionButton
-                              label="Apply correction"
+                              label={t("Apply correction")}
                               onPress={applyCorrection}
                               variant="vermilion"
                             />
                             <ActionButton
-                              label="Keep as recorded"
+                              label={t("Keep as recorded")}
                               onPress={keepAsRecorded}
                               variant="paper"
                             />
@@ -682,14 +694,16 @@ export function SessionScreen() {
             })
           )}
           {legacyHistory ? (
-            <Text style={styles.muted}>Rounds recorded before this update can't be edited.</Text>
+            <Text style={styles.muted}>
+              {t("Rounds recorded before this update can't be edited.")}
+            </Text>
           ) : null}
         </View>
 
         <View style={styles.panel}>
           <View style={styles.historyHeader}>
             <Text accessibilityRole="header" style={styles.panelTitle}>
-              Game summary
+              {t("Game summary")}
             </Text>
             <ActionButton
               label={showSummary ? "Hide summary" : "Show summary"}
@@ -702,7 +716,7 @@ export function SessionScreen() {
           </View>
           {summary === null ? (
             <Text style={styles.muted}>
-              Final standings, a win and draw tally, and a copyable round log.
+              {t("Final standings, a win and draw tally, and a copyable round log.")}
             </Text>
           ) : (
             <>
@@ -730,7 +744,7 @@ export function SessionScreen() {
                   />
                 </View>
               ) : (
-                <Text style={styles.muted}>Select the text above to copy it.</Text>
+                <Text style={styles.muted}>{t("Select the text above to copy it.")}</Text>
               )}
             </>
           )}
@@ -743,15 +757,15 @@ export function SessionScreen() {
         )}
         {confirmEnd ? (
           <View style={styles.endConfirm}>
-            <Text style={styles.endTitle}>End this table and erase its local history?</Text>
+            <Text style={styles.endTitle}>{t("End this table and erase its local history?")}</Text>
             <View style={styles.endActions}>
               <ActionButton
-                label="Keep table"
+                label={t("Keep table")}
                 onPress={() => setConfirmEnd(false)}
                 variant="paper"
               />
               <ActionButton
-                label="End & erase"
+                label={t("End & erase")}
                 onPress={session.clearSession}
                 variant="vermilion"
               />
@@ -763,7 +777,7 @@ export function SessionScreen() {
             onPress={() => setConfirmEnd(true)}
             style={styles.endLink}
           >
-            <Text style={styles.endLinkText}>End this table</Text>
+            <Text style={styles.endLinkText}>{t("End this table")}</Text>
           </Pressable>
         )}
       </ScrollView>

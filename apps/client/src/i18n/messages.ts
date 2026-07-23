@@ -72,7 +72,7 @@ export const messages: Record<Locale, Messages> = {
     language: {
       kicker: "LANGUAGE · THIS DEVICE",
       label: "Interface language",
-      note: "Scoring terms (han, fu, yakuman) stay in their usual form in every language. Translation is still in progress, so some screens remain in English.",
+      note: "Scoring terms (han, fu, yakuman) keep their usual form in every language.",
     },
     localeName: "English",
     nav: {
@@ -110,7 +110,7 @@ export const messages: Record<Locale, Messages> = {
     language: {
       kicker: "表示言語 · この端末",
       label: "表示言語",
-      note: "翻・符・役満などの用語は、どの言語でも通常の表記のままにしています。翻訳は作業中のため、一部の画面は英語のままです。",
+      note: "翻・符・役満などの用語は、どの言語でも通常の表記のままにしています。",
     },
     localeName: "日本語",
     nav: {
@@ -148,7 +148,7 @@ export const messages: Record<Locale, Messages> = {
     language: {
       kicker: "界面语言 · 本机",
       label: "界面语言",
-      note: "番、符、役满等术语在各语言下均保持惯用写法。翻译仍在进行中，部分页面暂为英文。",
+      note: "番、符、役满等术语在各语言下均保持惯用写法。",
     },
     localeName: "简体中文",
     nav: {
@@ -187,7 +187,7 @@ export const messages: Record<Locale, Messages> = {
     language: {
       kicker: "介面語言 · 本機",
       label: "介面語言",
-      note: "番、符、役滿等術語在各語言下均保持慣用寫法。翻譯仍在進行中，部分頁面暫為英文。",
+      note: "番、符、役滿等術語在各語言下均保持慣用寫法。",
     },
     localeName: "繁體中文",
     nav: {
