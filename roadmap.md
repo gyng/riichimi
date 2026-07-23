@@ -34,7 +34,11 @@ Deliver a polished mobile/web riichi companion that reaches an auditable result 
    - Tune the shipped blur, glare, crop, and perspective diagnostics on representative phones and lighting conditions while retaining retry, cancel, and manual escape paths.
    - Measure correction burden and refine keyboard/screen-reader traversal on representative devices.
    - Expand from the deliberately narrow closed-hand guide to calls and kans only after each layout has independent evidence.
-3. **Device QA**
+3. **Recognition robustness (safe-failure first)**
+   - **Evaluation harness** — per-class accuracy, calibration (ECE / reliability), per-tile-set slices, unknown recall, and correction-burden reporting over the real held-out crops, so any recognizer change is measurable rather than lost in the 46-crop noise floor. Prerequisite for everything below.
+   - **Test-time augmentation + confidence calibration** — average predictions over small crops/flips and apply temperature scaling, then measure accepted-coverage/accepted-accuracy/ECE on the real crops. Targets the axis that matters most for a review-gated scanner: catching its own errors (fewer confident-wrong, better unknown-flagging), not just raw top-1.
+   - A learned localizer (to handle touching tiles and textured tables — the biggest practical brittleness) is gated on boxed real data; the synthetic hand renderer already scaffolds per-tile boxes for it.
+4. **Device QA**
    - Verify camera, storage recovery, rotation, large text, keyboard, screen readers, reduced motion, and offline restart on representative iOS, Android, and web devices.
    - Benchmark model initialization, preprocessing, inference, memory, thermals, and interaction responsiveness in custom native builds.
 
