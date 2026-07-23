@@ -12,6 +12,7 @@ function session() {
   return createSession({
     id: "game-1",
     playerNames: ["Aki", "Bo", "Chi", "Dai"],
+    rulesProfileId: "wrc-2025",
     startedAt: "2026-07-23T00:00:00.000Z",
   });
 }
@@ -26,6 +27,7 @@ describe("table session", () => {
       handNumber: 1,
       honba: 0,
       roundWind: "east",
+      rulesProfileId: "wrc-2025",
     });
   });
 
@@ -135,9 +137,14 @@ describe("table session", () => {
   });
 
   it("rejects malformed table commands", () => {
-    expect(() => createSession({ id: "x", playerNames: ["A"], startedAt: "now" })).toThrow(
-      RangeError,
-    );
+    expect(() =>
+      createSession({
+        id: "x",
+        playerNames: ["A"],
+        rulesProfileId: "wrc-2025",
+        startedAt: "now",
+      }),
+    ).toThrow(RangeError);
     expect(() => declareRiichi(session(), 7)).toThrow(RangeError);
     expect(() =>
       applyWin(session(), {
@@ -163,7 +170,20 @@ describe("table session", () => {
       }),
     ).toThrow("cannot have a discarding player");
     expect(() =>
-      createSession({ id: "x", playerNames: ["A", "B", "", "D"], startedAt: "now" }),
+      createSession({
+        id: "x",
+        playerNames: ["A", "B", "", "D"],
+        rulesProfileId: "wrc-2025",
+        startedAt: "now",
+      }),
     ).toThrow("needs a name");
+    expect(() =>
+      createSession({
+        id: "x",
+        playerNames: ["A", "B", "C", "D"],
+        rulesProfileId: " ",
+        startedAt: "now",
+      }),
+    ).toThrow("rules profile");
   });
 });

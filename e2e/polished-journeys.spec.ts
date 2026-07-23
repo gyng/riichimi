@@ -73,6 +73,7 @@ test("dogfoods the polished mobile scoring and table flows through WebMCP", asyn
       expect.arrayContaining([
         "richii.app.get_state",
         "richii.app.navigate",
+        "richii.rules.select",
         "richii.session.start",
       ]),
     );
@@ -118,11 +119,41 @@ test("dogfoods the polished mobile scoring and table flows through WebMCP", asyn
     path: "docs/checkpoints/2026-07-23-05-score-history-mobile.png",
   });
 
-  await executeTool(page, "richii.session.start", {
+  const selectedRules = await executeTool(page, "richii.rules.select", {
+    profileId: "wrc-2025-red-five-table",
+  });
+  expect(selectedRules).toMatchObject({
+    structuredContent: { rules: { id: "wrc-2025-red-five-table", redFives: true } },
+  });
+  await expect
+    .poll(async () => {
+      const state = await executeTool(page, "richii.app.get_state");
+      if (typeof state !== "object" || state === null || !("structuredContent" in state)) {
+        return undefined;
+      }
+      const structuredContent = state.structuredContent;
+      if (
+        typeof structuredContent !== "object" ||
+        structuredContent === null ||
+        !("rules" in structuredContent)
+      ) {
+        return undefined;
+      }
+      const stateRules = structuredContent.rules;
+      return typeof stateRules === "object" && stateRules !== null && "id" in stateRules
+        ? stateRules.id
+        : undefined;
+    })
+    .toBe("wrc-2025-red-five-table");
+  const startedTable = await executeTool(page, "richii.session.start", {
     playerNames: ["Aiko", "Beni", "Chika", "Daichi"],
+  });
+  expect(startedTable).toMatchObject({
+    structuredContent: { rulesProfileId: "wrc-2025-red-five-table" },
   });
   await expect(page).toHaveURL(/\/session$/);
   await expect(page.getByRole("heading", { name: "East 1" })).toBeVisible();
+  await expect(page.getByText("WRC 2025 · RED-FIVE TABLE · PINNED")).toBeVisible();
   await executeTool(page, "richii.session.declare_riichi", { playerIndex: 1 });
   await expect(page.getByText("24,000", { exact: true }).filter({ visible: true })).toBeVisible();
   await executeTool(page, "richii.session.record_draw", { tenpaiPlayerIndices: [0, 2] });
@@ -172,8 +203,14 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   const faviconResponse = await page.request.get("/favicon.ico");
   expect(faviconResponse.ok()).toBe(true);
 
+  await page.getByRole("radio", { name: "WRC + red fives" }).click();
+  await expect(page.getByRole("radio", { name: "WRC + red fives" })).toBeChecked();
+  await page.reload();
+  await expect(page.getByRole("radio", { name: "WRC + red fives" })).toBeChecked();
+
   await page.getByRole("button", { name: "Enter tiles manually" }).click();
   await expect(page).toHaveURL(/\/manual$/);
+  await expect(page.getByRole("button", { name: "red five characters" })).toBeVisible();
   await page.getByRole("button", { name: "Try a scored example" }).click();
   await page.getByRole("button", { name: "Calculate maximum score" }).click();
   const desktopScore = page.getByText("2 han · 20 fu").filter({ visible: true });
@@ -200,46 +237,35 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   await expect(page.getByText("Photo ready for review")).toBeVisible();
   await page.screenshot({ path: "docs/checkpoints/2026-07-23-06-gallery-review-desktop.png" });
   await page.getByRole("button", { name: "Read 14 tiles offline" }).click();
-  await expect(page.getByText(/15 tiles read · \d+ need review/)).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByText("15 tiles read · 2 need review")).toBeVisible({ timeout: 30_000 });
+  await expect(
+    page.getByRole("button", { name: /^Hand tile 1, 1 characters, \d+ percent confidence$/ }),
+  ).toBeVisible();
   await page.screenshot({
-    path: "docs/checkpoints/2026-07-23-08-offline-recognition-review-desktop.png",
+    path: "docs/checkpoints/2026-07-23-11-v1-recognition-review-desktop.png",
   });
   const reviewedTiles = [
-    ["Hand tile 1", "1 characters"],
     ["Hand tile 2", "2 characters"],
-    ["Hand tile 3", "3 characters"],
-    ["Hand tile 4", "4 characters"],
     ["Hand tile 5", "5 characters"],
-    ["Hand tile 6", "6 characters"],
-    ["Hand tile 7", "7 circles"],
-    ["Hand tile 8", "8 circles"],
-    ["Hand tile 9", "9 circles"],
-    ["Hand tile 10", "2 bamboo"],
-    ["Hand tile 11", "3 bamboo"],
-    ["Winning tile 12", "4 bamboo"],
-    ["Hand tile 13", "5 circles"],
-    ["Hand tile 14", "5 circles"],
-    ["Dora indicator", "9 bamboo"],
   ] as const;
   for (const [position, tile] of reviewedTiles) {
     await page.getByRole("button", { name: new RegExp(`^${position},`) }).click();
-    await page.getByRole("button", { name: "Choose from all tiles" }).click();
-    await page.getByRole("button", { exact: true, name: tile }).click();
+    await page.getByRole("button", { name: `Use ${tile} for selected tile` }).click();
   }
   const completedReview = page.getByRole("heading", { name: "Recognition review complete" });
   await expect(completedReview).toBeVisible();
   await completedReview.scrollIntoViewIfNeeded();
   await page.screenshot({
-    path: "docs/checkpoints/2026-07-23-10-recognition-review-complete-desktop.png",
+    path: "docs/checkpoints/2026-07-23-12-v1-recognition-complete-desktop.png",
   });
   await page.getByRole("button", { name: "Continue with reviewed tiles" }).click();
   await expect(page).toHaveURL(/\/manual\?.*recognizedTiles=/);
   await expect(page.getByLabel("Captured hand reference")).toBeVisible();
   await expect(page.getByText("OFFLINE RECOGNITION · REVIEW REQUIRED")).toBeVisible();
-  await expect(page.getByText(/15 uncertain reads were confirmed or corrected/)).toBeVisible();
+  await expect(page.getByText(/2 uncertain reads were confirmed or corrected/)).toBeVisible();
   await expect(page.getByText(/14 of 14 concealed tiles/)).toBeVisible();
   await page.screenshot({
     fullPage: true,
-    path: "docs/checkpoints/2026-07-23-09-recognized-draft-desktop.png",
+    path: "docs/checkpoints/2026-07-23-13-v1-recognized-draft-desktop.png",
   });
 });

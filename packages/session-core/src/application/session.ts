@@ -66,6 +66,7 @@ function appendRecord(table: TableState, record: RoundRecord): readonly RoundRec
 export function createSession(input: {
   readonly id: string;
   readonly playerNames: readonly string[];
+  readonly rulesProfileId: string;
   readonly startedAt: string;
 }): SessionState {
   if (input.playerNames.length !== 4) {
@@ -73,6 +74,9 @@ export function createSession(input: {
   }
   if (input.playerNames.some((name) => name.trim().length === 0)) {
     throw new Error("Every player needs a name.");
+  }
+  if (input.rulesProfileId.trim().length === 0) {
+    throw new Error("A table needs a scoring rules profile.");
   }
 
   return {
@@ -90,6 +94,7 @@ export function createSession(input: {
       })),
       riichiSticks: 0,
       roundWind: "east",
+      rulesProfileId: input.rulesProfileId,
       startedAt: input.startedAt,
     },
     undoStack: [],

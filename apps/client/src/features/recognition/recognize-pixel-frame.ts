@@ -10,7 +10,7 @@ import {
   tileTensorWidth,
 } from "./tile-tensor";
 
-export const guidedRecognitionModelVersion = "guided-crop-v0-078ca926";
+export const guidedRecognitionModelVersion = "guided-crop-v1-0fc698d5";
 
 export class GuidedRecognitionError extends Error {
   constructor(message: string) {

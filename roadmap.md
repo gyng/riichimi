@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: **2026-07-23T08:49:46+08:00**
+Last updated: **2026-07-23T09:20:42+08:00**
 
 ## Product objective
 
@@ -17,6 +17,8 @@ Deliver a polished mobile/web riichi companion that reaches an auditable result 
 - A rights-traceable guided recognition beta with deterministic 15-face localization, a bundled ONNX classifier, web/native adapters, confidence and physical-count review, and photograph-backed draft correction.
 - A reproducible vision pipeline with pinned sources, crop partitions, augmentation, ONNX parity, artifact hashing, licensing, synthetic validation, and source-separated physical smoke evaluation.
 - A tile-by-tile recognition review desk with visible confidence, top-three confirmation, a physically bounded full picker, atomic winner reassignment, and a hard gate against scoring unresolved reads.
+- A V1 physical classifier promoted through source-separated comparison: 93.48% top-1 and 78.26% accepted coverage on 46 physical crops, with 100% accuracy among accepted reads and all errors retained for review.
+- Persistent WRC 2025 and explicit red-five-table profiles, with rules-aware tile entry, score attribution, legacy migration, and immutable per-table pinning.
 - Typed WebMCP tools with visible, recoverable mutations.
 - A deduplicated local score folio with audit details, removal, clear confirmation, and reload-safe direct links.
 - Unit, component, browser, coverage, formatting, lint, type, export, and screenshot checkpoints.
@@ -24,7 +26,7 @@ Deliver a polished mobile/web riichi companion that reaches an auditable result 
 ## P0 — production recognition and release confidence
 
 1. **Representative recognition evidence**
-   - Grow the rights-cleared, source-separated corpus to at least 500 complete guided hands spanning tile sets, phones, lighting, glare, perspective, red fives, and hard negatives.
+   - Grow the rights-cleared, source-separated corpus beyond the current 107 training / 46 held-out physical crops to at least 500 complete guided hands spanning tile sets, phones, lighting, glare, perspective, red fives, and hard negatives.
    - Gate promotion on per-class accuracy, exact-hand accuracy, calibration, correction burden, and unknown-tile recall rather than the current smoke set.
    - Add immutable candidate manifests and safe model rollback after a candidate passes.
 2. **Recognition review refinement**

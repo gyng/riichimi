@@ -45,6 +45,18 @@ The first working WebGL build put the inference runtime in the shared entry, gro
 
 The mandatory tile-level review desk brings the shared entry to 1,282,288 bytes and the full export to 3,901,944 bytes. That is an 8,253-byte (`0.6%`) review-UX increase and a 26,259-byte (`2.1%`) total increase over the 1,256,029-byte pre-recognition entry. The browser dogfood round grew from 4.8 to about 7 seconds because it now performs 15 position selections, 15 full-picker corrections, and a locked-to-reviewed handoff; this is valuable exercised behavior rather than test-harness overhead, and remains below the 15-second component/test feedback budget.
 
+### V1 recognition and rules-profile optimization check
+
+Recorded on 2026-07-23 after physical-corpus expansion, V1 promotion, rules profiles, and reduced-correction dogfood:
+
+- Warm static export: 5.45 seconds, 952,584 KB peak RSS.
+- Shared entry: 1,289,101 bytes, up 6,813 bytes (`0.5%`) from the review-desk checkpoint.
+- Full export: 3,912,162 bytes, up 10,218 bytes (`0.3%`); the active V1 model remains 1,866,535 bytes.
+- Two Playwright journeys: 5.4 seconds, including real WebGL inference and two low-confidence confirmations instead of 15 full-picker corrections.
+- Full check: 107 framework-free tests and 35 Expo component tests; formatting stays near 0.5 seconds and coverage tests near 0.5 seconds.
+
+The rules UI and persistence changes remain far below the 10% bundle trigger. V1 replaces—not adds to—the exported model payload, while the retained V0 rollback artifact is not imported and does not ship in the static export. No further application/build/test optimization is warranted at this checkpoint.
+
 ## Feedback-loop budgets
 
 - Formatting should remain below 2 seconds locally.

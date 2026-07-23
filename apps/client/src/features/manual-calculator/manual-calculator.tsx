@@ -18,7 +18,7 @@ import type {
   WinContext,
   WinMethod,
 } from "@richii/score-core";
-import { wrc2025Rules } from "@richii/rules";
+import { scoringRulesProfile } from "@richii/rules";
 import {
   ActionButton,
   CounterControl,
@@ -36,8 +36,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { createRoundCommandMetadata, useSession } from "../../state/session-context";
 import { useScoreHistory } from "../../state/score-history-context";
+import { useRules } from "../../state/rules-context";
 import { useWebMcpTools, webMcpResult } from "../../infrastructure/webmcp";
 import type { RecognitionDraft } from "../recognition/recognition-draft";
+import { RulesProfileControl } from "../rules/rules-profile-control";
 import { ScoreResultPanel } from "./score-result-panel";
 import { TilePicker } from "./tile-picker";
 
@@ -179,6 +181,7 @@ export function ManualCalculator({
 }) {
   const session = useSession();
   const scoreHistory = useScoreHistory();
+  const rulesPreference = useRules();
   const [concealedTiles, setConcealedTiles] = useState<readonly TileId[]>(
     recognitionDraft?.concealedTiles ?? [],
   );
@@ -220,6 +223,9 @@ export function ManualCalculator({
     seatWind,
   );
   const activeTable = session.state?.table ?? null;
+  const activeRules = scoringRulesProfile(
+    activeTable?.rulesProfileId ?? rulesPreference.activeRules.id,
+  );
   const playerOptions =
     activeTable?.players.map((player, index) => ({ label: player.name, value: String(index) })) ??
     [];
@@ -410,7 +416,7 @@ export function ManualCalculator({
       }),
       doraIndicators,
       melds,
-      rules: wrc2025Rules,
+      rules: activeRules,
       uraDoraIndicators,
       winningTile,
     };
@@ -521,8 +527,7 @@ export function ManualCalculator({
       title: "Inspect manual hand",
     },
     {
-      description:
-        "Validate and score the hand currently visible in Richii's manual calculator under WRC 2025 rules, updating the on-screen audit panel.",
+      description: `Validate and score the hand currently visible in Richii's manual calculator under ${activeRules.label}, updating the on-screen audit panel.`,
       execute: () => {
         const scoreResult = calculate();
         return webMcpResult(
@@ -558,7 +563,7 @@ export function ManualCalculator({
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <View style={styles.topBar}>
           <ActionButton label="Back" onPress={() => router.back()} variant="paper" />
-          <Text style={styles.rulesLabel}>WORLD RIICHI RULES · 2025</Text>
+          <Text style={styles.rulesLabel}>{activeRules.label.toUpperCase()}</Text>
         </View>
         <Text style={styles.kicker}>MANUAL SCORE LEDGER</Text>
         <Text accessibilityRole="header" style={styles.title}>
@@ -600,6 +605,8 @@ export function ManualCalculator({
             </Text>
           </View>
         )}
+
+        <RulesProfileControl lockedProfileId={activeTable?.rulesProfileId} />
 
         {activeTable === null ? null : (
           <View style={styles.sessionBanner}>
@@ -730,7 +737,11 @@ export function ManualCalculator({
               );
             })}
           </View>
-          <TilePicker isDisabled={isPickerTileDisabled} onSelect={addTile} />
+          <TilePicker
+            isDisabled={isPickerTileDisabled}
+            onSelect={addTile}
+            showRedFives={activeRules.redFives}
+          />
           {inventory.issues.length === 0 ? null : (
             <Text accessibilityLiveRegion="polite" style={styles.warning}>
               A tile cannot appear more than four times.
@@ -896,7 +907,9 @@ export function ManualCalculator({
 
         <View style={styles.calculateRow}>
           <ActionButton label="Calculate maximum score" onPress={calculate} variant="vermilion" />
-          <Text style={styles.calculateNote}>WRC 2025 · no red fives · kiriage mangan</Text>
+          <Text style={styles.calculateNote}>
+            {activeRules.redFives ? "RED FIVES ENABLED" : "NO RED FIVES"} · KIRIAGE MANGAN
+          </Text>
         </View>
         {result === null ? null : <ScoreResultPanel result={result} />}
         {activeTable === null && result?.kind === "success" ? (

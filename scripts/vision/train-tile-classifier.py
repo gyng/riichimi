@@ -270,6 +270,20 @@ def generate_real(crops_path: Path, per_crop: int, seed: int) -> tuple[np.ndarra
     return images[order], labels[order]
 
 
+def physical_training_sources(crops_path: Path) -> list[dict[str, str]]:
+    prepared = json.loads((crops_path / "prepared.json").read_text(encoding="utf-8"))["crops"]
+    sources = {
+        (item["pageUrl"], item["sourceSha256"]): {
+            "license": item["license"],
+            "pageUrl": item["pageUrl"],
+            "sha256": item["sourceSha256"],
+        }
+        for item in prepared
+        if item["partition"] == "train"
+    }
+    return [sources[key] for key in sorted(sources)]
+
+
 class TileDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
     def __init__(self, images: np.ndarray, labels: np.ndarray):
         self.images = images
@@ -422,10 +436,18 @@ def main() -> None:
         raise RuntimeError(f"ONNX parity delta {maximum_export_delta} exceeded 1e-4")
 
     digest = hashlib.sha256(args.output.read_bytes()).hexdigest()
+    training_sources = (
+        physical_training_sources(args.real_crops) if args.real_crops is not None else []
+    )
+    artifact_license = (
+        "CC-BY-SA-4.0"
+        if any(source["license"] == "CC-BY-SA-4.0" for source in training_sources)
+        else "CC-BY-SA-3.0"
+    )
     report = {
         "artifact": {
             "bytes": args.output.stat().st_size,
-            "license": "CC-BY-SA-3.0",
+            "license": artifact_license,
             "path": str(args.output),
             "provenance": "scripts/vision/physical-photo-crops.json",
             "sha256": digest,
@@ -449,13 +471,7 @@ def main() -> None:
             "assetCommit": "26e127ba2117f45cdce5ea0225748cc0cfad3169",
             "assetLicense": "CC0-1.0",
             "assetUrl": "https://github.com/FluffyStuff/riichi-mahjong-tiles",
-            "physicalTraining": [
-                {
-                    "license": "CC-BY-SA-3.0",
-                    "pageUrl": "https://commons.wikimedia.org/wiki/File:Majiang2.JPG",
-                    "sha256": "c8ed144d7cc5c56ed7ac58f9375114cf3beb3877674f74fd1ddbb0e330b63c69",
-                }
-            ],
+            "physicalTraining": training_sources,
         },
         "training": {
             "epochs": args.epochs,

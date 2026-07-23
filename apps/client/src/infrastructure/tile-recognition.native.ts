@@ -4,7 +4,7 @@ import { decode } from "jpeg-js";
 import * as ort from "onnxruntime-react-native";
 import { Image } from "react-native";
 
-import modelAsset from "../../assets/models/tile-classifier-v0.onnx";
+import modelAsset from "../../assets/models/tile-classifier-v1.onnx";
 import type { PixelFrame } from "../features/recognition/guided-layout";
 import { recognizePixelFrame } from "../features/recognition/recognize-pixel-frame";
 

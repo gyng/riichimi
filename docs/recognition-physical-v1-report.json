@@ -1,0 +1,1024 @@
+{
+  "confidenceThreshold": 0.75,
+  "metrics": {
+    "acceptedAccuracy": 1.0,
+    "acceptedCoverage": 0.782608695652174,
+    "evaluatedCrops": 46,
+    "top1Accuracy": 0.9347826086956522
+  },
+  "samples": [
+    {
+      "accepted": true,
+      "confidence": 0.9632490873336792,
+      "correct": true,
+      "expected": "1p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "1p",
+      "top3": [
+        {
+          "confidence": 0.9632490873336792,
+          "label": "1p"
+        },
+        {
+          "confidence": 0.005688353441655636,
+          "label": "south"
+        },
+        {
+          "confidence": 0.002637110883370042,
+          "label": "west"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.945701539516449,
+      "correct": true,
+      "expected": "2p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "2p",
+      "top3": [
+        {
+          "confidence": 0.945701539516449,
+          "label": "2p"
+        },
+        {
+          "confidence": 0.007259943522512913,
+          "label": "4m"
+        },
+        {
+          "confidence": 0.0050218491815030575,
+          "label": "4p"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9774098992347717,
+      "correct": true,
+      "expected": "3p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "3p",
+      "top3": [
+        {
+          "confidence": 0.9774098992347717,
+          "label": "3p"
+        },
+        {
+          "confidence": 0.001568330219015479,
+          "label": "0p"
+        },
+        {
+          "confidence": 0.0015016264514997602,
+          "label": "8s"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9628640413284302,
+      "correct": true,
+      "expected": "4p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "4p",
+      "top3": [
+        {
+          "confidence": 0.9628640413284302,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.004458130802959204,
+          "label": "6s"
+        },
+        {
+          "confidence": 0.0027460558339953423,
+          "label": "0p"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.8928938508033752,
+      "correct": true,
+      "expected": "5p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "5p",
+      "top3": [
+        {
+          "confidence": 0.8928938508033752,
+          "label": "5p"
+        },
+        {
+          "confidence": 0.01940816268324852,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.0073904781602323055,
+          "label": "4m"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9592481851577759,
+      "correct": true,
+      "expected": "6p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "6p",
+      "top3": [
+        {
+          "confidence": 0.9592481851577759,
+          "label": "6p"
+        },
+        {
+          "confidence": 0.00613420968875289,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.005217351019382477,
+          "label": "4p"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.8159664273262024,
+      "correct": true,
+      "expected": "7p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "7p",
+      "top3": [
+        {
+          "confidence": 0.8159664273262024,
+          "label": "7p"
+        },
+        {
+          "confidence": 0.04603620991110802,
+          "label": "6p"
+        },
+        {
+          "confidence": 0.01598581299185753,
+          "label": "4p"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.8658277988433838,
+      "correct": true,
+      "expected": "8p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "8p",
+      "top3": [
+        {
+          "confidence": 0.8658277988433838,
+          "label": "8p"
+        },
+        {
+          "confidence": 0.014010622166097164,
+          "label": "5p"
+        },
+        {
+          "confidence": 0.008813835680484772,
+          "label": "1p"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9298092722892761,
+      "correct": true,
+      "expected": "9p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "9p",
+      "top3": [
+        {
+          "confidence": 0.9298092722892761,
+          "label": "9p"
+        },
+        {
+          "confidence": 0.00946004781872034,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.005896498914808035,
+          "label": "1m"
+        }
+      ]
+    },
+    {
+      "accepted": false,
+      "confidence": 0.12041114270687103,
+      "correct": false,
+      "expected": "1s",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "green",
+      "top3": [
+        {
+          "confidence": 0.12041114270687103,
+          "label": "green"
+        },
+        {
+          "confidence": 0.09958867728710175,
+          "label": "1s"
+        },
+        {
+          "confidence": 0.0653245821595192,
+          "label": "0m"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9776566624641418,
+      "correct": true,
+      "expected": "2s",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "2s",
+      "top3": [
+        {
+          "confidence": 0.9776566624641418,
+          "label": "2s"
+        },
+        {
+          "confidence": 0.001625288394279778,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.0015021967701613903,
+          "label": "5m"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9702918529510498,
+      "correct": true,
+      "expected": "3s",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "3s",
+      "top3": [
+        {
+          "confidence": 0.9702918529510498,
+          "label": "3s"
+        },
+        {
+          "confidence": 0.0027551937382668257,
+          "label": "7m"
+        },
+        {
+          "confidence": 0.00237848493270576,
+          "label": "5s"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9571549892425537,
+      "correct": true,
+      "expected": "4s",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "4s",
+      "top3": [
+        {
+          "confidence": 0.9571549892425537,
+          "label": "4s"
+        },
+        {
+          "confidence": 0.004184482153505087,
+          "label": "2s"
+        },
+        {
+          "confidence": 0.0029421509243547916,
+          "label": "3s"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9774848818778992,
+      "correct": true,
+      "expected": "5s",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "5s",
+      "top3": [
+        {
+          "confidence": 0.9774848818778992,
+          "label": "5s"
+        },
+        {
+          "confidence": 0.002598418388515711,
+          "label": "8s"
+        },
+        {
+          "confidence": 0.0016506323590874672,
+          "label": "4s"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9538119435310364,
+      "correct": true,
+      "expected": "6s",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "6s",
+      "top3": [
+        {
+          "confidence": 0.9538119435310364,
+          "label": "6s"
+        },
+        {
+          "confidence": 0.005969054996967316,
+          "label": "4s"
+        },
+        {
+          "confidence": 0.003391684964299202,
+          "label": "7s"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.890321671962738,
+      "correct": true,
+      "expected": "7s",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "7s",
+      "top3": [
+        {
+          "confidence": 0.890321671962738,
+          "label": "7s"
+        },
+        {
+          "confidence": 0.013071656227111816,
+          "label": "6s"
+        },
+        {
+          "confidence": 0.006882763002067804,
+          "label": "8p"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9501575231552124,
+      "correct": true,
+      "expected": "8s",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "8s",
+      "top3": [
+        {
+          "confidence": 0.9501575231552124,
+          "label": "8s"
+        },
+        {
+          "confidence": 0.004217660985887051,
+          "label": "5s"
+        },
+        {
+          "confidence": 0.003494483884423971,
+          "label": "1p"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.8331648707389832,
+      "correct": true,
+      "expected": "9s",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "9s",
+      "top3": [
+        {
+          "confidence": 0.8331648707389832,
+          "label": "9s"
+        },
+        {
+          "confidence": 0.02320847474038601,
+          "label": "8p"
+        },
+        {
+          "confidence": 0.018755804747343063,
+          "label": "6s"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9406589269638062,
+      "correct": true,
+      "expected": "1m",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "1m",
+      "top3": [
+        {
+          "confidence": 0.9406589269638062,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.042557328939437866,
+          "label": "4m"
+        },
+        {
+          "confidence": 0.003769173286855221,
+          "label": "6m"
+        }
+      ]
+    },
+    {
+      "accepted": false,
+      "confidence": 0.3629258871078491,
+      "correct": true,
+      "expected": "2m",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "2m",
+      "top3": [
+        {
+          "confidence": 0.3629258871078491,
+          "label": "2m"
+        },
+        {
+          "confidence": 0.17164410650730133,
+          "label": "3m"
+        },
+        {
+          "confidence": 0.08303830027580261,
+          "label": "8m"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.8453222513198853,
+      "correct": true,
+      "expected": "3m",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "3m",
+      "top3": [
+        {
+          "confidence": 0.8453222513198853,
+          "label": "3m"
+        },
+        {
+          "confidence": 0.022244304418563843,
+          "label": "2m"
+        },
+        {
+          "confidence": 0.01672959327697754,
+          "label": "8m"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9283301830291748,
+      "correct": true,
+      "expected": "4m",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "4m",
+      "top3": [
+        {
+          "confidence": 0.9283301830291748,
+          "label": "4m"
+        },
+        {
+          "confidence": 0.013372376561164856,
+          "label": "9m"
+        },
+        {
+          "confidence": 0.004359996411949396,
+          "label": "2p"
+        }
+      ]
+    },
+    {
+      "accepted": false,
+      "confidence": 0.43593674898147583,
+      "correct": true,
+      "expected": "5m",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "5m",
+      "top3": [
+        {
+          "confidence": 0.43593674898147583,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.08459556847810745,
+          "label": "9m"
+        },
+        {
+          "confidence": 0.06625695526599884,
+          "label": "3m"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.915324330329895,
+      "correct": true,
+      "expected": "6m",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "6m",
+      "top3": [
+        {
+          "confidence": 0.915324330329895,
+          "label": "6m"
+        },
+        {
+          "confidence": 0.02219405584037304,
+          "label": "8m"
+        },
+        {
+          "confidence": 0.010672403499484062,
+          "label": "unknown"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9042959213256836,
+      "correct": true,
+      "expected": "7m",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "7m",
+      "top3": [
+        {
+          "confidence": 0.9042959213256836,
+          "label": "7m"
+        },
+        {
+          "confidence": 0.017159638926386833,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.016172733157873154,
+          "label": "6m"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9840442538261414,
+      "correct": true,
+      "expected": "8m",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "8m",
+      "top3": [
+        {
+          "confidence": 0.9840442538261414,
+          "label": "8m"
+        },
+        {
+          "confidence": 0.0036353725008666515,
+          "label": "7p"
+        },
+        {
+          "confidence": 0.0019641262479126453,
+          "label": "1p"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.8752711415290833,
+      "correct": true,
+      "expected": "9m",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "9m",
+      "top3": [
+        {
+          "confidence": 0.8752711415290833,
+          "label": "9m"
+        },
+        {
+          "confidence": 0.019531067460775375,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.007156778126955032,
+          "label": "unknown"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9857429265975952,
+      "correct": true,
+      "expected": "east",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "east",
+      "top3": [
+        {
+          "confidence": 0.9857429265975952,
+          "label": "east"
+        },
+        {
+          "confidence": 0.0026128131430596113,
+          "label": "7m"
+        },
+        {
+          "confidence": 0.0011178753338754177,
+          "label": "green"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.8775185346603394,
+      "correct": true,
+      "expected": "south",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "south",
+      "top3": [
+        {
+          "confidence": 0.8775185346603394,
+          "label": "south"
+        },
+        {
+          "confidence": 0.018275292590260506,
+          "label": "7m"
+        },
+        {
+          "confidence": 0.016873085871338844,
+          "label": "green"
+        }
+      ]
+    },
+    {
+      "accepted": false,
+      "confidence": 0.20355908572673798,
+      "correct": false,
+      "expected": "west",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "1m",
+      "top3": [
+        {
+          "confidence": 0.20355908572673798,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.1519044041633606,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.15123973786830902,
+          "label": "west"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.842704176902771,
+      "correct": true,
+      "expected": "north",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "north",
+      "top3": [
+        {
+          "confidence": 0.842704176902771,
+          "label": "north"
+        },
+        {
+          "confidence": 0.02589973621070385,
+          "label": "east"
+        },
+        {
+          "confidence": 0.025615697726607323,
+          "label": "3s"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9943194389343262,
+      "correct": true,
+      "expected": "white",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "white",
+      "top3": [
+        {
+          "confidence": 0.9943194389343262,
+          "label": "white"
+        },
+        {
+          "confidence": 0.0010875536827370524,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.0006290656747296453,
+          "label": "4m"
+        }
+      ]
+    },
+    {
+      "accepted": false,
+      "confidence": 0.32195645570755005,
+      "correct": false,
+      "expected": "green",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "east",
+      "top3": [
+        {
+          "confidence": 0.32195645570755005,
+          "label": "east"
+        },
+        {
+          "confidence": 0.2270892709493637,
+          "label": "green"
+        },
+        {
+          "confidence": 0.04512918367981911,
+          "label": "north"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9273291230201721,
+      "correct": true,
+      "expected": "red",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "red",
+      "top3": [
+        {
+          "confidence": 0.9273291230201721,
+          "label": "red"
+        },
+        {
+          "confidence": 0.01182145532220602,
+          "label": "7p"
+        },
+        {
+          "confidence": 0.009994502179324627,
+          "label": "unknown"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.8149632215499878,
+      "correct": true,
+      "expected": "0p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "0p",
+      "top3": [
+        {
+          "confidence": 0.8149632215499878,
+          "label": "0p"
+        },
+        {
+          "confidence": 0.013364758342504501,
+          "label": "9s"
+        },
+        {
+          "confidence": 0.012536578811705112,
+          "label": "1s"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9768547415733337,
+      "correct": true,
+      "expected": "0s",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "0s",
+      "top3": [
+        {
+          "confidence": 0.9768547415733337,
+          "label": "0s"
+        },
+        {
+          "confidence": 0.0022221694234758615,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.0019036318408325315,
+          "label": "6s"
+        }
+      ]
+    },
+    {
+      "accepted": false,
+      "confidence": 0.22665134072303772,
+      "correct": true,
+      "expected": "0m",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg",
+      "prediction": "0m",
+      "top3": [
+        {
+          "confidence": 0.22665134072303772,
+          "label": "0m"
+        },
+        {
+          "confidence": 0.06993281841278076,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.06381256878376007,
+          "label": "8m"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9163695573806763,
+      "correct": true,
+      "expected": "5m",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Japanese_Mahjong_Tiles_2.jpg",
+      "prediction": "5m",
+      "top3": [
+        {
+          "confidence": 0.9163695573806763,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.010315991938114166,
+          "label": "3m"
+        },
+        {
+          "confidence": 0.008858457207679749,
+          "label": "6p"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9767886400222778,
+      "correct": true,
+      "expected": "5s",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Japanese_Mahjong_Tiles_2.jpg",
+      "prediction": "5s",
+      "top3": [
+        {
+          "confidence": 0.9767886400222778,
+          "label": "5s"
+        },
+        {
+          "confidence": 0.0020386262331157923,
+          "label": "8s"
+        },
+        {
+          "confidence": 0.0016471962444484234,
+          "label": "3m"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9263055324554443,
+      "correct": true,
+      "expected": "5p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Japanese_Mahjong_Tiles_2.jpg",
+      "prediction": "5p",
+      "top3": [
+        {
+          "confidence": 0.9263055324554443,
+          "label": "5p"
+        },
+        {
+          "confidence": 0.011964988894760609,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.005038714036345482,
+          "label": "1s"
+        }
+      ]
+    },
+    {
+      "accepted": false,
+      "confidence": 0.7082526087760925,
+      "correct": true,
+      "expected": "0m",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Japanese_Mahjong_Tiles_2.jpg",
+      "prediction": "0m",
+      "top3": [
+        {
+          "confidence": 0.7082526087760925,
+          "label": "0m"
+        },
+        {
+          "confidence": 0.06133376434445381,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.02025309018790722,
+          "label": "unknown"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.9255726337432861,
+      "correct": true,
+      "expected": "0s",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Japanese_Mahjong_Tiles_2.jpg",
+      "prediction": "0s",
+      "top3": [
+        {
+          "confidence": 0.9255726337432861,
+          "label": "0s"
+        },
+        {
+          "confidence": 0.007467805873602629,
+          "label": "5s"
+        },
+        {
+          "confidence": 0.00685095926746726,
+          "label": "1m"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.8692120313644409,
+      "correct": true,
+      "expected": "0p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Japanese_Mahjong_Tiles_2.jpg",
+      "prediction": "0p",
+      "top3": [
+        {
+          "confidence": 0.8692120313644409,
+          "label": "0p"
+        },
+        {
+          "confidence": 0.012101852335035801,
+          "label": "0m"
+        },
+        {
+          "confidence": 0.011874177493155003,
+          "label": "8m"
+        }
+      ]
+    },
+    {
+      "accepted": false,
+      "confidence": 0.4099637567996979,
+      "correct": true,
+      "expected": "4p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_Tiles_(195606345).jpeg",
+      "prediction": "4p",
+      "top3": [
+        {
+          "confidence": 0.4099637567996979,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.24457743763923645,
+          "label": "9p"
+        },
+        {
+          "confidence": 0.04536212608218193,
+          "label": "3m"
+        }
+      ]
+    },
+    {
+      "accepted": false,
+      "confidence": 0.5186139941215515,
+      "correct": true,
+      "expected": "4p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_Tiles_(195606345).jpeg",
+      "prediction": "4p",
+      "top3": [
+        {
+          "confidence": 0.5186139941215515,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.09441845118999481,
+          "label": "north"
+        },
+        {
+          "confidence": 0.08635824918746948,
+          "label": "9p"
+        }
+      ]
+    },
+    {
+      "accepted": false,
+      "confidence": 0.24857985973358154,
+      "correct": true,
+      "expected": "2p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Dora_and_Wanpai.jpg",
+      "prediction": "2p",
+      "top3": [
+        {
+          "confidence": 0.24857985973358154,
+          "label": "2p"
+        },
+        {
+          "confidence": 0.12216024845838547,
+          "label": "6p"
+        },
+        {
+          "confidence": 0.11584547907114029,
+          "label": "4p"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 1
+}

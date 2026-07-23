@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useSession } from "../state/session-context";
 import { useScoreHistory } from "../state/score-history-context";
+import { RulesProfileControl } from "../features/rules/rules-profile-control";
 
 export function HomeScreen() {
   const session = useSession();
@@ -27,6 +28,9 @@ export function HomeScreen() {
           onSession={() => {
             router.push("/session");
           }}
+          rulesControl={
+            <RulesProfileControl lockedProfileId={session.state?.table.rulesProfileId} />
+          }
         />
       </ScrollView>
     </SafeAreaView>

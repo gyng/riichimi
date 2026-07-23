@@ -1,7 +1,9 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
 
 import { ManualCalculator } from "../src/features/manual-calculator/manual-calculator";
+import * as rulesPreferenceStorage from "../src/infrastructure/rules-preference-storage";
 import * as scoreHistoryStorage from "../src/infrastructure/score-history-storage";
+import { RulesProvider } from "../src/state/rules-context";
 import { ScoreHistoryProvider } from "../src/state/score-history-context";
 
 jest.mock("expo-router", () => ({
@@ -13,11 +15,18 @@ jest.mock("../src/infrastructure/score-history-storage", () => ({
   saveScoreHistory: jest.fn().mockResolvedValue(undefined),
 }));
 
+jest.mock("../src/infrastructure/rules-preference-storage", () => ({
+  loadRulesPreference: jest.fn().mockResolvedValue("wrc-2025"),
+  saveRulesPreference: jest.fn().mockResolvedValue(undefined),
+}));
+
 function CalculatorUnderTest() {
   return (
-    <ScoreHistoryProvider>
-      <ManualCalculator />
-    </ScoreHistoryProvider>
+    <RulesProvider>
+      <ScoreHistoryProvider>
+        <ManualCalculator />
+      </ScoreHistoryProvider>
+    </RulesProvider>
   );
 }
 
@@ -47,5 +56,19 @@ describe("ManualCalculator", () => {
     await fireEvent.press(screen.getByRole("button", { name: "Calculate maximum score" }));
 
     expect(screen.getByText(/Tap one hand tile to mark the winning tile/)).toBeOnTheScreen();
+  });
+
+  it("persists a red-five profile and exposes red tiles only for that profile", async () => {
+    await render(<CalculatorUnderTest />);
+
+    expect(screen.queryByRole("button", { name: "red five characters" })).not.toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole("radio", { name: "WRC + red fives" }));
+
+    expect(rulesPreferenceStorage.saveRulesPreference).toHaveBeenCalledWith(
+      "wrc-2025-red-five-table",
+    );
+    expect(screen.getByRole("button", { name: "red five characters" })).toBeOnTheScreen();
+    expect(screen.getByRole("button", { name: "red five circles" })).toBeOnTheScreen();
+    expect(screen.getByRole("button", { name: "red five bamboo" })).toBeOnTheScreen();
   });
 });

@@ -42,6 +42,7 @@ export interface TableState {
   readonly players: readonly TablePlayer[];
   readonly riichiSticks: number;
   readonly roundWind: Wind;
+  readonly rulesProfileId: string;
   readonly startedAt: string;
 }
 

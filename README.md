@@ -1,8 +1,8 @@
 # Richii
 
-Local-first riichi mahjong scoring for mobile and web, with an auditable WRC 2025 engine, camera-assisted entry, and persistent four-player table sessions.
+Local-first riichi mahjong scoring for mobile and web, with auditable WRC-based rules profiles, camera-assisted entry, and persistent four-player table sessions.
 
-The current app includes a complete manual calculator, locally persisted standalone score folio, camera or gallery capture, a rights-traceable offline guided-recognition beta with mandatory photo-backed review, yaku/fu/payment explanations, durable local table state, automatic transfers and round advancement, round history, undo, and progressive-enhancement WebMCP tools for agent-assisted navigation, scoring, history inspection, and table operation. A strict model-release gate prevents the beta's small smoke set from being presented as production accuracy. Product sequencing lives in [`docs/riichi-score-calculator-plan.md`](docs/riichi-score-calculator-plan.md), with training, provenance, evidence, and limitations in the [`recognition model audit`](docs/recognition-model-audit.md).
+The current app includes a complete manual calculator, persisted WRC 2025 and explicit red-five-table profiles, a device-local score folio, camera or gallery capture, a rights-traceable offline guided-recognition beta with mandatory photo-backed review, yaku/fu/payment explanations, durable local table state, automatic transfers and round advancement, round history, undo, and progressive-enhancement WebMCP tools for agent-assisted navigation, scoring, history inspection, rules selection, and table operation. The promoted V1 recognizer reaches 93.48% top-1 on 46 source-separated physical crops while retaining 100% accuracy among reads accepted above its conservative threshold; a strict release gate prevents that limited result from being presented as production accuracy. Product sequencing lives in [`docs/riichi-score-calculator-plan.md`](docs/riichi-score-calculator-plan.md), with training, provenance, evidence, and limitations in the [`recognition model audit`](docs/recognition-model-audit.md).
 
 ## Prerequisites
 

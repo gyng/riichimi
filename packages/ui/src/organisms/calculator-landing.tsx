@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import type { ReactNode } from "react";
 
 import { SectionLabel } from "../atoms/section-label";
 import { MethodCard } from "../molecules/method-card";
@@ -11,6 +12,7 @@ export interface CalculatorLandingProps {
   readonly onManual: () => void;
   readonly onScan: () => void;
   readonly onSession: () => void;
+  readonly rulesControl?: ReactNode | undefined;
 }
 
 export function CalculatorLanding({
@@ -20,6 +22,7 @@ export function CalculatorLanding({
   onManual,
   onScan,
   onSession,
+  rulesControl,
 }: CalculatorLandingProps) {
   const { width } = useWindowDimensions();
   const usesWideLayout = width >= 760;
@@ -46,6 +49,8 @@ export function CalculatorLanding({
           show, and explains every point.
         </Text>
       </View>
+
+      {rulesControl}
 
       <View style={[styles.methods, usesWideLayout && styles.methodsWide]}>
         <View style={styles.methodSlot}>

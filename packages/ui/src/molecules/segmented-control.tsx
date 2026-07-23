@@ -30,6 +30,7 @@ export function SegmentedControl<Value extends string>({
         const selected = option.value === value;
         return (
           <Pressable
+            aria-checked={selected}
             accessibilityLabel={option.label}
             accessibilityRole="radio"
             accessibilityState={{ checked: selected }}

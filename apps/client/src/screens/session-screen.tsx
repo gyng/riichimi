@@ -1,4 +1,5 @@
 import type { Wind } from "@richii/score-core";
+import { scoringRulesProfile } from "@richii/rules";
 import { ActionButton, color, space } from "@richii/ui";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -14,6 +15,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { createRoundCommandMetadata, useSession } from "../state/session-context";
+import { RulesProfileControl } from "../features/rules/rules-profile-control";
 
 const windNames: Record<Wind, string> = {
   east: "East",
@@ -57,6 +59,7 @@ export function SessionScreen() {
             Start at 25,000 points. Richii carries the dealer, winds, honba, riichi pool, score
             transfers, and hand history into each calculation.
           </Text>
+          <RulesProfileControl />
           <View style={styles.panel}>
             <Text accessibilityRole="header" style={styles.panelTitle}>
               Four players
@@ -101,6 +104,7 @@ export function SessionScreen() {
   }
 
   const table = session.state.table;
+  const tableRules = scoringRulesProfile(table.rulesProfileId);
 
   function toggleTenpai(index: number) {
     setTenpai((current) =>
@@ -113,7 +117,7 @@ export function SessionScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.topBar}>
           <ActionButton label="Back" onPress={() => router.back()} variant="paper" />
-          <Text style={styles.rules}>WRC 2025 · SAVED LOCALLY</Text>
+          <Text style={styles.rules}>{tableRules.label.toUpperCase()} · PINNED</Text>
         </View>
         <Text style={styles.kicker}>ACTIVE TABLE</Text>
         <Text accessibilityRole="header" style={styles.roundTitle}>

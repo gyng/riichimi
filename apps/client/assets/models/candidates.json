@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "activeCandidate": "guided-crop-v1-0fc698d5",
+  "rollbackCandidate": "guided-crop-v0-078ca926",
+  "candidates": [
+    {
+      "id": "guided-crop-v0-078ca926",
+      "artifact": "tile-classifier-v0.onnx",
+      "sha256": "078ca9261a43c70ab0a23c5bc384c9742b9c2167cb9c13ebc3901117d68571fa",
+      "license": "CC-BY-SA-3.0",
+      "physicalEvaluation": {
+        "acceptedAccuracy": 1.0,
+        "acceptedCoverage": 0.2826086956521739,
+        "evaluatedCrops": 46,
+        "top1Accuracy": 0.7391304347826086
+      }
+    },
+    {
+      "id": "guided-crop-v1-0fc698d5",
+      "artifact": "tile-classifier-v1.onnx",
+      "sha256": "0fc698d56409c6fe80abfd514867a21330183ef120cfb61dbbeae7eb2eb27e4b",
+      "license": "CC-BY-SA-4.0",
+      "physicalEvaluation": {
+        "acceptedAccuracy": 1.0,
+        "acceptedCoverage": 0.782608695652174,
+        "evaluatedCrops": 46,
+        "top1Accuracy": 0.9347826086956522
+      }
+    }
+  ]
+}

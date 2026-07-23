@@ -1,4 +1,4 @@
-import { canonicalTileIds } from "@richii/score-core";
+import { canonicalTileIds, redFiveIds } from "@richii/score-core";
 import type { TileId } from "@richii/score-core";
 import { MahjongTile, color, space } from "@richii/ui";
 import { StyleSheet, Text, View } from "react-native";
@@ -13,9 +13,10 @@ const rows = [
 export interface TilePickerProps {
   readonly isDisabled: (tile: TileId) => boolean;
   readonly onSelect: (tile: TileId) => void;
+  readonly showRedFives?: boolean | undefined;
 }
 
-export function TilePicker({ isDisabled, onSelect }: TilePickerProps) {
+export function TilePicker({ isDisabled, onSelect, showRedFives = false }: TilePickerProps) {
   return (
     <View style={styles.root}>
       {rows.map((row) => (
@@ -33,6 +34,21 @@ export function TilePicker({ isDisabled, onSelect }: TilePickerProps) {
           </View>
         </View>
       ))}
+      {showRedFives ? (
+        <View style={styles.rowSection}>
+          <Text style={styles.label}>RED FIVES</Text>
+          <View style={styles.tiles}>
+            {redFiveIds.map((tile) => (
+              <MahjongTile
+                disabled={isDisabled(tile)}
+                key={tile}
+                onPress={() => onSelect(tile)}
+                tile={tile}
+              />
+            ))}
+          </View>
+        </View>
+      ) : null}
     </View>
   );
 }

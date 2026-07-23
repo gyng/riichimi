@@ -10,6 +10,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 
 import { loadStoredSession, saveStoredSession } from "../infrastructure/session-storage";
+import { useRules } from "./rules-context";
 
 interface SessionContextValue {
   readonly clearSession: () => void;
@@ -42,6 +43,7 @@ function newId(prefix: string): string {
 }
 
 export function SessionProvider({ children }: { readonly children: ReactNode }) {
+  const rules = useRules();
   const [state, setState] = useState<SessionState | null>(null);
   const [loading, setLoading] = useState(true);
   const [storageError, setStorageError] = useState<string | null>(null);
@@ -85,6 +87,7 @@ export function SessionProvider({ children }: { readonly children: ReactNode }) 
           createSession({
             id: newId("table"),
             playerNames,
+            rulesProfileId: rules.activeRules.id,
             startedAt: new Date().toISOString(),
           }),
         ),
@@ -112,7 +115,7 @@ export function SessionProvider({ children }: { readonly children: ReactNode }) 
         }
       },
     }),
-    [loading, state, storageError],
+    [loading, rules.activeRules.id, state, storageError],
   );
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;

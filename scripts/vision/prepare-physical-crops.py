@@ -13,6 +13,30 @@ from pathlib import Path
 from PIL import Image
 
 
+def source_crops(source: dict, image: Image.Image) -> list[dict]:
+    """Expand explicit boxes and compact regular grids into auditable crop records."""
+    crops = list(source.get("crops", []))
+    grid = source.get("grid")
+    if grid is None:
+        return crops
+    columns = grid["columns"]
+    rows = grid["rows"]
+    labels = grid["labels"]
+    inset_x, inset_y = grid.get("inset", [0, 0])
+    if len(labels) != rows or any(len(row) != columns for row in labels):
+        raise ValueError(f"Grid labels do not match {columns}x{rows} for {source['id']}")
+    for row_index, row in enumerate(labels):
+        for column_index, label in enumerate(row):
+            if label is None:
+                continue
+            left = round(column_index * image.width / columns) + inset_x
+            top = round(row_index * image.height / rows) + inset_y
+            right = round((column_index + 1) * image.width / columns) - inset_x
+            bottom = round((row_index + 1) * image.height / rows) - inset_y
+            crops.append({"box": [left, top, right, bottom], "label": label})
+    return crops
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--manifest", required=True, type=Path)
@@ -38,7 +62,7 @@ def main() -> None:
             raise ValueError(f"SHA-256 mismatch for {source['id']}: {digest}")
         image = Image.open(source_path).convert("RGB")
         partition_directory = args.output / source["partition"]
-        for index, item in enumerate(source["crops"]):
+        for index, item in enumerate(source_crops(source, image)):
             label_directory = partition_directory / item["label"]
             label_directory.mkdir(parents=True, exist_ok=True)
             crop_path = label_directory / f"{source['id']}-{index:02d}.png"

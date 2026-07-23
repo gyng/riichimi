@@ -1,10 +1,10 @@
 # Progress
 
-Last updated: **2026-07-23T08:49:46+08:00**
+Last updated: **2026-07-23T09:20:42+08:00**
 
 ## Current state
 
-Richii is a polished, local-first scoring and table-session app on mobile-width web and desktop web. Its scoring, persistence, WebMCP surface, guided camera/gallery recognition beta, mandatory review handoff, and critical browser journeys are implemented and verified. Production physical-tile accuracy remains intentionally gated on a representative corpus and real-device evaluation; the app labels the current model as beta instead of overstating nine-crop evidence.
+Richii is a polished, local-first scoring and table-session app on mobile-width web and desktop web. Its scoring, persistent rules profiles, WebMCP surface, guided camera/gallery recognition beta, mandatory review handoff, and critical browser journeys are implemented and verified. V1 materially improves source-separated physical recognition and browser correction burden, while production accuracy remains intentionally gated on a representative complete-hand corpus and real-device evaluation.
 
 ## Timestamped checkpoints
 
@@ -78,6 +78,16 @@ Richii is a polished, local-first scoring and table-session app on mobile-width 
 - The quality gate passes with 105 framework-free tests and 28 Expo component tests. Both browser journeys, including 30 visible review interactions and real ONNX inference, complete in about 7 seconds.
 - The review desk adds about 8.3 KB to the shared entry. At 1,282,288 bytes, the entry is 2.1% above the pre-recognition checkpoint and remains well below the 10% optimization trigger.
 
+### 2026-07-23T09:20:42+08:00 — physical classifier V1 and rules truthfulness
+
+- Re-audited open physical-tile sources and added three author-owned, CC BY-SA 4.0 Japanese tile-set photographs with full standard/red-five coverage. Two distinct families are training-only; the Kantou family is source-separated evaluation-only.
+- Expanded physical training from 33 to 107 crops and held-out evaluation from 9 to 46 crops. Deterministic grid expansion, source hashes, licenses, partitions, and a reproducible fixture builder are committed.
+- Promoted `tile-classifier-v1.onnx`: physical top-1 improved from 73.91% to 93.48%; accepted coverage at the conservative 0.75 threshold improved from 28.26% to 78.26%; accepted accuracy stayed 100%. All three wrong proposals remain below threshold and cannot bypass review.
+- Replaced the synthetic-font browser fixture with a CC BY-SA 4.0 physical-tile composite from the held-out family. Exported WebGL dogfood reads all 15 classes correctly and needs only two low-confidence confirmations instead of 15 full-picker corrections.
+- Added persistent WRC 2025 and explicit WRC-based red-five-table profiles. Rules now control red-tile availability and scoring, survive reload, migrate old tables, pin at East 1, appear in score/session audit UI, and can be selected through WebMCP.
+- Browser dogfood found and fixed a preference-hydration race and missing web `aria-checked` state. The final two exported journeys pass in 5.4 seconds.
+- The final quality gate passes with 107 framework-free tests, 35 Expo component tests, a 5.45-second warm export, and a 1,289,101-byte shared entry. V1 replaces the exported V0 payload, so the active model size is unchanged.
+
 ## Visual evidence
 
 - [Mobile landing](docs/checkpoints/2026-07-23-01-home-mobile.png)
@@ -90,6 +100,9 @@ Richii is a polished, local-first scoring and table-session app on mobile-width 
 - [Desktop offline recognition review](docs/checkpoints/2026-07-23-08-offline-recognition-review-desktop.png)
 - [Desktop photograph-backed recognized draft](docs/checkpoints/2026-07-23-09-recognized-draft-desktop.png)
 - [Desktop recognition review completed](docs/checkpoints/2026-07-23-10-recognition-review-complete-desktop.png)
+- [V1 physical recognition with two flagged reads](docs/checkpoints/2026-07-23-11-v1-recognition-review-desktop.png)
+- [V1 recognition review completed](docs/checkpoints/2026-07-23-12-v1-recognition-complete-desktop.png)
+- [V1 photograph-backed recognized draft](docs/checkpoints/2026-07-23-13-v1-recognized-draft-desktop.png)
 
 ## Verification commands
 
@@ -101,5 +114,5 @@ npm run test:e2e
 
 ## External and environment constraints
 
-- Guided physical-tile recognition is a licensed, working beta, but production accuracy is not claimed until the 500-hand representative gate and device benchmarks pass.
+- Guided physical-tile recognition is a licensed, working beta with materially stronger crop evidence, but production accuracy is not claimed until the 500-hand representative gate and device benchmarks pass.
 - Native iOS/Android inference requires a custom development build because ONNX Runtime React Native is not available in Expo Go; camera, SQLite, large-text, screen-reader, latency, and memory passes still require real simulators/devices.

@@ -19,25 +19,27 @@ This obtains useful automation now while preserving the manual path for arbitrar
 
 ## Shipped candidate
 
-- Model: `apps/client/assets/models/tile-classifier-v0.onnx`
-- SHA-256: `078ca9261a43c70ab0a23c5bc384c9742b9c2167cb9c13ebc3901117d68571fa`
+- Model: `apps/client/assets/models/tile-classifier-v1.onnx`
+- SHA-256: `0fc698d56409c6fe80abfd514867a21330183ef120cfb61dbbeae7eb2eb27e4b`
 - Size: 1,866,535 bytes
 - Input: fixed RGB/NCHW `15 × 3 × 64 × 48`
 - Classes: 34 canonical tiles, three red fives, and `unknown`
 - Runtime: lazy ONNX Runtime WebGL on web; ONNX Runtime React Native on native builds
-- License: `CC-BY-SA-3.0`; full attribution is beside the artifact
+- License: `CC-BY-SA-4.0`; full attribution is beside the artifact
 
-Training combines deterministic camera-style augmentation of CC0 tile artwork with 33 licensed physical-photo crops. The artifact has 99.375% top-1 accuracy on a 3,040-image independent synthetic holdout and ONNX parity within `1.91e-6`. Synthetic accuracy validates the pipeline; it is not release evidence.
+Training combines deterministic camera-style augmentation of CC0 tile artwork with 107 licensed physical-photo crops from three source photographs and distinct Japanese tile families. The artifact has 99.44% top-1 accuracy on a 3,040-image independent synthetic holdout and ONNX parity within `2.39e-6`. Synthetic accuracy validates the pipeline; it is not release evidence.
 
-The source-separated physical smoke set has only nine crops: 7/9 top-1 (`77.78%`). At the conservative `0.75` threshold it accepts 2/9, both correct (`100%` accepted accuracy at `22.22%` coverage). The other seven stay in review. These figures justify beta dogfood and the threshold behavior, not broad accuracy claims.
+The source-separated physical set now has 46 crops spanning a held-out Japanese tile family, red fives, and three unrelated photographs. V1 scores 43/46 top-1 (`93.48%`), up from V0's 34/46 (`73.91%`) on the same expanded set. At the conservative `0.75` threshold V1 accepts 36/46 and all 36 are correct (`100%` accepted accuracy at `78.26%` coverage), up from `28.26%` coverage. All three wrong predictions remain below threshold and therefore stay in review. These figures justify the V1 beta promotion and materially lower correction burden; they do not establish complete-hand or production accuracy.
+
+Exported-browser dogfood uses a guided composite derived from the held-out CC BY-SA 4.0 tile family. V1 reads all 15 tile classes correctly and asks for two low-confidence confirmations; V0's out-of-distribution demonstration required 15 confirmations. This is one repeatable integration fixture, not part of the 500-hand release set.
 
 ## Rights and provenance
 
 - Seed glyphs: [`FluffyStuff/riichi-mahjong-tiles`](https://github.com/FluffyStuff/riichi-mahjong-tiles), CC0, commit `26e127ba2117f45cdce5ea0225748cc0cfad3169`.
-- Physical training source: [`Majiang2.JPG`](https://commons.wikimedia.org/wiki/File:Majiang2.JPG), CC BY-SA 3.0, pinned by source SHA-256.
-- Held-out smoke sources: [`Japanese Mahjong Tiles 2.jpg`](https://commons.wikimedia.org/wiki/File:Japanese_Mahjong_Tiles_2.jpg) (public domain), [`Mahjong Tiles (195606345).jpeg`](<https://commons.wikimedia.org/wiki/File:Mahjong_Tiles_(195606345).jpeg>) (CC0), and [`Dora and Wanpai.jpg`](https://commons.wikimedia.org/wiki/File:Dora_and_Wanpai.jpg) (public domain).
+- Physical training sources: [`Majiang2.JPG`](https://commons.wikimedia.org/wiki/File:Majiang2.JPG) (CC BY-SA 3.0), [`Mahjong eg JP A.jpg`](https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_A.jpg) (CC BY-SA 4.0), and [`Mahjong eg JP.jpg`](https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP.jpg) (CC BY-SA 4.0), all pinned by source SHA-256.
+- Held-out sources: [`Mahjong eg JP Kantou.jpg`](https://commons.wikimedia.org/wiki/File:Mahjong_eg_JP_Kantou.jpg) (CC BY-SA 4.0), [`Japanese Mahjong Tiles 2.jpg`](https://commons.wikimedia.org/wiki/File:Japanese_Mahjong_Tiles_2.jpg) (public domain), [`Mahjong Tiles (195606345).jpeg`](<https://commons.wikimedia.org/wiki/File:Mahjong_Tiles_(195606345).jpeg>) (CC0), and [`Dora and Wanpai.jpg`](https://commons.wikimedia.org/wiki/File:Dora_and_Wanpai.jpg) (public domain).
 
-Source photos are downloaded only by the reproducible preparation script and are not committed. The manifest pins URL, page, license, SHA-256, exact crop boxes, labels, and train/evaluation partition.
+Source photos are downloaded only by the reproducible preparation script and are not committed. The manifest pins URL, page, license, SHA-256, exact boxes or deterministic grids, labels, and train/evaluation partition. Training/evaluation partitioning happens by source photograph before augmentation.
 
 ## Alternatives investigated
 
@@ -60,7 +62,7 @@ The local pipeline was selected because every committed artifact has a reproduci
 - at least 93% exact-hand accuracy before correction; and
 - reviewed unknown recall, calibration, per-tile-set slices, latency, memory, and real iOS/Android/web device behavior.
 
-The v0 beta does **not** pass this gate because it has no 500-hand representative set or exact-hand accuracy result.
+The V1 beta does **not** pass this gate because it has no 500-hand representative set or exact-hand accuracy result.
 
 ## Evidence still required
 

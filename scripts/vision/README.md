@@ -19,19 +19,20 @@ python3 -m venv /tmp/richii-vision-venv
 /tmp/richii-vision-venv/bin/python scripts/vision/train-tile-classifier.py \
   --assets /tmp/richii-tiles-source/Export/Regular \
   --real-crops /tmp/richii-physical-crops \
-  --output apps/client/assets/models/tile-classifier-v0.onnx \
-  --report docs/recognition-model-v0-report.json
+  --real-samples-per-crop 24 \
+  --output apps/client/assets/models/tile-classifier-v1.onnx \
+  --report docs/recognition-model-v1-report.json
 /tmp/richii-vision-venv/bin/python scripts/vision/evaluate-physical-crops.py \
-  --model apps/client/assets/models/tile-classifier-v0.onnx \
-  --training-report docs/recognition-model-v0-report.json \
+  --model apps/client/assets/models/tile-classifier-v1.onnx \
+  --training-report docs/recognition-model-v1-report.json \
   --crops /tmp/richii-physical-crops \
-  --output docs/recognition-physical-v0-report.json
+  --output docs/recognition-physical-v1-report.json
 ```
 
 Synthetic validation measures whether the training and export pipeline works; it is not physical-photo release evidence. Public-domain physical-photo smoke evaluation and representative guided-hand evaluation are reported separately.
 
 ## License and release status
 
-The generated classifier is distributed under `CC-BY-SA-3.0` because physical-photo training includes [`Majiang2.JPG`](https://commons.wikimedia.org/wiki/File:Majiang2.JPG). The glyph seed is CC0. See the model asset README and `physical-photo-crops.json` for provenance and source-separated partitions.
+The generated classifier is distributed under `CC-BY-SA-4.0`. Physical-photo training combines one CC BY-SA 3.0 source and two CC BY-SA 4.0 sources under the compatible later license; the glyph seed is CC0. See the model asset README and `physical-photo-crops.json` for provenance and source-separated partitions.
 
-This is a conservative beta, not a production-accuracy claim. Its nine-crop source-separated physical smoke set is useful for catching obvious regressions but is far below the 500 complete-hand release gate.
+This is a conservative beta, not a production-accuracy claim. Its 46-crop source-separated physical set is useful for model promotion and regression detection but is far below the 500 complete-hand release gate.

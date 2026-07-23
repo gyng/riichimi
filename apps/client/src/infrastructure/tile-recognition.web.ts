@@ -2,7 +2,7 @@ import type { ImageFrame, TileRecognitionPort } from "@richii/vision";
 import type { InferenceSession } from "onnxruntime-web";
 import type * as OrtWebGlNamespace from "onnxruntime-web/webgl";
 
-import modelAsset from "../../assets/models/tile-classifier-v0.onnx";
+import modelAsset from "../../assets/models/tile-classifier-v1.onnx";
 import { recognizePixelFrame } from "../features/recognition/recognize-pixel-frame";
 import type { PixelFrame } from "../features/recognition/guided-layout";
 

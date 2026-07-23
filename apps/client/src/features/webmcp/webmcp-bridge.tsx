@@ -1,4 +1,5 @@
 import { router, usePathname } from "expo-router";
+import { isScoringRulesProfileId, scoringRulesProfile } from "@richii/rules";
 
 import {
   integerArrayInput,
@@ -9,6 +10,7 @@ import {
 } from "../../infrastructure/webmcp";
 import { createRoundCommandMetadata, useSession } from "../../state/session-context";
 import { useScoreHistory } from "../../state/score-history-context";
+import { useRules } from "../../state/rules-context";
 
 const routes = {
   history: "/history",
@@ -36,7 +38,9 @@ export function WebMcpBridge() {
   const pathname = usePathname();
   const session = useSession();
   const scoreHistory = useScoreHistory();
+  const rules = useRules();
   const table = session.state?.table ?? null;
+  const activeRules = scoringRulesProfile(table?.rulesProfileId ?? rules.activeRules.id);
 
   useWebMcpTools([
     {
@@ -47,9 +51,10 @@ export function WebMcpBridge() {
         webMcpResult("Richii app state read successfully.", {
           activeRoute: pathname,
           rules: {
-            id: "wrc-2025",
-            kiriageMangan: true,
-            redFives: false,
+            id: activeRules.id,
+            kiriageMangan: activeRules.kiriageMangan,
+            label: activeRules.label,
+            redFives: activeRules.redFives,
           },
           savedScoreCount: scoreHistory.entries.length,
           table:
@@ -62,6 +67,7 @@ export function WebMcpBridge() {
                   players: table.players.map(({ name, score }) => ({ name, score })),
                   riichiSticks: table.riichiSticks,
                   roundWind: table.roundWind,
+                  rulesProfileId: table.rulesProfileId,
                 },
         }),
       inputSchema: { additionalProperties: false, properties: {}, type: "object" },
@@ -89,6 +95,38 @@ export function WebMcpBridge() {
       },
       name: "richii.app.navigate",
       title: "Navigate Richii",
+    },
+    {
+      description:
+        "Select the visible scoring profile and save it on this device. A running table keeps its pinned profile and must be ended before this setting can change.",
+      execute: (input: Record<string, unknown>) => {
+        if (table !== null) {
+          throw new Error(
+            "The active table has pinned rules. End it before choosing another profile.",
+          );
+        }
+        const profileId = input["profileId"];
+        if (typeof profileId !== "string" || !isScoringRulesProfileId(profileId)) {
+          throw new Error("profileId must name a supported scoring rules profile.");
+        }
+        rules.selectProfile(profileId);
+        return webMcpResult("Selected the scoring rules profile.", {
+          rules: scoringRulesProfile(profileId),
+        });
+      },
+      inputSchema: {
+        additionalProperties: false,
+        properties: {
+          profileId: {
+            enum: ["wrc-2025", "wrc-2025-red-five-table"],
+            type: "string",
+          },
+        },
+        required: ["profileId"],
+        type: "object",
+      },
+      name: "richii.rules.select",
+      title: "Select scoring rules",
     },
     {
       annotations: { readOnlyHint: true },
@@ -119,7 +157,10 @@ export function WebMcpBridge() {
         const playerNames = stringArrayInput(input, "playerNames", 4);
         session.createTable(playerNames);
         router.push("/session");
-        return webMcpResult("Started a local East 1 table.", { playerNames });
+        return webMcpResult("Started a local East 1 table.", {
+          playerNames,
+          rulesProfileId: rules.activeRules.id,
+        });
       },
       inputSchema: {
         additionalProperties: false,
