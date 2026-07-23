@@ -140,6 +140,10 @@ const styles = StyleSheet.create({
   suited: {
     alignItems: "center",
   },
+  // A tile is the one deliberate exception to the 48x48 target minimum: a suit
+  // row shows all nine ranks, which cannot each be 48 wide on a narrow phone
+  // without wrapping mid-suit and breaking the row people scan. Height stays
+  // comfortably above the minimum and tiles keep a real gap between them.
   tile: {
     alignItems: "center",
     aspectRatio: 0.72,

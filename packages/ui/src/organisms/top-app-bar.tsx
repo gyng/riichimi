@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import type { ReactNode } from "react";
 
 import { color, space } from "../tokens/theme";
@@ -30,18 +30,28 @@ export function TopAppBar({
   onBrandPress,
   trailing,
 }: TopAppBarProps) {
+  const { width } = useWindowDimensions();
+  // On a phone the wordmark would push the destinations onto a second row and
+  // cost a chunk of the screen before any content. The mark alone still carries
+  // the brand, and the link keeps its accessible name either way.
+  const compact = width < 600;
+
   return (
-    <View style={styles.bar}>
+    <View style={[styles.bar, compact && styles.barCompact]}>
       <Pressable
         accessibilityLabel={`${brandLabel} home`}
         accessibilityRole="link"
         onPress={onBrandPress}
-        style={({ pressed }) => [styles.brand, pressed && styles.pressed]}
+        style={({ pressed }) => [
+          styles.brand,
+          compact && styles.brandCompact,
+          pressed && styles.pressed,
+        ]}
       >
         <View accessibilityElementsHidden style={styles.brandMark}>
           <Text style={styles.brandGlyph}>{brandGlyph}</Text>
         </View>
-        <Text style={styles.brandLabel}>{brandLabel}</Text>
+        {compact ? null : <Text style={styles.brandLabel}>{brandLabel}</Text>}
       </Pressable>
 
       <View accessibilityLabel="Primary" style={styles.nav}>
@@ -82,12 +92,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: space.x5,
     paddingVertical: space.x3,
   },
+  barCompact: {
+    gap: space.x2,
+    paddingHorizontal: space.x4,
+  },
   brand: {
     alignItems: "center",
     flexDirection: "row",
     gap: space.x2,
     marginRight: space.x4,
-    minHeight: 44,
+    minHeight: 48,
+  },
+  brandCompact: {
+    justifyContent: "center",
+    marginRight: space.x1,
+    minWidth: 48,
   },
   brandGlyph: {
     color: color.white,
@@ -111,10 +130,12 @@ const styles = StyleSheet.create({
     width: 25,
   },
   item: {
+    alignItems: "center",
     borderBottomColor: "transparent",
     borderBottomWidth: 2,
     justifyContent: "center",
-    minHeight: 44,
+    minHeight: 48,
+    minWidth: 48,
     paddingHorizontal: space.x2,
   },
   itemActive: {

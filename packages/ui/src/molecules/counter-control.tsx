@@ -56,9 +56,9 @@ const styles = StyleSheet.create({
     borderColor: color.line,
     borderRadius: radius.control,
     borderWidth: 1,
-    height: 44,
+    height: 48,
     justifyContent: "center",
-    width: 44,
+    width: 48,
   },
   buttonLabel: {
     color: color.ink,

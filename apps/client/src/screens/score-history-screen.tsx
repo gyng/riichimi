@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
   muted: { color: color.inkMuted, fontFamily: "serif", fontSize: 15, lineHeight: 22 },
   payment: { color: color.ink, fontFamily: "serif", fontSize: 17, fontWeight: "700", marginTop: 2 },
   railLine: { backgroundColor: color.line, flex: 1, marginTop: space.x2, width: 1 },
-  removeButton: { minHeight: 44, paddingHorizontal: space.x2, justifyContent: "center" },
+  removeButton: { minHeight: 48, paddingHorizontal: space.x2, justifyContent: "center" },
   removeText: { color: color.accent, fontFamily: "serif", fontSize: 14, fontWeight: "700" },
   resultKicker: { color: color.jade, fontFamily: "monospace", fontSize: 8, letterSpacing: 1 },
   resultStrip: {

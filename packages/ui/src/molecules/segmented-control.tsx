@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.control - 2,
     flexGrow: 1,
     justifyContent: "center",
-    minHeight: 44,
+    minHeight: 48,
     minWidth: 64,
     paddingHorizontal: space.x3,
     paddingVertical: space.x2,

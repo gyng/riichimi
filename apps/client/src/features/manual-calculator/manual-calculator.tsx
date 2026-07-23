@@ -1200,7 +1200,7 @@ const styles = StyleSheet.create({
     borderColor: color.line,
     borderRadius: 999,
     borderWidth: 1,
-    minHeight: 40,
+    minHeight: 48,
     paddingHorizontal: space.x4,
     paddingVertical: 10,
   },

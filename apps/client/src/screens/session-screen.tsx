@@ -1022,7 +1022,7 @@ const styles = StyleSheet.create({
     borderColor: color.line,
     borderRadius: 999,
     borderWidth: 1,
-    minHeight: 42,
+    minHeight: 48,
     paddingHorizontal: space.x4,
     paddingVertical: space.x3,
   },
