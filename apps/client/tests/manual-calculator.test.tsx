@@ -133,7 +133,7 @@ describe("ManualCalculator", () => {
     await render(<CalculatorUnderTest />);
 
     expect(screen.queryByRole("button", { name: "red five characters" })).not.toBeOnTheScreen();
-    await fireEvent.press(screen.getByRole("radio", { name: "WRC + red fives" }));
+    await fireEvent.press(screen.getByRole("radio", { name: "WRC 2025 · red-five table" }));
 
     expect(rulesPreferenceStorage.saveRulesPreference).toHaveBeenCalledWith(
       "wrc-2025-red-five-table",

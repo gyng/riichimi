@@ -43,13 +43,17 @@ export function calculateStandardFu(
 
   const pair = interpretation.decomposition.pair;
 
-  if (
-    pair === "white" ||
-    pair === "green" ||
-    pair === "red" ||
-    pair === hand.context.seatWind ||
-    pair === hand.context.roundWind
-  ) {
+  const isDragonPair = pair === "white" || pair === "green" || pair === "red";
+  const isSeatWindPair = pair === hand.context.seatWind;
+  const isRoundWindPair = pair === hand.context.roundWind;
+
+  if (isDragonPair) {
+    items.push({ fu: 2, reason: "Value honour pair" });
+  } else if (isSeatWindPair && isRoundWindPair) {
+    // A pair that is both winds is worth 4 fu under some rulesets and 2 under
+    // others, so the amount is a profile decision rather than a fixed rule.
+    items.push({ fu: hand.rules.doubleWindPairFu, reason: "Double wind pair" });
+  } else if (isSeatWindPair || isRoundWindPair) {
     items.push({ fu: 2, reason: "Value honour pair" });
   }
 

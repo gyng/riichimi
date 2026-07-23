@@ -8,10 +8,29 @@ import { StyleSheet, Text, View } from "react-native";
 
 import { useRules } from "../../state/rules-context";
 
+import type { ScoringRules } from "@riichimi/score-core";
+
 const options = scoringRulesProfiles.map((profile) => ({
-  label: profile.redFives ? "WRC + red fives" : "WRC 2025",
+  label: profile.label,
   value: profile.id,
 }));
+
+/**
+ * Describe a profile from its actual options rather than prose, so the summary
+ * cannot drift from what the scorer does.
+ */
+function describeProfile(profile: ScoringRules): string {
+  return [
+    profile.redFives ? "red fives" : "no red fives",
+    profile.allowOpenTanyao ? "open tanyao" : "closed tanyao only",
+    profile.kiriageMangan ? "round-up mangan" : "no round-up mangan",
+    profile.countedLimit === "yonbaiman" ? "kazoe yakuman" : "counted hands cap at sanbaiman",
+    profile.uraDora ? "ura-dora" : "no ura-dora",
+    profile.yakumanStacking === "single" ? "yakuman never combine" : null,
+  ]
+    .filter((part): part is string => part !== null)
+    .join(" · ");
+}
 
 export function RulesProfileControl({
   lockedProfileId,
@@ -34,7 +53,7 @@ export function RulesProfileControl({
         <Text style={styles.note}>
           {locked
             ? "This table keeps the profile chosen at East 1, including through undo and reload."
-            : "The red-five table profile is WRC 2025 with one explicit local change: red fives are enabled and counted as dora."}
+            : describeProfile(selected)}
         </Text>
       </View>
       {locked ? null : (
@@ -61,7 +80,9 @@ export function RulesProfileControl({
 }
 
 const styles = StyleSheet.create({
-  control: { minWidth: 280 },
+  // Must be able to shrink to the row, or the profile options size to their own
+  // content and overflow the screen instead of wrapping.
+  control: { flexGrow: 1, flexShrink: 1, minWidth: 240 },
   copy: { flex: 1, minWidth: 250 },
   error: { color: color.accent, fontFamily: "serif", fontSize: 13, width: "100%" },
   kicker: {

@@ -34,7 +34,11 @@ export function calculateBasePoints(
   rules: ScoringRules,
 ): BasePointResult {
   if (yakumanCount > 0) {
-    return { basePoints: 8000 * yakumanCount, limit: yakumanLimitName(yakumanCount) };
+    // Some rulesets never stack yakuman, and some stack them only up to a cap.
+    const stacked = rules.yakumanStacking === "single" ? 1 : yakumanCount;
+    const payable =
+      rules.maxYakumanMultiple === null ? stacked : Math.min(stacked, rules.maxYakumanMultiple);
+    return { basePoints: 8000 * payable, limit: yakumanLimitName(payable) };
   }
 
   if (han >= 13 && rules.countedLimit === "yonbaiman") {

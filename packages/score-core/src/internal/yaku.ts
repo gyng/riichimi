@@ -410,7 +410,10 @@ function indicatorDoraCount(
 
 export function countDora(hand: NormalizedHand): DoraBreakdown {
   const dora = indicatorDoraCount(hand.allHandTiles, hand.doraIndicators);
-  const uraDora = indicatorDoraCount(hand.allHandTiles, hand.uraDoraIndicators);
+  // Rulesets that play without ura-dora ignore any revealed indicators.
+  const uraDora = hand.rules.uraDora
+    ? indicatorDoraCount(hand.allHandTiles, hand.uraDoraIndicators)
+    : 0;
   const redDora = hand.rules.redFives
     ? hand.originalHandTiles.filter((tile) => canonicalizeTile(tile) !== tile).length
     : 0;

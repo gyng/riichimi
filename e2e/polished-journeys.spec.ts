@@ -207,10 +207,10 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   const faviconResponse = await page.request.get("/favicon.ico");
   expect(faviconResponse.ok()).toBe(true);
 
-  await page.getByRole("radio", { name: "WRC + red fives" }).click();
-  await expect(page.getByRole("radio", { name: "WRC + red fives" })).toBeChecked();
+  await page.getByRole("radio", { name: "WRC 2025 · red-five table" }).click();
+  await expect(page.getByRole("radio", { name: "WRC 2025 · red-five table" })).toBeChecked();
   await page.reload();
-  await expect(page.getByRole("radio", { name: "WRC + red fives" })).toBeChecked();
+  await expect(page.getByRole("radio", { name: "WRC 2025 · red-five table" })).toBeChecked();
 
   await page.getByRole("button", { name: "Enter tiles manually" }).click();
   await expect(page).toHaveURL(/\/manual$/);

@@ -28,6 +28,11 @@ Status vocabulary: **Shipped** · **In progress** · **Planned** · **Blocked**.
 - **Mobile-first pass.** Measured at 390px across every route: the bar stays on
   one row, interactive targets meet the 48px minimum, and no route scrolls
   horizontally. The tile face is the one documented exception.
+- **Scoring rules profiles.** Tenhou, EMA, M.League, and JPML A ship beside the
+  WRC profiles, each citing a primary source. Required real engine work, not
+  data: counted-limit capping, yakuman stacking and caps, optional ura-dora, and
+  a profile-controlled double-wind pair fu. Mahjong Soul is deliberately held —
+  see [rules profiles](rules-profiles.md) for why, and for what is not modelled.
 - **Win announcer.** `announceWin` produces structured announcement data, a
   narrow `SpeechPort` carries the device capability (Web Speech today, native
   reporting unavailable), and an opt-in per-device toggle speaks the result
@@ -35,34 +40,14 @@ Status vocabulary: **Shipped** · **In progress** · **Planned** · **Blocked**.
 
 ## Planned
 
-### 1. Scoring rules profiles for common rulesets
-
-Add Tenhou, Mahjong Soul, EMA, M.League, and JPML A profiles beside the existing
-WRC 2025 profiles.
-
-This is the highest-correctness-risk item on the roadmap: a wrong option value
-silently produces a wrong score. Two constraints:
-
-- Every profile carries a real, citable `sourceUrl`. No profile ships on
-  recalled rules.
-- `ScoringRules` currently exposes only `allowOpenTanyao`, `kiriageMangan`,
-  `redFives`, plus a fixed `countedLimit` and `doubleYakuman: false`. Real
-  variants additionally differ on ura dora, kan dora, nagashi mangan, kazoe
-  handling, and double/multiple yakuman. Each new knob is an engine change with
-  its own tests, not a data-only addition.
-
-Where a rule cannot be confirmed from an authoritative source, the profile must
-not guess: either omit the ruleset or surface the uncertainty. A profile that
-looks official but scores wrong is worse than no profile.
-
-### 2. House rule editor
+### 1. House rule editor
 
 Let a table express local rules directly (red fives, kuitan, kiriage, and the
 knobs added in item 1) as a named local profile, clearly distinguished from
 published rulesets the way `WRC 2025 · red-five table` already is. Depends on the
 knob set from item 1 being settled.
 
-### 3. Internationalisation, especially CJK
+### 2. Internationalisation, especially CJK
 
 Extract user-facing copy behind a translation boundary and verify Japanese and
 Chinese rendering: line breaking, font fallback, numeral and honorific handling,
