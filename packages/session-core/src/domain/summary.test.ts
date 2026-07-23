@@ -86,7 +86,13 @@ describe("summarizeSession", () => {
   });
 
   it("reflects riichi-stick deductions in the live scores", () => {
-    const summary = summarizeSession(declareRiichi(newTable(), 0));
+    const summary = summarizeSession(
+      declareRiichi(newTable(), {
+        id: "riichi-0",
+        occurredAt: "2026-07-23T00:00:30.000Z",
+        playerIndex: 0,
+      }),
+    );
     const alice = summary.standings.find((entry) => entry.name === "Alice");
     expect(alice?.score).toBe(24000);
     expect(alice?.net).toBe(-1000);

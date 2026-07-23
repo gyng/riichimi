@@ -46,9 +46,45 @@ export interface TableState {
   readonly startedAt: string;
 }
 
+export interface RiichiEvent {
+  readonly id: string;
+  readonly kind: "riichi";
+  readonly occurredAt: string;
+  readonly playerIndex: number;
+}
+
+export interface WinEvent {
+  readonly discarderIndex: number | null;
+  readonly id: string;
+  readonly kind: "win";
+  readonly occurredAt: string;
+  readonly payments: PaymentBreakdown;
+  readonly winnerIndex: number;
+}
+
+export interface DrawEvent {
+  readonly id: string;
+  readonly kind: "draw";
+  readonly occurredAt: string;
+  readonly tenpaiPlayerIndices: readonly number[];
+}
+
+export type SessionEvent = DrawEvent | RiichiEvent | WinEvent;
+
 export interface SessionState {
+  /** Immutable starting snapshot. Replay always folds events over this base. */
+  readonly base: TableState;
+  readonly events: readonly SessionEvent[];
+  /** Derived cache; invariant: deep-equals replaySessionEvents(base, events). */
   readonly table: TableState;
-  readonly undoStack: readonly TableState[];
+  /** Prior event logs, most recent last. Undo = pop + replay. */
+  readonly undoStack: readonly (readonly SessionEvent[])[];
+}
+
+export interface RiichiCommand {
+  readonly id: string;
+  readonly occurredAt: string;
+  readonly playerIndex: number;
 }
 
 export interface WinCommand {

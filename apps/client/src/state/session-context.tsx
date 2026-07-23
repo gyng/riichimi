@@ -93,7 +93,7 @@ export function SessionProvider({ children }: { readonly children: ReactNode }) 
         ),
       declarePlayerRiichi: (playerIndex) => {
         if (state !== null) {
-          commit(declareRiichi(state, playerIndex));
+          commit(declareRiichi(state, { ...createRoundCommandMetadata(), playerIndex }));
         }
       },
       loading,
