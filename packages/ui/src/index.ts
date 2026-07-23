@@ -13,5 +13,5 @@ export type { SectionLabelProps } from "./atoms/section-label";
 export type { CounterControlProps } from "./molecules/counter-control";
 export type { MethodCardProps } from "./molecules/method-card";
 export type { SegmentedControlProps, SegmentOption } from "./molecules/segmented-control";
-export type { CalculatorLandingProps } from "./organisms/calculator-landing";
+export type { CalculatorLandingCopy, CalculatorLandingProps } from "./organisms/calculator-landing";
 export type { TopAppBarItem, TopAppBarProps } from "./organisms/top-app-bar";

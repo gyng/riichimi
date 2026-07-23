@@ -1,4 +1,6 @@
 import { CalculatorLanding } from "@riichimi/ui";
+
+import { messages } from "../src/i18n/messages";
 import { fireEvent, render, screen } from "@testing-library/react-native";
 
 describe("CalculatorLanding", () => {
@@ -7,6 +9,7 @@ describe("CalculatorLanding", () => {
 
     await render(
       <CalculatorLanding
+        copy={messages.en.home}
         hasActiveSession={false}
         historyCount={0}
         onHistory={jest.fn()}
@@ -25,6 +28,7 @@ describe("CalculatorLanding", () => {
 
     await render(
       <CalculatorLanding
+        copy={messages.en.home}
         hasActiveSession={false}
         historyCount={0}
         onHistory={jest.fn()}
@@ -43,6 +47,7 @@ describe("CalculatorLanding", () => {
 
     await render(
       <CalculatorLanding
+        copy={messages.en.home}
         hasActiveSession={false}
         historyCount={3}
         onHistory={onHistory}

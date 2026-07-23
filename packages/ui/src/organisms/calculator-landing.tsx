@@ -5,7 +5,31 @@ import { SectionLabel } from "../atoms/section-label";
 import { MethodCard } from "../molecules/method-card";
 import { color, space } from "../tokens/theme";
 
+/** Every user-facing string, supplied by the app so it can be translated. */
+export interface CalculatorLandingCopy {
+  readonly headline: string;
+  readonly historyBody: string;
+  readonly historyKicker: string;
+  readonly historyRevisit: string;
+  readonly historySaved: string;
+  readonly historyStart: string;
+  readonly intro: string;
+  readonly kicker: string;
+  readonly manualAction: string;
+  readonly manualBody: string;
+  readonly manualIndex: string;
+  readonly manualTitle: string;
+  readonly scanAction: string;
+  readonly scanBody: string;
+  readonly scanIndex: string;
+  readonly scanTitle: string;
+  readonly sessionKicker: string;
+  readonly sessionResume: string;
+  readonly sessionStart: string;
+}
+
 export interface CalculatorLandingProps {
+  readonly copy: CalculatorLandingCopy;
   readonly hasActiveSession: boolean;
   readonly historyCount: number;
   readonly onHistory: () => void;
@@ -16,6 +40,7 @@ export interface CalculatorLandingProps {
 }
 
 export function CalculatorLanding({
+  copy,
   hasActiveSession,
   historyCount,
   onHistory,
@@ -30,14 +55,11 @@ export function CalculatorLanding({
   return (
     <View style={styles.root}>
       <View style={styles.hero}>
-        <SectionLabel>Winning hand calculator</SectionLabel>
+        <SectionLabel>{copy.kicker}</SectionLabel>
         <Text accessibilityRole="header" style={styles.headline}>
-          Score a winning hand
+          {copy.headline}
         </Text>
-        <Text style={styles.intro}>
-          Scan the tiles or enter them by hand. Riichimi asks only what the table cannot show and
-          explains every point — locally, on this device.
-        </Text>
+        <Text style={styles.intro}>{copy.intro}</Text>
       </View>
 
       {rulesControl}
@@ -45,58 +67,56 @@ export function CalculatorLanding({
       <View style={[styles.methods, usesWideLayout && styles.methodsWide]}>
         <View style={styles.methodSlot}>
           <MethodCard
-            actionLabel="Scan a winning hand"
-            body="Use a guided camera frame to recognize tiles, calls, the winning tile, and dora indicators."
-            index="01 / RECOMMENDED"
+            actionLabel={copy.scanAction}
+            body={copy.scanBody}
+            index={copy.scanIndex}
             onPress={onScan}
             primary
-            title="Let the tiles speak"
+            title={copy.scanTitle}
           />
         </View>
         <View style={styles.methodSlot}>
           <MethodCard
-            actionLabel="Enter tiles manually"
-            body="Build the same auditable result without camera access. Nothing important is hidden behind automation."
-            index="02 / MANUAL"
+            actionLabel={copy.manualAction}
+            body={copy.manualBody}
+            index={copy.manualIndex}
             onPress={onManual}
-            title="Keep full control"
+            title={copy.manualTitle}
           />
         </View>
       </View>
 
       <Pressable
-        accessibilityLabel={
-          hasActiveSession ? "Resume the active table" : "Start a four-player table"
-        }
+        accessibilityLabel={hasActiveSession ? copy.sessionResume : copy.sessionStart}
         accessibilityRole="button"
         onPress={onSession}
         style={({ pressed }) => [styles.sessionCard, pressed && styles.sessionPressed]}
       >
         <View>
-          <Text style={styles.sessionKicker}>03 / TABLE SESSION</Text>
+          <Text style={styles.sessionKicker}>{copy.sessionKicker}</Text>
           <Text style={styles.sessionTitle}>
-            {hasActiveSession ? "Resume the active table" : "Start a four-player table"}
+            {hasActiveSession ? copy.sessionResume : copy.sessionStart}
           </Text>
         </View>
         <Text style={styles.sessionArrow}>→</Text>
       </Pressable>
 
       <Pressable
-        accessibilityLabel={historyCount === 0 ? "Keep the next answer" : "Revisit recent answers"}
+        accessibilityLabel={historyCount === 0 ? copy.historyStart : copy.historyRevisit}
         accessibilityRole="button"
         onPress={onHistory}
         style={({ pressed }) => [styles.historyCard, pressed && styles.sessionPressed]}
       >
         <View style={styles.historyNumberBlock}>
           <Text style={styles.historyNumber}>{String(historyCount).padStart(2, "0")}</Text>
-          <Text style={styles.historyCountLabel}>SAVED</Text>
+          <Text style={styles.historyCountLabel}>{copy.historySaved}</Text>
         </View>
         <View style={styles.historyCopy}>
-          <Text style={styles.historyKicker}>SCORE FOLIO</Text>
+          <Text style={styles.historyKicker}>{copy.historyKicker}</Text>
           <Text style={styles.historyTitle}>
-            {historyCount === 0 ? "Keep the next answer" : "Revisit recent answers"}
+            {historyCount === 0 ? copy.historyStart : copy.historyRevisit}
           </Text>
-          <Text style={styles.historyBody}>Local score audits, ready when the table asks why.</Text>
+          <Text style={styles.historyBody}>{copy.historyBody}</Text>
         </View>
         <Text style={styles.sessionArrow}>→</Text>
       </Pressable>
