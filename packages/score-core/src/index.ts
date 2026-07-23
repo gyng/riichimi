@@ -1,3 +1,5 @@
+export { announceWin } from "./domain/announcement";
+export type { WinAnnouncement } from "./domain/announcement";
 export { auditTileInventory } from "./domain/tile-inventory";
 export { scoreHand } from "./application/score-hand";
 export { calculateBasePoints, calculatePayments } from "./internal/payments";

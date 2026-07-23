@@ -1,0 +1,565 @@
+- main [ref=f21e4]:
+    - button [ref=f21e11] [cursor=pointer]
+    - generic [ref=f21e20]:
+        - heading "はじめに" [level=3] [ref=f21e22]
+        - paragraph [ref=f21e25]: このサイトでは、雀魂を始めるために必要な流れを、わかりやすく解説していきます。手順をひとつずつ進めれば、だれでもかんたんに遊べます！雀魂でドキドキの麻雀体験を楽しんでみてください！
+    - generic [ref=f21e27]:
+        - heading [level=2] [ref=f21e29]
+        - list [ref=f21e30]:
+            - listitem [ref=f21e31]:
+                - link "ゲームを始める前に" [ref=f21e32] [cursor=pointer]:
+                    - /url: "#before_start"
+            - listitem [ref=f21e36]:
+                - link "ゲームの始め方" [ref=f21e37] [cursor=pointer]:
+                    - /url: "#install"
+            - listitem [ref=f21e41]:
+                - link "インストールができたら" [ref=f21e42] [cursor=pointer]:
+                    - /url: "#initial_setup"
+            - listitem [ref=f21e46]:
+                - link "ログインのやり方" [ref=f21e47] [cursor=pointer]:
+                    - /url: "#login"
+            - listitem [ref=f21e51]:
+                - link "麻雀で遊ぶ" [ref=f21e52] [cursor=pointer]:
+                    - /url: "#features"
+            - listitem [ref=f21e56]:
+                - link "対局の操作方法" [ref=f21e57] [cursor=pointer]:
+                    - /url: "#tutorial"
+            - listitem [ref=f21e61]:
+                - link "よくある質問" [ref=f21e62] [cursor=pointer]:
+                    - /url: "#faq"
+        - generic [ref=f21e66]:
+            - paragraph [ref=f21e67]: ガイドを印刷したい方はこちら！
+            - link "かんたんスタートガイド冊子版(pdf)" [ref=f21e68] [cursor=pointer]:
+                - /url: ./assets/jantama_startguide.pdf
+        - link "公式サイト" [ref=f21e71] [cursor=pointer]:
+            - /url: https://mahjongsoul.com/
+    - generic [ref=f21e73]:
+        - generic [ref=f21e74]:
+            - heading [level=2] [ref=f21e75]
+            - paragraph [ref=f21e76]: 始める準備ができているかチェック！
+        - generic [ref=f21e77]:
+            - generic [ref=f21e78]: 事前チェックリスト
+            - list [ref=f21e81]:
+                - listitem [ref=f21e82]: メールアドレスはありますか？
+                - listitem [ref=f21e83]: スマートフォン/タブレットの空き容量はありますか？
+                - listitem [ref=f21e84]: Wi-Fiにつながっていますか？
+        - paragraph [ref=f21e85]:
+            - text: 上記ができていない場合は
+            - link "よくある質問" [ref=f21e86] [cursor=pointer]:
+                - /url: "#faq"
+            - text: で対応方法をチェック！
+    - generic [ref=f21e88]:
+        - generic [ref=f21e89]:
+            - heading [level=2] [ref=f21e90]
+            - paragraph [ref=f21e91]: ゲームを始める前に
+        - link "スマートフォン・タブレットの方" [ref=f21e92] [cursor=pointer]:
+            - /url: "#install_mobile"
+        - link "パソコンの方" [ref=f21e95] [cursor=pointer]:
+            - /url: "#install_pc"
+        - generic [ref=f21e98]:
+            - generic [ref=f21e99]: スマートフォン・タブレットでの始め方
+            - generic [ref=f21e101]:
+                - paragraph [ref=f21e104]: このガイドでは、スマートフォンやタブレットの画面を指で軽く触れる操作を「タップ」と呼ぶにゃ！
+                - heading "1 アプリストアを開く" [level=3] [ref=f21e106]:
+                    - generic [ref=f21e107]: "1"
+                    - generic [ref=f21e109]: アプリストアを開く
+                - paragraph [ref=f21e111]: スマートフォンのホーム画面からIPhone・iPadの方はApp Store、Androidの方はPlayストアのアイコンを探してタップ。
+                - generic [ref=f21e112]:
+                    - generic [ref=f21e113]: iPhone・iPad
+                    - generic [ref=f21e115]: Android
+                - heading "2 検索画面に移動する" [level=3] [ref=f21e118]:
+                    - generic [ref=f21e119]: "2"
+                    - generic [ref=f21e121]: 検索画面に移動する
+                - paragraph [ref=f21e123]: 一番下にある検索アイコンをタップ。
+                - generic [ref=f21e124]:
+                    - generic [ref=f21e125]: iPhone・iPad
+                    - generic [ref=f21e127]: Android
+                - heading "3 雀魂を検索してインストール！" [level=3] [ref=f21e130]:
+                    - generic [ref=f21e131]: "3"
+                    - generic [ref=f21e133]: 雀魂を検索してインストール！
+                - list [ref=f21e135]:
+                    - listitem [ref=f21e136]:
+                        - generic [ref=f21e137]: 一番上の検索窓でじゃんたまと検索。
+                    - listitem [ref=f21e138]:
+                        - generic [ref=f21e139]: 雀魂 -じゃんたま-の横にある入手のボタンをタップ。
+                - generic [ref=f21e140]:
+                    - generic [ref=f21e141]: iPhone・iPad
+                    - generic [ref=f21e143]: Android
+                - paragraph [ref=f21e145]:
+                    - text: ここまでできたら、
+                    - link "インストールができたら" [ref=f21e146] [cursor=pointer]:
+                        - /url: "#initial_setup"
+                    - text: に進みましょう。
+                - link "次へ" [ref=f21e148] [cursor=pointer]:
+                    - /url: "#initial_setup"
+        - generic [ref=f21e152]:
+            - generic [ref=f21e153]: パソコンでの始め方
+            - generic [ref=f21e155]:
+                - heading "1 インターネットで検索する" [level=3] [ref=f21e157]:
+                    - generic [ref=f21e158]: "1"
+                    - generic [ref=f21e160]: インターネットで検索する
+                - paragraph [ref=f21e162]: インターネットでじゃんたまと検索。
+                - heading "2 雀魂公式サイトを開く" [level=3] [ref=f21e166]:
+                    - generic [ref=f21e167]: "2"
+                    - generic [ref=f21e169]: 雀魂公式サイトを開く
+                - paragraph [ref=f21e171]: 検索の一番上に出てくる雀魂 -じゃんたま-| 麻雀を無料で気軽にをクリック。
+                - heading "3 ゲームスタート" [level=3] [ref=f21e175]:
+                    - generic [ref=f21e176]: "3"
+                    - generic [ref=f21e178]: ゲームスタート
+                - paragraph [ref=f21e180]: スタートボタンをクリック。
+                - paragraph [ref=f21e183]:
+                    - text: ここまでできたら、
+                    - link "ログインのやり方" [ref=f21e184] [cursor=pointer]:
+                        - /url: "#login"
+                    - text: に進みましょう。
+                - link "次へ" [ref=f21e186] [cursor=pointer]:
+                    - /url: "#login"
+    - generic [ref=f21e191]:
+        - generic [ref=f21e192]:
+            - heading [level=2] [ref=f21e193]
+            - paragraph [ref=f21e194]: ゲームを始める前に
+        - generic [ref=f21e196]:
+            - heading "1 雀魂アプリを開く" [level=3] [ref=f21e198]:
+                - generic [ref=f21e199]: "1"
+                - generic [ref=f21e201]: 雀魂アプリを開く
+            - paragraph [ref=f21e203]: ホーム画面から雀魂のアイコンを探してタップ。
+            - heading "2 ローカルネットワーク上の デバイスの設定をする" [level=3] [ref=f21e207]:
+                - generic [ref=f21e208]: "2"
+                - generic [ref=f21e210]:
+                    - generic [ref=f21e211]: ローカルネットワーク上の
+                    - generic [ref=f21e212]: デバイスの設定をする
+            - paragraph [ref=f21e213]: ※Wi-Fiにつなげていない場合はこの画面は表示されないので、次に進む。
+            - paragraph [ref=f21e216]: アプリを開くと、ローカルネットワーク上のデバイスを見つけることを許可するか聞かれるので、許可/アプリにトラッキングしないように要求(許可しない)を選んでタップ。
+            - generic [ref=f21e217]:
+                - generic [ref=f21e218] [cursor=pointer]:
+                    - paragraph [ref=f21e220]: ローカルネットワーク上のデバイスを見つけるとは？
+                    - button [ref=f21e221]
+                - paragraph [ref=f21e222]: 同じWi-Fiにあるプリンターやパソコンなどを探してつなぐ機能です。ゲームを遊ぶだけなら不要なので、不安な場合は許可しなくても問題ないです。
+            - heading "3 通知の設定をする" [level=3] [ref=f21e224]:
+                - generic [ref=f21e225]: "3"
+                - generic [ref=f21e227]: 通知の設定をする
+            - paragraph [ref=f21e229]: 通知を許可するか聞かれるので、許可/許可しないを選んでタップ。
+            - paragraph [ref=f21e234]: イベントやメンテナンスなどのお知らせがほしい時は許可がおすすめにゃ！
+            - heading "4 トラッキングの設定をする" [level=3] [ref=f21e236]:
+                - generic [ref=f21e237]: "4"
+                - generic [ref=f21e239]: トラッキングの設定をする
+            - paragraph [ref=f21e241]: ※Wi-Fiにつなげていない場合はこの画面は表示されないので、次に進む。
+            - list [ref=f21e242]:
+                - listitem [ref=f21e243]:
+                    - generic [ref=f21e244]: トラッキングの許可に関する画面が出るので次へをタップ。
+                - listitem [ref=f21e245]:
+                    - generic [ref=f21e246]: 許可するか聞かれるので許可/許可しないを選んでタップ。
+            - generic [ref=f21e250]:
+                - generic [ref=f21e251] [cursor=pointer]:
+                    - paragraph [ref=f21e253]: トラッキングとは？
+                    - button [ref=f21e254]
+                - paragraph [ref=f21e255]: トラッキングとは、アプリやウェブサイトが「あなたがどんな操作をしたか」を記録・追跡することです。たとえば、どんなページを見たか、どんな商品に興味を持ったか、といった情報を集めます。この情報は、広告をあなたに合わせて表示したり、アプリの使いやすさを改善したりするために使われます。
+            - heading "5 追加データをダウンロード" [level=3] [ref=f21e257]:
+                - generic [ref=f21e258]: "5"
+                - generic [ref=f21e260]: 追加データをダウンロード
+            - paragraph [ref=f21e262]: 基本データダウンロード/全データダウンロードのどちらかを選んで、確認ボタンをタップ。
+            - paragraph [ref=f21e267]: キャラの声やアガリ時の演出ありでプレイしたい場合は「全データダウンロード」がおすすめにゃ！
+            - paragraph [ref=f21e268]:
+                - text: ここまでできたら、
+                - link "ログインのやり方" [ref=f21e269] [cursor=pointer]:
+                    - /url: "#login"
+                - text: に進みましょう。
+            - link "次へ" [ref=f21e271] [cursor=pointer]:
+                - /url: "#login"
+    - generic [ref=f21e276]:
+        - generic [ref=f21e277]:
+            - heading [level=2] [ref=f21e278]
+            - paragraph [ref=f21e279]: ゲームを始める前に
+        - generic [ref=f21e281]:
+            - paragraph [ref=f21e284]: ログインにはメールアドレスが必要にゃ。登録したいメールアドレスをあらかじめ準備しておくにゃ！
+            - heading "1 ログインをタップ" [level=3] [ref=f21e286]:
+                - generic [ref=f21e287]: "1"
+                - generic [ref=f21e289]: ログインをタップ
+            - list [ref=f21e291]:
+                - listitem [ref=f21e292]:
+                    - generic [ref=f21e293]: 「次回から自動でログインする」にチェックを入れる。
+                - listitem [ref=f21e294]:
+                    - generic [ref=f21e295]: ログインボタンをタップ(パソコンの人はクリック)。
+            - heading "2 認証コードを受け取る" [level=3] [ref=f21e299]:
+                - generic [ref=f21e300]: "2"
+                - generic [ref=f21e302]: 認証コードを受け取る
+            - list [ref=f21e304]:
+                - listitem [ref=f21e305]:
+                    - generic [ref=f21e306]: 自分のメールアドレスを入力。
+                - listitem [ref=f21e307]:
+                    - generic [ref=f21e308]: コードを受け取るをタップ。
+                - listitem [ref=f21e309]:
+                    - generic [ref=f21e310]: 入力したメールアドレスにメールが届いたか確認。
+            - paragraph [ref=f21e311]: ※メールアドレスのフォーマットが正しくないときや、メールアドレスを入力しない場合はボタンをタップできません。メールアドレスを確認してください（メールアドレスの最初の部分にスペースなどが入っている可能性があります）。
+            - generic [ref=f21e314]:
+                - paragraph [ref=f21e316]: メールが届かないときは以下の方法を試してみてにゃ！
+                - list [ref=f21e317]:
+                    - listitem [ref=f21e318]: 入力したメールアドレスが正しいか確認
+                    - listitem [ref=f21e319]: 迷惑メールフォルダに受信されていないか確認
+                    - listitem [ref=f21e320]: 迷惑メール、フィルタリングの確認、および受信設定に「info@passport.yostar.co.jp」を入れる
+                    - listitem [ref=f21e321]: 全て半角で入力されているか確認
+                    - listitem [ref=f21e322]: 余分なスペース（空白）がないか確認
+                    - listitem [ref=f21e323]: セキュリティソフトの設定を見直す
+            - heading "3 認証コードを確認" [level=3] [ref=f21e325]:
+                - generic [ref=f21e326]: "3"
+                - generic [ref=f21e328]: 認証コードを確認
+            - list [ref=f21e330]:
+                - listitem [ref=f21e331]:
+                    - generic [ref=f21e332]: メールが届いたら、雀魂アプリを閉じる。
+                - listitem [ref=f21e333]:
+                    - generic [ref=f21e334]: メールアプリを開いて、メールを確認。
+                - listitem [ref=f21e335]:
+                    - generic [ref=f21e336]: 確認コードをコピーするかメモしてすぐに入力できるようにする。
+            - paragraph [ref=f21e339]: ※図はメールアプリの画面例。認証コードは仮のものです。実際は6桁の数字で表示されます。
+            - heading "4 認証コードを入力" [level=3] [ref=f21e341]:
+                - generic [ref=f21e342]: "4"
+                - generic [ref=f21e344]: 認証コードを入力
+            - list [ref=f21e346]:
+                - listitem [ref=f21e347]:
+                    - generic [ref=f21e348]: 雀魂アプリを再度開く。
+                - listitem [ref=f21e349]:
+                    - generic [ref=f21e350]: 認証コードを入力。
+                - listitem [ref=f21e351]:
+                    - generic [ref=f21e352]: ログインボタンをタップ。
+            - paragraph [ref=f21e353]: ※認証コードをまちがえると「認証コードが正しくありません。認証コードを再度ご確認ください。」と表示されます。再度確認して正しい認証コードを入力してください。
+            - heading "5 Yostar IDを連携" [level=3] [ref=f21e357]:
+                - generic [ref=f21e358]: "5"
+                - generic [ref=f21e360]: Yostar IDを連携
+            - list [ref=f21e362]:
+                - listitem [ref=f21e363]:
+                    - generic [ref=f21e364]: ログインに成功したらYostar IDの連携を求められるので「現在使用中のメールアドレスで連携」をタップ。
+                - listitem [ref=f21e365]:
+                    - generic [ref=f21e366]: 連携完了の画面が出るので、右上の×をタップ。
+            - heading "6 利用規約を確認" [level=3] [ref=f21e372]:
+                - generic [ref=f21e373]: "6"
+                - generic [ref=f21e375]: 利用規約を確認
+            - paragraph [ref=f21e377]: 利用規約のお知らせが出るので、確認したら確認ボタンをタップ。
+            - heading "7 プレイヤー名を登録" [level=3] [ref=f21e381]:
+                - generic [ref=f21e382]: "7"
+                - generic [ref=f21e384]: プレイヤー名を登録
+            - list [ref=f21e386]:
+                - listitem [ref=f21e387]:
+                    - generic [ref=f21e388]: 好きな名前を入力。
+                - listitem [ref=f21e389]:
+                    - generic [ref=f21e390]: 入力できたら確認ボタンをタップ。
+            - paragraph [ref=f21e393]: 同じ名前のユーザーがいる場合、その名前は使用できないので、他のユーザー名を登録してください。
+            - paragraph [ref=f21e396]: 同じ名前のユーザーがいたときは、名前の末尾に数字を入れると使えるようになることが多いにゃ!（例：〇〇1234）
+            - heading "8 チュートリアルを受ける" [level=3] [ref=f21e398]:
+                - generic [ref=f21e399]: "8"
+                - generic [ref=f21e401]: チュートリアルを受ける
+            - paragraph [ref=f21e403]: チュートリアル(麻雀のルール説明)を受けるか聞かれるので、 受けたい人は「はい」受けたくない人は「大丈夫」をタップ。
+            - heading "9 ログイン成功！" [level=3] [ref=f21e407]:
+                - generic [ref=f21e408]: "9"
+                - generic [ref=f21e410]: ログイン成功！
+            - paragraph [ref=f21e412]: 下の画面になったらログイン成功！ 実際にゲームを始めてみましょう！
+            - paragraph [ref=f21e415]:
+                - text: ログインができたら、
+                - link "麻雀で遊ぶ" [ref=f21e416] [cursor=pointer]:
+                    - /url: "#features"
+                - text: に進みましょう。
+            - link "次へ" [ref=f21e418] [cursor=pointer]:
+                - /url: "#features"
+    - generic [ref=f21e423]:
+        - generic [ref=f21e424]:
+            - heading [level=2] [ref=f21e425]
+            - paragraph [ref=f21e426]: 雀魂は色んな遊び方で楽しめる！
+        - generic [ref=f21e427]:
+            - generic [ref=f21e428]:
+                - generic [ref=f21e429]: 全国のプレイヤーと対戦！
+                - heading "段位戦" [level=3] [ref=f21e430]
+            - paragraph [ref=f21e433]: 全国のプレイヤーとオンラインで対局します。勝利すると「段位ポイント」が増え、段位が上がります！最高ランク「魂天」目指して、実力を磨きましょう！
+            - generic [ref=f21e434]:
+                - generic [ref=f21e435]: 段位とは
+                - generic [ref=f21e437]:
+                    - paragraph [ref=f21e438]: スタート直後の段位は「初心」から始まり、昇段していくと 「雀士」「雀傑」「雀豪」「雀聖」と続き、最高段位が「魂天」です。
+                    - paragraph [ref=f21e443]:
+                        - text: 段位戦は、あらかじめルールが決まっているにゃ。くわしくは
+                        - link [ref=f21e444] [cursor=pointer]:
+                            - /url: https://mahjongsoul.com/news/46
+                            - text: 公式ページ
+                        - text: をチェックにゃ！
+            - generic [ref=f21e445]:
+                - generic [ref=f21e446]: 段位戦のやり方
+                - generic [ref=f21e448]:
+                    - heading [level=3] [ref=f21e450]:
+                        - generic [ref=f21e451]: "1"
+                        - generic [ref=f21e453]: 対戦する間を決める
+                    - paragraph [ref=f21e455]: 初心者は「銅の間」からスタートします。段位が上がるにつれて「銀の間」「金の間」「玉の間」「王座の間」といった上位の間で戦えるようになります。
+                    - heading [level=3] [ref=f21e459]:
+                        - generic [ref=f21e460]: "2"
+                        - generic [ref=f21e462]: ルールを選ぶ
+                    - list [ref=f21e464]:
+                        - listitem [ref=f21e465]:
+                            - generic [ref=f21e466]: 参加したいルールをタップ。
+                        - listitem [ref=f21e467]:
+                            - generic [ref=f21e468]: タップするとマッチングが始まり、少し待つと対局が始まります。
+                    - paragraph [ref=f21e473]: 自分の段位に合った間を選ぶと、同じくらいの実力の相手と遊べるのでおすすめにゃ！
+            - button "詳しく見る" [ref=f21e474] [cursor=pointer]
+        - generic [ref=f21e477]:
+            - generic [ref=f21e478]:
+                - generic [ref=f21e479]: 家族や友達と気軽に麻雀！
+                - heading "友人戦" [level=3] [ref=f21e480]
+            - paragraph [ref=f21e483]: 友達同士でルームを作って遊べるモードです。ルールも自由に設定できて気軽に遊べます！仲良し同士で盛り上がろう！
+            - generic [ref=f21e484]:
+                - generic [ref=f21e485]: 友人戦のやり方
+                - generic [ref=f21e487]:
+                    - paragraph [ref=f21e488]: 1人がルームを作り、他の人がそのルームに入ります。
+                    - paragraph [ref=f21e490]: ルームを作る人とルームに入る人が
+                    - heading [level=3] [ref=f21e494]:
+                        - generic [ref=f21e495]: "1"
+                        - generic [ref=f21e497]:
+                            - generic [ref=f21e498]:
+                                - text: メイン画面から
+                                - generic [ref=f21e499]: 友人戦
+                                - text: を
+                            - generic [ref=f21e500]: タップ
+                    - paragraph [ref=f21e504]: ルームを作る人が
+                    - heading [level=3] [ref=f21e507]:
+                        - generic [ref=f21e508]: "2"
+                        - generic [ref=f21e511]:
+                            - generic [ref=f21e512]: ルーム作成
+                            - text: をタップ
+                    - paragraph [ref=f21e516]: ルームを作る人が
+                    - heading [level=3] [ref=f21e519]:
+                        - generic [ref=f21e520]: "3"
+                        - generic [ref=f21e522]:
+                            - generic [ref=f21e523]: ルールを選ぶ
+                            - generic [ref=f21e525]:
+                                - generic [ref=f21e527]: 作成
+                                - text: をタップ
+                    - paragraph [ref=f21e531]: ルームを作る人が
+                    - heading [level=3] [ref=f21e534]:
+                        - generic [ref=f21e535]: "4"
+                        - generic [ref=f21e537]:
+                            - generic [ref=f21e538]:
+                                - generic [ref=f21e539]: ルームID
+                                - text: をルームに入る人に
+                            - generic [ref=f21e540]: 伝える
+                    - paragraph [ref=f21e544]: ルームに入る人が
+                    - heading [level=3] [ref=f21e547]:
+                        - generic [ref=f21e548]: "5"
+                        - generic [ref=f21e551]:
+                            - generic [ref=f21e552]: ルーム参加
+                            - text: をタップ
+                    - paragraph [ref=f21e556]: ルームに入る人が
+                    - heading [level=3] [ref=f21e559]:
+                        - generic [ref=f21e560]: "6"
+                        - generic [ref=f21e563]:
+                            - generic [ref=f21e564]: ルームID
+                            - text: を入力し
+                            - generic [ref=f21e565]: 確認
+                            - text: タップ
+                    - paragraph [ref=f21e569]: ルームに入る人が
+                    - heading [level=3] [ref=f21e572]:
+                        - generic [ref=f21e573]: "7"
+                        - generic [ref=f21e576]:
+                            - generic [ref=f21e577]: 準備
+                            - text: をタップ
+                    - paragraph [ref=f21e581]: ルームを作る人が
+                    - heading [level=3] [ref=f21e584]:
+                        - generic [ref=f21e585]: "8"
+                        - generic [ref=f21e587]:
+                            - generic [ref=f21e588]:
+                                - text: 全員が準備できたら
+                                - generic [ref=f21e589]: 開始
+                            - generic [ref=f21e590]: をタップ
+                    - paragraph [ref=f21e595]: 人数が足りないときはコンピューター（CPU）も追加できるにゃ!
+            - button "詳しく見る" [ref=f21e596] [cursor=pointer]
+        - generic [ref=f21e599]:
+            - generic [ref=f21e600]:
+                - generic [ref=f21e601]: 優勝を目指して、実力を試そう！
+                - heading "大会戦" [level=3] [ref=f21e602]
+            - paragraph [ref=f21e605]: 雀魂には、公式大会や他のユーザーが主催した大会に参加できます！普段の対局とは違う特別ルールや緊張感の中で、仲間や全国のプレイヤーと競い合えます。
+            - generic [ref=f21e606]:
+                - generic [ref=f21e607]: 大会戦の遊び方
+                - paragraph [ref=f21e610]: 大会戦（たいかいせん） は、雀魂で開かれる大人数参加型の特別な対局モードです。主催者がルールを決め、参加者は「大会コード」を入力して入ります。
+            - generic [ref=f21e611]:
+                - generic [ref=f21e612]: 大会の主催の仕方
+                - generic [ref=f21e614]:
+                    - paragraph [ref=f21e615]: 大会戦（たいかいせん） は、雀魂で開かれる大人数参加型の特別な対局モードです。主催者がルールを決め、参加者は「大会コード」を入力して入ります。
+                    - heading [level=3] [ref=f21e617]:
+                        - generic [ref=f21e618]: "1"
+                        - generic [ref=f21e620]:
+                            - generic [ref=f21e621]:
+                                - text: 大会戦から
+                                - generic [ref=f21e622]: 大会ロビー
+                                - text: を
+                            - generic [ref=f21e623]: タップ
+                    - heading [level=3] [ref=f21e627]:
+                        - generic [ref=f21e628]: "2"
+                        - generic [ref=f21e631]:
+                            - generic [ref=f21e632]: 大会管理
+                            - text: をタップ
+                    - heading [level=3] [ref=f21e636]:
+                        - generic [ref=f21e637]: "3"
+                        - generic [ref=f21e640]:
+                            - generic [ref=f21e641]: 大会作成
+                            - text: をタップ
+                    - heading [level=3] [ref=f21e645]:
+                        - generic [ref=f21e646]: "4"
+                        - generic [ref=f21e648]:
+                            - generic [ref=f21e649]: 大会のルールを決める
+                            - generic [ref=f21e651]:
+                                - generic [ref=f21e653]: 作成
+                                - text: タップ
+            - generic [ref=f21e656]:
+                - generic [ref=f21e657]: 大会の入り方
+                - generic [ref=f21e659]:
+                    - heading [level=3] [ref=f21e661]:
+                        - generic [ref=f21e662]: "1"
+                        - generic [ref=f21e664]:
+                            - generic [ref=f21e665]:
+                                - text: 大会戦から
+                                - generic [ref=f21e666]: 大会ロビー
+                                - text: を
+                            - generic [ref=f21e667]: タップ
+                    - heading [level=3] [ref=f21e671]:
+                        - generic [ref=f21e672]: "2"
+                        - generic [ref=f21e675]:
+                            - generic [ref=f21e676]: 大会IDで検索
+                            - text: をタップ
+                    - heading [level=3] [ref=f21e680]:
+                        - generic [ref=f21e681]: "3"
+                        - generic [ref=f21e684]:
+                            - text: 大会IDを入力し
+                            - generic [ref=f21e685]: 確認
+                            - text: をタップ
+                    - heading [level=3] [ref=f21e689]:
+                        - generic [ref=f21e690]: "4"
+                        - generic [ref=f21e693]:
+                            - generic [ref=f21e694]: 準備完了
+                            - text: をタップ
+            - button "詳しく見る" [ref=f21e697] [cursor=pointer]
+        - generic [ref=f21e700]:
+            - heading "期間限定イベントも充実" [level=3] [ref=f21e702]
+            - paragraph [ref=f21e705]: 特別ルールや演出が楽しめるお祭り気分のイベント開催中！参加するだけで普段とは違うワクワク感が味わえ、報酬もゲットできます。いつもと違う雀魂を楽しんでください！
+            - generic [ref=f21e706]:
+                - generic [ref=f21e707]: イベントの始め方
+                - generic [ref=f21e709]:
+                    - paragraph [ref=f21e710]: 大会戦（たいかいせん） は、雀魂で開かれる大人数参加型の特別な対局モードです。主催者がルールを決め、参加者は「大会コード」を入力して入ります。
+                    - heading [level=3] [ref=f21e712]:
+                        - generic [ref=f21e713]: "1"
+                        - generic [ref=f21e715]:
+                            - generic [ref=f21e716]:
+                                - text: ホーム画面の
+                                - generic [ref=f21e717]: イベント
+                            - generic [ref=f21e718]: アイコンをタップ
+                    - heading [level=3] [ref=f21e722]:
+                        - generic [ref=f21e723]: "2"
+                        - generic [ref=f21e725]:
+                            - generic [ref=f21e726]: イベント一覧から、好きな
+                            - generic [ref=f21e727]: イベントを選んで参加！
+            - button "詳しく見る" [ref=f21e730] [cursor=pointer]
+        - generic [ref=f21e733]:
+            - heading "その他の機能も充実" [level=3] [ref=f21e735]
+            - paragraph [ref=f21e738]: 雀魂は麻雀だけでなく、麻雀が上手くなるための観戦や牌譜といったモードのほか、キャラや装飾品を集めてカスタマイズできる倉庫・雑貨屋・祈願という機能もあります。
+            - generic [ref=f21e739]: 各機能の位置
+            - heading [level=3] [ref=f21e743]:
+                - generic [ref=f21e744]: プロフィール確認
+            - paragraph [ref=f21e747]: 自分の対戦成績や段位などが確認できます。
+            - heading [level=3] [ref=f21e751]:
+                - generic [ref=f21e752]: 観戦
+            - paragraph [ref=f21e755]: リアルタイムで行われている対戦が観戦できます。
+            - heading [level=3] [ref=f21e759]:
+                - generic [ref=f21e760]: 牌譜
+            - paragraph [ref=f21e763]: 自分の今までしてきた対戦の牌譜が確認できます。
+            - heading [level=3] [ref=f21e767]:
+                - generic [ref=f21e768]: 倉庫
+            - paragraph [ref=f21e771]: 自分の持っているアイテム・イラストが確認できます。
+            - heading [level=3] [ref=f21e775]:
+                - generic [ref=f21e776]: 雑貨屋
+            - paragraph [ref=f21e779]: 雑貨屋（ざっかや） は、雀魂の中でアイテムを買ったり交換したりできるお店です。ゲーム内の通貨（コインや宝玉など）を使って、キャラクター用アイテムや便利な道具を手に入れることができます。
+            - heading [level=3] [ref=f21e783]:
+                - generic [ref=f21e784]: 祈願
+            - paragraph [ref=f21e787]: 祈願（きがん） は、雀魂でキャラクターや装飾品を手に入れるための「ガチャ」のことです。ゲーム内のアイテム（祈願石や有償／無償の通貨）を使って引くことで、新しい仲間や見た目を楽しむ要素が増えます。
+            - button "詳しく見る" [ref=f21e790] [cursor=pointer]
+    - generic [ref=f21e794]:
+        - generic [ref=f21e795]:
+            - heading [level=2] [ref=f21e796]
+            - paragraph [ref=f21e797]: 操作方法を覚えて、いざ対局！
+        - generic [ref=f21e798]:
+            - generic [ref=f21e799]: 画面の見方
+            - generic [ref=f21e801]:
+                - heading [level=3] [ref=f21e805]
+                - heading [level=3] [ref=f21e812]
+                - heading [level=3] [ref=f21e819]
+                - heading [level=3] [ref=f21e826]
+                - heading [level=3] [ref=f21e833]
+        - generic [ref=f21e839]:
+            - generic [ref=f21e840]: 牌の切り方
+            - generic [ref=f21e842]:
+                - paragraph [ref=f21e843]: 2通りあるので、やりやすい方でやってみましょう。
+                - heading "やり方 1 タップで切る" [level=3] [ref=f21e845]:
+                    - generic [ref=f21e846]: やり方
+                    - generic [ref=f21e847]: "1"
+                    - generic [ref=f21e849]: タップで切る
+                - paragraph [ref=f21e851]: 切りたい牌をタップして、もう一度同じ牌をタップすると切れます。
+                - heading "やり方 2 スライドで切る" [level=3] [ref=f21e855]:
+                    - generic [ref=f21e856]: やり方
+                    - generic [ref=f21e857]: "2"
+                    - generic [ref=f21e859]: スライドで切る
+                - paragraph [ref=f21e861]: 捨てたい牌を指で押さえて、牌を持ち上げるイメージで、画面の中央までスライドすると切れます。
+        - generic [ref=f21e864]:
+            - generic [ref=f21e865]: 鳴くとき、アガるとき
+            - paragraph [ref=f21e868]: 出てくるボタンをタップ。鳴かない・アガらないときはスキップをタップ。
+    - generic [ref=f21e872]:
+        - heading [level=2] [ref=f21e874]
+        - generic [ref=f21e875]:
+            - generic [ref=f21e876] [cursor=pointer]:
+                - paragraph [ref=f21e878]: メールアドレスを確認・作成したい。
+                - button [ref=f21e879]
+            - paragraph [ref=f21e880]: スマートフォンの設定アプリから「アカウント」や「ユーザー情報」を見ると、自分のメールアドレスを確認できます。 アドレスを持っていない人はGmailがおすすめです。 作成は「Gmail 新規登録」と検索して、案内に従って進めましょう。
+        - generic [ref=f21e881]:
+            - generic [ref=f21e882] [cursor=pointer]:
+                - paragraph [ref=f21e884]: スマートフォンの容量を空けたい。
+                - button [ref=f21e885]
+            - generic:
+                - paragraph [ref=f21e886]: 次の方法を試してみましょう。
+                - list [ref=f21e888]:
+                    - listitem [ref=f21e889]: 写真や動画を整理する（不要なものを消す／クラウドに保存する）
+                    - listitem [ref=f21e890]: アプリのキャッシュを削除する（設定 → ストレージから可能）
+                    - listitem [ref=f21e891]: SNSなどで受け取った大きな画像や動画を消す
+                    - listitem [ref=f21e892]: 使っていないアプリを削除する
+                    - listitem [ref=f21e893]: ダウンロードした不要なファイルを削除する
+        - generic [ref=f21e894]:
+            - generic [ref=f21e895] [cursor=pointer]:
+                - paragraph [ref=f21e897]: トラッキングとは？
+                - button [ref=f21e898]
+            - paragraph [ref=f21e899]: トラッキングとは、アプリやウェブサイトが「あなたがどんな操作をしたか」を記録・追跡することです。たとえば、どんなページを見たか、どんな商品に興味を持ったか、といった情報を集めます。この情報は、広告をあなたに合わせて表示したり、アプリの使いやすさを改善したりするために使われます。
+        - generic [ref=f21e900]:
+            - generic [ref=f21e901] [cursor=pointer]:
+                - paragraph [ref=f21e903]: ローカルネットワーク上のデバイスを見つけるとは？
+                - button [ref=f21e904]
+            - paragraph [ref=f21e905]: 同じWi-Fiにつなげているプリンターやパソコンなどを探してつなぐ機能です。ゲームを遊ぶだけなら不要なので、不安な場合は許可しなくても問題ないです。
+        - generic [ref=f21e906]:
+            - generic [ref=f21e907] [cursor=pointer]:
+                - paragraph [ref=f21e909]: Yostar ID とは？
+                - button [ref=f21e910]
+            - paragraph [ref=f21e911]: Yostar ID（ヨースターID） は、雀魂などYostarのゲームを遊ぶための共通アカウントです。登録しておくと、スマートフォン・タブレット・パソコンのどこからでも同じデータで遊ぶことができます。万が一スマートフォンがこわれたり買いかえたりしても、Yostar IDでログインすればデータを引きついで続きから遊べるので安心です。
+        - generic [ref=f21e912]:
+            - generic [ref=f21e913] [cursor=pointer]:
+                - paragraph [ref=f21e915]: ログイン方法がわからなくなった・メールアドレスやログイン方法を変更したい。
+                - button [ref=f21e916]
+            - generic:
+                - paragraph [ref=f21e917]: ログイン方法の確認・変更を行うことが可能です。お問い合わせページにアクセスし、カテゴリー「アカウントについて」を選んで、お問い合わせフォームよりご連絡ください。メールアドレスやログイン方法の変更は本人確認が必要になるので、必要な情報を全て記入してください。
+                - paragraph [ref=f21e918]:
+                    - link "お問い合わせページ" [ref=f21e919] [cursor=pointer]:
+                        - /url: https://mahjongsoul.com/support
+    - generic [ref=f21e923]:
+        - link [ref=f21e924] [cursor=pointer]:
+            - /url: https://apps.apple.com/jp/app/id1469186379
+        - link [ref=f21e925] [cursor=pointer]:
+            - /url: https://play.google.com/store/apps/details?id=com.YoStarJP.MajSoul
+    - generic [ref=f21e928]:
+        - generic [ref=f21e929]:
+            - link "利用規約" [ref=f21e930] [cursor=pointer]:
+                - /url: https://mahjongsoul.com/terms_of_service
+            - link "プライバシーポリシー" [ref=f21e931] [cursor=pointer]:
+                - /url: https://mahjongsoul.com/privacy_policy
+            - link "資金決済法に基づく表示" [ref=f21e932] [cursor=pointer]:
+                - /url: https://mahjongsoul.com/money_settlement
+            - link "特定商取引法に基づく表示" [ref=f21e933] [cursor=pointer]:
+                - /url: https://mahjongsoul.com/specific_business
+            - link "公式大会参加規約" [ref=f21e934] [cursor=pointer]:
+                - /url: https://mahjongsoul.com/new_statute
+        - generic [ref=f21e935]: ©2019 Soul Games, Inc. ©2019 Yostar, Inc. All Rights Reserved.

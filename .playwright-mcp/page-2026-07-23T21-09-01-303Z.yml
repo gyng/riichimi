@@ -1,0 +1,74 @@
+- generic [ref=f18e3]:
+    - generic [ref=f18e6]:
+        - link [ref=f18e7] [cursor=pointer]:
+            - /url: https://twitter.com/MahjongSoul_JP
+        - link [ref=f18e9] [cursor=pointer]:
+            - /url: https://discord.gg/mahjongsoul
+        - link [ref=f18e11] [cursor=pointer]:
+            - /url: https://www.youtube.com/channel/UC8Wn_3U-fssptm6US_nsoOA
+        - link [ref=f18e13] [cursor=pointer]:
+            - /url: https://www.twitch.tv/mahjongsoul_jp
+    - generic [ref=f18e15]:
+        - generic [ref=f18e16]:
+            - link [ref=f18e20] [cursor=pointer]:
+                - /url: https://game.mahjongsoul.com/index.html
+            - link [ref=f18e21] [cursor=pointer]:
+                - /url: https://mahjongsoul.com/startguide
+            - generic [ref=f18e22]:
+                - link [ref=f18e23] [cursor=pointer]:
+                    - /url: https://apps.apple.com/jp/app/id1469186379
+                - link [ref=f18e25] [cursor=pointer]:
+                    - /url: https://play.google.com/store/apps/details?id=com.YoStarJP.MajSoul
+        - generic [ref=f18e31]:
+            - generic [ref=f18e32]:
+                - link "イベント 2026/7/20 New ☆ピックアップ☆特定雀士「ミラ」「藤本 キララ」「七海 礼奈」「ジニア」「九条 璃雨」「かぐや姫 」「セイラン」「三上 千織」「石原 碓海」「ワン次郎」「ライアン」「A-37」（2026年7月22日(水) 〜 2026年8月5日(水) 5:59）" [ref=f18e33] [cursor=pointer]:
+                    - /url: /news/370
+                    - generic [ref=f18e34]:
+                        - generic [ref=f18e35]:
+                            - generic [ref=f18e36]: イベント
+                            - generic [ref=f18e38]: 2026/7/20
+                            - generic [ref=f18e39]: New
+                        - generic [ref=f18e41]: ☆ピックアップ☆特定雀士「ミラ」「藤本 キララ」「七海 礼奈」「ジニア」「九条 璃雨」「かぐや姫 」「セイラン」「三上 千織」「石原 碓海」「ワン次郎」「ライアン」「A-37」（2026年7月22日(水) 〜 2026年8月5日(水) 5:59）
+                - link "イベント 2026/7/20 New ☆期間限定着せ替え☆「ミラ」「七海 礼奈」「石原 碓海」「一姫」「ジニア」「九条 璃雨」「藤本 キララ」「かぐや姫」「セイラン」「ワン次郎 」「ライアン」「A-37」（2026年7月22日(水) 〜 2026年8月5日(水) 5:59）" [ref=f18e42] [cursor=pointer]:
+                    - /url: /news/371
+                    - generic [ref=f18e43]:
+                        - generic [ref=f18e44]:
+                            - generic [ref=f18e45]: イベント
+                            - generic [ref=f18e47]: 2026/7/20
+                            - generic [ref=f18e48]: New
+                        - generic [ref=f18e50]: ☆期間限定着せ替え☆「ミラ」「七海 礼奈」「石原 碓海」「一姫」「ジニア」「九条 璃雨」「藤本 キララ」「かぐや姫」「セイラン」「ワン次郎 」「ライアン」「A-37」（2026年7月22日(水) 〜 2026年8月5日(水) 5:59）
+                - link "メンテナンス 2026/7/20 New メンテナンスのお知らせ 期間限定イベント「蝶が見る花の夢」開催(2026年7月22日(水) 7:30 ~17:00)" [ref=f18e51] [cursor=pointer]:
+                    - /url: /news/369
+                    - generic [ref=f18e52]:
+                        - generic [ref=f18e53]:
+                            - generic [ref=f18e54]: メンテナンス
+                            - generic [ref=f18e56]: 2026/7/20
+                            - generic [ref=f18e57]: New
+                        - generic [ref=f18e59]: メンテナンスのお知らせ 期間限定イベント「蝶が見る花の夢」開催(2026年7月22日(水) 7:30 ~17:00)
+                - link "メンテナンス 2026/7/8 アップデートのお知らせ 期間限定イベント「着せ替え復刻投票」開催（7月10日(金) 12:00）" [ref=f18e60] [cursor=pointer]:
+                    - /url: /news/368
+                    - generic [ref=f18e61]:
+                        - generic [ref=f18e62]:
+                            - generic [ref=f18e63]: メンテナンス
+                            - generic [ref=f18e65]: 2026/7/8
+                        - generic [ref=f18e66]: アップデートのお知らせ 期間限定イベント「着せ替え復刻投票」開催（7月10日(金) 12:00）
+                - link "2026/6/16 【第60回】社務所通信 2026年6月16日(火)20時配信！" [ref=f18e67] [cursor=pointer]:
+                    - /url: /news/367
+                    - generic [ref=f18e68]:
+                        - generic [ref=f18e69]: 2026/6/16
+                        - generic [ref=f18e72]: 【第60回】社務所通信 2026年6月16日(火)20時配信！
+            - link "more" [ref=f18e73] [cursor=pointer]:
+                - /url: /news
+    - generic [ref=f18e77]:
+        - generic [ref=f18e78]:
+            - link "利用規約" [ref=f18e79] [cursor=pointer]:
+                - /url: /terms_of_service
+            - link "プライバシーポリシー" [ref=f18e80] [cursor=pointer]:
+                - /url: /privacy_policy
+            - link "資金決済法に基づく表示" [ref=f18e81] [cursor=pointer]:
+                - /url: /money_settlement
+            - link "特定商取引法に基づく表示" [ref=f18e82] [cursor=pointer]:
+                - /url: /specific_business
+            - link "公式大会参加規約" [ref=f18e83] [cursor=pointer]:
+                - /url: /new_statute
+        - generic [ref=f18e84]: ©2019 Soul Games, Inc. ©2019 Yostar, Inc. All Rights Reserved.

@@ -1,4 +1,5 @@
 import {
+  announceWin,
   auditTileInventory,
   canonicalizeTile,
   scoreHand,
@@ -44,6 +45,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { bodyEdges } from "../../components/screen-insets";
 
+import { speech } from "../../infrastructure/speech";
+import { announcementText } from "../announcer/announcement-text";
+import { useAnnouncerPreference } from "../announcer/use-announcer-preference";
 import { createRoundCommandMetadata, useSession } from "../../state/session-context";
 import { useScoreHistory } from "../../state/score-history-context";
 import { useRules } from "../../state/rules-context";
@@ -246,6 +250,7 @@ export function ManualCalculator({
   const [editReview, setEditReview] = useState<EditReview | null>(null);
   const [editError, setEditError] = useState<SessionEditError | null>(null);
   const [pendingCommand, setPendingCommand] = useState<SessionEditCommand | null>(null);
+  const [announceWins, setAnnounceWins] = useAnnouncerPreference();
   const concealedCapacity = 14 - melds.length * 3;
   const isClosed = melds.every((meld) => meld.kind === "quad" && !meld.open);
 
@@ -515,6 +520,10 @@ export function ManualCalculator({
     setResult(scoreResult);
     if (scoreResult.kind === "success" && activeTable === null) {
       scoreHistory.record(scoreInput, scoreResult);
+    }
+    // Announcing is opt-in and never gates the score: the panel is already set.
+    if (scoreResult.kind === "success" && announceWins && speech.available) {
+      speech.speak(announcementText(announceWin(scoreResult)));
     }
     return scoreResult;
   }
@@ -1083,6 +1092,25 @@ export function ManualCalculator({
             {activeRules.redFives ? "RED FIVES ENABLED" : "NO RED FIVES"} · KIRIAGE MANGAN
           </Text>
         </View>
+        {speech.available ? (
+          <Pressable
+            accessibilityRole="checkbox"
+            accessibilityState={{ checked: announceWins }}
+            onPress={() => {
+              const next = !announceWins;
+              setAnnounceWins(next);
+              if (!next) {
+                speech.cancel();
+              }
+            }}
+            style={styles.announceRow}
+          >
+            <View style={[styles.checkbox, announceWins && styles.checkedBox]}>
+              <Text style={styles.checkmark}>{announceWins ? "✓" : ""}</Text>
+            </View>
+            <Text style={styles.checkboxLabel}>Announce the result out loud</Text>
+          </Pressable>
+        ) : null}
         {result === null ? null : <ScoreResultPanel result={result} />}
         {activeTable === null && result?.kind === "success" ? (
           <View style={styles.savedNotice}>
@@ -1167,6 +1195,13 @@ export function ManualCalculator({
 }
 
 const styles = StyleSheet.create({
+  announceRow: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: space.x2,
+    marginBottom: space.x5,
+    minHeight: 48,
+  },
   calculateNote: {
     color: color.inkMuted,
     flexShrink: 1,

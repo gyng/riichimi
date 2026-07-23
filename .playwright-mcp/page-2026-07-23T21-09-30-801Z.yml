@@ -1,0 +1,23 @@
+- generic [ref=f22e3]:
+    - generic [ref=f22e6]:
+        - link [ref=f22e7] [cursor=pointer]:
+            - /url: https://twitter.com/MahjongSoul_JP
+        - link [ref=f22e9] [cursor=pointer]:
+            - /url: https://discord.gg/mahjongsoul
+        - link [ref=f22e11] [cursor=pointer]:
+            - /url: https://www.youtube.com/channel/UC8Wn_3U-fssptm6US_nsoOA
+        - link [ref=f22e13] [cursor=pointer]:
+            - /url: https://www.twitch.tv/mahjongsoul_jp
+    - generic [ref=f22e21]:
+        - generic [ref=f22e22]:
+            - link "利用規約" [ref=f22e23] [cursor=pointer]:
+                - /url: /terms_of_service
+            - link "プライバシーポリシー" [ref=f22e24] [cursor=pointer]:
+                - /url: /privacy_policy
+            - link "資金決済法に基づく表示" [ref=f22e25] [cursor=pointer]:
+                - /url: /money_settlement
+            - link "特定商取引法に基づく表示" [ref=f22e26] [cursor=pointer]:
+                - /url: /specific_business
+            - link "公式大会参加規約" [ref=f22e27] [cursor=pointer]:
+                - /url: /new_statute
+        - generic [ref=f22e28]: ©2019 Soul Games, Inc. ©2019 Yostar, Inc. All Rights Reserved.

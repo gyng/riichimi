@@ -31,6 +31,15 @@ jest.mock("../src/infrastructure/session-storage", () => ({
   saveStoredSession: jest.fn().mockResolvedValue(undefined),
 }));
 
+jest.mock("../src/infrastructure/announcer-preference-storage", () => ({
+  loadAnnouncerPreference: jest.fn().mockResolvedValue(false),
+  saveAnnouncerPreference: jest.fn().mockResolvedValue(undefined),
+}));
+
+jest.mock("../src/infrastructure/speech", () => ({
+  speech: { available: true, cancel: jest.fn(), speak: jest.fn() },
+}));
+
 function CalculatorUnderTest() {
   return (
     <RulesProvider>
@@ -75,6 +84,24 @@ beforeEach(() => {
 });
 
 describe("ManualCalculator", () => {
+  it("stays silent until announcing is turned on, then speaks the scored result", async () => {
+    const { speech } = jest.requireMock<{
+      speech: { cancel: jest.Mock; speak: jest.Mock };
+    }>("../src/infrastructure/speech");
+    await render(<CalculatorUnderTest />);
+
+    await fireEvent.press(screen.getByRole("button", { name: "Try a scored example" }));
+    await fireEvent.press(screen.getByRole("button", { name: "Calculate maximum score" }));
+    expect(speech.speak).not.toHaveBeenCalled();
+
+    await fireEvent.press(screen.getByRole("checkbox", { name: /Announce the result out loud/ }));
+    await fireEvent.press(screen.getByRole("button", { name: "Calculate maximum score" }));
+
+    expect(speech.speak).toHaveBeenCalledWith(
+      "Tsumo, Menzen tsumo, Pinfu, 2 han 20 fu, 1,500 points.",
+    );
+  });
+
   it("scores the complete worked example through the user-facing flow", async () => {
     await render(<CalculatorUnderTest />);
 
