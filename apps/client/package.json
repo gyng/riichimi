@@ -1,5 +1,5 @@
 {
-  "name": "@richii/client",
+  "name": "@riichimi/client",
   "version": "0.0.0",
   "private": true,
   "main": "expo-router/entry",
@@ -13,11 +13,11 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@richii/rules": "*",
-    "@richii/score-core": "*",
-    "@richii/session-core": "*",
-    "@richii/ui": "*",
-    "@richii/vision": "*",
+    "@riichimi/rules": "*",
+    "@riichimi/score-core": "*",
+    "@riichimi/session-core": "*",
+    "@riichimi/ui": "*",
+    "@riichimi/vision": "*",
     "expo": "57.0.8",
     "expo-asset": "57.0.7",
     "expo-camera": "57.0.3",

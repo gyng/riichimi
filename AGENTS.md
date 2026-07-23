@@ -1,8 +1,8 @@
-# Richii engineering instructions
+# Riichimi engineering instructions
 
 ## Mission
 
-Richii is a local-first riichi mahjong score calculator for mobile and web. Its defining experience is a trustworthy path from a guided camera capture to an auditable score with minimal correction. Correctness, explicit uncertainty, accessibility, and user control outrank novelty.
+Riichimi is a local-first riichi mahjong score calculator for mobile and web. Its defining experience is a trustworthy path from a guided camera capture to an auditable score with minimal correction. Correctness, explicit uncertainty, accessibility, and user control outrank novelty.
 
 Read these before substantial work:
 

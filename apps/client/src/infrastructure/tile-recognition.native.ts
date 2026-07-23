@@ -1,4 +1,4 @@
-import type { TileRecognitionPort } from "@richii/vision";
+import type { TileRecognitionPort } from "@riichimi/vision";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import { decode } from "jpeg-js";
 import * as ort from "onnxruntime-react-native";

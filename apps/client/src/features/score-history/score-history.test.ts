@@ -1,5 +1,5 @@
-import type { ScoreHandInput, ScoreSuccess } from "@richii/score-core";
-import { wrc2025Rules } from "@richii/rules";
+import type { ScoreHandInput, ScoreSuccess } from "@riichimi/score-core";
+import { wrc2025Rules } from "@riichimi/rules";
 
 import {
   addScoreHistoryEntry,

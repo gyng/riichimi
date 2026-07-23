@@ -1,4 +1,4 @@
-import type { NormalizedBounds } from "@richii/vision";
+import type { NormalizedBounds } from "@riichimi/vision";
 
 import type { PixelFrame } from "./guided-layout";
 

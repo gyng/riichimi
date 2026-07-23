@@ -1,4 +1,4 @@
-import { CalculatorLanding } from "@richii/ui";
+import { CalculatorLanding } from "@riichimi/ui";
 import { fireEvent, render, screen } from "@testing-library/react-native";
 
 describe("CalculatorLanding", () => {

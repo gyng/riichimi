@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Train Richii's compact crop classifier from rights-clear tile artwork.
+"""Train Riichimi's compact crop classifier from rights-clear tile artwork.
 
 The dataset is generated deterministically in memory. It simulates physical tile bodies,
 perspective, glare, shadows, focus, camera noise, occlusion, and varied table surfaces around

@@ -1,11 +1,11 @@
-import { TopAppBar } from "@richii/ui";
+import { TopAppBar } from "@riichimi/ui";
 import { fireEvent, render, screen } from "@testing-library/react-native";
 
 function renderBar(overrides?: { onScan?: () => void; onBrand?: () => void }) {
   return render(
     <TopAppBar
       brandGlyph="立"
-      brandLabel="RICHII"
+      brandLabel="RIICHIMI"
       items={[
         { active: true, key: "/scan", label: "Scan", onPress: overrides?.onScan ?? jest.fn() },
         { active: false, key: "/manual", label: "Manual", onPress: jest.fn() },
@@ -31,7 +31,7 @@ describe("TopAppBar", () => {
     const onBrand = jest.fn();
     await renderBar({ onBrand });
 
-    await fireEvent.press(screen.getByRole("link", { name: "RICHII home" }));
+    await fireEvent.press(screen.getByRole("link", { name: "RIICHIMI home" }));
     expect(onBrand).toHaveBeenCalledTimes(1);
   });
 });

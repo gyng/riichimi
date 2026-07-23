@@ -1,5 +1,5 @@
-import type { TileId } from "@richii/score-core";
-import { recognitionModelClasses } from "@richii/vision";
+import type { TileId } from "@riichimi/score-core";
+import { recognitionModelClasses } from "@riichimi/vision";
 
 export interface ClassifiedTile {
   readonly alternatives: readonly { readonly confidence: number; readonly tile: TileId }[];

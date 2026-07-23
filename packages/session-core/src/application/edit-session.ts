@@ -1,4 +1,4 @@
-import type { PaymentBreakdown, Wind } from "@richii/score-core";
+import type { PaymentBreakdown, Wind } from "@riichimi/score-core";
 
 import type {
   RiichiEvent,

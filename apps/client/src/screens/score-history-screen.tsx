@@ -1,4 +1,4 @@
-import { ActionButton, MahjongTile, color, space } from "@richii/ui";
+import { ActionButton, MahjongTile, color, space } from "@riichimi/ui";
 import { router } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";

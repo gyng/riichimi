@@ -2,7 +2,7 @@
 
 ## Direction of dependency
 
-Richii uses concentric architecture. Code dependencies point toward stable mahjong policy.
+Riichimi uses concentric architecture. Code dependencies point toward stable mahjong policy.
 
 ```text
 React screens and routes

@@ -1,4 +1,4 @@
-import type { TileId } from "@richii/score-core";
+import type { TileId } from "@riichimi/score-core";
 
 export interface NormalizedBounds {
   readonly height: number;

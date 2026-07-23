@@ -2,7 +2,7 @@
 
 ## Experience thesis
 
-Richii should feel like a calm scoring assistant placed beside the table, not an accounting form. Its visual language is a modern Japanese scoring ledger: warm paper, sumi ink, restrained vermilion, clear grid rhythm, and tile-like geometry.
+Riichimi should feel like a calm scoring assistant placed beside the table, not an accounting form. Its visual language is a modern Japanese scoring ledger: warm paper, sumi ink, restrained vermilion, clear grid rhythm, and tile-like geometry.
 
 ## Information architecture
 

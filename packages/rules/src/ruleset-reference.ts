@@ -1,4 +1,4 @@
-import type { ScoringRules } from "@richii/score-core";
+import type { ScoringRules } from "@riichimi/score-core";
 
 export const wrc2025Rules = {
   allowOpenTanyao: true,

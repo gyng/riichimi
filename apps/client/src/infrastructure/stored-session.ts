@@ -1,6 +1,6 @@
-import type { SessionEvent, SessionState, TableState } from "@richii/session-core";
-import { reconstructSessionFromSnapshots, replaySessionEvents } from "@richii/session-core";
-import { isScoringRulesProfileId } from "@richii/rules";
+import type { SessionEvent, SessionState, TableState } from "@riichimi/session-core";
+import { reconstructSessionFromSnapshots, replaySessionEvents } from "@riichimi/session-core";
+import { isScoringRulesProfileId } from "@riichimi/rules";
 
 // Boundary shape check for a persisted TableState. Model output and stored JSON
 // are untrusted, so the base snapshot is validated structurally before any

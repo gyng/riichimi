@@ -1,5 +1,5 @@
 import { router, usePathname } from "expo-router";
-import { isScoringRulesProfileId, scoringRulesProfile } from "@richii/rules";
+import { isScoringRulesProfileId, scoringRulesProfile } from "@riichimi/rules";
 
 import {
   integerArrayInput,
@@ -46,9 +46,9 @@ export function WebMcpBridge() {
     {
       annotations: { readOnlyHint: true },
       description:
-        "Inspect the active Richii route, supported scoring rules, and current local table summary without changing app state.",
+        "Inspect the active Riichimi route, supported scoring rules, and current local table summary without changing app state.",
       execute: () =>
-        webMcpResult("Richii app state read successfully.", {
+        webMcpResult("Riichimi app state read successfully.", {
           activeRoute: pathname,
           rules: {
             id: activeRules.id,
@@ -71,12 +71,12 @@ export function WebMcpBridge() {
                 },
         }),
       inputSchema: { additionalProperties: false, properties: {}, type: "object" },
-      name: "richii.app.get_state",
-      title: "Inspect Richii state",
+      name: "riichimi.app.get_state",
+      title: "Inspect Riichimi state",
     },
     {
       description:
-        "Navigate the visible Richii interface to the home, score history, manual calculator, camera scan, or table session screen.",
+        "Navigate the visible Riichimi interface to the home, score history, manual calculator, camera scan, or table session screen.",
       execute: (input: Record<string, unknown>) => {
         const destination = destinationInput(input);
         router.push(routes[destination]);
@@ -93,8 +93,8 @@ export function WebMcpBridge() {
         required: ["destination"],
         type: "object",
       },
-      name: "richii.app.navigate",
-      title: "Navigate Richii",
+      name: "riichimi.app.navigate",
+      title: "Navigate Riichimi",
     },
     {
       description:
@@ -125,13 +125,13 @@ export function WebMcpBridge() {
         required: ["profileId"],
         type: "object",
       },
-      name: "richii.rules.select",
+      name: "riichimi.rules.select",
       title: "Select scoring rules",
     },
     {
       annotations: { readOnlyHint: true },
       description:
-        "List recent standalone scores saved locally by Richii, including hand context, score, payment, and yaku summaries.",
+        "List recent standalone scores saved locally by Riichimi, including hand context, score, payment, and yaku summaries.",
       execute: () =>
         webMcpResult(`Read ${scoreHistory.entries.length} saved scores.`, {
           entries: scoreHistory.entries.map((entry) => ({
@@ -144,7 +144,7 @@ export function WebMcpBridge() {
           })),
         }),
       inputSchema: { additionalProperties: false, properties: {}, type: "object" },
-      name: "richii.history.list",
+      name: "riichimi.history.list",
       title: "List recent scores",
     },
     {
@@ -175,7 +175,7 @@ export function WebMcpBridge() {
         required: ["playerNames"],
         type: "object",
       },
-      name: "richii.session.start",
+      name: "riichimi.session.start",
       title: "Start table session",
     },
     {
@@ -200,12 +200,12 @@ export function WebMcpBridge() {
         required: ["playerIndex"],
         type: "object",
       },
-      name: "richii.session.declare_riichi",
+      name: "riichimi.session.declare_riichi",
       title: "Declare player riichi",
     },
     {
       description:
-        "Record an exhaustive draw for the active table using zero to four tenpai player indexes. Richii settles noten payments and advances or repeats the dealer; the visible UI can undo it.",
+        "Record an exhaustive draw for the active table using zero to four tenpai player indexes. Riichimi settles noten payments and advances or repeats the dealer; the visible UI can undo it.",
       execute: (input: Record<string, unknown>) => {
         if (table === null) {
           throw new Error("No table is active.");
@@ -228,7 +228,7 @@ export function WebMcpBridge() {
         required: ["tenpaiPlayerIndices"],
         type: "object",
       },
-      name: "richii.session.record_draw",
+      name: "riichimi.session.record_draw",
       title: "Record exhaustive draw",
     },
     {
@@ -241,7 +241,7 @@ export function WebMcpBridge() {
         return webMcpResult("Undid the most recent table change.");
       },
       inputSchema: { additionalProperties: false, properties: {}, type: "object" },
-      name: "richii.session.undo",
+      name: "riichimi.session.undo",
       title: "Undo table change",
     },
   ]);

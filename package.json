@@ -1,5 +1,5 @@
 {
-  "name": "richii",
+  "name": "riichimi",
   "version": "0.0.0",
   "private": true,
   "description": "Local-first riichi mahjong recognition and scoring for mobile and web.",
@@ -8,22 +8,22 @@
     "packages/*"
   ],
   "scripts": {
-    "android": "npm run android --workspace @richii/client",
-    "build:web": "npm run build:web --workspace @richii/client",
+    "android": "npm run android --workspace @riichimi/client",
+    "build:web": "npm run build:web --workspace @riichimi/client",
     "check": "npm run format:check && npm run lint && npm run test:coverage && npm run test:ui",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
-    "ios": "npm run ios --workspace @richii/client",
+    "ios": "npm run ios --workspace @riichimi/client",
     "lint": "oxlint --deny-warnings --report-unused-disable-directives",
     "lint:fix": "oxlint --fix --deny-warnings --report-unused-disable-directives",
     "serve:web": "node scripts/serve-static.mjs",
-    "start": "npm run start --workspace @richii/client",
+    "start": "npm run start --workspace @riichimi/client",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "node scripts/run-e2e.mjs",
-    "test:ui": "npm run test --workspace @richii/client",
+    "test:ui": "npm run test --workspace @riichimi/client",
     "test:unit": "vitest run",
     "test:watch": "vitest",
-    "web": "npm run web --workspace @richii/client"
+    "web": "npm run web --workspace @riichimi/client"
   },
   "devDependencies": {
     "@playwright/test": "1.61.1",

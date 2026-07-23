@@ -1,7 +1,7 @@
-import type { TileId } from "@richii/score-core";
-import { ActionButton, SegmentedControl, color, space } from "@richii/ui";
-import { reviewRecognition } from "@richii/vision";
-import type { CaptureLayout, DetectedTile, RecognitionResult } from "@richii/vision";
+import type { TileId } from "@riichimi/score-core";
+import { ActionButton, SegmentedControl, color, space } from "@riichimi/ui";
+import { reviewRecognition } from "@riichimi/vision";
+import type { CaptureLayout, DetectedTile, RecognitionResult } from "@riichimi/vision";
 import { Asset } from "expo-asset";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
@@ -252,7 +252,7 @@ export function ScanScreen() {
           Show us the tiles.{"\n"}Keep the photo here.
         </Text>
         <Text style={styles.permissionBody}>
-          Richii asks for camera access only when you choose to scan. Captures stay on this device
+          Riichimi asks for camera access only when you choose to scan. Captures stay on this device
           unless you explicitly choose to contribute an example later.
         </Text>
         <View style={styles.permissionActions}>

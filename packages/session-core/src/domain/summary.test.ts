@@ -104,7 +104,7 @@ describe("formatSessionSummaryText", () => {
     const summary = summarizeSession(ronWin(newTable(), "r1"));
     const text = formatSessionSummaryText(summary);
     // The header shows the CURRENT round (East 2 after a non-dealer win).
-    expect(text).toContain("Richii table — East 2 · 0 honba");
+    expect(text).toContain("Riichimi table — East 2 · 0 honba");
     expect(text).toContain("1 round (1 win, 0 draws)");
     expect(text).toContain("1. Bob — 28,900 (+3,900)");
     expect(text).toContain("4. Cara — 21,100 (-3,900)");

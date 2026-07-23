@@ -1,11 +1,11 @@
-import type { SessionState, TableState } from "@richii/session-core";
+import type { SessionState, TableState } from "@riichimi/session-core";
 import {
   applyDraw,
   applyWin,
   createSession,
   declareRiichi,
   replaySessionEvents,
-} from "@richii/session-core";
+} from "@riichimi/session-core";
 
 import { parseStoredSession, serializeStoredSession } from "./stored-session";
 

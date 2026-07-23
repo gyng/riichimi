@@ -1,5 +1,5 @@
-import { scoringRulesProfile, wrc2025Rules } from "@richii/rules";
-import type { ScoringRulesProfileId } from "@richii/rules";
+import { scoringRulesProfile, wrc2025Rules } from "@riichimi/rules";
+import type { ScoringRulesProfileId } from "@riichimi/rules";
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 

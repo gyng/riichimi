@@ -5,7 +5,7 @@ import {
   serializeAnnouncerPreference,
 } from "../features/announcer/announcer-preference";
 
-const storageKey = "richii.announce-wins.v1";
+const storageKey = "riichimi.announce-wins.v1";
 
 export async function loadAnnouncerPreference(): Promise<boolean> {
   return parseAnnouncerPreference(await Storage.getItem(storageKey));

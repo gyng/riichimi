@@ -5,7 +5,7 @@
 
 ## Context
 
-Richii needs one product language across Android, iOS, and web; direct camera access; shared domain code; offline model inference; and a fast, strict TypeScript feedback loop.
+Riichimi needs one product language across Android, iOS, and web; direct camera access; shared domain code; offline model inference; and a fast, strict TypeScript feedback loop.
 
 ## Decision
 

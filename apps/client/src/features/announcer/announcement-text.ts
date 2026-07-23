@@ -1,4 +1,4 @@
-import type { WinAnnouncement } from "@richii/score-core";
+import type { WinAnnouncement } from "@riichimi/score-core";
 
 const methodWord: Record<WinAnnouncement["method"], string> = {
   ron: "Ron",

@@ -4,8 +4,8 @@ import {
   redFiveIds,
   tileRank,
   tileSuit,
-} from "@richii/score-core";
-import type { DeclaredMeld, TileId } from "@richii/score-core";
+} from "@riichimi/score-core";
+import type { DeclaredMeld, TileId } from "@riichimi/score-core";
 
 export interface RecognitionDraft {
   readonly concealedTiles: readonly TileId[];

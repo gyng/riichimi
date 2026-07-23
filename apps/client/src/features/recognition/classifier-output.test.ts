@@ -1,4 +1,4 @@
-import { recognitionModelClasses } from "@richii/vision";
+import { recognitionModelClasses } from "@riichimi/vision";
 
 import { classifyBatchLogits } from "./classifier-output";
 

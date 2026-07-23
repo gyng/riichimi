@@ -6,14 +6,14 @@ import {
   editSessionRound,
   previewSessionEdit,
   undoLastSessionChange,
-} from "@richii/session-core";
+} from "@riichimi/session-core";
 import type {
   DrawCommand,
   SessionEditCommand,
   SessionEditResult,
   SessionState,
   WinCommand,
-} from "@richii/session-core";
+} from "@riichimi/session-core";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 

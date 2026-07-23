@@ -1,5 +1,5 @@
-import { canonicalizeTile } from "@richii/score-core";
-import type { CanonicalTileId } from "@richii/score-core";
+import { canonicalizeTile } from "@riichimi/score-core";
+import type { CanonicalTileId } from "@riichimi/score-core";
 
 import type {
   DetectedTile,

@@ -4,8 +4,8 @@ import { createServer } from "node:http";
 import { extname, resolve, sep } from "node:path";
 
 const root = resolve(process.cwd(), "apps/client/dist");
-const host = process.env.RICHII_HOST ?? "127.0.0.1";
-const port = Number(process.env.RICHII_PORT ?? "41731");
+const host = process.env.RIICHIMI_HOST ?? "127.0.0.1";
+const port = Number(process.env.RIICHIMI_PORT ?? "41731");
 
 const contentTypes = new Map([
   [".css", "text/css; charset=utf-8"],
@@ -76,5 +76,5 @@ const server = createServer((request, response) => {
 });
 
 server.listen(port, host, () => {
-  process.stdout.write(`Richii static export: http://${host}:${port}\n`);
+  process.stdout.write(`Riichimi static export: http://${host}:${port}\n`);
 });

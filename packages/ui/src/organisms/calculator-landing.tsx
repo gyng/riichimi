@@ -35,7 +35,7 @@ export function CalculatorLanding({
           Score a winning hand
         </Text>
         <Text style={styles.intro}>
-          Scan the tiles or enter them by hand. Richii asks only what the table cannot show and
+          Scan the tiles or enter them by hand. Riichimi asks only what the table cannot show and
           explains every point — locally, on this device.
         </Text>
       </View>

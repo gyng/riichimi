@@ -1,4 +1,4 @@
-import { recognitionModelClasses } from "@richii/vision";
+import { recognitionModelClasses } from "@riichimi/vision";
 
 import { recognizePixelFrame } from "./recognize-pixel-frame";
 import type { PixelFrame } from "./guided-layout";

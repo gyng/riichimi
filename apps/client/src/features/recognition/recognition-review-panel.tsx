@@ -1,8 +1,8 @@
-import { canonicalTileIds, canonicalizeTile, redFiveIds } from "@richii/score-core";
-import type { TileId } from "@richii/score-core";
-import { ActionButton, MahjongTile, color, space, tileAccessibleName } from "@richii/ui";
-import { chooseWinningDetection, correctDetection, reviewRecognition } from "@richii/vision";
-import type { DetectedTile, RecognitionResult } from "@richii/vision";
+import { canonicalTileIds, canonicalizeTile, redFiveIds } from "@riichimi/score-core";
+import type { TileId } from "@riichimi/score-core";
+import { ActionButton, MahjongTile, color, space, tileAccessibleName } from "@riichimi/ui";
+import { chooseWinningDetection, correctDetection, reviewRecognition } from "@riichimi/vision";
+import type { DetectedTile, RecognitionResult } from "@riichimi/vision";
 import { useEffect, useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 

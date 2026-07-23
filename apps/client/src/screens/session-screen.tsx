@@ -1,11 +1,11 @@
-import type { Wind } from "@richii/score-core";
-import { scoringRulesProfile } from "@richii/rules";
+import type { Wind } from "@riichimi/score-core";
+import { scoringRulesProfile } from "@riichimi/rules";
 import {
   editableRoundIds,
   formatSessionSummaryText,
   handRiichiPlayerIndices,
   summarizeSession,
-} from "@richii/session-core";
+} from "@riichimi/session-core";
 import type {
   EditReview,
   EditWarning,
@@ -13,8 +13,8 @@ import type {
   RoundRecord,
   SessionEditCommand,
   SessionEditError,
-} from "@richii/session-core";
-import { ActionButton, color, space } from "@richii/ui";
+} from "@riichimi/session-core";
+import { ActionButton, color, space } from "@riichimi/ui";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
@@ -85,7 +85,7 @@ export function SessionScreen() {
             Let the round remember itself.
           </Text>
           <Text style={styles.intro}>
-            Start at 25,000 points. Richii carries the dealer, winds, honba, riichi pool, score
+            Start at 25,000 points. Riichimi carries the dealer, winds, honba, riichi pool, score
             transfers, and hand history into each calculation.
           </Text>
           <RulesProfileControl />

@@ -54,7 +54,7 @@ Confirmed against the current code:
   `[...undoStack, table]` is a complete action trace, so riichi declarations in old
   stored sessions are **exactly reconstructible by diffing consecutive snapshots**.
   Migration can be lossless, and verifiably so.
-- Persistence: `richii.session.v1` stores raw `JSON.stringify(SessionState)`;
+- Persistence: `riichimi.session.v1` stores raw `JSON.stringify(SessionState)`;
   `stored-session.ts` validates/migrates `rulesProfileId`. The legacy fixture in
   `stored-session.test.ts` shows player ids are _not_ always derivable from the table
   id (`player-0` vs `table-1-player-1`) — so migration must never re-derive the base
@@ -365,12 +365,12 @@ interface StoredSessionV2 {
 ```
 
 `table` is not persisted — replay on load is the single source of truth (and doubles as
-an integrity check). Storage adapters write key `richii.session.v2`. Load order:
+an integrity check). Storage adapters write key `riichimi.session.v2`. Load order:
 
-1. Read `richii.session.v2`; if present, shape-validate at the boundary (extend
+1. Read `riichimi.session.v2`; if present, shape-validate at the boundary (extend
    `stored-session.ts`), reuse the existing `rulesProfileId` migration on `base`, replay,
    return.
-2. Else read `richii.session.v1` and migrate (below). Leave the v1 key untouched until
+2. Else read `riichimi.session.v1` and migrate (below). Leave the v1 key untouched until
    the first successful v2 save, then remove it — so a migration bug can never destroy
    the original data.
 

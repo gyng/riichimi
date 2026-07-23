@@ -6,7 +6,7 @@ import {
   suitedTile,
   tileRank,
   tileSuit,
-} from "@richii/score-core";
+} from "@riichimi/score-core";
 import type {
   DeclaredMeld,
   FirstTurnWin,
@@ -18,16 +18,16 @@ import type {
   Wind,
   WinContext,
   WinMethod,
-} from "@richii/score-core";
-import { scoringRulesProfile } from "@richii/rules";
-import { tableBeforeRound } from "@richii/session-core";
+} from "@riichimi/score-core";
+import { scoringRulesProfile } from "@riichimi/rules";
+import { tableBeforeRound } from "@riichimi/session-core";
 import type {
   EditReview,
   EditWarning,
   RoundContextChange,
   SessionEditCommand,
   SessionEditError,
-} from "@richii/session-core";
+} from "@riichimi/session-core";
 import {
   ActionButton,
   CounterControl,
@@ -36,7 +36,7 @@ import {
   color,
   space,
   tileAccessibleName,
-} from "@richii/ui";
+} from "@riichimi/ui";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
@@ -658,21 +658,21 @@ export function ManualCalculator({
   useWebMcpTools([
     {
       description:
-        "Load Richii's complete closed pinfu-tsumo example into the visible manual calculator for inspection or scoring.",
+        "Load Riichimi's complete closed pinfu-tsumo example into the visible manual calculator for inspection or scoring.",
       execute: () => {
         loadExample();
         return webMcpResult(
-          "Loaded the worked example. Call richii.manual.calculate after the UI updates.",
+          "Loaded the worked example. Call riichimi.manual.calculate after the UI updates.",
         );
       },
       inputSchema: { additionalProperties: false, properties: {}, type: "object" },
-      name: "richii.manual.load_example",
+      name: "riichimi.manual.load_example",
       title: "Load scoring example",
     },
     {
       annotations: { readOnlyHint: true },
       description:
-        "Inspect the tiles and scoring context currently visible in Richii's manual calculator without changing them.",
+        "Inspect the tiles and scoring context currently visible in Riichimi's manual calculator without changing them.",
       execute: () =>
         webMcpResult("Read the current manual calculator state.", {
           concealedTiles,
@@ -693,11 +693,11 @@ export function ManualCalculator({
           winningTile: winningIndex === null ? null : (concealedTiles[winningIndex] ?? null),
         }),
       inputSchema: { additionalProperties: false, properties: {}, type: "object" },
-      name: "richii.manual.get_state",
+      name: "riichimi.manual.get_state",
       title: "Inspect manual hand",
     },
     {
-      description: `Validate and score the hand currently visible in Richii's manual calculator under ${activeRules.label}, updating the on-screen audit panel.`,
+      description: `Validate and score the hand currently visible in Riichimi's manual calculator under ${activeRules.label}, updating the on-screen audit panel.`,
       execute: () => {
         const scoreResult = calculate();
         return webMcpResult(
@@ -708,7 +708,7 @@ export function ManualCalculator({
         );
       },
       inputSchema: { additionalProperties: false, properties: {}, type: "object" },
-      name: "richii.manual.calculate",
+      name: "riichimi.manual.calculate",
       title: "Calculate current hand",
     },
     {
@@ -723,7 +723,7 @@ export function ManualCalculator({
         });
       },
       inputSchema: { additionalProperties: false, properties: {}, type: "object" },
-      name: "richii.manual.record_table_result",
+      name: "riichimi.manual.record_table_result",
       title: "Record scored table result",
     },
   ]);
@@ -786,7 +786,7 @@ export function ManualCalculator({
               <Text style={styles.sessionBannerTitle}>
                 {editMode
                   ? "Re-score this hand. The round's honba, sticks, and winds are seeded but stay editable."
-                  : "Choose the winner. Richii will post the transfer and advance the round."}
+                  : "Choose the winner. Riichimi will post the transfer and advance the round."}
               </Text>
             </View>
             <View style={styles.sessionChoice}>

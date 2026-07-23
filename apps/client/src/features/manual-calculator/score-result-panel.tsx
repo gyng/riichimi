@@ -1,5 +1,5 @@
-import type { ScoreHandResult } from "@richii/score-core";
-import { color, space } from "@richii/ui";
+import type { ScoreHandResult } from "@riichimi/score-core";
+import { color, space } from "@riichimi/ui";
 import { StyleSheet, Text, View } from "react-native";
 
 export interface ScoreResultPanelProps {

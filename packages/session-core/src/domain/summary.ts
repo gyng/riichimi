@@ -1,4 +1,4 @@
-import type { Wind } from "@richii/score-core";
+import type { Wind } from "@riichimi/score-core";
 
 import type { RoundRecord, SessionState, TablePlayer } from "./session";
 
@@ -138,7 +138,7 @@ function signed(value: number): string {
 export function formatSessionSummaryText(summary: SessionSummary): string {
   const lines: string[] = [];
   lines.push(
-    `Richii table — ${windLabel[summary.currentRound.roundWind]} ${summary.currentRound.handNumber} · ${summary.currentRound.honba} honba`,
+    `Riichimi table — ${windLabel[summary.currentRound.roundWind]} ${summary.currentRound.handNumber} · ${summary.currentRound.honba} honba`,
   );
   lines.push(
     `${summary.roundsPlayed} round${summary.roundsPlayed === 1 ? "" : "s"} (${summary.winCount} win${summary.winCount === 1 ? "" : "s"}, ${summary.drawCount} draw${summary.drawCount === 1 ? "" : "s"})`,

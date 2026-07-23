@@ -4,7 +4,7 @@ import type {
   DetectionRole,
   NormalizedBounds,
   RecognitionResult,
-} from "@richii/vision";
+} from "@riichimi/vision";
 
 import { inspectFrameExposure, inspectLocatedCapture } from "./capture-quality";
 import type { CaptureQualityIssueKind } from "./capture-quality";

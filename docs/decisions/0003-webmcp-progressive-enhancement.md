@@ -5,7 +5,7 @@
 
 ## Context
 
-Richii should require minimal manual work for both people and user-directed agents. The browser can expose task-level operations, but an agent interface must not bypass the same validation, visibility, privacy, or recovery guarantees as the human interface. WebMCP is still an emerging browser capability and cannot be a runtime prerequisite.
+Riichimi should require minimal manual work for both people and user-directed agents. The browser can expose task-level operations, but an agent interface must not bypass the same validation, visibility, privacy, or recovery guarantees as the human interface. WebMCP is still an emerging browser capability and cannot be a runtime prerequisite.
 
 ## Decision
 

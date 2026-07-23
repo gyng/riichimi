@@ -1,5 +1,5 @@
 {
-  "name": "@richii/vision",
+  "name": "@riichimi/vision",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -11,6 +11,6 @@
     }
   },
   "dependencies": {
-    "@richii/score-core": "*"
+    "@riichimi/score-core": "*"
   }
 }

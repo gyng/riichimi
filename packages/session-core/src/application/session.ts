@@ -1,4 +1,4 @@
-import type { Wind } from "@richii/score-core";
+import type { Wind } from "@riichimi/score-core";
 
 import type {
   DrawCommand,

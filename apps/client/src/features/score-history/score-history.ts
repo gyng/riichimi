@@ -1,4 +1,4 @@
-import { canonicalTileIds, redFiveIds } from "@richii/score-core";
+import { canonicalTileIds, redFiveIds } from "@riichimi/score-core";
 import type {
   PaymentBreakdown,
   ScoreHandInput,
@@ -8,7 +8,7 @@ import type {
   Wind,
   Yaku,
   Yakuman,
-} from "@richii/score-core";
+} from "@riichimi/score-core";
 
 export interface ScoreHistoryEntry {
   readonly calculatedAt: string;

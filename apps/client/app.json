@@ -1,18 +1,18 @@
 {
   "expo": {
-    "name": "Richii",
-    "slug": "richii",
+    "name": "Riichimi",
+    "slug": "riichimi",
     "version": "0.1.0",
     "orientation": "portrait",
-    "scheme": "richii",
+    "scheme": "riichimi",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
-      "bundleIdentifier": "app.richii.calculator",
+      "bundleIdentifier": "app.riichimi.calculator",
       "supportsTablet": true
     },
     "android": {
-      "package": "app.richii.calculator"
+      "package": "app.riichimi.calculator"
     },
     "web": {
       "bundler": "metro",
@@ -24,13 +24,13 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow Richii to scan a winning mahjong hand."
+          "cameraPermission": "Allow Riichimi to scan a winning mahjong hand."
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "Allow Richii to open a mahjong hand photo for local scoring."
+          "photosPermission": "Allow Riichimi to open a mahjong hand photo for local scoring."
         }
       ]
     ],

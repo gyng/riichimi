@@ -53,7 +53,7 @@ def main() -> None:
         if not source_path.exists():
             print(f"Downloading {source['pageUrl']}…", flush=True)
             request = urllib.request.Request(
-                source["url"], headers={"User-Agent": "RichiiVisionResearch/0.1"}
+                source["url"], headers={"User-Agent": "RiichimiVisionResearch/0.1"}
             )
             with urllib.request.urlopen(request) as response:
                 source_path.write_bytes(response.read())

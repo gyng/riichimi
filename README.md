@@ -1,4 +1,4 @@
-# Richii
+# Riichimi
 
 Local-first riichi mahjong scoring for mobile and web, with auditable WRC-based rules profiles, camera-assisted entry, and persistent four-player table sessions.
 

@@ -12,18 +12,18 @@ let readinessTimeout;
 
 const readiness = new Promise((resolveReady, rejectReady) => {
   readinessTimeout = setTimeout(() => {
-    rejectReady(new Error("Richii's static server did not become ready within 15 seconds."));
+    rejectReady(new Error("Riichimi's static server did not become ready within 15 seconds."));
   }, 15_000);
   server.once("error", rejectReady);
   server.once("exit", (code) => {
     if (!ready) {
-      rejectReady(new Error(`Richii's static server exited before testing with code ${code}.`));
+      rejectReady(new Error(`Riichimi's static server exited before testing with code ${code}.`));
     }
   });
   server.stdout.on("data", (chunk) => {
     const output = String(chunk);
     process.stdout.write(output);
-    if (!ready && output.includes("Richii static export:")) {
+    if (!ready && output.includes("Riichimi static export:")) {
       ready = true;
       clearTimeout(readinessTimeout);
       resolveReady();

@@ -1,4 +1,4 @@
-import { CalculatorLanding, color } from "@richii/ui";
+import { CalculatorLanding, color } from "@riichimi/ui";
 import { router } from "expo-router";
 import { ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";

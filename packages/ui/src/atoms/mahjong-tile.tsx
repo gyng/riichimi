@@ -1,4 +1,4 @@
-import type { TileId } from "@richii/score-core";
+import type { TileId } from "@riichimi/score-core";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { color, radius } from "../tokens/theme";

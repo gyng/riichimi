@@ -4,7 +4,7 @@ Last reviewed: **2026-07-23**
 
 ## Decision
 
-Ship Richii's rights-traceable guided recognizer as an offline **beta with mandatory review**. Do not claim production recognition accuracy yet.
+Ship Riichimi's rights-traceable guided recognizer as an offline **beta with mandatory review**. Do not claim production recognition accuracy yet.
 
 The implemented system deliberately narrows the visual problem:
 
@@ -91,15 +91,15 @@ Down-weighting removed the top-1 regression (back to parity) and left a one-crop
 
 - `pjura/mahjong_vision` is useful classifier prior art but targets Mahjong Soul screenshots, not physical tiles.
 - RiichiCam demonstrates a relevant product workflow, but its model/training artifacts are not publicly redistributable.
-- Reviewed Roboflow Universe projects expose relevant physical annotations, but no reviewed candidate combined all Richii classes, immutable redistributable weights, acceptable provenance, and exact-hand evaluation. Dataset access also required hosted credentials.
+- Reviewed Roboflow Universe projects expose relevant physical annotations, but no reviewed candidate combined all Riichimi classes, immutable redistributable weights, acceptable provenance, and exact-hand evaluation. Dataset access also required hosted credentials.
 - The reviewed Kaggle corpus claimed MIT metadata while describing images scraped from search/marketplace sites; that is not a sufficient rights chain for a shipped model.
-- Ultralytics-based export routes introduce an AGPL/commercial-license decision Richii has not approved.
+- Ultralytics-based export routes introduce an AGPL/commercial-license decision Riichimi has not approved.
 
 The local pipeline was selected because every committed artifact has a reproducible, auditable rights chain and avoids a hosted inference dependency.
 
 ## Production acceptance contract
 
-`@richii/vision` exposes `evaluateRecognitionModelRelease`. Production approval still requires:
+`@riichimi/vision` exposes `evaluateRecognitionModelRelease`. Production approval still requires:
 
 - immutable artifact integrity and HTTPS provenance;
 - an SPDX license and every supported class;

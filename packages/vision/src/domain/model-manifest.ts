@@ -1,5 +1,5 @@
-import { canonicalTileIds, redFiveIds } from "@richii/score-core";
-import type { TileId } from "@richii/score-core";
+import { canonicalTileIds, redFiveIds } from "@riichimi/score-core";
+import type { TileId } from "@riichimi/score-core";
 
 export type RecognitionClass = TileId | "unknown";
 

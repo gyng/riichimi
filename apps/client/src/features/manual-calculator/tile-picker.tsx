@@ -1,6 +1,6 @@
-import { canonicalTileIds, redFiveIds } from "@richii/score-core";
-import type { TileId } from "@richii/score-core";
-import { MahjongTile, color, space } from "@richii/ui";
+import { canonicalTileIds, redFiveIds } from "@riichimi/score-core";
+import type { TileId } from "@riichimi/score-core";
+import { MahjongTile, color, space } from "@riichimi/ui";
 import { StyleSheet, Text, View } from "react-native";
 
 const rows = [

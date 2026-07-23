@@ -1,24 +1,28 @@
-import { TopAppBar } from "@richii/ui";
-import type { TopAppBarItem } from "@richii/ui";
+import { TopAppBar } from "@riichimi/ui";
+import type { TopAppBarItem } from "@riichimi/ui";
 import { router, usePathname } from "expo-router";
 
+import { useLocale } from "../state/locale-context";
+import type { Messages } from "../i18n/messages";
+
 const destinations = [
-  { label: "Scan", route: "/scan" },
-  { label: "Manual", route: "/manual" },
-  { label: "Table", route: "/session" },
-  { label: "History", route: "/history" },
-] as const;
+  { key: "scan", route: "/scan" },
+  { key: "manual", route: "/manual" },
+  { key: "table", route: "/session" },
+  { key: "history", route: "/history" },
+] as const satisfies readonly { key: keyof Messages["nav"]; route: string }[];
 
 /**
  * The app's persistent top navigation. Maps the current route to the active
- * destination and drives navigation; the presentational bar lives in `@richii/ui`.
+ * destination and drives navigation; the presentational bar lives in `@riichimi/ui`.
  */
 export function AppNavigationBar() {
   const pathname = usePathname();
+  const { messages } = useLocale();
   const items: readonly TopAppBarItem[] = destinations.map((destination) => ({
     active: pathname === destination.route,
     key: destination.route,
-    label: destination.label,
+    label: messages.nav[destination.key],
     onPress: () => {
       router.navigate(destination.route);
     },
@@ -27,7 +31,7 @@ export function AppNavigationBar() {
   return (
     <TopAppBar
       brandGlyph="立"
-      brandLabel="RICHII"
+      brandLabel="RIICHIMI"
       items={items}
       onBrandPress={() => {
         router.navigate("/");

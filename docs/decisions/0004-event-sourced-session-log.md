@@ -20,8 +20,8 @@ Model a session as an event log folded over an immutable base snapshot:
 
 Persistence and migration:
 
-- The stored document is `StoredSessionV2` (`richii.session.v2`): `{ base, events, undoStack, schemaVersion: 2 }`. `table` is not persisted as truth — replay on load rebuilds it and doubles as an integrity check.
-- Load order is v2, then the legacy `richii.session.v1` document. The v1 key is retained until the first successful v2 save, so a migration defect can never destroy the original data.
+- The stored document is `StoredSessionV2` (`riichimi.session.v2`): `{ base, events, undoStack, schemaVersion: 2 }`. `table` is not persisted as truth — replay on load rebuilds it and doubles as an integrity check.
+- Load order is v2, then the legacy `riichimi.session.v1` document. The v1 key is retained until the first successful v2 save, so a migration defect can never destroy the original data.
 - A true v1 session (`{ table, undoStack: TableState[] }`, no `base`/`events`) migrates via `reconstructSessionFromSnapshots`, which diffs the complete, untrimmed snapshot trace to recover each action — including riichi declarations, which are otherwise invisible. Reconstruction is **verified** by replay-equality against the final snapshot. A verifiable trace becomes an editable event log; an unverifiable one degrades to a lossless read-only baseline (`base` = the final snapshot, `events` empty) with scores and history intact but pre-existing rounds not editable.
 - Migrated riichi events get synthesized ids (`riichi-migrated-<n>`) and borrow the following round's timestamp — an approximate, display-only value, since a v1 riichi recorded none of its own.
 - The **persisted** `undoStack` is capped at the 50 most recent entries; the in-memory stack stays unbounded. Worst-case JSON stays comfortably inside browser storage limits.

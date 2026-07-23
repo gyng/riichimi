@@ -1,6 +1,6 @@
-# Richii guided tile classifier v1
+# Riichimi guided tile classifier v1
 
-`tile-classifier-v1.onnx` is Richii's locally trained beta tile-face classifier.
+`tile-classifier-v1.onnx` is Riichimi's locally trained beta tile-face classifier.
 
 - Artifact SHA-256: `0fc698d56409c6fe80abfd514867a21330183ef120cfb61dbbeae7eb2eb27e4b`
 - Input: 15 RGB crops, NCHW `15 × 3 × 64 × 48`, normalized to `[-1, 1]`

@@ -1,5 +1,5 @@
 {
-  "name": "@richii/rules",
+  "name": "@riichimi/rules",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -11,6 +11,6 @@
     }
   },
   "dependencies": {
-    "@richii/score-core": "*"
+    "@riichimi/score-core": "*"
   }
 }

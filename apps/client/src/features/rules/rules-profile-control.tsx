@@ -1,5 +1,9 @@
-import { isScoringRulesProfileId, scoringRulesProfile, scoringRulesProfiles } from "@richii/rules";
-import { SegmentedControl, color, space } from "@richii/ui";
+import {
+  isScoringRulesProfileId,
+  scoringRulesProfile,
+  scoringRulesProfiles,
+} from "@riichimi/rules";
+import { SegmentedControl, color, space } from "@riichimi/ui";
 import { StyleSheet, Text, View } from "react-native";
 
 import { useRules } from "../../state/rules-context";

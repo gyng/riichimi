@@ -4,7 +4,7 @@ Last updated: **2026-07-24T03:13:42+08:00**
 
 ## Current state
 
-Richii is a polished, local-first scoring and table-session app on mobile-width web and desktop web. Its scoring, persistent rules profiles, WebMCP surface, guided camera/gallery recognition beta, mandatory review handoff, and critical browser journeys are implemented and verified. V1 materially improves source-separated physical recognition and browser correction burden, while production accuracy remains intentionally gated on a representative complete-hand corpus and real-device evaluation.
+Riichimi is a polished, local-first scoring and table-session app on mobile-width web and desktop web. Its scoring, persistent rules profiles, WebMCP surface, guided camera/gallery recognition beta, mandatory review handoff, and critical browser journeys are implemented and verified. V1 materially improves source-separated physical recognition and browser correction burden, while production accuracy remains intentionally gated on a representative complete-hand corpus and real-device evaluation.
 
 ## Timestamped checkpoints
 
@@ -37,7 +37,7 @@ Richii is a polished, local-first scoring and table-session app on mobile-width 
 
 - Added automatic local retention for successful standalone scores, with exact-hand deduplication and a 20-entry cap.
 - Added the responsive Score folio route with tiles, winning-tile emphasis, context, yaku, payments, removal, and confirmed full clearing.
-- Added nested storage validation, platform-specific persistence, a read-only `richii.history.list` WebMCP tool, and visible saved-state feedback from the calculator.
+- Added nested storage validation, platform-specific persistence, a read-only `riichimi.history.list` WebMCP tool, and visible saved-state feedback from the calculator.
 - Browser dogfood proved scoring → history navigation → full `/history` reload → persisted audit on mobile, plus visible desktop history navigation.
 - Replaced the generic static test server after it exposed a clean-route 404; `npm run serve:web` now maps Expo route paths to their exported HTML files.
 - Made `npm run test:e2e` own the server lifecycle and wait for an explicit readiness signal, avoiding a proxy-sensitive Playwright preflight probe.
@@ -50,7 +50,7 @@ Richii is a polished, local-first scoring and table-session app on mobile-width 
 - Browser dogfood now drives a real file chooser with a code-native guided-hand fixture and verifies the full gallery → review → manual-reference journey.
 - Added a recognition model audit and a tested manifest gate for artifact integrity, HTTPS provenance, SPDX licensing, RGB/NCHW input, all required tile classes, evaluation-set size, and release accuracy.
 - Reviewed available model candidates without importing unvalidated or licensing-ambiguous weights.
-- Extended WebMCP with `richii.manual.record_table_result`, which posts only a visible successful score into its active table through the same persistent, undoable session action as the UI.
+- Extended WebMCP with `riichimi.manual.record_table_result`, which posts only a visible successful score into its active table through the same persistent, undoable session action as the UI.
 - The mobile dogfood round now proves table → linked calculator → inherited context → score → exact transfers → dealer repeat → persistent round history.
 - The full quality gate passed: 104 Vitest tests at 98.79% statement / 94.23% branch coverage, 13 Jest component tests, seven-route export, and two Playwright journeys in 3.7 seconds.
 - The shared web entry is 1,256,029 bytes, a 0.9% increase from the score-history checkpoint and below the 10% optimization trigger.

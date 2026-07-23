@@ -1,4 +1,4 @@
-import type { ImageFrame, TileRecognitionPort } from "@richii/vision";
+import type { ImageFrame, TileRecognitionPort } from "@riichimi/vision";
 import type { InferenceSession } from "onnxruntime-web";
 import type * as OrtWebGlNamespace from "onnxruntime-web/webgl";
 

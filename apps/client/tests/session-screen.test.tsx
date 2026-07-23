@@ -1,5 +1,5 @@
-import { applyWin, createSession } from "@richii/session-core";
-import type { SessionState } from "@richii/session-core";
+import { applyWin, createSession } from "@riichimi/session-core";
+import type { SessionState } from "@riichimi/session-core";
 import { fireEvent, render, screen } from "@testing-library/react-native";
 import { router } from "expo-router";
 

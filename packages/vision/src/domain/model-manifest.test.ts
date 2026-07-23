@@ -1,4 +1,4 @@
-import { canonicalTileIds, redFiveIds } from "@richii/score-core";
+import { canonicalTileIds, redFiveIds } from "@riichimi/score-core";
 import { describe, expect, it } from "vitest";
 
 import { evaluateRecognitionModelRelease, guidedScannerReleaseThresholds } from "./model-manifest";
@@ -10,14 +10,14 @@ function manifest(overrides: Partial<RecognitionModelManifest> = {}): Recognitio
       bytes: 8_000_000,
       format: "onnx",
       sha256: "a".repeat(64),
-      url: "https://models.richii.app/guided-v1.onnx",
+      url: "https://models.riichimi.app/guided-v1.onnx",
     },
     classes: [...canonicalTileIds, ...redFiveIds, "unknown"],
-    id: "richii-guided-physical-tiles",
+    id: "riichimi-guided-physical-tiles",
     input: { colorSpace: "rgb", height: 640, layout: "nchw", width: 640 },
-    license: { sourceUrl: "https://models.richii.app/LICENSE", spdxId: "Apache-2.0" },
+    license: { sourceUrl: "https://models.riichimi.app/LICENSE", spdxId: "Apache-2.0" },
     metrics: {
-      datasetId: "richii-guided-eval-v1",
+      datasetId: "riichimi-guided-eval-v1",
       evaluatedHands: 500,
       exactHandAccuracy: 0.95,
       perTileTop1Accuracy: 0.996,

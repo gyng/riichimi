@@ -12,7 +12,7 @@ interface TestWebMcpHarness {
 
 declare global {
   interface Window {
-    richiiWebMcpTest: TestWebMcpHarness;
+    riichimiWebMcpTest: TestWebMcpHarness;
   }
 }
 
@@ -34,7 +34,7 @@ async function installWebMcpHarness(page: Page): Promise<void> {
       configurable: true,
       value: modelContext,
     });
-    Object.defineProperty(window, "richiiWebMcpTest", {
+    Object.defineProperty(window, "riichimiWebMcpTest", {
       configurable: true,
       value: {
         execute: async (name: string, input: Record<string, unknown> = {}) => {
@@ -56,7 +56,7 @@ async function executeTool(
   input: Record<string, unknown> = {},
 ): Promise<unknown> {
   return page.evaluate(
-    async ({ toolInput, toolName }) => window.richiiWebMcpTest.execute(toolName, toolInput),
+    async ({ toolInput, toolName }) => window.riichimiWebMcpTest.execute(toolName, toolInput),
     { toolInput: input, toolName: name },
   );
 }
@@ -68,25 +68,25 @@ test("dogfoods the polished mobile scoring and table flows through WebMCP", asyn
 
   await expect(page.getByRole("heading", { name: /Score a winning hand/ })).toBeVisible();
   await expect
-    .poll(() => page.evaluate(() => window.richiiWebMcpTest.names()))
+    .poll(() => page.evaluate(() => window.riichimiWebMcpTest.names()))
     .toEqual(
       expect.arrayContaining([
-        "richii.app.get_state",
-        "richii.app.navigate",
-        "richii.rules.select",
-        "richii.session.start",
+        "riichimi.app.get_state",
+        "riichimi.app.navigate",
+        "riichimi.rules.select",
+        "riichimi.session.start",
       ]),
     );
   await page.screenshot({ fullPage: true, path: "docs/checkpoints/2026-07-23-01-home-mobile.png" });
 
-  await executeTool(page, "richii.app.navigate", { destination: "manual" });
+  await executeTool(page, "riichimi.app.navigate", { destination: "manual" });
   await expect(page).toHaveURL(/\/manual$/);
   await expect
-    .poll(() => page.evaluate(() => window.richiiWebMcpTest.names()))
-    .toContain("richii.manual.load_example");
-  await executeTool(page, "richii.manual.load_example");
+    .poll(() => page.evaluate(() => window.riichimiWebMcpTest.names()))
+    .toContain("riichimi.manual.load_example");
+  await executeTool(page, "riichimi.manual.load_example");
   await expect(page.getByText(/14 of 14 concealed tiles/)).toBeVisible();
-  const scoreResult = await executeTool(page, "richii.manual.calculate");
+  const scoreResult = await executeTool(page, "riichimi.manual.calculate");
   expect(scoreResult).toMatchObject({ structuredContent: { kind: "success" } });
   const mobileScore = page.getByText("2 han · 20 fu").filter({ visible: true });
   await expect(mobileScore).toBeVisible();
@@ -96,7 +96,7 @@ test("dogfoods the polished mobile scoring and table flows through WebMCP", asyn
     path: "docs/checkpoints/2026-07-23-02-manual-score-mobile.png",
   });
 
-  const historyResult = await executeTool(page, "richii.history.list");
+  const historyResult = await executeTool(page, "riichimi.history.list");
   expect(historyResult).toMatchObject({
     structuredContent: {
       entries: [
@@ -108,7 +108,7 @@ test("dogfoods the polished mobile scoring and table flows through WebMCP", asyn
       ],
     },
   });
-  await executeTool(page, "richii.app.navigate", { destination: "history" });
+  await executeTool(page, "riichimi.app.navigate", { destination: "history" });
   await expect(page).toHaveURL(/\/history$/);
   await expect(page.getByRole("heading", { name: "Every answer leaves a trail." })).toBeVisible();
   await expect(page.getByText("Fully concealed hand").filter({ visible: true })).toBeVisible();
@@ -119,7 +119,7 @@ test("dogfoods the polished mobile scoring and table flows through WebMCP", asyn
     path: "docs/checkpoints/2026-07-23-05-score-history-mobile.png",
   });
 
-  const selectedRules = await executeTool(page, "richii.rules.select", {
+  const selectedRules = await executeTool(page, "riichimi.rules.select", {
     profileId: "wrc-2025-red-five-table",
   });
   expect(selectedRules).toMatchObject({
@@ -127,7 +127,7 @@ test("dogfoods the polished mobile scoring and table flows through WebMCP", asyn
   });
   await expect
     .poll(async () => {
-      const state = await executeTool(page, "richii.app.get_state");
+      const state = await executeTool(page, "riichimi.app.get_state");
       if (typeof state !== "object" || state === null || !("structuredContent" in state)) {
         return undefined;
       }
@@ -145,7 +145,7 @@ test("dogfoods the polished mobile scoring and table flows through WebMCP", asyn
         : undefined;
     })
     .toBe("wrc-2025-red-five-table");
-  const startedTable = await executeTool(page, "richii.session.start", {
+  const startedTable = await executeTool(page, "riichimi.session.start", {
     playerNames: ["Aiko", "Beni", "Chika", "Daichi"],
   });
   expect(startedTable).toMatchObject({
@@ -154,14 +154,14 @@ test("dogfoods the polished mobile scoring and table flows through WebMCP", asyn
   await expect(page).toHaveURL(/\/session$/);
   await expect(page.getByRole("heading", { name: "East 1" })).toBeVisible();
   await expect(page.getByText("WRC 2025 · RED-FIVE TABLE · PINNED")).toBeVisible();
-  await executeTool(page, "richii.session.declare_riichi", { playerIndex: 1 });
+  await executeTool(page, "riichimi.session.declare_riichi", { playerIndex: 1 });
   await expect(page.getByText("24,000", { exact: true }).filter({ visible: true })).toBeVisible();
-  await executeTool(page, "richii.session.record_draw", { tenpaiPlayerIndices: [0, 2] });
+  await executeTool(page, "riichimi.session.record_draw", { tenpaiPlayerIndices: [0, 2] });
   await expect(
     page.getByText("26,500", { exact: true }).filter({ visible: true }).first(),
   ).toBeVisible();
   await expect(page.getByText("Exhaustive draw").filter({ visible: true }).last()).toBeVisible();
-  await executeTool(page, "richii.session.undo");
+  await executeTool(page, "riichimi.session.undo");
   await expect(page.getByText("24,000", { exact: true }).filter({ visible: true })).toBeVisible();
   await expect(page.getByText("No completed rounds yet.").filter({ visible: true })).toBeVisible();
   await page.screenshot({
@@ -173,12 +173,12 @@ test("dogfoods the polished mobile scoring and table flows through WebMCP", asyn
   await expect(page).toHaveURL(/\/manual$/);
   await expect(page.getByText("ACTIVE TABLE · CONTEXT LINKED")).toBeVisible();
   await expect
-    .poll(() => page.evaluate(() => window.richiiWebMcpTest.names()))
-    .toContain("richii.manual.load_example");
-  await executeTool(page, "richii.manual.load_example");
-  await executeTool(page, "richii.manual.calculate");
+    .poll(() => page.evaluate(() => window.riichimiWebMcpTest.names()))
+    .toContain("riichimi.manual.load_example");
+  await executeTool(page, "riichimi.manual.load_example");
+  await executeTool(page, "riichimi.manual.calculate");
   await expect(page.getByText("Score checked. Ready to update the table.")).toBeVisible();
-  const recordedWin = await executeTool(page, "richii.manual.record_table_result");
+  const recordedWin = await executeTool(page, "riichimi.manual.record_table_result");
   expect(recordedWin).toMatchObject({
     structuredContent: {
       discarderIndex: null,

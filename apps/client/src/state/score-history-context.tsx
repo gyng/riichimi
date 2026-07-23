@@ -1,4 +1,4 @@
-import type { ScoreHandInput, ScoreSuccess } from "@richii/score-core";
+import type { ScoreHandInput, ScoreSuccess } from "@riichimi/score-core";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 

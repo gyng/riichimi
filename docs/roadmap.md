@@ -1,4 +1,4 @@
-# Richii roadmap
+# Riichimi roadmap
 
 Last reviewed: **2026-07-24**
 
@@ -25,6 +25,13 @@ Status vocabulary: **Shipped** · **In progress** · **Planned** · **Blocked**.
   safe-area inset and back navigation.
 - **Camera-free review path.** A bundled sample hand runs the real offline
   recognizer, so the scan flow can be reviewed on a desktop with no camera.
+- **Mobile-first pass.** Measured at 390px across every route: the bar stays on
+  one row, interactive targets meet the 48px minimum, and no route scrolls
+  horizontally. The tile face is the one documented exception.
+- **Win announcer.** `announceWin` produces structured announcement data, a
+  narrow `SpeechPort` carries the device capability (Web Speech today, native
+  reporting unavailable), and an opt-in per-device toggle speaks the result
+  without gating scoring.
 
 ## Planned
 
@@ -55,21 +62,7 @@ knobs added in item 1) as a named local profile, clearly distinguished from
 published rulesets the way `WRC 2025 · red-five table` already is. Depends on the
 knob set from item 1 being settled.
 
-### 3. Mobile-first UI pass
-
-The layout is responsive but was composed desktop-first. Audit the primary flows
-on narrow phones, large text, and landscape: capture, review, calculator, table,
-and history. Interactive targets at least 48×48, no horizontal scrolling, and
-keyboard/screen-reader parity on web.
-
-### 4. Win announcer
-
-Announce the scored result (Mahjong-Soul style) through a **TTS port** so the
-implementation is swappable. Start with a Web Speech adapter; leave room for a
-local neural voice (Moonshine, Piper) later. Must respect reduced-motion and
-sound preferences, be off by default or easily silenced, and never block scoring.
-
-### 5. Internationalisation, especially CJK
+### 3. Internationalisation, especially CJK
 
 Extract user-facing copy behind a translation boundary and verify Japanese and
 Chinese rendering: line breaking, font fallback, numeral and honorific handling,
