@@ -1,0 +1,210 @@
+{
+  "confidenceThreshold": 0.75,
+  "metrics": {
+    "acceptedAccuracy": 1.0,
+    "acceptedCoverage": 0.2222222222222222,
+    "evaluatedCrops": 9,
+    "top1Accuracy": 0.7777777777777778
+  },
+  "samples": [
+    {
+      "accepted": false,
+      "confidence": 0.38026389479637146,
+      "correct": true,
+      "expected": "5m",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Japanese_Mahjong_Tiles_2.jpg",
+      "prediction": "5m",
+      "top3": [
+        {
+          "confidence": 0.38026389479637146,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.07795585691928864,
+          "label": "8m"
+        },
+        {
+          "confidence": 0.0430384986102581,
+          "label": "8s"
+        }
+      ]
+    },
+    {
+      "accepted": false,
+      "confidence": 0.7453084588050842,
+      "correct": true,
+      "expected": "5s",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Japanese_Mahjong_Tiles_2.jpg",
+      "prediction": "5s",
+      "top3": [
+        {
+          "confidence": 0.7453084588050842,
+          "label": "5s"
+        },
+        {
+          "confidence": 0.0317901074886322,
+          "label": "4s"
+        },
+        {
+          "confidence": 0.023359961807727814,
+          "label": "7p"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.7843108773231506,
+      "correct": true,
+      "expected": "5p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Japanese_Mahjong_Tiles_2.jpg",
+      "prediction": "5p",
+      "top3": [
+        {
+          "confidence": 0.7843108773231506,
+          "label": "5p"
+        },
+        {
+          "confidence": 0.027027666568756104,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.023893726989626884,
+          "label": "2p"
+        }
+      ]
+    },
+    {
+      "accepted": false,
+      "confidence": 0.44676119089126587,
+      "correct": true,
+      "expected": "0m",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Japanese_Mahjong_Tiles_2.jpg",
+      "prediction": "0m",
+      "top3": [
+        {
+          "confidence": 0.44676119089126587,
+          "label": "0m"
+        },
+        {
+          "confidence": 0.14316129684448242,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.027614794671535492,
+          "label": "6p"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "confidence": 0.8782793879508972,
+      "correct": true,
+      "expected": "0s",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Japanese_Mahjong_Tiles_2.jpg",
+      "prediction": "0s",
+      "top3": [
+        {
+          "confidence": 0.8782793879508972,
+          "label": "0s"
+        },
+        {
+          "confidence": 0.014865166507661343,
+          "label": "5s"
+        },
+        {
+          "confidence": 0.01073592808097601,
+          "label": "3m"
+        }
+      ]
+    },
+    {
+      "accepted": false,
+      "confidence": 0.15952211618423462,
+      "correct": true,
+      "expected": "0p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Japanese_Mahjong_Tiles_2.jpg",
+      "prediction": "0p",
+      "top3": [
+        {
+          "confidence": 0.15952211618423462,
+          "label": "0p"
+        },
+        {
+          "confidence": 0.10362698137760162,
+          "label": "6p"
+        },
+        {
+          "confidence": 0.09660792350769043,
+          "label": "4m"
+        }
+      ]
+    },
+    {
+      "accepted": false,
+      "confidence": 0.5238681435585022,
+      "correct": false,
+      "expected": "4p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_Tiles_(195606345).jpeg",
+      "prediction": "9p",
+      "top3": [
+        {
+          "confidence": 0.5238681435585022,
+          "label": "9p"
+        },
+        {
+          "confidence": 0.12778425216674805,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.06017622724175453,
+          "label": "8s"
+        }
+      ]
+    },
+    {
+      "accepted": false,
+      "confidence": 0.3577534258365631,
+      "correct": false,
+      "expected": "4p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_Tiles_(195606345).jpeg",
+      "prediction": "9p",
+      "top3": [
+        {
+          "confidence": 0.3577534258365631,
+          "label": "9p"
+        },
+        {
+          "confidence": 0.13635089993476868,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.1142621710896492,
+          "label": "6s"
+        }
+      ]
+    },
+    {
+      "accepted": false,
+      "confidence": 0.4088694155216217,
+      "correct": true,
+      "expected": "2p",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Dora_and_Wanpai.jpg",
+      "prediction": "2p",
+      "top3": [
+        {
+          "confidence": 0.4088694155216217,
+          "label": "2p"
+        },
+        {
+          "confidence": 0.14418666064739227,
+          "label": "east"
+        },
+        {
+          "confidence": 0.10990218818187714,
+          "label": "4m"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 1
+}

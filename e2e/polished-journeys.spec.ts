@@ -199,7 +199,18 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   await fileChooser.setFiles("e2e/fixtures/guided-hand.png");
   await expect(page.getByText("Photo ready for review")).toBeVisible();
   await page.screenshot({ path: "docs/checkpoints/2026-07-23-06-gallery-review-desktop.png" });
-  await page.getByRole("button", { name: "Enter tiles from this photo" }).click();
-  await expect(page).toHaveURL(/\/manual\?referencePhoto=/);
+  await page.getByRole("button", { name: "Read 14 tiles offline" }).click();
+  await expect(page.getByText(/15 tiles read · \d+ need review/)).toBeVisible({ timeout: 30_000 });
+  await page.screenshot({
+    path: "docs/checkpoints/2026-07-23-08-offline-recognition-review-desktop.png",
+  });
+  await page.getByRole("button", { name: "Review recognized tiles" }).click();
+  await expect(page).toHaveURL(/\/manual\?.*recognizedTiles=/);
   await expect(page.getByLabel("Captured hand reference")).toBeVisible();
+  await expect(page.getByText("OFFLINE RECOGNITION · REVIEW REQUIRED")).toBeVisible();
+  await expect(page.getByText(/14 of 14 concealed tiles/)).toBeVisible();
+  await page.screenshot({
+    fullPage: true,
+    path: "docs/checkpoints/2026-07-23-09-recognized-draft-desktop.png",
+  });
 });

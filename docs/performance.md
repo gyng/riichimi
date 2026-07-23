@@ -29,6 +29,20 @@ All feedback loops remain below their budgets, so no optimization-only change is
 
 An early session build accidentally pulled Expo SQLite's web WASM runtime into Metro and failed on a missing artifact after about 10 seconds. Splitting the persistence adapter by platform fixed the export and avoided adding the database runtime to the browser bundle. Native retains SQLite durability; web uses its native local-storage facility.
 
+### Guided recognition optimization run
+
+Recorded on 2026-07-23 after the offline recognition beta:
+
+- Deterministic CPU training: about 303 seconds and 885 MB peak RSS for 10 epochs; training is an explicit artifact-generation job, not an ordinary feedback loop.
+- Warm static export: 5.5 seconds after Metro caching; 17.4 seconds during the measured cold-ish WebGL integration run.
+- Shared entry: 1,274,035 bytes, up 18,006 bytes (`1.4%`) from the 1,256,029-byte pre-recognition checkpoint.
+- Lazy inference chunk: 467,713 bytes, fetched only after a person requests recognition.
+- ONNX classifier asset: 1,866,535 bytes, fetched separately from the initial JavaScript.
+- Full static export: 3,892,219 bytes across seven routes, the lazy engine, and model.
+- Two Playwright journeys including real exported-app WebGL inference: 4.4 seconds.
+
+The first working WebGL build put the inference runtime in the shared entry, growing it to about 1.74 MB and crossing the 10% explanation trigger. Converting the runtime import to a true async boundary reduced the initial payload to 1.27 MB. The default ONNX Runtime Web WASM entry was also rejected because its dynamic loader is incompatible with Metro and would add a roughly 13.5 MB WASM payload; WebGL is the smaller verified web backend for this beta. The fixed 15-crop input avoids symbolic-shape incompatibility in that backend.
+
 ## Feedback-loop budgets
 
 - Formatting should remain below 2 seconds locally.

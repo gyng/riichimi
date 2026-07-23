@@ -3,6 +3,7 @@ export { correctDetection, reviewRecognition } from "./application/review-recogn
 export {
   evaluateRecognitionModelRelease,
   guidedScannerReleaseThresholds,
+  recognitionModelClasses,
 } from "./domain/model-manifest";
 export type {
   ModelReleaseIssue,

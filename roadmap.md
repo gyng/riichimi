@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: **2026-07-23T05:23:45+08:00**
+Last updated: **2026-07-23T08:37:10+08:00**
 
 ## Product objective
 
@@ -14,26 +14,25 @@ Deliver a polished mobile/web riichi companion that reaches an auditable result 
 - Recognition contracts and confidence-aware correction prioritization.
 - Camera and gallery photo review with reference-preserving manual handoff and Android picker recovery.
 - A versioned recognition artifact manifest gate covering integrity, provenance, classes, input, and release metrics.
+- A rights-traceable guided recognition beta with deterministic 15-face localization, a bundled ONNX classifier, web/native adapters, confidence and physical-count review, and photograph-backed draft correction.
+- A reproducible vision pipeline with pinned sources, crop partitions, augmentation, ONNX parity, artifact hashing, licensing, synthetic validation, and source-separated physical smoke evaluation.
 - Typed WebMCP tools with visible, recoverable mutations.
 - A deduplicated local score folio with audit details, removal, clear confirmation, and reload-safe direct links.
 - Unit, component, browser, coverage, formatting, lint, type, export, and screenshot checkpoints.
 
 ## P0 — production recognition and release confidence
 
-1. **Licensed recognition artifact**
-   - Select or train detector/classifier weights with documented redistribution rights.
-   - Establish a versioned dataset manifest spanning tile sets, phones, lighting, glare, perspective, calls, kans, red fives, and hard negatives.
-   - Gate release on per-class accuracy, structural hand accuracy, calibration, and unknown-tile recall rather than a demo image.
-2. **Offline inference adapters**
-   - Implement ONNX Runtime Web and React Native adapters behind the existing vision port.
-   - Keep preprocessing/post-processing equivalent across platforms and move heavy work off interaction frames.
-   - Version, verify, cache, and safely roll back model artifacts.
-3. **Recognition review journey**
-   - Connect capture → inference → confidence review → minimal correction → context → score.
-   - Add blur/glare/crop feedback and explicit failure/retry/cancel states.
-   - Never score a structurally invalid or low-confidence hand without confirmation.
-4. **Device QA**
+1. **Representative recognition evidence**
+   - Grow the rights-cleared, source-separated corpus to at least 500 complete guided hands spanning tile sets, phones, lighting, glare, perspective, red fives, and hard negatives.
+   - Gate promotion on per-class accuracy, exact-hand accuracy, calibration, correction burden, and unknown-tile recall rather than the current smoke set.
+   - Add immutable candidate manifests and safe model rollback after a candidate passes.
+2. **Recognition review refinement**
+   - Highlight individual low-confidence tiles and offer top-three one-tap corrections before the full picker.
+   - Add blur, glare, crop, and layout-specific guidance while retaining retry, cancel, and manual escape paths.
+   - Expand from the deliberately narrow closed-hand guide to calls and kans only after each layout has independent evidence.
+3. **Device QA**
    - Verify camera, storage recovery, rotation, large text, keyboard, screen readers, reduced motion, and offline restart on representative iOS, Android, and web devices.
+   - Benchmark model initialization, preprocessing, inference, memory, thermals, and interaction responsiveness in custom native builds.
 
 Exit gate: representative guided scans meet documented accuracy and latency targets on mid-range hardware, the full journey passes on all targets, and failures degrade cleanly to manual entry.
 

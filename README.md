@@ -2,7 +2,7 @@
 
 Local-first riichi mahjong scoring for mobile and web, with an auditable WRC 2025 engine, camera-assisted entry, and persistent four-player table sessions.
 
-The current app includes a complete manual calculator, locally persisted standalone score folio, camera or gallery capture with an on-device photo reference fallback, yaku/fu/payment explanations, durable local table state, automatic transfers and round advancement, round history, undo, and progressive-enhancement WebMCP tools for agent-assisted navigation, scoring, history inspection, and table operation. The confidence-aware recognition pipeline and a strict model-release manifest gate are implemented; production physical-tile inference still requires licensed model weights and device validation. Product sequencing lives in [`docs/riichi-score-calculator-plan.md`](docs/riichi-score-calculator-plan.md), with candidate research in the [`recognition model audit`](docs/recognition-model-audit.md).
+The current app includes a complete manual calculator, locally persisted standalone score folio, camera or gallery capture, a rights-traceable offline guided-recognition beta with mandatory photo-backed review, yaku/fu/payment explanations, durable local table state, automatic transfers and round advancement, round history, undo, and progressive-enhancement WebMCP tools for agent-assisted navigation, scoring, history inspection, and table operation. A strict model-release gate prevents the beta's small smoke set from being presented as production accuracy. Product sequencing lives in [`docs/riichi-score-calculator-plan.md`](docs/riichi-score-calculator-plan.md), with training, provenance, evidence, and limitations in the [`recognition model audit`](docs/recognition-model-audit.md).
 
 ## Prerequisites
 
@@ -19,6 +19,8 @@ npm run web
 
 Use `npm start` for the Expo development menu, or `npm run android` / `npm run ios` for a native target.
 
+Native recognition uses ONNX Runtime React Native and therefore needs an Expo custom development build; it is not available in Expo Go. Web recognition lazy-loads the local model runtime only after you ask it to read a guided photo.
+
 After `npm run build:web`, use `npm run serve:web` to serve the static export with working clean-route reloads and direct links.
 
 ## Quality gate
@@ -29,7 +31,7 @@ npm run build:web
 npm run test:e2e
 ```
 
-`npm run lint` uses Oxlint's tsgolint integration for both type-aware lint rules and TypeScript 7 project diagnostics. Oxfmt is the only formatter. The Playwright suite runs two focused browser dogfood rounds against the exported site, including a complete scored-hand-to-table transfer and gallery-photo handoff, and regenerates the dated visual checkpoints in [`docs/checkpoints`](docs/checkpoints/README.md).
+`npm run lint` uses Oxlint's tsgolint integration for both type-aware lint rules and TypeScript 7 project diagnostics. Oxfmt is the only formatter. The Playwright suite runs two focused browser dogfood rounds against the exported site, including a complete scored-hand-to-table transfer and real gallery-photo model inference, and regenerates the dated visual checkpoints in [`docs/checkpoints`](docs/checkpoints/README.md).
 
 ## Workspace map
 

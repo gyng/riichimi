@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "majiang2",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Majiang2.JPG",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Majiang2.JPG",
+      "sha256": "c8ed144d7cc5c56ed7ac58f9375114cf3beb3877674f74fd1ddbb0e330b63c69",
+      "license": "CC-BY-SA-3.0",
+      "partition": "train",
+      "crops": [
+        { "label": "1p", "box": [41, 478, 100, 560] },
+        { "label": "2p", "box": [104, 478, 163, 560] },
+        { "label": "3p", "box": [167, 478, 226, 560] },
+        { "label": "4p", "box": [230, 478, 289, 560] },
+        { "label": "5p", "box": [293, 478, 352, 560] },
+        { "label": "6p", "box": [356, 478, 415, 560] },
+        { "label": "7p", "box": [419, 478, 478, 560] },
+        { "label": "8p", "box": [482, 478, 541, 560] },
+        { "label": "9p", "box": [545, 478, 608, 560] },
+        { "label": "1s", "box": [41, 575, 100, 658] },
+        { "label": "2s", "box": [104, 575, 163, 658] },
+        { "label": "3s", "box": [167, 575, 226, 658] },
+        { "label": "4s", "box": [230, 575, 289, 658] },
+        { "label": "5s", "box": [293, 575, 352, 658] },
+        { "label": "6s", "box": [356, 575, 415, 658] },
+        { "label": "7s", "box": [419, 575, 478, 658] },
+        { "label": "8s", "box": [482, 575, 541, 658] },
+        { "label": "9s", "box": [545, 575, 608, 658] },
+        { "label": "1m", "box": [41, 672, 100, 753] },
+        { "label": "2m", "box": [104, 672, 163, 753] },
+        { "label": "3m", "box": [167, 672, 226, 753] },
+        { "label": "4m", "box": [230, 672, 289, 753] },
+        { "label": "5m", "box": [293, 672, 352, 753] },
+        { "label": "6m", "box": [356, 672, 415, 753] },
+        { "label": "7m", "box": [419, 672, 478, 753] },
+        { "label": "8m", "box": [482, 672, 541, 753] },
+        { "label": "9m", "box": [545, 672, 608, 753] },
+        { "label": "east", "box": [41, 768, 100, 850] },
+        { "label": "south", "box": [104, 768, 163, 850] },
+        { "label": "west", "box": [167, 768, 226, 850] },
+        { "label": "north", "box": [230, 768, 289, 850] },
+        { "label": "red", "box": [293, 768, 352, 850] },
+        { "label": "green", "box": [356, 768, 415, 850] }
+      ]
+    },
+    {
+      "id": "japanese-mahjong-tiles-2",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Japanese_Mahjong_Tiles_2.jpg",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Japanese_Mahjong_Tiles_2.jpg",
+      "sha256": "0d750911fc58268824ab2c2a3e728736d487b2922a421209ddc3b263cfdcb370",
+      "license": "PD",
+      "partition": "evaluation",
+      "crops": [
+        { "label": "5m", "box": [37, 27, 131, 153] },
+        { "label": "5s", "box": [128, 27, 220, 153] },
+        { "label": "5p", "box": [217, 27, 310, 153] },
+        { "label": "0m", "box": [37, 151, 131, 276] },
+        { "label": "0s", "box": [128, 151, 220, 276] },
+        { "label": "0p", "box": [217, 151, 310, 276] }
+      ]
+    },
+    {
+      "id": "mahjong-tiles-195606345",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/1/16/Mahjong_Tiles_%28195606345%29.jpeg",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Mahjong_Tiles_(195606345).jpeg",
+      "sha256": "6d72c6f1dd56c13b6d0a27ff34eaff422fc800de4b43c5bc1f8b8e2f208c7d0a",
+      "license": "CC0-1.0",
+      "partition": "evaluation",
+      "crops": [
+        { "label": "4p", "box": [905, 275, 1360, 1020] },
+        { "label": "4p", "box": [1350, 300, 1835, 1020] }
+      ]
+    },
+    {
+      "id": "dora-wanpai",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Dora_and_Wanpai.jpg",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Dora_and_Wanpai.jpg",
+      "sha256": "defcde235f61b4f9ca32d79647f595b516a6bf66fb2aef85a0764dbe89c1395d",
+      "license": "PD",
+      "partition": "evaluation",
+      "crops": [{ "label": "2p", "box": [248, 145, 338, 244] }]
+    }
+  ]
+}

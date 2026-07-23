@@ -1,10 +1,10 @@
 # Progress
 
-Last updated: **2026-07-23T05:23:45+08:00**
+Last updated: **2026-07-23T08:37:10+08:00**
 
 ## Current state
 
-Richii is a polished, local-first scoring and table-session app on mobile-width web and desktop web. Its scoring, persistence, camera/gallery fallback, WebMCP surface, and critical browser journeys are implemented and verified. Production physical-tile recognition remains intentionally gated on a licensed model and real-device evaluation; the app says so instead of presenting a simulated detector as complete.
+Richii is a polished, local-first scoring and table-session app on mobile-width web and desktop web. Its scoring, persistence, WebMCP surface, guided camera/gallery recognition beta, mandatory review handoff, and critical browser journeys are implemented and verified. Production physical-tile accuracy remains intentionally gated on a representative corpus and real-device evaluation; the app labels the current model as beta instead of overstating nine-crop evidence.
 
 ## Timestamped checkpoints
 
@@ -56,6 +56,18 @@ Richii is a polished, local-first scoring and table-session app on mobile-width 
 - The shared web entry is 1,256,029 bytes, a 0.9% increase from the score-history checkpoint and below the 10% optimization trigger.
 - Initialized the repository and created the verified baseline commit after project, generated-output, and secret-scope audits.
 
+### 2026-07-23T08:37:10+08:00 — guided offline recognition beta
+
+- Researched public physical-tile models and datasets, rejected private weights, credential-gated artifacts, incomplete class sets, ambiguous scraped-image provenance, and unapproved license boundaries.
+- Built a deterministic, reproducible classifier pipeline from pinned CC0 artwork and licensed physical-photo crops; committed source hashes, crop coordinates, partitions, attribution, scripts, reports, and the 1.87 MB ONNX artifact.
+- Added strict guided localization for exactly 14 separated hand tiles plus one dora, fixed-batch preprocessing, 38-class decoding, top alternatives, unknown handling, and confidence/structural review.
+- Added lazy ONNX Runtime WebGL inference and ONNX Runtime React Native adapters. Captures and inference remain local; no image-upload WebMCP surface was added.
+- Connected gallery/camera review → offline recognition → visible uncertainty count → prefilled 14-tile/dora/winner draft → photograph-backed correction → normal scoring.
+- The source-separated physical smoke set scored 7/9 top-1. A `0.75` threshold accepted 2/9 and both were correct; low coverage is intentional while evidence is small. The v0 artifact does not pass the 500-hand production release gate.
+- Browser dogfood found and fixed Metro's incompatible default WASM import, then found and fixed a symbolic-batch incompatibility in WebGL. The final exported-app run executes the real model and completes both browser journeys in 4.4 seconds.
+- A bundle-growth optimization lazy-loads the 467,713-byte inference engine. The shared entry is 1,274,035 bytes, only 1.4% above the previous 1,256,029-byte checkpoint; the model is a separate 1,866,535-byte asset.
+- Recognition/domain/component coverage now includes layout rejection, tensor equivalence, output review, routing validation, adapter orchestration, and the browser-level model execution journey.
+
 ## Visual evidence
 
 - [Mobile landing](docs/checkpoints/2026-07-23-01-home-mobile.png)
@@ -65,6 +77,8 @@ Richii is a polished, local-first scoring and table-session app on mobile-width 
 - [Mobile score folio after reload](docs/checkpoints/2026-07-23-05-score-history-mobile.png)
 - [Desktop gallery photo review](docs/checkpoints/2026-07-23-06-gallery-review-desktop.png)
 - [Mobile table after posting a scored win](docs/checkpoints/2026-07-23-07-session-scored-win-mobile.png)
+- [Desktop offline recognition review](docs/checkpoints/2026-07-23-08-offline-recognition-review-desktop.png)
+- [Desktop photograph-backed recognized draft](docs/checkpoints/2026-07-23-09-recognized-draft-desktop.png)
 
 ## Verification commands
 
@@ -76,5 +90,5 @@ npm run test:e2e
 
 ## External and environment constraints
 
-- Physical-tile auto-detection is not claimed complete until licensed weights, a representative photo corpus, accuracy targets, and device benchmarks are available.
-- Native iOS/Android camera, SQLite, large-text, and screen-reader passes still require real simulators/devices.
+- Guided physical-tile recognition is a licensed, working beta, but production accuracy is not claimed until the 500-hand representative gate and device benchmarks pass.
+- Native iOS/Android inference requires a custom development build because ONNX Runtime React Native is not available in Expo Go; camera, SQLite, large-text, screen-reader, latency, and memory passes still require real simulators/devices.

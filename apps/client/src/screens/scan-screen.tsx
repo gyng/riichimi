@@ -1,4 +1,6 @@
 import { ActionButton, color, space } from "@richii/ui";
+import { reviewRecognition } from "@richii/vision";
+import type { RecognitionResult } from "@richii/vision";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
@@ -6,11 +8,24 @@ import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { tileRecognition } from "../infrastructure/tile-recognition";
+
+type RecognitionState =
+  | { readonly kind: "idle" }
+  | { readonly kind: "running" }
+  | { readonly kind: "failure"; readonly message: string }
+  | {
+      readonly kind: "complete";
+      readonly result: RecognitionResult;
+      readonly reviewCount: number;
+    };
+
 export function ScanScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [photoSource, setPhotoSource] = useState<"camera" | "library">("camera");
   const [importError, setImportError] = useState<string | null>(null);
+  const [recognition, setRecognition] = useState<RecognitionState>({ kind: "idle" });
   const camera = useRef<CameraView>(null);
 
   useEffect(() => {
@@ -25,6 +40,7 @@ export function ScanScreen() {
       ) {
         setPhotoSource("library");
         setPhotoUri(pending.assets[0].uri);
+        setRecognition({ kind: "idle" });
       }
     });
     return () => {
@@ -38,6 +54,7 @@ export function ScanScreen() {
     if (photo !== undefined) {
       setPhotoSource("camera");
       setPhotoUri(photo.uri);
+      setRecognition({ kind: "idle" });
     }
   }
 
@@ -54,12 +71,72 @@ export function ScanScreen() {
       if (asset !== undefined) {
         setPhotoSource("library");
         setPhotoUri(asset.uri);
+        setRecognition({ kind: "idle" });
       }
     } catch {
       setImportError(
         "That photo could not be opened. Try another image or enter the tiles manually.",
       );
     }
+  }
+
+  async function recognizePhoto() {
+    if (photoUri === null) {
+      return;
+    }
+    setRecognition({ kind: "running" });
+    try {
+      const result = await tileRecognition.recognize({ height: 1, uri: photoUri, width: 1 });
+      const review = reviewRecognition(result, 0.75);
+      setRecognition({
+        kind: "complete",
+        result,
+        reviewCount: review.reviewDetectionIds.length,
+      });
+    } catch (error) {
+      setRecognition({
+        kind: "failure",
+        message:
+          error instanceof Error ? error.message : "The tiles could not be read from this photo.",
+      });
+    }
+  }
+
+  function reviewRecognizedTiles(result: RecognitionResult, reviewCount: number) {
+    if (photoUri === null) {
+      return;
+    }
+    const hand = result.detections
+      .filter(({ role }) => role === "concealed" || role === "winning")
+      .toSorted((left, right) => left.bounds.x - right.bounds.x);
+    const dora = result.detections.find(({ role }) => role === "dora");
+    const tiles = hand.map(({ alternatives, tile }) => tile ?? alternatives[0]?.tile);
+    const winningIndex = hand.findIndex(({ role }) => role === "winning");
+    const doraTile = dora?.tile ?? dora?.alternatives[0]?.tile;
+    if (
+      hand.length !== 14 ||
+      tiles.some((tile) => tile === undefined) ||
+      winningIndex < 0 ||
+      doraTile === undefined
+    ) {
+      setRecognition({
+        kind: "failure",
+        message:
+          "One or more tiles could not be proposed. Retake the photo or enter them manually.",
+      });
+      return;
+    }
+    router.push({
+      pathname: "/manual",
+      params: {
+        recognizedDora: doraTile,
+        recognizedModel: result.modelVersion,
+        recognizedReviewCount: String(reviewCount),
+        recognizedTiles: tiles.join(","),
+        recognizedWinningIndex: String(winningIndex),
+        referencePhoto: photoUri,
+      },
+    });
   }
 
   if (permission === null) {
@@ -126,21 +203,61 @@ export function ScanScreen() {
             {photoSource === "camera" ? "Capture ready for review" : "Photo ready for review"}
           </Text>
           <Text style={styles.reviewBody}>
-            The offline physical-tile model is not installed in this build. Keep the capture beside
-            the tile picker so you can enter the hand without switching back and forth.
+            Beta recognition runs entirely on this device. It expects exactly 14 upright, separated
+            tiles on a dark plain surface, the winning tile after a larger gap, and one dora
+            indicator below the hand. Every result still needs your confirmation.
           </Text>
+          {recognition.kind === "running" ? (
+            <View accessibilityLiveRegion="polite" style={styles.recognitionStatus}>
+              <ActivityIndicator color={color.accent} />
+              <Text style={styles.status}>Reading 15 tile faces offline…</Text>
+            </View>
+          ) : null}
+          {recognition.kind === "failure" ? (
+            <Text accessibilityLiveRegion="polite" style={styles.recognitionError}>
+              {recognition.message} Reposition the tiles and retry, or use manual entry.
+            </Text>
+          ) : null}
+          {recognition.kind === "complete" ? (
+            <View accessibilityLiveRegion="polite" style={styles.recognitionResult}>
+              <Text style={styles.recognitionKicker}>OFFLINE BETA · DRAFT ONLY</Text>
+              <Text style={styles.recognitionTitle}>
+                15 tiles read · {recognition.reviewCount} need review
+              </Text>
+              <Text style={styles.recognitionCopy}>
+                Compare every proposed tile with the reference before calculating the score.
+              </Text>
+            </View>
+          ) : null}
           <View style={styles.reviewActions}>
             <ActionButton
               label={photoSource === "camera" ? "Retake" : "Choose another photo"}
               onPress={() => {
                 if (photoSource === "camera") {
                   setPhotoUri(null);
+                  setRecognition({ kind: "idle" });
                 } else {
                   void choosePhoto();
                 }
               }}
               variant="paper"
             />
+            {recognition.kind === "complete" ? (
+              <ActionButton
+                label="Review recognized tiles"
+                onPress={() => reviewRecognizedTiles(recognition.result, recognition.reviewCount)}
+                variant="vermilion"
+              />
+            ) : (
+              <ActionButton
+                disabled={recognition.kind === "running"}
+                label="Read 14 tiles offline"
+                onPress={() => {
+                  void recognizePhoto();
+                }}
+                variant="vermilion"
+              />
+            )}
             <ActionButton
               label="Enter tiles from this photo"
               onPress={() =>
@@ -169,7 +286,9 @@ export function ScanScreen() {
             <View style={styles.guideCornerBottomRight} />
           </View>
           <View style={styles.shutterArea}>
-            <Text style={styles.cameraHint}>Keep the winning tile slightly apart.</Text>
+            <Text style={styles.cameraHint}>
+              Separate 14 upright tiles; leave a larger gap before the winner. Put one dora below.
+            </Text>
             <View style={styles.captureActions}>
               <ActionButton
                 label="Capture hand"
@@ -346,6 +465,48 @@ const styles = StyleSheet.create({
   reviewPanel: {
     backgroundColor: color.canvas,
     padding: space.x5,
+  },
+  recognitionCopy: {
+    color: color.inkMuted,
+    fontFamily: "serif",
+    fontSize: 13,
+    lineHeight: 19,
+    marginTop: space.x1,
+  },
+  recognitionError: {
+    color: color.accent,
+    fontFamily: "serif",
+    fontSize: 14,
+    lineHeight: 21,
+    marginBottom: space.x4,
+  },
+  recognitionKicker: {
+    color: color.accent,
+    fontFamily: "monospace",
+    fontSize: 9,
+    fontWeight: "800",
+    letterSpacing: 1,
+  },
+  recognitionResult: {
+    backgroundColor: "#F2E7D3",
+    borderColor: color.line,
+    borderRadius: 10,
+    borderWidth: 1,
+    marginBottom: space.x4,
+    padding: space.x3,
+  },
+  recognitionStatus: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: space.x2,
+    marginBottom: space.x4,
+  },
+  recognitionTitle: {
+    color: color.ink,
+    fontFamily: "serif",
+    fontSize: 18,
+    fontWeight: "700",
+    marginTop: space.x1,
   },
   reviewTitle: {
     color: color.ink,

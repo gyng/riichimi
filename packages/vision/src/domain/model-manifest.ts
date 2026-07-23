@@ -59,7 +59,7 @@ export const guidedScannerReleaseThresholds: ModelReleaseThresholds = {
   perTileTop1Accuracy: 0.995,
 };
 
-const requiredClasses: readonly RecognitionClass[] = [
+export const recognitionModelClasses: readonly RecognitionClass[] = [
   ...canonicalTileIds,
   ...redFiveIds,
   "unknown",
@@ -134,7 +134,7 @@ export function evaluateRecognitionModelRelease(
 ): readonly ModelReleaseIssue[] {
   const issues = invalidManifestIssues(manifest);
   const availableClasses = new Set(manifest.classes);
-  const missingClasses = requiredClasses.filter((tile) => !availableClasses.has(tile));
+  const missingClasses = recognitionModelClasses.filter((tile) => !availableClasses.has(tile));
   if (missingClasses.length > 0) {
     issues.push({
       code: "INCOMPLETE_CLASSES",

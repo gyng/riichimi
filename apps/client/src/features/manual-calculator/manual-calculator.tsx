@@ -37,6 +37,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { createRoundCommandMetadata, useSession } from "../../state/session-context";
 import { useScoreHistory } from "../../state/score-history-context";
 import { useWebMcpTools, webMcpResult } from "../../infrastructure/webmcp";
+import type { RecognitionDraft } from "../recognition/recognition-draft";
 import { ScoreResultPanel } from "./score-result-panel";
 import { TilePicker } from "./tile-picker";
 
@@ -170,16 +171,24 @@ function Section({
 }
 
 export function ManualCalculator({
+  recognitionDraft,
   referencePhoto,
 }: {
+  readonly recognitionDraft?: RecognitionDraft | undefined;
   readonly referencePhoto?: string | undefined;
 }) {
   const session = useSession();
   const scoreHistory = useScoreHistory();
-  const [concealedTiles, setConcealedTiles] = useState<readonly TileId[]>([]);
+  const [concealedTiles, setConcealedTiles] = useState<readonly TileId[]>(
+    recognitionDraft?.concealedTiles ?? [],
+  );
   const [melds, setMelds] = useState<readonly DeclaredMeld[]>([]);
-  const [winningIndex, setWinningIndex] = useState<number | null>(null);
-  const [doraIndicators, setDoraIndicators] = useState<readonly TileId[]>([]);
+  const [winningIndex, setWinningIndex] = useState<number | null>(
+    recognitionDraft?.winningIndex ?? null,
+  );
+  const [doraIndicators, setDoraIndicators] = useState<readonly TileId[]>(
+    recognitionDraft?.doraIndicators ?? [],
+  );
   const [uraDoraIndicators, setUraDoraIndicators] = useState<readonly TileId[]>([]);
   const [pickerTarget, setPickerTarget] = useState<PickerTarget>("hand");
   const [method, setMethod] = useState<WinMethod>("tsumo");
@@ -562,6 +571,20 @@ export function ManualCalculator({
         <View style={styles.exampleAction}>
           <ActionButton label="Try a scored example" onPress={loadExample} variant="paper" />
         </View>
+
+        {recognitionDraft === undefined ? null : (
+          <View style={styles.recognitionBanner}>
+            <Text style={styles.recognitionBannerKicker}>
+              OFFLINE RECOGNITION · REVIEW REQUIRED
+            </Text>
+            <Text style={styles.recognitionBannerTitle}>
+              {recognitionDraft.reviewCount === 0
+                ? "All 15 reads cleared the beta threshold. Confirm the winning tile and dora before scoring."
+                : `${recognitionDraft.reviewCount} ${recognitionDraft.reviewCount === 1 ? "read needs" : "reads need"} attention. Confirm every tile against the photo before scoring.`}
+            </Text>
+            <Text style={styles.recognitionModel}>MODEL {recognitionDraft.modelVersion}</Text>
+          </View>
+        )}
 
         {referencePhoto === undefined ? null : (
           <View style={styles.referencePanel}>
@@ -1127,6 +1150,37 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "700",
     marginTop: 2,
+  },
+  recognitionBanner: {
+    backgroundColor: "#F2E7D3",
+    borderColor: color.accent,
+    borderLeftWidth: 4,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginBottom: space.x5,
+    padding: space.x4,
+  },
+  recognitionBannerKicker: {
+    color: color.accent,
+    fontFamily: "monospace",
+    fontSize: 10,
+    fontWeight: "800",
+    letterSpacing: 1.1,
+  },
+  recognitionBannerTitle: {
+    color: color.ink,
+    fontFamily: "serif",
+    fontSize: 17,
+    fontWeight: "700",
+    lineHeight: 24,
+    marginTop: space.x2,
+  },
+  recognitionModel: {
+    color: color.inkMuted,
+    fontFamily: "monospace",
+    fontSize: 9,
+    letterSpacing: 0.6,
+    marginTop: space.x3,
   },
   safeArea: { backgroundColor: color.canvas, flex: 1 },
   section: {
