@@ -1,6 +1,7 @@
 export {
   editableRoundIds,
   editSessionRound,
+  handRiichiPlayerIndices,
   previewSessionEdit,
   tableBeforeRound,
 } from "./application/edit-session";

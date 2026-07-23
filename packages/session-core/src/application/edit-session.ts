@@ -475,6 +475,23 @@ export function editableRoundIds(state: SessionState): ReadonlySet<string> {
   return ids;
 }
 
+// Seat indices that declared riichi in the hand segment of `roundId`, in
+// declaration order. Empty for a legacy round not present in the event log.
+export function handRiichiPlayerIndices(state: SessionState, roundId: string): readonly number[] {
+  const roundIndex = findRoundEventIndex(state.events, roundId);
+  if (roundIndex === -1) {
+    return [];
+  }
+  const players: number[] = [];
+  for (const index of segmentRiichiIndices(state.events, roundIndex)) {
+    const event = state.events[index];
+    if (event?.kind === "riichi") {
+      players.push(event.playerIndex);
+    }
+  }
+  return players;
+}
+
 export function tableBeforeRound(state: SessionState, roundId: string): TableState | null {
   const index = findRoundEventIndex(state.events, roundId);
   if (index === -1) {

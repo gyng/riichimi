@@ -73,6 +73,47 @@ describe("SessionScreen", () => {
     expect(screen.getByText("WRC 2025 · RED-FIVE TABLE · PINNED")).toBeOnTheScreen();
   });
 
+  it("edits a completed draw round through a confirmed preview and undoes it", async () => {
+    await render(<SessionUnderTest />);
+    await fireEvent.press(await screen.findByRole("button", { name: "Start East 1" }));
+    await fireEvent.press(screen.getByRole("checkbox", { name: "Player 1" }));
+    await fireEvent.press(screen.getByRole("checkbox", { name: "Player 2" }));
+    await fireEvent.press(screen.getByRole("button", { name: "Record draw & advance" }));
+
+    expect(screen.getAllByText("26,500")).toHaveLength(2);
+    expect(screen.getAllByText("23,500")).toHaveLength(2);
+
+    await fireEvent.press(screen.getByRole("button", { name: "Edit East 1 draw" }));
+
+    // Drop Player 2 from the tenpai set, leaving only the dealer tenpai.
+    await fireEvent.press(screen.getByRole("checkbox", { name: "Player 2 tenpai" }));
+    await fireEvent.press(screen.getByRole("button", { name: "Apply" }));
+
+    // Signed per-player final-score changes are shown before committing.
+    expect(screen.getByText("Player 1: +1,500")).toBeOnTheScreen();
+    expect(screen.getByText(/^Player 2: .2,500$/)).toBeOnTheScreen();
+    expect(screen.getByText("Player 3: +500")).toBeOnTheScreen();
+
+    // "Keep as recorded" dismisses the confirmation without changing anything.
+    await fireEvent.press(screen.getByRole("button", { name: "Keep as recorded" }));
+    expect(screen.getAllByText("26,500")).toHaveLength(2);
+    expect(screen.getAllByText("23,500")).toHaveLength(2);
+
+    // Re-preview, then commit the correction.
+    await fireEvent.press(screen.getByRole("button", { name: "Apply" }));
+    await fireEvent.press(screen.getByRole("button", { name: "Apply correction" }));
+
+    expect(screen.getByText("28,000")).toBeOnTheScreen();
+    expect(screen.getAllByText("24,000")).toHaveLength(3);
+    expect(
+      screen.getByText("Round corrected. Scores updated. Undo is available."),
+    ).toBeOnTheScreen();
+
+    await fireEvent.press(screen.getByRole("button", { name: "Undo last change" }));
+    expect(screen.getAllByText("26,500")).toHaveLength(2);
+    expect(screen.getAllByText("23,500")).toHaveLength(2);
+  });
+
   it("reveals a copyable game summary reflecting the round history", async () => {
     await render(<SessionUnderTest />);
     await fireEvent.press(await screen.findByRole("button", { name: "Start East 1" }));

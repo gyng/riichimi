@@ -1,6 +1,19 @@
 import type { Wind } from "@richii/score-core";
 import { scoringRulesProfile } from "@richii/rules";
-import { formatSessionSummaryText, summarizeSession } from "@richii/session-core";
+import {
+  editableRoundIds,
+  formatSessionSummaryText,
+  handRiichiPlayerIndices,
+  summarizeSession,
+} from "@richii/session-core";
+import type {
+  EditReview,
+  EditWarning,
+  RoundContextChange,
+  RoundRecord,
+  SessionEditCommand,
+  SessionEditError,
+} from "@richii/session-core";
 import { ActionButton, color, space } from "@richii/ui";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -31,6 +44,10 @@ function points(value: number): string {
   return new Intl.NumberFormat("en-US").format(value);
 }
 
+function toggle(current: readonly number[], index: number): readonly number[] {
+  return current.includes(index) ? current.filter((item) => item !== index) : [...current, index];
+}
+
 export function SessionScreen() {
   const session = useSession();
   const [names, setNames] = useState(["Player 1", "Player 2", "Player 3", "Player 4"]);
@@ -38,6 +55,15 @@ export function SessionScreen() {
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [editingRoundId, setEditingRoundId] = useState<string | null>(null);
+  const [draftTenpai, setDraftTenpai] = useState<readonly number[]>([]);
+  const [draftWinner, setDraftWinner] = useState(0);
+  const [draftDiscarder, setDraftDiscarder] = useState<number | null>(null);
+  const [draftRiichi, setDraftRiichi] = useState<readonly number[]>([]);
+  const [pendingCommand, setPendingCommand] = useState<SessionEditCommand | null>(null);
+  const [pendingReview, setPendingReview] = useState<EditReview | null>(null);
+  const [editError, setEditError] = useState<SessionEditError | null>(null);
+  const [editStatus, setEditStatus] = useState<string | null>(null);
 
   if (session.loading) {
     return (
@@ -107,15 +133,154 @@ export function SessionScreen() {
     );
   }
 
-  const table = session.state.table;
+  const sessionState = session.state;
+  const table = sessionState.table;
   const tableRules = scoringRulesProfile(table.rulesProfileId);
-  const summary = showSummary ? summarizeSession(session.state) : null;
+  const summary = showSummary ? summarizeSession(sessionState) : null;
   const summaryText = summary === null ? "" : formatSessionSummaryText(summary);
+  const editableIds = editableRoundIds(sessionState);
+  const legacyHistory = table.history.length > 0 && editableIds.size === 0;
+
+  function playerName(index: number): string {
+    return table.players[index]?.name ?? seatNames[index] ?? `Player ${index + 1}`;
+  }
+
+  function roundLabel(record: RoundRecord): string {
+    return `${windNames[record.roundWind]} ${record.handNumber}`;
+  }
+
+  function roundIdLabel(roundId: string): string {
+    const record = table.history.find((item) => item.id === roundId);
+    return record === undefined ? "a later round" : roundLabel(record);
+  }
 
   function toggleTenpai(index: number) {
-    setTenpai((current) =>
-      current.includes(index) ? current.filter((item) => item !== index) : [...current, index],
-    );
+    setTenpai((current) => toggle(current, index));
+  }
+
+  function closeEditor() {
+    setEditingRoundId(null);
+    setPendingCommand(null);
+    setPendingReview(null);
+    setEditError(null);
+  }
+
+  function openEditor(record: RoundRecord) {
+    setEditingRoundId(record.id);
+    setPendingCommand(null);
+    setPendingReview(null);
+    setEditError(null);
+    setEditStatus(null);
+    setDraftRiichi(handRiichiPlayerIndices(sessionState, record.id));
+    if (record.kind === "draw") {
+      setDraftTenpai(record.tenpaiPlayerIndices);
+    } else {
+      setDraftWinner(record.winnerIndex);
+      setDraftDiscarder(record.discarderIndex);
+    }
+  }
+
+  function runPreview(command: SessionEditCommand) {
+    const result = session.previewEdit(command);
+    if (result.kind === "rejected") {
+      setEditError(result.error);
+      setPendingCommand(null);
+      setPendingReview(null);
+      return;
+    }
+    setEditError(null);
+    setPendingCommand(command);
+    setPendingReview(result.review);
+  }
+
+  function previewOutcome(record: RoundRecord) {
+    if (record.kind === "draw") {
+      runPreview({
+        kind: "replace-round",
+        revision: { kind: "draw", tenpaiPlayerIndices: draftTenpai },
+        roundId: record.id,
+      });
+      return;
+    }
+    runPreview({
+      kind: "replace-round",
+      revision: {
+        discarderIndex: draftDiscarder,
+        kind: "win",
+        payments: record.payments,
+        winnerIndex: draftWinner,
+      },
+      roundId: record.id,
+    });
+  }
+
+  function previewRiichi(record: RoundRecord) {
+    runPreview({
+      declarations: draftRiichi.map((playerIndex) => ({
+        ...createRoundCommandMetadata(),
+        playerIndex,
+      })),
+      kind: "set-hand-riichi",
+      roundId: record.id,
+    });
+  }
+
+  function applyCorrection() {
+    if (pendingCommand === null) {
+      return;
+    }
+    const result = session.editRound(pendingCommand);
+    closeEditor();
+    if (result.kind === "edited") {
+      setEditStatus("Round corrected. Scores updated. Undo is available.");
+    }
+  }
+
+  function keepAsRecorded() {
+    setPendingCommand(null);
+    setPendingReview(null);
+  }
+
+  function selectWinner(index: number) {
+    setDraftWinner(index);
+    setDraftDiscarder((current) => (current === index ? null : current));
+  }
+
+  function describeChangedRound(change: RoundContextChange): string {
+    const identity = `${windNames[change.before.roundWind]} ${change.before.handNumber}`;
+    const target = `${windNames[change.after.roundWind]} ${change.after.handNumber}`;
+    if (change.before.honba !== change.after.honba) {
+      return `${identity} now replays as ${target} · honba ${change.before.honba} → ${change.after.honba}`;
+    }
+    return `${identity} now replays as ${target}`;
+  }
+
+  function describeWarning(warning: EditWarning): string {
+    if (warning.kind === "stale-honba-payment") {
+      return `${roundIdLabel(warning.roundId)}'s payment was entered with ${warning.beforeHonba} honba; it now replays at ${warning.afterHonba} — re-score that round if the bonus should change.`;
+    }
+    return `${roundIdLabel(warning.roundId)}'s dealer/non-dealer split may be wrong after this change — re-score that round to confirm.`;
+  }
+
+  function describeEditError(error: SessionEditError): string {
+    switch (error.kind) {
+      case "invalid-revision": {
+        return error.reason;
+      }
+      case "riichi-underfunded": {
+        return `This change would leave ${playerName(error.playerIndex)} with under 1,000 points at their riichi in a later hand. Remove that riichi declaration first or adjust the correction.`;
+      }
+      case "round-not-editable": {
+        return "This round was recorded before edits were supported and can't be changed.";
+      }
+      case "round-not-found": {
+        return "This round could no longer be found.";
+      }
+      default: {
+        const exhaustive: never = error;
+        return exhaustive;
+      }
+    }
   }
 
   function copySummary() {
@@ -242,32 +407,268 @@ export function SessionScreen() {
               variant="paper"
             />
           </View>
+          {editStatus === null ? null : (
+            <Text accessibilityLiveRegion="polite" style={styles.editStatus}>
+              {editStatus}
+            </Text>
+          )}
           {table.history.length === 0 ? (
             <Text style={styles.muted}>No completed rounds yet.</Text>
           ) : (
-            table.history.toReversed().map((record) => (
-              <View key={record.id} style={styles.historyRow}>
-                <View>
-                  <Text style={styles.historyTitle}>
-                    {windNames[record.roundWind]} {record.handNumber} ·{" "}
-                    {record.kind === "win"
-                      ? `${table.players[record.winnerIndex]?.name ?? "Winner"} won`
-                      : "Exhaustive draw"}
-                  </Text>
-                  <Text style={styles.historyMeta}>
-                    {record.honba} honba · {new Date(record.occurredAt).toLocaleString()}
-                  </Text>
+            table.history.toReversed().map((record) => {
+              const editable = editableIds.has(record.id);
+              const editing = editingRoundId === record.id;
+              const editName =
+                record.kind === "win"
+                  ? `Edit ${roundLabel(record)}, ${playerName(record.winnerIndex)} won`
+                  : `Edit ${roundLabel(record)} draw`;
+              const laterChanges =
+                pendingReview === null
+                  ? []
+                  : pendingReview.changedRounds.filter((change) => change.roundId !== record.id);
+              return (
+                <View key={record.id} style={styles.historyGroup}>
+                  <View style={styles.historyRow}>
+                    <View style={styles.historyCopy}>
+                      <Text style={styles.historyTitle}>
+                        {roundLabel(record)} ·{" "}
+                        {record.kind === "win"
+                          ? `${playerName(record.winnerIndex)} won`
+                          : "Exhaustive draw"}
+                      </Text>
+                      <Text style={styles.historyMeta}>
+                        {record.honba} honba · {new Date(record.occurredAt).toLocaleString()}
+                      </Text>
+                    </View>
+                    <Text style={styles.delta}>
+                      {record.deltas
+                        .map((delta) =>
+                          delta === 0 ? "±0" : `${delta > 0 ? "+" : ""}${points(delta)}`,
+                        )
+                        .join("  ")}
+                    </Text>
+                    {editable ? (
+                      <ActionButton
+                        label={editing ? "Close editor" : editName}
+                        onPress={() => (editing ? closeEditor() : openEditor(record))}
+                        variant="paper"
+                      />
+                    ) : null}
+                  </View>
+                  {editing ? (
+                    <View style={styles.editor}>
+                      <Text accessibilityRole="header" style={styles.editorTitle}>
+                        Editing {roundLabel(record)}
+                      </Text>
+                      {record.kind === "draw" ? (
+                        <>
+                          <Text style={styles.label}>TENPAI PLAYERS</Text>
+                          <View style={styles.tenpaiRow}>
+                            {table.players.map((player, index) => {
+                              const selected = draftTenpai.includes(index);
+                              return (
+                                <Pressable
+                                  accessibilityLabel={`${player.name} tenpai`}
+                                  accessibilityRole="checkbox"
+                                  accessibilityState={{ checked: selected }}
+                                  key={player.id}
+                                  onPress={() =>
+                                    setDraftTenpai((current) => toggle(current, index))
+                                  }
+                                  style={[styles.tenpaiChip, selected && styles.selectedChip]}
+                                >
+                                  <Text
+                                    style={[styles.tenpaiText, selected && styles.selectedChipText]}
+                                  >
+                                    {player.name}
+                                  </Text>
+                                </Pressable>
+                              );
+                            })}
+                          </View>
+                          <Text style={styles.label}>RIICHI DECLARED THIS HAND</Text>
+                          <View style={styles.tenpaiRow}>
+                            {table.players.map((player, index) => {
+                              const selected = draftRiichi.includes(index);
+                              return (
+                                <Pressable
+                                  accessibilityLabel={`${player.name} riichi`}
+                                  accessibilityRole="checkbox"
+                                  accessibilityState={{ checked: selected }}
+                                  key={player.id}
+                                  onPress={() =>
+                                    setDraftRiichi((current) => toggle(current, index))
+                                  }
+                                  style={[styles.tenpaiChip, selected && styles.selectedChip]}
+                                >
+                                  <Text
+                                    style={[styles.tenpaiText, selected && styles.selectedChipText]}
+                                  >
+                                    {player.name}
+                                  </Text>
+                                </Pressable>
+                              );
+                            })}
+                          </View>
+                          <View style={styles.editorActions}>
+                            <ActionButton
+                              label="Apply"
+                              onPress={() => previewOutcome(record)}
+                              variant="vermilion"
+                            />
+                            <ActionButton
+                              label="Apply riichi change"
+                              onPress={() => previewRiichi(record)}
+                              variant="paper"
+                            />
+                            <ActionButton
+                              label="Delete this round"
+                              onPress={() =>
+                                runPreview({ kind: "delete-round", roundId: record.id })
+                              }
+                              variant="paper"
+                            />
+                            <ActionButton label="Cancel" onPress={closeEditor} variant="paper" />
+                          </View>
+                        </>
+                      ) : (
+                        <>
+                          <Text style={styles.label}>WINNER</Text>
+                          <View style={styles.tenpaiRow}>
+                            {table.players.map((player, index) => {
+                              const selected = draftWinner === index;
+                              return (
+                                <Pressable
+                                  accessibilityLabel={`Winner ${player.name}`}
+                                  accessibilityRole="radio"
+                                  accessibilityState={{ checked: selected }}
+                                  key={player.id}
+                                  onPress={() => selectWinner(index)}
+                                  style={[styles.tenpaiChip, selected && styles.selectedChip]}
+                                >
+                                  <Text
+                                    style={[styles.tenpaiText, selected && styles.selectedChipText]}
+                                  >
+                                    {player.name}
+                                  </Text>
+                                </Pressable>
+                              );
+                            })}
+                          </View>
+                          {record.payments.kind === "ron" ? (
+                            <>
+                              <Text style={styles.label}>DISCARDER</Text>
+                              <View style={styles.tenpaiRow}>
+                                {table.players.map((player, index) => {
+                                  if (index === draftWinner) {
+                                    return null;
+                                  }
+                                  const selected = draftDiscarder === index;
+                                  return (
+                                    <Pressable
+                                      accessibilityLabel={`Discarder ${player.name}`}
+                                      accessibilityRole="radio"
+                                      accessibilityState={{ checked: selected }}
+                                      key={player.id}
+                                      onPress={() => setDraftDiscarder(index)}
+                                      style={[styles.tenpaiChip, selected && styles.selectedChip]}
+                                    >
+                                      <Text
+                                        style={[
+                                          styles.tenpaiText,
+                                          selected && styles.selectedChipText,
+                                        ]}
+                                      >
+                                        {player.name}
+                                      </Text>
+                                    </Pressable>
+                                  );
+                                })}
+                              </View>
+                            </>
+                          ) : (
+                            <Text style={styles.muted}>
+                              Tsumo — the win is self-drawn, so there is no discarder.
+                            </Text>
+                          )}
+                          <Text style={styles.muted}>
+                            Payments stay as recorded (
+                            {record.deltas
+                              .map((delta) =>
+                                delta === 0 ? "±0" : `${delta > 0 ? "+" : ""}${points(delta)}`,
+                              )
+                              .join("  ")}
+                            ). Re-scoring a hand arrives in a later update.
+                          </Text>
+                          <View style={styles.editorActions}>
+                            <ActionButton
+                              label="Apply"
+                              onPress={() => previewOutcome(record)}
+                              variant="vermilion"
+                            />
+                            <ActionButton
+                              label="Delete this round"
+                              onPress={() =>
+                                runPreview({ kind: "delete-round", roundId: record.id })
+                              }
+                              variant="paper"
+                            />
+                            <ActionButton label="Cancel" onPress={closeEditor} variant="paper" />
+                          </View>
+                        </>
+                      )}
+                      {editError !== null && pendingReview === null ? (
+                        <Text accessibilityLiveRegion="polite" style={styles.error}>
+                          {describeEditError(editError)}
+                        </Text>
+                      ) : null}
+                      {pendingReview !== null ? (
+                        <View accessibilityLiveRegion="polite" style={styles.editConfirm}>
+                          <Text style={styles.endTitle}>Confirm this correction</Text>
+                          <Text style={styles.confirmSubhead}>Final score changes</Text>
+                          {pendingReview.scoreChanges.map((change, index) => (
+                            <Text key={index} style={styles.confirmScoreLine}>
+                              {playerName(index)}: {signedPoints(change)}
+                            </Text>
+                          ))}
+                          {laterChanges.length > 0 ? (
+                            <>
+                              <Text style={styles.confirmSubhead}>Later rounds that shift</Text>
+                              {laterChanges.map((change) => (
+                                <Text key={change.roundId} style={styles.muted}>
+                                  {describeChangedRound(change)}
+                                </Text>
+                              ))}
+                            </>
+                          ) : null}
+                          {pendingReview.warnings.map((warning, index) => (
+                            <Text key={index} style={styles.confirmWarning}>
+                              {describeWarning(warning)}
+                            </Text>
+                          ))}
+                          <View style={styles.endActions}>
+                            <ActionButton
+                              label="Apply correction"
+                              onPress={applyCorrection}
+                              variant="vermilion"
+                            />
+                            <ActionButton
+                              label="Keep as recorded"
+                              onPress={keepAsRecorded}
+                              variant="paper"
+                            />
+                          </View>
+                        </View>
+                      ) : null}
+                    </View>
+                  ) : null}
                 </View>
-                <Text style={styles.delta}>
-                  {record.deltas
-                    .map((delta) =>
-                      delta === 0 ? "±0" : `${delta > 0 ? "+" : ""}${points(delta)}`,
-                    )
-                    .join("  ")}
-                </Text>
-              </View>
-            ))
+              );
+            })
           )}
+          {legacyHistory ? (
+            <Text style={styles.muted}>Rounds recorded before this update can't be edited.</Text>
+          ) : null}
         </View>
 
         <View style={styles.panel}>
@@ -375,6 +776,26 @@ const styles = StyleSheet.create({
     gap: space.x3,
     justifyContent: "center",
   },
+  confirmScoreLine: {
+    color: color.ink,
+    fontFamily: "monospace",
+    fontSize: 13,
+    fontWeight: "700",
+  },
+  confirmSubhead: {
+    color: color.inkMuted,
+    fontFamily: "monospace",
+    fontSize: 9,
+    fontWeight: "700",
+    letterSpacing: 1,
+    marginTop: space.x2,
+  },
+  confirmWarning: {
+    color: color.accent,
+    fontFamily: "serif",
+    fontSize: 13,
+    lineHeight: 19,
+  },
   content: {
     alignSelf: "center",
     maxWidth: 1000,
@@ -384,6 +805,33 @@ const styles = StyleSheet.create({
   },
   dealerCard: { borderColor: color.accent, borderWidth: 2 },
   delta: { color: color.jade, fontFamily: "monospace", fontSize: 11, fontWeight: "700" },
+  editConfirm: {
+    backgroundColor: "#F6DCD4",
+    borderColor: color.accent,
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: space.x2,
+    marginTop: space.x3,
+    padding: space.x4,
+  },
+  editStatus: {
+    color: color.jade,
+    fontFamily: "serif",
+    fontSize: 14,
+    fontWeight: "700",
+  },
+  editor: {
+    backgroundColor: color.canvas,
+    borderColor: color.line,
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: space.x3,
+    marginBottom: space.x2,
+    marginTop: space.x2,
+    padding: space.x4,
+  },
+  editorActions: { flexDirection: "row", flexWrap: "wrap", gap: space.x3, marginTop: space.x2 },
+  editorTitle: { color: color.ink, fontFamily: "serif", fontSize: 17, fontWeight: "800" },
   endActions: { flexDirection: "row", flexWrap: "wrap", gap: space.x3 },
   endConfirm: {
     backgroundColor: "#F6DCD4",
@@ -403,6 +851,8 @@ const styles = StyleSheet.create({
   },
   endTitle: { color: color.ink, fontFamily: "serif", fontSize: 17, fontWeight: "700" },
   error: { color: color.accent, fontFamily: "serif", fontSize: 14, marginTop: space.x3 },
+  historyCopy: { flex: 1, minWidth: 200 },
+  historyGroup: { borderTopColor: color.line, borderTopWidth: 1 },
   historyHeader: {
     alignItems: "center",
     flexDirection: "row",
@@ -413,8 +863,6 @@ const styles = StyleSheet.create({
   historyMeta: { color: color.inkMuted, fontFamily: "serif", fontSize: 12, marginTop: 2 },
   historyRow: {
     alignItems: "center",
-    borderTopColor: color.line,
-    borderTopWidth: 1,
     flexDirection: "row",
     flexWrap: "wrap",
     gap: space.x4,

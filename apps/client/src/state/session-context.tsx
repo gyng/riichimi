@@ -3,9 +3,17 @@ import {
   applyWin,
   createSession,
   declareRiichi,
+  editSessionRound,
+  previewSessionEdit,
   undoLastSessionChange,
 } from "@richii/session-core";
-import type { DrawCommand, SessionState, WinCommand } from "@richii/session-core";
+import type {
+  DrawCommand,
+  SessionEditCommand,
+  SessionEditResult,
+  SessionState,
+  WinCommand,
+} from "@richii/session-core";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 
@@ -16,7 +24,11 @@ interface SessionContextValue {
   readonly clearSession: () => void;
   readonly createTable: (playerNames: readonly string[]) => void;
   readonly declarePlayerRiichi: (playerIndex: number) => void;
+  /** Commits and persists on a successful edit; a rejected edit changes nothing. */
+  readonly editRound: (command: SessionEditCommand) => SessionEditResult;
   readonly loading: boolean;
+  /** Pure: computes the review for a candidate edit without changing state. */
+  readonly previewEdit: (command: SessionEditCommand) => SessionEditResult;
   readonly recordDraw: (command: DrawCommand) => void;
   readonly recordWin: (command: WinCommand) => void;
   readonly state: SessionState | null;
@@ -24,11 +36,18 @@ interface SessionContextValue {
   readonly undo: () => void;
 }
 
+const noSessionRejection: SessionEditResult = {
+  error: { kind: "round-not-found", roundId: "" },
+  kind: "rejected",
+};
+
 const emptyContext: SessionContextValue = {
   clearSession: () => {},
   createTable: () => {},
   declarePlayerRiichi: () => {},
+  editRound: () => noSessionRejection,
   loading: false,
+  previewEdit: () => noSessionRejection,
   recordDraw: () => {},
   recordWin: () => {},
   state: null,
@@ -96,7 +115,19 @@ export function SessionProvider({ children }: { readonly children: ReactNode }) 
           commit(declareRiichi(state, { ...createRoundCommandMetadata(), playerIndex }));
         }
       },
+      editRound: (command) => {
+        if (state === null) {
+          return noSessionRejection;
+        }
+        const result = editSessionRound(state, command);
+        if (result.kind === "edited") {
+          commit(result.state);
+        }
+        return result;
+      },
       loading,
+      previewEdit: (command) =>
+        state === null ? noSessionRejection : previewSessionEdit(state, command),
       recordDraw: (command) => {
         if (state !== null) {
           commit(applyDraw(state, command));
