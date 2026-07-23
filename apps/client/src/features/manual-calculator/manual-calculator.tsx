@@ -19,6 +19,14 @@ import type {
   WinMethod,
 } from "@richii/score-core";
 import { scoringRulesProfile } from "@richii/rules";
+import { tableBeforeRound } from "@richii/session-core";
+import type {
+  EditReview,
+  EditWarning,
+  RoundContextChange,
+  SessionEditCommand,
+  SessionEditError,
+} from "@richii/session-core";
 import {
   ActionButton,
   CounterControl,
@@ -28,8 +36,8 @@ import {
   space,
   tileAccessibleName,
 } from "@richii/ui";
-import { router } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -75,6 +83,34 @@ const pickerOptions: readonly { label: string; value: PickerTarget }[] = [
 ];
 
 const seatWinds: readonly Wind[] = ["east", "south", "west", "north"];
+
+const windNames: Record<Wind, string> = {
+  east: "East",
+  north: "North",
+  south: "South",
+  west: "West",
+};
+
+function signedPoints(value: number): string {
+  const magnitude = new Intl.NumberFormat("en-US").format(Math.abs(value));
+  return value === 0 ? "±0" : `${value > 0 ? "+" : "−"}${magnitude}`;
+}
+
+function describeChangedRound(change: RoundContextChange): string {
+  const identity = `${windNames[change.before.roundWind]} ${change.before.handNumber}`;
+  const target = `${windNames[change.after.roundWind]} ${change.after.handNumber}`;
+  if (change.before.honba !== change.after.honba) {
+    return `${identity} now replays as ${target} · honba ${change.before.honba} → ${change.after.honba}`;
+  }
+  return `${identity} now replays as ${target}`;
+}
+
+function describeEditWarning(warning: EditWarning): string {
+  if (warning.kind === "stale-honba-payment") {
+    return `A later round's payment was entered with ${warning.beforeHonba} honba; it now replays at ${warning.afterHonba} — re-score that round if the bonus should change.`;
+  }
+  return "A later tsumo's dealer/non-dealer split may be wrong after this change — re-score that round to confirm.";
+}
 
 function playerSeatWind(playerIndex: number, dealerIndex: number): Wind {
   return seatWinds[(playerIndex - dealerIndex + 4) % 4] ?? "east";
@@ -205,6 +241,9 @@ export function ManualCalculator({
   const [result, setResult] = useState<ScoreHandResult | null>(null);
   const [sessionWinnerIndex, setSessionWinnerIndex] = useState(0);
   const [discarderIndex, setDiscarderIndex] = useState(1);
+  const [editReview, setEditReview] = useState<EditReview | null>(null);
+  const [editError, setEditError] = useState<SessionEditError | null>(null);
+  const [pendingCommand, setPendingCommand] = useState<SessionEditCommand | null>(null);
   const concealedCapacity = 14 - melds.length * 3;
   const isClosed = melds.every((meld) => meld.kind === "quad" && !meld.open);
 
@@ -223,6 +262,31 @@ export function ManualCalculator({
     seatWind,
   );
   const activeTable = session.state?.table ?? null;
+  const searchParams = useLocalSearchParams<{ editRound?: string }>();
+  const editRoundParam = searchParams.editRound;
+  const editRoundId =
+    typeof editRoundParam === "string" && editRoundParam.length > 0 ? editRoundParam : null;
+  const sessionState = session.state;
+  // Re-scoring a completed win round. `before` is the replayed table context
+  // immediately before that round (NOT the current table), so honba/sticks/wind
+  // seed correctly; those fields stay user-editable defaults thereafter.
+  const editContext = useMemo(() => {
+    if (editRoundId === null || sessionState === null) {
+      return null;
+    }
+    const before = tableBeforeRound(sessionState, editRoundId);
+    if (before === null) {
+      return null;
+    }
+    const record = sessionState.table.history.find((item) => item.id === editRoundId);
+    if (record === undefined || record.kind !== "win") {
+      return null;
+    }
+    return { before, record } as const;
+  }, [editRoundId, sessionState]);
+  const editMode = editContext !== null;
+  const contextEditable = activeTable === null || editMode;
+  const seededEditRoundRef = useRef<string | null>(null);
   const activeRules = scoringRulesProfile(
     activeTable?.rulesProfileId ?? rulesPreference.activeRules.id,
   );
@@ -235,7 +299,9 @@ export function ManualCalculator({
       .filter((_, index) => index !== sessionWinnerIndex) ?? [];
 
   useEffect(() => {
-    if (activeTable === null) {
+    // In edit mode the context is seeded once from the round being corrected
+    // (see below); the live active-table seeding must not clobber it.
+    if (activeTable === null || editMode) {
       return;
     }
     const winner = Math.min(sessionWinnerIndex, activeTable.players.length - 1);
@@ -244,10 +310,33 @@ export function ManualCalculator({
     setRiichiSticks(activeTable.riichiSticks);
     setSeatWind(playerSeatWind(winner, activeTable.dealerIndex));
     setRiichi(activeTable.declaredRiichiPlayerIndices.includes(winner) ? "riichi" : "none");
-  }, [activeTable, sessionWinnerIndex]);
+  }, [activeTable, sessionWinnerIndex, editMode]);
+
+  useEffect(() => {
+    if (editContext === null || editRoundId === null) {
+      return;
+    }
+    if (seededEditRoundRef.current === editRoundId) {
+      return;
+    }
+    seededEditRoundRef.current = editRoundId;
+    const { before, record } = editContext;
+    const winner = record.winnerIndex;
+    setSessionWinnerIndex(winner);
+    setDiscarderIndex(record.discarderIndex ?? (winner + 1) % 4);
+    setMethod(record.payments.kind === "ron" ? "ron" : "tsumo");
+    setRoundWind(before.roundWind);
+    setHonba(before.honba);
+    setRiichiSticks(before.riichiSticks);
+    setSeatWind(playerSeatWind(winner, before.dealerIndex));
+    setRiichi(before.declaredRiichiPlayerIndices.includes(winner) ? "riichi" : "none");
+  }, [editContext, editRoundId]);
 
   function resetResult() {
     setResult(null);
+    setEditReview(null);
+    setEditError(null);
+    setPendingCommand(null);
   }
 
   function clearClosedOnlyState() {
@@ -485,6 +574,76 @@ export function ManualCalculator({
     return recorded;
   }
 
+  function editPlayerName(index: number): string {
+    return activeTable?.players[index]?.name ?? `Player ${index + 1}`;
+  }
+
+  function describeEditError(error: SessionEditError): string {
+    switch (error.kind) {
+      case "invalid-revision": {
+        return error.reason;
+      }
+      case "riichi-underfunded": {
+        return `This change would leave ${editPlayerName(error.playerIndex)} with under 1,000 points at their riichi in a later hand. Adjust the correction, or remove that riichi first.`;
+      }
+      case "round-not-editable": {
+        return "This round was recorded before edits were supported and can't be changed.";
+      }
+      case "round-not-found": {
+        return "This round could no longer be found.";
+      }
+      default: {
+        const exhaustive: never = error;
+        return exhaustive;
+      }
+    }
+  }
+
+  function previewCorrection() {
+    if (editRoundId === null || result?.kind !== "success") {
+      return;
+    }
+    const command: SessionEditCommand = {
+      kind: "replace-round",
+      revision: {
+        discarderIndex: method === "ron" ? discarderIndex : null,
+        kind: "win",
+        payments: result.payments,
+        winnerIndex: sessionWinnerIndex,
+      },
+      roundId: editRoundId,
+    };
+    const preview = session.previewEdit(command);
+    if (preview.kind === "rejected") {
+      setEditError(preview.error);
+      setEditReview(null);
+      setPendingCommand(null);
+      return;
+    }
+    setEditError(null);
+    setEditReview(preview.review);
+    setPendingCommand(command);
+  }
+
+  function confirmCorrection() {
+    if (pendingCommand === null) {
+      return;
+    }
+    const outcome = session.editRound(pendingCommand);
+    if (outcome.kind === "edited") {
+      router.replace("/session");
+      return;
+    }
+    setEditError(outcome.error);
+    setEditReview(null);
+    setPendingCommand(null);
+  }
+
+  function cancelCorrection() {
+    setEditReview(null);
+    setPendingCommand(null);
+  }
+
   useWebMcpTools([
     {
       description:
@@ -611,9 +770,13 @@ export function ManualCalculator({
         {activeTable === null ? null : (
           <View style={styles.sessionBanner}>
             <View style={styles.sessionBannerCopy}>
-              <Text style={styles.sessionBannerKicker}>ACTIVE TABLE · CONTEXT LINKED</Text>
+              <Text style={styles.sessionBannerKicker}>
+                {editMode ? "EDITING RECORDED ROUND" : "ACTIVE TABLE · CONTEXT LINKED"}
+              </Text>
               <Text style={styles.sessionBannerTitle}>
-                Choose the winner. Richii will post the transfer and advance the round.
+                {editMode
+                  ? "Re-score this hand. The round's honba, sticks, and winds are seeded but stay editable."
+                  : "Choose the winner. Richii will post the transfer and advance the round."}
               </Text>
             </View>
             <View style={styles.sessionChoice}>
@@ -625,6 +788,14 @@ export function ManualCalculator({
                   setSessionWinnerIndex(index);
                   if (discarderIndex === index) {
                     setDiscarderIndex((index + 1) % 4);
+                  }
+                  if (editContext !== null) {
+                    setSeatWind(playerSeatWind(index, editContext.before.dealerIndex));
+                    setRiichi(
+                      editContext.before.declaredRiichiPlayerIndices.includes(index)
+                        ? "riichi"
+                        : "none",
+                    );
                   }
                   resetResult();
                 }}
@@ -807,7 +978,7 @@ export function ManualCalculator({
             </View>
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>SEAT WIND</Text>
-              {activeTable === null ? (
+              {contextEditable ? (
                 <SegmentedControl
                   accessibilityLabel="Seat wind"
                   onChange={setPlayerWind}
@@ -820,7 +991,7 @@ export function ManualCalculator({
             </View>
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>ROUND WIND</Text>
-              {activeTable === null ? (
+              {contextEditable ? (
                 <SegmentedControl
                   accessibilityLabel="Round wind"
                   onChange={(value) => {
@@ -874,7 +1045,7 @@ export function ManualCalculator({
             </Pressable>
           )}
 
-          {activeTable === null ? (
+          {contextEditable ? (
             <View style={styles.counterRow}>
               <CounterControl
                 label="Honba"
@@ -925,7 +1096,7 @@ export function ManualCalculator({
             />
           </View>
         ) : null}
-        {activeTable !== null && result?.kind === "success" ? (
+        {activeTable !== null && !editMode && result?.kind === "success" ? (
           <View style={styles.recordResult}>
             <Text style={styles.recordTitle}>Score checked. Ready to update the table.</Text>
             <ActionButton
@@ -933,6 +1104,53 @@ export function ManualCalculator({
               onPress={recordScoredTableResult}
               variant="vermilion"
             />
+          </View>
+        ) : null}
+        {editMode && result?.kind === "success" && editReview === null ? (
+          <View style={styles.recordResult}>
+            <Text style={styles.recordTitle}>
+              Re-scored this hand. Review the change before it replaces the recorded round.
+            </Text>
+            <ActionButton label="Save correction" onPress={previewCorrection} variant="vermilion" />
+          </View>
+        ) : null}
+        {editMode && editError !== null && editReview === null ? (
+          <Text accessibilityLiveRegion="polite" style={styles.warning}>
+            {describeEditError(editError)}
+          </Text>
+        ) : null}
+        {editMode && editReview !== null ? (
+          <View accessibilityLiveRegion="polite" style={styles.editConfirm}>
+            <Text style={styles.editConfirmTitle}>Confirm this correction</Text>
+            <Text style={styles.editConfirmSubhead}>Final score changes</Text>
+            {editReview.scoreChanges.map((change, index) => (
+              <Text key={index} style={styles.editConfirmScoreLine}>
+                {editPlayerName(index)}: {signedPoints(change)}
+              </Text>
+            ))}
+            {editReview.changedRounds.length > 0 ? (
+              <>
+                <Text style={styles.editConfirmSubhead}>Later rounds that shift</Text>
+                {editReview.changedRounds.map((change) => (
+                  <Text key={change.roundId} style={styles.editConfirmNote}>
+                    {describeChangedRound(change)}
+                  </Text>
+                ))}
+              </>
+            ) : null}
+            {editReview.warnings.map((warning, index) => (
+              <Text key={index} style={styles.editConfirmWarning}>
+                {describeEditWarning(warning)}
+              </Text>
+            ))}
+            <View style={styles.editConfirmActions}>
+              <ActionButton
+                label="Update this round"
+                onPress={confirmCorrection}
+                variant="vermilion"
+              />
+              <ActionButton label="Keep as recorded" onPress={cancelCorrection} variant="paper" />
+            </View>
           </View>
         ) : null}
       </ScrollView>
@@ -990,6 +1208,44 @@ const styles = StyleSheet.create({
   contextGrid: { flexDirection: "row", flexWrap: "wrap", gap: space.x5 },
   counterRow: { flexDirection: "row", flexWrap: "wrap", gap: space.x7, marginTop: space.x5 },
   disabledChip: { opacity: 0.35 },
+  editConfirm: {
+    backgroundColor: "#F6DCD4",
+    borderColor: color.accent,
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: space.x2,
+    marginBottom: space.x5,
+    marginTop: space.x4,
+    padding: space.x4,
+  },
+  editConfirmActions: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: space.x3,
+    marginTop: space.x3,
+  },
+  editConfirmNote: { color: color.inkMuted, fontFamily: "serif", fontSize: 13, lineHeight: 19 },
+  editConfirmScoreLine: {
+    color: color.ink,
+    fontFamily: "monospace",
+    fontSize: 13,
+    fontWeight: "700",
+  },
+  editConfirmSubhead: {
+    color: color.inkMuted,
+    fontFamily: "monospace",
+    fontSize: 9,
+    fontWeight: "700",
+    letterSpacing: 1,
+    marginTop: space.x2,
+  },
+  editConfirmTitle: { color: color.ink, fontFamily: "serif", fontSize: 17, fontWeight: "700" },
+  editConfirmWarning: {
+    color: color.accent,
+    fontFamily: "serif",
+    fontSize: 13,
+    lineHeight: 19,
+  },
   empty: {
     color: color.inkMuted,
     fontFamily: "serif",

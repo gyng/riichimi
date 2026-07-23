@@ -1,7 +1,11 @@
+import { applyWin, createSession } from "@richii/session-core";
+import type { SessionState } from "@richii/session-core";
 import { fireEvent, render, screen } from "@testing-library/react-native";
+import { router } from "expo-router";
 
 import { SessionScreen } from "../src/screens/session-screen";
 import * as rulesPreferenceStorage from "../src/infrastructure/rules-preference-storage";
+import * as sessionStorage from "../src/infrastructure/session-storage";
 import { RulesProvider } from "../src/state/rules-context";
 import { SessionProvider } from "../src/state/session-context";
 
@@ -13,6 +17,10 @@ jest.mock("../src/infrastructure/session-storage", () => ({
   loadStoredSession: jest.fn().mockResolvedValue(null),
   saveStoredSession: jest.fn().mockResolvedValue(undefined),
 }));
+
+beforeEach(() => {
+  jest.mocked(sessionStorage.loadStoredSession).mockResolvedValue(null);
+});
 
 jest.mock("../src/infrastructure/rules-preference-storage", () => ({
   loadRulesPreference: jest.fn().mockResolvedValue("wrc-2025"),
@@ -112,6 +120,36 @@ describe("SessionScreen", () => {
     await fireEvent.press(screen.getByRole("button", { name: "Undo last change" }));
     expect(screen.getAllByText("26,500")).toHaveLength(2);
     expect(screen.getAllByText("23,500")).toHaveLength(2);
+  });
+
+  it("offers re-scoring a completed win round and routes to the calculator", async () => {
+    const base = createSession({
+      id: "table-win",
+      playerNames: ["Aki", "Bo", "Cy", "Di"],
+      rulesProfileId: "wrc-2025",
+      startedAt: "2026-07-01T00:00:00.000Z",
+    });
+    const seeded: SessionState = applyWin(base, {
+      discarderIndex: 0,
+      id: "round-win-1",
+      occurredAt: "2026-07-01T00:05:00.000Z",
+      payments: { fromDiscarder: 5200, kind: "ron", total: 5200 },
+      winnerIndex: 1,
+    });
+    jest.mocked(sessionStorage.loadStoredSession).mockResolvedValue(seeded);
+
+    await render(<SessionUnderTest />);
+
+    await fireEvent.press(await screen.findByRole("button", { name: "Edit East 1, Bo won" }));
+
+    const rescore = screen.getByRole("button", { name: "Re-score this hand" });
+    expect(rescore).toBeOnTheScreen();
+
+    await fireEvent.press(rescore);
+    expect(jest.mocked(router.push)).toHaveBeenCalledWith({
+      params: { editRound: "round-win-1" },
+      pathname: "/manual",
+    });
   });
 
   it("reveals a copyable game summary reflecting the round history", async () => {

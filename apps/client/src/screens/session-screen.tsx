@@ -592,19 +592,29 @@ export function SessionScreen() {
                             </Text>
                           )}
                           <Text style={styles.muted}>
-                            Payments stay as recorded (
+                            Reassigning keeps the payment as recorded (
                             {record.deltas
                               .map((delta) =>
                                 delta === 0 ? "±0" : `${delta > 0 ? "+" : ""}${points(delta)}`,
                               )
                               .join("  ")}
-                            ). Re-scoring a hand arrives in a later update.
+                            ). To recompute han, fu, and transfers, re-score the hand.
                           </Text>
                           <View style={styles.editorActions}>
                             <ActionButton
                               label="Apply"
                               onPress={() => previewOutcome(record)}
                               variant="vermilion"
+                            />
+                            <ActionButton
+                              label="Re-score this hand"
+                              onPress={() =>
+                                router.push({
+                                  params: { editRound: record.id },
+                                  pathname: "/manual",
+                                })
+                              }
+                              variant="paper"
                             />
                             <ActionButton
                               label="Delete this round"
