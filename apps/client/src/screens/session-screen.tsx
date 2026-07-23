@@ -327,13 +327,13 @@ export function SessionScreen() {
               >
                 <Text style={styles.label}>
                   {seat}
-                  {index === table.dealerIndex ? " · DEALER" : ""}
+                  {index === table.dealerIndex ? ` · ${t("DEALER")}` : ""}
                 </Text>
                 <Text style={styles.playerName}>{player.name}</Text>
                 <Text style={styles.playerScore}>{points(player.score)}</Text>
                 <ActionButton
                   disabled={hasDeclared || player.score < 1000}
-                  label={hasDeclared ? "Riichi declared" : "Declare riichi"}
+                  label={hasDeclared ? "Riichi declared" : t("Declare riichi")}
                   onPress={() => session.declarePlayerRiichi(index)}
                   variant="paper"
                 />
@@ -364,8 +364,9 @@ export function SessionScreen() {
               {t("Exhaustive draw")}
             </Text>
             <Text style={styles.muted}>
-              Select tenpai players. The 3,000-point noten payment and dealer continuation are
-              automatic.
+              {t(
+                "Select tenpai players. The 3,000-point noten payment and dealer continuation are automatic.",
+              )}
             </Text>
             <View style={styles.tenpaiRow}>
               {table.players.map((player, index) => {
@@ -444,7 +445,7 @@ export function SessionScreen() {
                         {roundLabel(record)} ·{" "}
                         {record.kind === "win"
                           ? `${playerName(record.winnerIndex)} won`
-                          : "Exhaustive draw"}
+                          : t("Exhaustive draw")}
                       </Text>
                       <Text style={styles.historyMeta}>
                         {record.honba} honba · {new Date(record.occurredAt).toLocaleString()}
@@ -713,7 +714,7 @@ export function SessionScreen() {
               {t("Game summary")}
             </Text>
             <ActionButton
-              label={showSummary ? "Hide summary" : "Show summary"}
+              label={showSummary ? t("Hide summary") : t("Show summary")}
               onPress={() => {
                 setShowSummary((current) => !current);
                 setCopied(false);

@@ -244,7 +244,7 @@ export function ScanScreen() {
   const continueLabel = !tilesReady
     ? `Resolve ${currentRecognitionReview?.reviewDetectionIds.length ?? 0} tiles to continue`
     : requireStructureConfirmation
-      ? "Confirm split & continue"
+      ? t("Confirm split & continue")
       : "Continue with reviewed tiles";
 
   if (permission === null) {
@@ -259,7 +259,7 @@ export function ScanScreen() {
   if (!permission.granted && photoUri === null) {
     return (
       <SafeAreaView edges={bodyEdges} style={styles.permissionScreen}>
-        <Text style={styles.kicker}>CAMERA / PRIVATE BY DEFAULT</Text>
+        <Text style={styles.kicker}>{t("CAMERA / PRIVATE BY DEFAULT")}</Text>
         <Text accessibilityRole="header" style={styles.permissionTitle}>
           Show us the tiles.{"\n"}Keep the photo here.
         </Text>
@@ -269,7 +269,9 @@ export function ScanScreen() {
         </Text>
         <View style={styles.permissionActions}>
           <ActionButton
-            label={permission.canAskAgain ? "Allow camera access" : "Camera access is blocked"}
+            label={
+              permission.canAskAgain ? t("Allow camera access") : t("Camera access is blocked")
+            }
             onPress={() => {
               void requestPermission();
             }}
@@ -314,7 +316,9 @@ export function ScanScreen() {
           />
           <View style={styles.reviewPanel}>
             <Text style={styles.reviewTitle}>
-              {photoSource === "camera" ? "Capture ready for review" : "Photo ready for review"}
+              {photoSource === "camera"
+                ? t("Capture ready for review")
+                : t("Photo ready for review")}
             </Text>
             <Text style={styles.reviewBody}>
               Beta recognition runs entirely on this device. Use a dark, plain surface and keep
@@ -382,7 +386,7 @@ export function ScanScreen() {
             ) : null}
             <View style={styles.reviewActions}>
               <ActionButton
-                label={photoSource === "camera" ? "Retake" : "Choose another photo"}
+                label={photoSource === "camera" ? t("Retake") : t("Choose another photo")}
                 onPress={() => {
                   if (photoSource === "camera") {
                     setPhotoUri(null);

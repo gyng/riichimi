@@ -825,7 +825,7 @@ export function ManualCalculator({
           <View style={styles.sessionBanner}>
             <View style={styles.sessionBannerCopy}>
               <Text style={styles.sessionBannerKicker}>
-                {editMode ? "EDITING RECORDED ROUND" : "ACTIVE TABLE · CONTEXT LINKED"}
+                {editMode ? t("EDITING RECORDED ROUND") : t("ACTIVE TABLE \u00b7 CONTEXT LINKED")}
               </Text>
               <Text style={styles.sessionBannerTitle}>
                 {editMode
@@ -1175,7 +1175,7 @@ export function ManualCalculator({
             variant="vermilion"
           />
           <Text style={styles.calculateNote}>
-            {activeRules.redFives ? "RED FIVES ENABLED" : "NO RED FIVES"} · KIRIAGE MANGAN
+            {activeRules.redFives ? t("RED FIVES ENABLED") : t("NO RED FIVES")} · KIRIAGE MANGAN
           </Text>
         </View>
         {speech.available ? (

@@ -62,7 +62,9 @@ export function ScoreHistoryScreen() {
             {t("Every answer leaves a trail.")}
           </Text>
           <Text style={styles.intro}>
-            Revisit the hand, context, yaku, and exact transfer behind recent standalone scores.
+            {t(
+              "Revisit the hand, context, yaku, and exact transfer behind recent standalone scores.",
+            )}
             Recalculating the same hand refreshes one entry instead of making duplicates.
           </Text>
         </View>
@@ -75,8 +77,9 @@ export function ScoreHistoryScreen() {
                 {t("No saved scores yet")}
               </Text>
               <Text style={styles.muted}>
-                A successful standalone calculation appears here automatically. Table results stay
-                with their round history.
+                {t(
+                  "A successful standalone calculation appears here automatically. Table results stay with their round history.",
+                )}
               </Text>
               <View style={styles.emptyAction}>
                 <ActionButton
