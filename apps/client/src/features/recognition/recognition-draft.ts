@@ -5,7 +5,7 @@ export interface RecognitionDraft {
   readonly concealedTiles: readonly TileId[];
   readonly doraIndicators: readonly [TileId];
   readonly modelVersion: string;
-  readonly reviewCount: number;
+  readonly reviewedCount: number;
   readonly winningIndex: number;
 }
 
@@ -18,14 +18,14 @@ function isTile(value: string): value is TileId {
 export function parseRecognitionDraft(input: {
   readonly dora?: string | undefined;
   readonly modelVersion?: string | undefined;
-  readonly reviewCount?: string | undefined;
+  readonly reviewedCount?: string | undefined;
   readonly tiles?: string | undefined;
   readonly winningIndex?: string | undefined;
 }): RecognitionDraft | undefined {
   const tiles = input.tiles?.split(",") ?? [];
   const dora = input.dora;
   const winningIndex = Number(input.winningIndex);
-  const reviewCount = Number(input.reviewCount);
+  const reviewedCount = Number(input.reviewedCount);
   if (
     tiles.length !== 14 ||
     !tiles.every(isTile) ||
@@ -34,8 +34,8 @@ export function parseRecognitionDraft(input: {
     !Number.isInteger(winningIndex) ||
     winningIndex < 0 ||
     winningIndex > 13 ||
-    !Number.isInteger(reviewCount) ||
-    reviewCount < 0 ||
+    !Number.isInteger(reviewedCount) ||
+    reviewedCount < 0 ||
     input.modelVersion === undefined ||
     input.modelVersion.trim().length === 0
   ) {
@@ -45,7 +45,7 @@ export function parseRecognitionDraft(input: {
     concealedTiles: tiles,
     doraIndicators: [dora],
     modelVersion: input.modelVersion,
-    reviewCount,
+    reviewedCount,
     winningIndex,
   };
 }

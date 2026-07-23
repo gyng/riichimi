@@ -12,7 +12,8 @@ The implemented system deliberately narrows the visual problem:
 2. A deterministic connected-component locator must find exactly those 15 faces. It does not invent missing boxes.
 3. A compact fixed-batch ONNX classifier proposes each tile and top alternatives.
 4. Confidence below `0.75`, unknown output, uncertain winner placement, and impossible physical counts stay in review.
-5. The calculator opens with the photograph beside a prefilled draft; scoring still requires the person to confirm it.
+5. The review desk highlights each affected tile, offers the top three candidates plus the complete legal inventory, and allows atomic winner reassignment.
+6. The calculator cannot receive the recognized draft until every review issue is resolved; it then opens with the photograph beside the confirmed hand.
 
 This obtains useful automation now while preserving the manual path for arbitrary table layouts, calls, kans, glare, overlaps, and unfamiliar tile art.
 

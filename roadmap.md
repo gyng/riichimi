@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: **2026-07-23T08:37:10+08:00**
+Last updated: **2026-07-23T08:49:46+08:00**
 
 ## Product objective
 
@@ -16,6 +16,7 @@ Deliver a polished mobile/web riichi companion that reaches an auditable result 
 - A versioned recognition artifact manifest gate covering integrity, provenance, classes, input, and release metrics.
 - A rights-traceable guided recognition beta with deterministic 15-face localization, a bundled ONNX classifier, web/native adapters, confidence and physical-count review, and photograph-backed draft correction.
 - A reproducible vision pipeline with pinned sources, crop partitions, augmentation, ONNX parity, artifact hashing, licensing, synthetic validation, and source-separated physical smoke evaluation.
+- A tile-by-tile recognition review desk with visible confidence, top-three confirmation, a physically bounded full picker, atomic winner reassignment, and a hard gate against scoring unresolved reads.
 - Typed WebMCP tools with visible, recoverable mutations.
 - A deduplicated local score folio with audit details, removal, clear confirmation, and reload-safe direct links.
 - Unit, component, browser, coverage, formatting, lint, type, export, and screenshot checkpoints.
@@ -27,8 +28,8 @@ Deliver a polished mobile/web riichi companion that reaches an auditable result 
    - Gate promotion on per-class accuracy, exact-hand accuracy, calibration, correction burden, and unknown-tile recall rather than the current smoke set.
    - Add immutable candidate manifests and safe model rollback after a candidate passes.
 2. **Recognition review refinement**
-   - Highlight individual low-confidence tiles and offer top-three one-tap corrections before the full picker.
-   - Add blur, glare, crop, and layout-specific guidance while retaining retry, cancel, and manual escape paths.
+   - Add blur, glare, crop, and perspective-specific guidance while retaining retry, cancel, and manual escape paths.
+   - Measure correction burden and refine keyboard/screen-reader traversal on representative devices.
    - Expand from the deliberately narrow closed-hand guide to calls and kans only after each layout has independent evidence.
 3. **Device QA**
    - Verify camera, storage recovery, rotation, large text, keyboard, screen readers, reduced motion, and offline restart on representative iOS, Android, and web devices.

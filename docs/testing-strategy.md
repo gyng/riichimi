@@ -26,7 +26,7 @@ Keep a small cross-platform suite for critical journeys:
 
 Do not duplicate every scoring example at this layer.
 
-The current Playwright browser suite performs two dogfood rounds: one mobile-width journey through WebMCP and one desktop journey through visible controls. The mobile round includes a table-linked score, exact transfers, dealer repeat, and persisted history; the desktop round proves camera-permission recovery, a real browser file chooser, photo review, and photo-reference handoff to manual entry. Dated screenshots are evidence, not assertion snapshots; behavior is asserted through roles, names, state, URLs, and structured tool results.
+The current Playwright browser suite performs two dogfood rounds: one mobile-width journey through WebMCP and one desktop journey through visible controls. The mobile round includes a table-linked score, exact transfers, dealer repeat, and persisted history; the desktop round proves camera-permission recovery, a real browser file chooser, real ONNX inference, mandatory review, 15 explicit tile corrections against the visible photograph, and reviewed handoff to scoring. Dated screenshots are evidence, not assertion snapshots; behavior is asserted through roles, names, state, URLs, and structured tool results.
 
 Recognition model manifests are tested as domain policy. Tests independently protect artifact integrity, provenance, complete class coverage, evaluation-set size, per-tile accuracy, and exact-hand accuracy. A passing metadata test does not replace real-corpus or device evaluation.
 

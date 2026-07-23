@@ -10,10 +10,10 @@ Build a mobile and web riichi mahjong calculator that turns a photo of a winning
 - Complete: accessible manual tile/meld/indicator entry and context-aware scoring on mobile and web.
 - Complete: a device-local, deduplicated 20-entry score folio with hand, context, yaku, payment, removal, clear confirmation, and reload recovery.
 - Complete: local four-player sessions with riichi deposits, transfers, draws, dealer/round progression, history, recovery, deletion, and undo.
-- Complete: camera permission/capture flow, camera and gallery photo review, Android pending-picker recovery, photo-reference manual fallback, recognition contracts, confidence review, structural checks, and correction transitions.
+- Complete: camera permission/capture flow, camera and gallery photo review, Android pending-picker recovery, photo-reference manual fallback, recognition contracts, confidence review, structural checks, tile-by-tile correction, winner reassignment, and a hard no-score-until-reviewed transition.
 - Complete: a tested model-release manifest gate for artifact integrity, provenance, input shape, full class coverage, evaluation size, and accuracy thresholds.
 - Complete: progressive-enhancement WebMCP discovery and typed tools for app state, navigation, manual scoring, score-history inspection, local table mutation, and undo, with visible browser dogfood coverage.
-- Pending external artifact: a licensed physical-tile detector/classifier with representative real-photo evaluation. The [candidate audit](recognition-model-audit.md) records why reviewed models were not selected. No unvalidated third-party weights are shipped, and the UI does not present manual guesses as model output.
+- Beta complete: a rights-traceable guided physical-tile locator/classifier runs offline on web and native adapters. Its [model audit](recognition-model-audit.md) records provenance, training, the small source-separated smoke evaluation, and why it is not promoted to production accuracy. Pending evidence is a representative 500-hand corpus and real-device benchmarks—not an undisclosed model artifact.
 
 The initial product should optimize for a guided winning-hand scan rather than unrestricted whole-table recognition. A camera can recognize tiles, melds, and indicators, but important scoring facts—such as riichi, ippatsu, round state, and how the hand was won—may not be visible. The target is therefore:
 
@@ -33,7 +33,7 @@ The initial product should optimize for a guided winning-hand scan rather than u
    - The winning tile, placed slightly apart
    - Dora and ura-dora indicators
 3. The app detects each tile, its orientation, red fives, meld grouping, and recognition confidence.
-4. Only low-confidence or structurally impossible results are presented for correction.
+4. Low-confidence or structurally impossible results are outlined and advanced one by one through top-three suggestions or the complete tile picker. Scoring remains locked until all issues are resolved.
 5. A compact context sheet asks only for missing facts:
    - Ron or tsumo
    - Round wind and seat wind, unless supplied by a game session

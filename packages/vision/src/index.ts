@@ -1,5 +1,9 @@
 export { prioritizeDetectionsForReview } from "./application/prioritize-review";
-export { correctDetection, reviewRecognition } from "./application/review-recognition";
+export {
+  chooseWinningDetection,
+  correctDetection,
+  reviewRecognition,
+} from "./application/review-recognition";
 export {
   evaluateRecognitionModelRelease,
   guidedScannerReleaseThresholds,

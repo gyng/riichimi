@@ -578,9 +578,9 @@ export function ManualCalculator({
               OFFLINE RECOGNITION · REVIEW REQUIRED
             </Text>
             <Text style={styles.recognitionBannerTitle}>
-              {recognitionDraft.reviewCount === 0
+              {recognitionDraft.reviewedCount === 0
                 ? "All 15 reads cleared the beta threshold. Confirm the winning tile and dora before scoring."
-                : `${recognitionDraft.reviewCount} ${recognitionDraft.reviewCount === 1 ? "read needs" : "reads need"} attention. Confirm every tile against the photo before scoring.`}
+                : `${recognitionDraft.reviewedCount} ${recognitionDraft.reviewedCount === 1 ? "uncertain read was" : "uncertain reads were"} confirmed or corrected before continuing. Compare the final hand with the photo once more before scoring.`}
             </Text>
             <Text style={styles.recognitionModel}>MODEL {recognitionDraft.modelVersion}</Text>
           </View>

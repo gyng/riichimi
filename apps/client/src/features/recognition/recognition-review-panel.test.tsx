@@ -1,0 +1,99 @@
+import { fireEvent, render, screen } from "@testing-library/react-native";
+
+import { RecognitionReviewPanel } from "./recognition-review-panel";
+
+describe("RecognitionReviewPanel", () => {
+  it("turns a low-confidence proposal into an explicit reviewed correction", async () => {
+    const onChange = jest.fn();
+    await render(
+      <RecognitionReviewPanel
+        initialReviewCount={1}
+        onChange={onChange}
+        result={{
+          detections: [
+            {
+              alternatives: [
+                { confidence: 0.55, tile: "1m" },
+                { confidence: 0.3, tile: "2m" },
+              ],
+              bounds: { height: 0.4, width: 0.1, x: 0.1, y: 0.2 },
+              confidence: 0.55,
+              id: "hand-0",
+              role: "winning",
+              tile: "1m",
+            },
+            {
+              alternatives: [{ confidence: 0.98, tile: "9s" }],
+              bounds: { height: 0.4, width: 0.1, x: 0.8, y: 0.6 },
+              confidence: 0.98,
+              id: "dora-0",
+              role: "dora",
+              tile: "9s",
+            },
+          ],
+          modelVersion: "test",
+        }}
+      />,
+    );
+
+    expect(screen.getByText("1 tile needs confirmation")).toBeOnTheScreen();
+    await fireEvent.press(
+      screen.getByRole("button", { name: "Use 2 characters for selected tile" }),
+    );
+
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detections: expect.arrayContaining([
+          expect.objectContaining({ confidence: 1, id: "hand-0", tile: "2m" }),
+        ]),
+      }),
+    );
+  });
+
+  it("allows the winner to be reassigned without creating two winning tiles", async () => {
+    const onChange = jest.fn();
+    await render(
+      <RecognitionReviewPanel
+        initialReviewCount={0}
+        onChange={onChange}
+        result={{
+          detections: [
+            {
+              alternatives: [{ confidence: 0.99, tile: "1m" }],
+              bounds: { height: 0.4, width: 0.1, x: 0.1, y: 0.2 },
+              confidence: 0.99,
+              id: "hand-0",
+              role: "winning",
+              tile: "1m",
+            },
+            {
+              alternatives: [{ confidence: 0.99, tile: "2m" }],
+              bounds: { height: 0.4, width: 0.1, x: 0.2, y: 0.2 },
+              confidence: 0.99,
+              id: "hand-1",
+              role: "concealed",
+              tile: "2m",
+            },
+          ],
+          modelVersion: "test",
+        }}
+      />,
+    );
+
+    await fireEvent.press(
+      screen.getByRole("button", {
+        name: "Hand tile 2, 2 characters, 99 percent confidence",
+      }),
+    );
+    await fireEvent.press(screen.getByRole("button", { name: "Mark as winning tile" }));
+
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detections: [
+          expect.objectContaining({ role: "concealed" }),
+          expect.objectContaining({ role: "winning" }),
+        ],
+      }),
+    );
+  });
+});

@@ -204,10 +204,39 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   await page.screenshot({
     path: "docs/checkpoints/2026-07-23-08-offline-recognition-review-desktop.png",
   });
-  await page.getByRole("button", { name: "Review recognized tiles" }).click();
+  const reviewedTiles = [
+    ["Hand tile 1", "1 characters"],
+    ["Hand tile 2", "2 characters"],
+    ["Hand tile 3", "3 characters"],
+    ["Hand tile 4", "4 characters"],
+    ["Hand tile 5", "5 characters"],
+    ["Hand tile 6", "6 characters"],
+    ["Hand tile 7", "7 circles"],
+    ["Hand tile 8", "8 circles"],
+    ["Hand tile 9", "9 circles"],
+    ["Hand tile 10", "2 bamboo"],
+    ["Hand tile 11", "3 bamboo"],
+    ["Winning tile 12", "4 bamboo"],
+    ["Hand tile 13", "5 circles"],
+    ["Hand tile 14", "5 circles"],
+    ["Dora indicator", "9 bamboo"],
+  ] as const;
+  for (const [position, tile] of reviewedTiles) {
+    await page.getByRole("button", { name: new RegExp(`^${position},`) }).click();
+    await page.getByRole("button", { name: "Choose from all tiles" }).click();
+    await page.getByRole("button", { exact: true, name: tile }).click();
+  }
+  const completedReview = page.getByRole("heading", { name: "Recognition review complete" });
+  await expect(completedReview).toBeVisible();
+  await completedReview.scrollIntoViewIfNeeded();
+  await page.screenshot({
+    path: "docs/checkpoints/2026-07-23-10-recognition-review-complete-desktop.png",
+  });
+  await page.getByRole("button", { name: "Continue with reviewed tiles" }).click();
   await expect(page).toHaveURL(/\/manual\?.*recognizedTiles=/);
   await expect(page.getByLabel("Captured hand reference")).toBeVisible();
   await expect(page.getByText("OFFLINE RECOGNITION · REVIEW REQUIRED")).toBeVisible();
+  await expect(page.getByText(/15 uncertain reads were confirmed or corrected/)).toBeVisible();
   await expect(page.getByText(/14 of 14 concealed tiles/)).toBeVisible();
   await page.screenshot({
     fullPage: true,

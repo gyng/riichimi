@@ -1,6 +1,6 @@
 # Progress
 
-Last updated: **2026-07-23T08:37:10+08:00**
+Last updated: **2026-07-23T08:49:46+08:00**
 
 ## Current state
 
@@ -68,6 +68,16 @@ Richii is a polished, local-first scoring and table-session app on mobile-width 
 - A bundle-growth optimization lazy-loads the 467,713-byte inference engine. The shared entry is 1,274,035 bytes, only 1.4% above the previous 1,256,029-byte checkpoint; the model is a separate 1,866,535-byte asset.
 - Recognition/domain/component coverage now includes layout rejection, tensor equivalence, output review, routing validation, adapter orchestration, and the browser-level model execution journey.
 
+### 2026-07-23T08:49:46+08:00 — mandatory tile-level recognition review
+
+- Closed a safety contradiction discovered by the completion audit: the prior handoff counted uncertain reads but did not identify them individually or prevent immediate scoring.
+- Added a photograph-adjacent review desk for all 15 reads with visible confidence, precise position/role labels, red issue outlines, top-three one-tap choices, and a complete 37-tile picker.
+- The picker enforces the four-copy physical inventory while replacing a tile, and winner reassignment atomically clears the previous winning role.
+- Scoring stays locked until confidence, unknown-tile, role, winner-count, and impossible-count issues are all resolved. The scoring ledger records how many uncertain reads were explicitly confirmed or corrected.
+- Exported-browser dogfood now corrects every one of the deliberately out-of-distribution fixture's 15 model proposals against the visible photo before the reviewed handoff succeeds.
+- The quality gate passes with 105 framework-free tests and 28 Expo component tests. Both browser journeys, including 30 visible review interactions and real ONNX inference, complete in about 7 seconds.
+- The review desk adds about 8.3 KB to the shared entry. At 1,282,288 bytes, the entry is 2.1% above the pre-recognition checkpoint and remains well below the 10% optimization trigger.
+
 ## Visual evidence
 
 - [Mobile landing](docs/checkpoints/2026-07-23-01-home-mobile.png)
@@ -79,6 +89,7 @@ Richii is a polished, local-first scoring and table-session app on mobile-width 
 - [Mobile table after posting a scored win](docs/checkpoints/2026-07-23-07-session-scored-win-mobile.png)
 - [Desktop offline recognition review](docs/checkpoints/2026-07-23-08-offline-recognition-review-desktop.png)
 - [Desktop photograph-backed recognized draft](docs/checkpoints/2026-07-23-09-recognized-draft-desktop.png)
+- [Desktop recognition review completed](docs/checkpoints/2026-07-23-10-recognition-review-complete-desktop.png)
 
 ## Verification commands
 

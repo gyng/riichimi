@@ -43,6 +43,8 @@ Recorded on 2026-07-23 after the offline recognition beta:
 
 The first working WebGL build put the inference runtime in the shared entry, growing it to about 1.74 MB and crossing the 10% explanation trigger. Converting the runtime import to a true async boundary reduced the initial payload to 1.27 MB. The default ONNX Runtime Web WASM entry was also rejected because its dynamic loader is incompatible with Metro and would add a roughly 13.5 MB WASM payload; WebGL is the smaller verified web backend for this beta. The fixed 15-crop input avoids symbolic-shape incompatibility in that backend.
 
+The mandatory tile-level review desk brings the shared entry to 1,282,288 bytes and the full export to 3,901,944 bytes. That is an 8,253-byte (`0.6%`) review-UX increase and a 26,259-byte (`2.1%`) total increase over the 1,256,029-byte pre-recognition entry. The browser dogfood round grew from 4.8 to about 7 seconds because it now performs 15 position selections, 15 full-picker corrections, and a locked-to-reviewed handoff; this is valuable exercised behavior rather than test-harness overhead, and remains below the 15-second component/test feedback budget.
+
 ## Feedback-loop budgets
 
 - Formatting should remain below 2 seconds locally.

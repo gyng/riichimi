@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { DetectedTile, RecognitionResult } from "../domain/recognition";
-import { correctDetection, reviewRecognition } from "./review-recognition";
+import { chooseWinningDetection, correctDetection, reviewRecognition } from "./review-recognition";
 
 function detection(
   id: string,
@@ -82,5 +82,22 @@ describe("correctDetection", () => {
     expect(() =>
       correctDetection(recognition([]), "missing", { role: "concealed", tile: "1m" }),
     ).toThrow("does not exist");
+  });
+});
+
+describe("chooseWinningDetection", () => {
+  it("moves the winning role atomically between concealed detections", () => {
+    const result = recognition([
+      detection("first", "1m", "winning"),
+      detection("second", "2m", "concealed"),
+      detection("dora", "3m", "dora"),
+    ]);
+
+    expect(chooseWinningDetection(result, "second").detections).toMatchObject([
+      { id: "first", role: "concealed" },
+      { confidence: 1, id: "second", role: "winning" },
+      { id: "dora", role: "dora" },
+    ]);
+    expect(() => chooseWinningDetection(result, "dora")).toThrow(/concealed hand tile/);
   });
 });

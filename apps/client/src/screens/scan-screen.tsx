@@ -5,10 +5,14 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { tileRecognition } from "../infrastructure/tile-recognition";
+import {
+  RecognitionReviewPanel,
+  recognitionReviewThreshold,
+} from "../features/recognition/recognition-review-panel";
 
 type RecognitionState =
   | { readonly kind: "idle" }
@@ -16,8 +20,8 @@ type RecognitionState =
   | { readonly kind: "failure"; readonly message: string }
   | {
       readonly kind: "complete";
+      readonly initialReviewCount: number;
       readonly result: RecognitionResult;
-      readonly reviewCount: number;
     };
 
 export function ScanScreen() {
@@ -87,11 +91,11 @@ export function ScanScreen() {
     setRecognition({ kind: "running" });
     try {
       const result = await tileRecognition.recognize({ height: 1, uri: photoUri, width: 1 });
-      const review = reviewRecognition(result, 0.75);
+      const review = reviewRecognition(result, recognitionReviewThreshold);
       setRecognition({
+        initialReviewCount: review.reviewDetectionIds.length,
         kind: "complete",
         result,
-        reviewCount: review.reviewDetectionIds.length,
       });
     } catch (error) {
       setRecognition({
@@ -102,7 +106,7 @@ export function ScanScreen() {
     }
   }
 
-  function reviewRecognizedTiles(result: RecognitionResult, reviewCount: number) {
+  function reviewRecognizedTiles(result: RecognitionResult, reviewedCount: number) {
     if (photoUri === null) {
       return;
     }
@@ -131,13 +135,18 @@ export function ScanScreen() {
       params: {
         recognizedDora: doraTile,
         recognizedModel: result.modelVersion,
-        recognizedReviewCount: String(reviewCount),
+        recognizedReviewedCount: String(reviewedCount),
         recognizedTiles: tiles.join(","),
         recognizedWinningIndex: String(winningIndex),
         referencePhoto: photoUri,
       },
     });
   }
+
+  const currentRecognitionReview =
+    recognition.kind === "complete"
+      ? reviewRecognition(recognition.result, recognitionReviewThreshold)
+      : null;
 
   if (permission === null) {
     return (
@@ -193,80 +202,102 @@ export function ScanScreen() {
   if (photoUri !== null) {
     return (
       <SafeAreaView style={styles.captureScreen}>
-        <Image
-          accessibilityLabel="Captured mahjong hand"
-          source={{ uri: photoUri }}
-          style={styles.preview}
-        />
-        <View style={styles.reviewPanel}>
-          <Text style={styles.reviewTitle}>
-            {photoSource === "camera" ? "Capture ready for review" : "Photo ready for review"}
-          </Text>
-          <Text style={styles.reviewBody}>
-            Beta recognition runs entirely on this device. It expects exactly 14 upright, separated
-            tiles on a dark plain surface, the winning tile after a larger gap, and one dora
-            indicator below the hand. Every result still needs your confirmation.
-          </Text>
-          {recognition.kind === "running" ? (
-            <View accessibilityLiveRegion="polite" style={styles.recognitionStatus}>
-              <ActivityIndicator color={color.accent} />
-              <Text style={styles.status}>Reading 15 tile faces offline…</Text>
-            </View>
-          ) : null}
-          {recognition.kind === "failure" ? (
-            <Text accessibilityLiveRegion="polite" style={styles.recognitionError}>
-              {recognition.message} Reposition the tiles and retry, or use manual entry.
+        <ScrollView contentContainerStyle={styles.photoReviewContent}>
+          <Image
+            accessibilityLabel="Captured mahjong hand"
+            source={{ uri: photoUri }}
+            style={styles.preview}
+          />
+          <View style={styles.reviewPanel}>
+            <Text style={styles.reviewTitle}>
+              {photoSource === "camera" ? "Capture ready for review" : "Photo ready for review"}
             </Text>
-          ) : null}
-          {recognition.kind === "complete" ? (
-            <View accessibilityLiveRegion="polite" style={styles.recognitionResult}>
-              <Text style={styles.recognitionKicker}>OFFLINE BETA · DRAFT ONLY</Text>
-              <Text style={styles.recognitionTitle}>
-                15 tiles read · {recognition.reviewCount} need review
+            <Text style={styles.reviewBody}>
+              Beta recognition runs entirely on this device. It expects exactly 14 upright,
+              separated tiles on a dark plain surface, the winning tile after a larger gap, and one
+              dora indicator below the hand. Every result still needs your confirmation.
+            </Text>
+            {recognition.kind === "running" ? (
+              <View accessibilityLiveRegion="polite" style={styles.recognitionStatus}>
+                <ActivityIndicator color={color.accent} />
+                <Text style={styles.status}>Reading 15 tile faces offline…</Text>
+              </View>
+            ) : null}
+            {recognition.kind === "failure" ? (
+              <Text accessibilityLiveRegion="polite" style={styles.recognitionError}>
+                {recognition.message} Reposition the tiles and retry, or use manual entry.
               </Text>
-              <Text style={styles.recognitionCopy}>
-                Compare every proposed tile with the reference before calculating the score.
-              </Text>
-            </View>
-          ) : null}
-          <View style={styles.reviewActions}>
-            <ActionButton
-              label={photoSource === "camera" ? "Retake" : "Choose another photo"}
-              onPress={() => {
-                if (photoSource === "camera") {
-                  setPhotoUri(null);
-                  setRecognition({ kind: "idle" });
-                } else {
-                  void choosePhoto();
-                }
-              }}
-              variant="paper"
-            />
+            ) : null}
             {recognition.kind === "complete" ? (
-              <ActionButton
-                label="Review recognized tiles"
-                onPress={() => reviewRecognizedTiles(recognition.result, recognition.reviewCount)}
-                variant="vermilion"
+              <View accessibilityLiveRegion="polite" style={styles.recognitionResult}>
+                <Text style={styles.recognitionKicker}>OFFLINE BETA · DRAFT ONLY</Text>
+                <Text style={styles.recognitionTitle}>
+                  {`15 tiles read · ${currentRecognitionReview?.reviewDetectionIds.length ?? 0} need review`}
+                </Text>
+                <Text style={styles.recognitionCopy}>
+                  Compare every proposed tile with the reference before calculating the score.
+                </Text>
+              </View>
+            ) : null}
+            {recognition.kind === "complete" ? (
+              <RecognitionReviewPanel
+                initialReviewCount={recognition.initialReviewCount}
+                onChange={(result) =>
+                  setRecognition({
+                    initialReviewCount: recognition.initialReviewCount,
+                    kind: "complete",
+                    result,
+                  })
+                }
+                result={recognition.result}
               />
-            ) : (
+            ) : null}
+            <View style={styles.reviewActions}>
               <ActionButton
-                disabled={recognition.kind === "running"}
-                label="Read 14 tiles offline"
+                label={photoSource === "camera" ? "Retake" : "Choose another photo"}
                 onPress={() => {
-                  void recognizePhoto();
+                  if (photoSource === "camera") {
+                    setPhotoUri(null);
+                    setRecognition({ kind: "idle" });
+                  } else {
+                    void choosePhoto();
+                  }
                 }}
+                variant="paper"
+              />
+              {recognition.kind === "complete" ? (
+                <ActionButton
+                  disabled={currentRecognitionReview?.readyToConfirm !== true}
+                  label={
+                    currentRecognitionReview?.readyToConfirm === true
+                      ? "Continue with reviewed tiles"
+                      : `Resolve ${currentRecognitionReview?.reviewDetectionIds.length ?? 0} tiles to continue`
+                  }
+                  onPress={() =>
+                    reviewRecognizedTiles(recognition.result, recognition.initialReviewCount)
+                  }
+                  variant="vermilion"
+                />
+              ) : (
+                <ActionButton
+                  disabled={recognition.kind === "running"}
+                  label="Read 14 tiles offline"
+                  onPress={() => {
+                    void recognizePhoto();
+                  }}
+                  variant="vermilion"
+                />
+              )}
+              <ActionButton
+                label="Enter tiles from this photo"
+                onPress={() =>
+                  router.push({ pathname: "/manual", params: { referencePhoto: photoUri } })
+                }
                 variant="vermilion"
               />
-            )}
-            <ActionButton
-              label="Enter tiles from this photo"
-              onPress={() =>
-                router.push({ pathname: "/manual", params: { referencePhoto: photoUri } })
-              }
-              variant="vermilion"
-            />
+            </View>
           </View>
-        </View>
+        </ScrollView>
       </SafeAreaView>
     );
   }
@@ -446,9 +477,13 @@ const styles = StyleSheet.create({
     marginBottom: space.x4,
     marginTop: space.x3,
   },
+  photoReviewContent: { backgroundColor: color.ink, flexGrow: 1 },
   preview: {
-    flex: 1,
+    aspectRatio: 2.1,
+    maxHeight: 560,
+    minHeight: 190,
     resizeMode: "contain",
+    width: "100%",
   },
   reviewActions: {
     flexDirection: "row",

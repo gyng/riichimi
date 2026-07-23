@@ -132,13 +132,18 @@ describe("ScanScreen", () => {
       await fireEvent.press(screen.getByRole("button", { name: "Read 14 tiles offline" }));
     });
     expect(await screen.findByText("15 tiles read · 1 need review")).toBeOnTheScreen();
-    await fireEvent.press(screen.getByRole("button", { name: "Review recognized tiles" }));
+    expect(screen.getByRole("button", { name: "Resolve 1 tiles to continue" })).toBeDisabled();
+    await fireEvent.press(
+      screen.getByRole("button", { name: "Use 2 characters for selected tile" }),
+    );
+    expect(await screen.findByText("Recognition review complete")).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole("button", { name: "Continue with reviewed tiles" }));
 
     expect(router.push).toHaveBeenCalledWith({
       params: {
         recognizedDora: "9s",
         recognizedModel: "guided-crop-v0-test",
-        recognizedReviewCount: "1",
+        recognizedReviewedCount: "1",
         recognizedTiles: handTiles.join(","),
         recognizedWinningIndex: "13",
         referencePhoto: "file:///guided-hand.jpg",

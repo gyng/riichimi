@@ -110,3 +110,29 @@ export function correctDetection(
   }
   return { ...result, detections };
 }
+
+export function chooseWinningDetection(
+  result: RecognitionResult,
+  detectionId: string,
+): RecognitionResult {
+  const selected = result.detections.find(({ id }) => id === detectionId);
+  if (selected === undefined) {
+    throw new Error(`Detection ${detectionId} does not exist.`);
+  }
+  if (selected.role === "dora" || selected.role === "ura" || selected.role === "meld") {
+    throw new Error("Only a concealed hand tile can be marked as the winning tile.");
+  }
+  return {
+    ...result,
+    detections: result.detections.map((detection) => ({
+      ...detection,
+      confidence: detection.id === detectionId ? 1 : detection.confidence,
+      role:
+        detection.id === detectionId
+          ? "winning"
+          : detection.role === "winning"
+            ? "concealed"
+            : detection.role,
+    })),
+  };
+}

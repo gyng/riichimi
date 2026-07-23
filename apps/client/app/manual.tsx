@@ -6,7 +6,7 @@ export default function ManualRoute() {
   const parameters = useLocalSearchParams<{
     recognizedDora?: string;
     recognizedModel?: string;
-    recognizedReviewCount?: string;
+    recognizedReviewedCount?: string;
     recognizedTiles?: string;
     recognizedWinningIndex?: string;
     referencePhoto?: string;
@@ -14,7 +14,7 @@ export default function ManualRoute() {
   const recognitionDraft = parseRecognitionDraft({
     dora: parameters.recognizedDora,
     modelVersion: parameters.recognizedModel,
-    reviewCount: parameters.recognizedReviewCount,
+    reviewedCount: parameters.recognizedReviewedCount,
     tiles: parameters.recognizedTiles,
     winningIndex: parameters.recognizedWinningIndex,
   });
