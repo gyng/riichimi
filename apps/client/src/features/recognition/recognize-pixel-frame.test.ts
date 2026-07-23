@@ -51,7 +51,7 @@ describe("recognizePixelFrame", () => {
     frame.data.fill(0);
     const classifier = jest.fn<Promise<Float32Array>, []>();
 
-    await expect(recognizePixelFrame(frame, classifier)).rejects.toThrow(/needs exactly 14/);
+    await expect(recognizePixelFrame(frame, classifier)).rejects.toThrow(/dora indicator below/);
     expect(classifier).not.toHaveBeenCalled();
   });
 

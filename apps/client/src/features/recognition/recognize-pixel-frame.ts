@@ -1,4 +1,9 @@
-import type { DetectedTile, RecognitionResult } from "@richii/vision";
+import type {
+  DetectedTile,
+  DetectionRole,
+  NormalizedBounds,
+  RecognitionResult,
+} from "@richii/vision";
 
 import { inspectFrameExposure, inspectLocatedCapture } from "./capture-quality";
 import type { CaptureQualityIssueKind } from "./capture-quality";
@@ -43,24 +48,41 @@ export async function recognizePixelFrame(
   if (qualityIssue !== null) {
     throw new GuidedRecognitionError(qualityIssue.kind, qualityIssue.message);
   }
-  const bounds = [...layout.hand, layout.dora];
-  const batch = combineTileTensors(bounds.map((item) => cropTileTensor(frame, item)));
-  const logits = await runClassifier(batch, [bounds.length, 3, tileTensorHeight, tileTensorWidth]);
-  const classifications = classifyBatchLogits(logits, bounds.length);
-  const detections: DetectedTile[] = classifications.map((classification, index) => {
-    const isDora = index === layout.hand.length;
-    const isWinning = index === layout.winningIndex;
-    const role = isDora ? "dora" : isWinning ? "winning" : "concealed";
+  // One slot per physical tile face, in a stable order: concealed hand, then the
+  // called melds (grouped), then the dora. Meld ids encode their group so the
+  // draft can reassemble each set.
+  interface Slot {
+    readonly bounds: NormalizedBounds;
+    readonly id: string;
+    readonly role: DetectionRole;
+    readonly winning: boolean;
+  }
+  const slots: Slot[] = [];
+  layout.concealed.forEach((bounds, index) => {
+    const winning = index === layout.winningIndex;
+    slots.push({ bounds, id: `hand-${index}`, role: winning ? "winning" : "concealed", winning });
+  });
+  layout.melds.forEach((meld, groupIndex) => {
+    meld.forEach((bounds, tileIndex) => {
+      slots.push({ bounds, id: `meld-${groupIndex}-${tileIndex}`, role: "meld", winning: false });
+    });
+  });
+  slots.push({ bounds: layout.dora, id: "dora-0", role: "dora", winning: false });
+
+  const batch = combineTileTensors(slots.map((slot) => cropTileTensor(frame, slot.bounds)));
+  const logits = await runClassifier(batch, [slots.length, 3, tileTensorHeight, tileTensorWidth]);
+  const classifications = classifyBatchLogits(logits, slots.length);
+  const detections: DetectedTile[] = slots.map((slot, index) => {
+    const classification = classifications[index];
+    const confidence = classification?.confidence ?? 0;
     return {
-      alternatives: classification.alternatives,
-      bounds: bounds[index] ?? { height: 0, width: 0, x: 0, y: 0 },
+      alternatives: classification?.alternatives ?? [],
+      bounds: slot.bounds,
       confidence:
-        isWinning && !layout.winningRoleCertain
-          ? Math.min(0.5, classification.confidence)
-          : classification.confidence,
-      id: isDora ? "dora-0" : `hand-${index}`,
-      role,
-      tile: classification.tile,
+        slot.winning && !layout.winningRoleCertain ? Math.min(0.5, confidence) : confidence,
+      id: slot.id,
+      role: slot.role,
+      tile: classification?.tile ?? null,
     };
   });
   return { detections, modelVersion: guidedRecognitionModelVersion };

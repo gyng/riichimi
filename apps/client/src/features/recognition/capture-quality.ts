@@ -96,7 +96,7 @@ export function inspectLocatedCapture(
   frame: PixelFrame,
   layout: Extract<GuidedLayoutResult, { kind: "success" }>,
 ): CaptureQualityIssue | null {
-  const bounds = [...layout.hand, layout.dora];
+  const bounds = [...layout.concealed, ...layout.melds.flat(), layout.dora];
   if (bounds.some(touchesFrameEdge)) {
     return {
       kind: "crop",
@@ -104,7 +104,7 @@ export function inspectLocatedCapture(
         "One or more tiles touch the photo edge. Keep every tile fully inside the guide and retake it.",
     };
   }
-  if (perspectiveIsExcessive(layout.hand)) {
+  if (perspectiveIsExcessive(layout.concealed)) {
     return {
       kind: "perspective",
       message:

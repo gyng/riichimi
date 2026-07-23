@@ -1,9 +1,10 @@
 import { locateGuidedTiles } from "./guided-layout";
 import type { PixelFrame } from "./guided-layout";
 
-function frame(tileCount = 14, doraCount = 1): PixelFrame {
-  const width = 620;
-  const height = 260;
+const width = 620;
+const height = 260;
+
+function blankFrame(): { data: Uint8ClampedArray } {
   const data = new Uint8ClampedArray(width * height * 4);
   for (let index = 0; index < width * height; index += 1) {
     data[index * 4] = 25;
@@ -11,25 +12,56 @@ function frame(tileCount = 14, doraCount = 1): PixelFrame {
     data[index * 4 + 2] = 55;
     data[index * 4 + 3] = 255;
   }
-  function rectangle(left: number, top: number, right: number, bottom: number) {
-    for (let y = top; y < bottom; y += 1) {
-      for (let x = left; x < right; x += 1) {
-        const offset = (y * width + x) * 4;
-        data[offset] = 242;
-        data[offset + 1] = 239;
-        data[offset + 2] = 226;
-      }
+  return { data };
+}
+
+function drawRectangle(
+  data: Uint8ClampedArray,
+  left: number,
+  top: number,
+  right: number,
+  bottom: number,
+) {
+  for (let y = top; y < bottom; y += 1) {
+    for (let x = left; x < right; x += 1) {
+      const offset = (y * width + x) * 4;
+      data[offset] = 242;
+      data[offset + 1] = 239;
+      data[offset + 2] = 226;
     }
   }
+}
+
+// A closed hand: `tileCount` concealed tiles on top (with a winning gap after the
+// 11th) and `doraCount` indicators below.
+function frame(tileCount = 14, doraCount = 1): PixelFrame {
+  const { data } = blankFrame();
   for (let index = 0; index < tileCount; index += 1) {
     const winningGap = index >= 11 ? 16 : 0;
     const left = 16 + index * 41 + winningGap;
-    rectangle(left, 42, left + 34, 96);
+    drawRectangle(data, left, 42, left + 34, 96);
   }
   for (let index = 0; index < doraCount; index += 1) {
     const left = 500 + index * 48;
-    rectangle(left, 150, left + 34, 204);
+    drawRectangle(data, left, 150, left + 34, 204);
   }
+  return { data, height, width };
+}
+
+// A hand with one called meld: concealed tiles on top, a meld group of
+// `meldSize` tiles on a middle row, and one dora below.
+function frameWithMeld(concealedCount: number, meldSize: number): PixelFrame {
+  const { data } = blankFrame();
+  for (let index = 0; index < concealedCount; index += 1) {
+    const winningGap = index >= concealedCount - 3 ? 16 : 0;
+    const left = 16 + index * 41 + winningGap;
+    drawRectangle(data, left, 24, left + 34, 78);
+  }
+  for (let index = 0; index < meldSize; index += 1) {
+    const left = 30 + index * 36;
+    drawRectangle(data, left, 104, left + 34, 158);
+  }
+  drawRectangle(data, 300, 184, 334, 238);
   return { data, height, width };
 }
 
@@ -38,23 +70,50 @@ describe("locateGuidedTiles", () => {
     const result = locateGuidedTiles(frame());
 
     expect(result).toMatchObject({
-      hand: expect.arrayContaining([expect.objectContaining({ height: expect.any(Number) })]),
+      concealed: expect.arrayContaining([expect.objectContaining({ height: expect.any(Number) })]),
       kind: "success",
+      melds: [],
       winningIndex: 11,
       winningRoleCertain: true,
     });
     if (result.kind !== "success") {
       throw new Error("Expected the guided layout to be found.");
     }
-    expect(result.hand).toHaveLength(14);
-    expect(result.dora.y).toBeGreaterThan(result.hand[0]?.y ?? 0);
+    expect(result.concealed).toHaveLength(14);
+    expect(result.dora.y).toBeGreaterThan(result.concealed[0]?.y ?? 0);
+  });
+
+  it("separates a called triplet meld from the concealed hand", () => {
+    const result = locateGuidedTiles(frameWithMeld(11, 3));
+    if (result.kind !== "success") {
+      throw new Error(`Expected a located layout, received: ${result.message}`);
+    }
+    expect(result.concealed).toHaveLength(11);
+    expect(result.melds).toHaveLength(1);
+    expect(result.melds[0]).toHaveLength(3);
+  });
+
+  it("reads a four-tile kan as one meld group", () => {
+    const result = locateGuidedTiles(frameWithMeld(10, 4));
+    if (result.kind !== "success") {
+      throw new Error(`Expected a located layout, received: ${result.message}`);
+    }
+    expect(result.melds).toHaveLength(1);
+    expect(result.melds[0]).toHaveLength(4);
+  });
+
+  it("rejects a meld group that is not 3 or 4 tiles", () => {
+    expect(locateGuidedTiles(frameWithMeld(11, 2))).toMatchObject({
+      kind: "failure",
+      message: expect.stringContaining("3 tiles (chi/pon) or 4"),
+    });
   });
 
   it("fails with capture guidance instead of inventing missing tiles", () => {
-    expect(locateGuidedTiles(frame(9, 0))).toEqual({
+    expect(locateGuidedTiles(frame(9, 0))).toMatchObject({
       foundTileFaces: 9,
       kind: "failure",
-      message: "Found 9 tile-like faces, but the guided row needs exactly 14 separated tiles.",
+      message: expect.stringContaining("dora indicator below"),
     });
   });
 

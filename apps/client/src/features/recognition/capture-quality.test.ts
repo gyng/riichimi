@@ -19,14 +19,15 @@ function layout(
   overrides: Partial<Extract<GuidedLayoutResult, { kind: "success" }>> = {},
 ): Extract<GuidedLayoutResult, { kind: "success" }> {
   return {
-    dora: { height: 0.2, width: 0.12, x: 0.8, y: 0.7 },
-    hand: Array.from({ length: 14 }, (_, index) => ({
+    concealed: Array.from({ length: 14 }, (_, index) => ({
       height: 0.3,
       width: 0.045,
       x: 0.03 + index * 0.065,
       y: 0.2,
     })),
+    dora: { height: 0.2, width: 0.12, x: 0.8, y: 0.7 },
     kind: "success",
+    melds: [],
     winningIndex: 13,
     winningRoleCertain: true,
     ...overrides,
@@ -64,7 +65,7 @@ describe("capture quality", () => {
   it("gives a dedicated crop message when a detected tile touches an edge", () => {
     const input = addSharpDetail(frame());
     const current = layout();
-    const first = current.hand[0];
+    const first = current.concealed[0];
     if (first === undefined) {
       throw new Error("Expected a guided hand tile.");
     }
@@ -72,7 +73,7 @@ describe("capture quality", () => {
     expect(
       inspectLocatedCapture(input, {
         ...current,
-        hand: [{ ...first, x: 0 }, ...current.hand.slice(1)],
+        concealed: [{ ...first, x: 0 }, ...current.concealed.slice(1)],
       }),
     ).toMatchObject({ kind: "crop" });
   });
@@ -80,7 +81,7 @@ describe("capture quality", () => {
   it("separates excessive perspective from ordinary geometry failures", () => {
     const input = addSharpDetail(frame());
     const current = layout();
-    const last = current.hand.at(-1);
+    const last = current.concealed.at(-1);
     if (last === undefined) {
       throw new Error("Expected a guided hand tile.");
     }
@@ -88,7 +89,7 @@ describe("capture quality", () => {
     expect(
       inspectLocatedCapture(input, {
         ...current,
-        hand: [...current.hand.slice(0, -1), { ...last, height: 0.16, width: 0.045 }],
+        concealed: [...current.concealed.slice(0, -1), { ...last, height: 0.16, width: 0.045 }],
       }),
     ).toMatchObject({ kind: "perspective" });
   });

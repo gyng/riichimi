@@ -8,9 +8,14 @@ export interface PixelFrame {
 
 export type GuidedLayoutResult =
   | {
+      /** The concealed hand row, left-to-right. A closed hand is the whole hand. */
+      readonly concealed: readonly NormalizedBounds[];
       readonly dora: NormalizedBounds;
-      readonly hand: readonly NormalizedBounds[];
+      /** Called melds, each a group of 3 (chi/pon) or 4 (kan) tiles. Empty for a
+          fully concealed hand. */
+      readonly melds: readonly (readonly NormalizedBounds[])[];
       readonly kind: "success";
+      /** Index of the winning tile within `concealed`. */
       readonly winningIndex: number;
       readonly winningRoleCertain: boolean;
     }
@@ -124,6 +129,56 @@ function centerY(component: Component): number {
   return (component.top + component.bottom) / 2;
 }
 
+function widthOf(component: Component): number {
+  return component.right - component.left + 1;
+}
+
+function median(values: readonly number[]): number {
+  const sorted = values.toSorted((left, right) => left - right);
+  return sorted[Math.floor(sorted.length / 2)] ?? 0;
+}
+
+// Split a left-to-right row into contiguous groups: a gap wider than ~0.5 tile
+// widths is a group boundary. Used to separate the called melds in the meld row.
+function groupByGaps(row: readonly Component[]): Component[][] {
+  const boundary = median(row.map(widthOf)) * 0.5;
+  const groups: Component[][] = [];
+  let current: Component[] = [];
+  for (let index = 0; index < row.length; index += 1) {
+    const component = row[index];
+    if (component === undefined) {
+      continue;
+    }
+    const previous = row[index - 1];
+    if (previous !== undefined && component.left - previous.right > boundary) {
+      groups.push(current);
+      current = [];
+    }
+    current.push(component);
+  }
+  if (current.length > 0) {
+    groups.push(current);
+  }
+  return groups;
+}
+
+function clusterRows(components: readonly Component[]): Component[][] {
+  const rows: Component[][] = [];
+  for (const component of components.toSorted((left, right) => centerY(left) - centerY(right))) {
+    const height = component.bottom - component.top + 1;
+    const row = rows.find((items) => {
+      const averageCenter = items.reduce((sum, item) => sum + centerY(item), 0) / items.length;
+      return Math.abs(centerY(component) - averageCenter) <= height * 0.42;
+    });
+    if (row === undefined) {
+      rows.push([component]);
+    } else {
+      row.push(component);
+    }
+  }
+  return rows;
+}
+
 export function locateGuidedTiles(frame: PixelFrame): GuidedLayoutResult {
   if (
     frame.width <= 0 ||
@@ -133,59 +188,77 @@ export function locateGuidedTiles(frame: PixelFrame): GuidedLayoutResult {
     throw new RangeError("Pixel frame dimensions must match its RGBA data.");
   }
   const components = candidateComponents(frame);
-  const rows: Component[][] = [];
-  for (const component of components.toSorted((left, right) => centerY(left) - centerY(right))) {
-    const componentHeight = component.bottom - component.top + 1;
-    const row = rows.find((items) => {
-      const averageCenter = items.reduce((sum, item) => sum + centerY(item), 0) / items.length;
-      return Math.abs(centerY(component) - averageCenter) <= componentHeight * 0.42;
-    });
-    if (row === undefined) {
-      rows.push([component]);
-    } else {
-      row.push(component);
+  const failure = (message: string): GuidedLayoutResult => ({
+    foundTileFaces: components.length,
+    kind: "failure",
+    message,
+  });
+
+  // Rows top-to-bottom: concealed hand, optional meld row(s), then the dora.
+  const rows = clusterRows(components).toSorted(
+    (left, right) =>
+      left.reduce((sum, item) => sum + centerY(item), 0) / left.length -
+      right.reduce((sum, item) => sum + centerY(item), 0) / right.length,
+  );
+  if (rows.length < 2) {
+    return failure(
+      `Found ${components.length} tile-like faces. Place the hand row on top and one dora indicator below.`,
+    );
+  }
+
+  const doraRow = rows.at(-1);
+  if (doraRow === undefined || doraRow.length !== 1) {
+    return failure(
+      `The guide needs exactly one separated dora indicator below the hand; found ${doraRow?.length ?? 0}.`,
+    );
+  }
+  const dora = doraRow[0];
+  const concealedRow = rows[0];
+  if (dora === undefined || concealedRow === undefined) {
+    return failure("The hand and dora rows could not be read.");
+  }
+  if (concealedRow.length < 2) {
+    return failure("The concealed hand row needs at least two tiles.");
+  }
+  if (centerY(dora) <= Math.max(...concealedRow.map((item) => centerY(item)))) {
+    return failure("Place the one dora indicator below the hand.");
+  }
+
+  // Middle rows hold the called melds. Each meld is a group of 3 (chi/pon) or 4
+  // (kan) tiles set apart from its neighbours.
+  const melds: Component[][] = [];
+  for (const meldRow of rows.slice(1, -1)) {
+    for (const group of groupByGaps(meldRow.toSorted((left, right) => left.left - right.left))) {
+      if (group.length !== 3 && group.length !== 4) {
+        return failure(
+          `A called meld needs 3 tiles (chi/pon) or 4 (kan); found a group of ${group.length}.`,
+        );
+      }
+      melds.push(group);
     }
   }
-  const handRow = rows
-    .filter((row) => row.length >= 10)
-    .toSorted((left, right) => Math.abs(left.length - 14) - Math.abs(right.length - 14))[0];
-  if (handRow === undefined || handRow.length !== 14) {
-    return {
-      foundTileFaces: components.length,
-      kind: "failure",
-      message: `Found ${components.length} tile-like faces, but the guided row needs exactly 14 separated tiles.`,
-    };
+
+  const totalTiles = concealedRow.length + melds.reduce((sum, meld) => sum + meld.length, 0);
+  if (totalTiles < 14 || totalTiles > 18) {
+    return failure(
+      `A winning hand is 14–18 tiles (with kans); found ${totalTiles} across the hand and melds.`,
+    );
   }
-  const hand = handRow.toSorted((left, right) => left.left - right.left);
-  const handSet = new Set(hand);
-  const doraCandidates = components.filter((component) => !handSet.has(component));
-  if (doraCandidates.length !== 1) {
-    return {
-      foundTileFaces: components.length,
-      kind: "failure",
-      message: `The hand was found, but the guide needs exactly one separated dora indicator; found ${doraCandidates.length}.`,
-    };
-  }
-  const dora = doraCandidates[0];
-  const handBottom = Math.max(...hand.map(({ bottom }) => bottom));
-  if (dora === undefined || centerY(dora) <= handBottom) {
-    return {
-      foundTileFaces: components.length,
-      kind: "failure",
-      message: "Place the one dora indicator below the 14-tile hand row.",
-    };
-  }
+
+  const hand = concealedRow.toSorted((left, right) => left.left - right.left);
   const gaps = hand.slice(1).map((component, index) => component.left - (hand[index]?.right ?? 0));
-  const sortedGaps = gaps.toSorted((left, right) => left - right);
-  const medianGap = sortedGaps[Math.floor(sortedGaps.length / 2)] ?? 0;
-  const maximumGap = Math.max(...gaps);
+  const medianGap = median(gaps);
+  const maximumGap = gaps.length > 0 ? Math.max(...gaps) : 0;
   const winningIndex = gaps.indexOf(maximumGap) + 1;
-  const winningRoleCertain = maximumGap >= Math.max(frame.width * 0.012, medianGap * 1.7);
+  const winningRoleCertain =
+    gaps.length > 0 && maximumGap >= Math.max(frame.width * 0.012, medianGap * 1.7);
+
   return {
+    concealed: hand.map((component) => normalized(component, frame)),
     dora: normalized(dora, frame),
-    hand: hand.map((component) => normalized(component, frame)),
     kind: "success",
-    winningIndex: winningRoleCertain ? winningIndex : 13,
+    melds: melds.map((meld) => meld.map((component) => normalized(component, frame))),
+    winningIndex: winningRoleCertain ? winningIndex : hand.length - 1,
     winningRoleCertain,
   };
 }
