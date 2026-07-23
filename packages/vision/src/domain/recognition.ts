@@ -23,8 +23,14 @@ export interface TileCandidate {
 
 export type DetectionRole = "concealed" | "dora" | "meld" | "unknown" | "ura" | "winning";
 
+/** How the tiles are staged in the capture, which selects the layout parser.
+    `guided` uses separate rows (hand / melds / dora); `natural` reads one row the
+    way a revealed hand sits, at the cost of a structure guess confirmed at review. */
+export type CaptureLayout = "guided" | "natural";
+
 export interface ImageFrame {
   readonly height: number;
+  readonly layout?: CaptureLayout;
   readonly uri: string;
   readonly width: number;
 }

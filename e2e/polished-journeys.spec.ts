@@ -190,7 +190,11 @@ test("dogfoods the polished mobile scoring and table flows through WebMCP", asyn
   await expect(page.getByRole("heading", { name: "East 1" })).toBeVisible();
   await expect(page.getByLabel("1 honba, 0 riichi sticks").filter({ visible: true })).toBeVisible();
   await expect(page.getByText("28,100", { exact: true }).filter({ visible: true })).toBeVisible();
-  await expect(page.getByText("Aiko won").filter({ visible: true })).toBeVisible();
+  // "East 1 · Aiko won" (history) vs "Edit East 1, Aiko won" (edit button) both
+  // contain "Aiko won"; assert the history entry exactly to stay unambiguous.
+  await expect(
+    page.getByText("East 1 · Aiko won", { exact: true }).filter({ visible: true }),
+  ).toBeVisible();
   await page.screenshot({
     fullPage: true,
     path: "docs/checkpoints/2026-07-23-07-session-scored-win-mobile.png",
@@ -235,6 +239,9 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   const fileChooser = await fileChooserPromise;
   await fileChooser.setFiles("e2e/fixtures/guided-hand-blurred.png");
   await expect(page.getByText("Photo ready for review")).toBeVisible();
+  // These fixtures stage the hand as separate rows, so read them with the guided
+  // layout (persists across the retake below).
+  await page.getByRole("radio", { name: "Guided" }).click();
   await page.getByRole("button", { name: "Read 14 tiles offline" }).click();
   await expect(page.getByText(/photo is too blurry to read safely/)).toBeVisible();
   await page.screenshot({

@@ -1,9 +1,33 @@
 # Design: Guided meld/kan capture for the camera recognizer
 
-Status: **phases 1–4 complete.** The guided recognizer now localizes called melds
-and kans, infers their type, feeds them into a scoreable draft, and reviews them
+Status: **phases 1–4 complete, plus two selectable capture layouts with a
+structure-confirmation review gate.** The recognizer localizes called melds and
+kans, infers their type, feeds them into a scoreable draft, and reviews them
 tile-by-tile behind the confirm-before-score gate — while keeping the
 deliberately-narrow, review-gated philosophy.
+
+## Capture layouts: natural (default) and guided
+
+There are two ways to stage a hand for the scan, chosen on the scan screen:
+
+- **Natural (default)** — the whole hand on one row, the way a revealed hand
+  actually sits: the concealed hand (winning tile after a larger gap), then any
+  called melds/kans set apart to the right, then one dora indicator last. Parsed
+  by `single-row-layout.ts` (`locateSingleRowTiles`). Less re-staging, but the
+  concealed/called split is a **geometry guess** — a winner gap grown too wide can
+  read as a called triplet, and a meld staged too close can merge into the hand
+  (both changing open/closed, and so han and fu).
+- **Guided** — the concealed hand, called melds/kans, and the dora on separate
+  rows. Parsed by `guided-layout.ts` (`locateGuidedTiles`). Structurally
+  unambiguous, so its split can be trusted; best when a hand has called sets.
+
+Because the natural layout's structure is a guess, it is **not trusted silently**:
+the review desk requires an explicit **structure confirmation** before scoring
+(`requireStructureConfirmation`). The review panel shows the inferred split
+(N concealed · M called sets), lets the user fold a mis-read called set back into
+the hand in one tap, and — for a swallowed meld — points to the calculator, where
+melds are fully editable. This is what makes natural a safe default: the guess is
+always surfaced and correctable, never applied behind the user's back.
 
 Placement decision: **open-vs-closed is set in the calculator, not the review
 desk.** The recognizer defaults every meld to open (rotation/face-down cues are

@@ -52,16 +52,20 @@ function classifierSession(): Promise<ort.InferenceSession> {
 export const tileRecognition: TileRecognitionPort = {
   async recognize(frame) {
     const pixels = await pixelFrame(frame.uri);
-    return recognizePixelFrame(pixels, async (tensor, dimensions) => {
-      const session = await classifierSession();
-      const output = await session.run({
-        pixels: new ort.Tensor("float32", tensor, [...dimensions]),
-      });
-      const logits = output["logits"];
-      if (logits === undefined || !(logits.data instanceof Float32Array)) {
-        throw new Error("The tile classifier returned no logits.");
-      }
-      return logits.data;
-    });
+    return recognizePixelFrame(
+      pixels,
+      async (tensor, dimensions) => {
+        const session = await classifierSession();
+        const output = await session.run({
+          pixels: new ort.Tensor("float32", tensor, [...dimensions]),
+        });
+        const logits = output["logits"];
+        if (logits === undefined || !(logits.data instanceof Float32Array)) {
+          throw new Error("The tile classifier returned no logits.");
+        }
+        return logits.data;
+      },
+      frame.layout ?? "guided",
+    );
   },
 };

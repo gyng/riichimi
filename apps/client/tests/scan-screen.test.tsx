@@ -137,6 +137,14 @@ describe("ScanScreen", () => {
       screen.getByRole("button", { name: "Use 2 characters for selected tile" }),
     );
     expect(await screen.findByText("Recognition review complete")).toBeOnTheScreen();
+    // The natural (default) layout also requires the concealed/called split to be
+    // explicitly confirmed before the reviewed draft can continue.
+    expect(
+      screen.getByRole("button", { name: "Confirm the hand structure to continue" }),
+    ).toBeDisabled();
+    await fireEvent.press(
+      screen.getByRole("checkbox", { name: /concealed and called split matches the photo/ }),
+    );
     await fireEvent.press(screen.getByRole("button", { name: "Continue with reviewed tiles" }));
 
     expect(router.push).toHaveBeenCalledWith({

@@ -1,4 +1,5 @@
 import type {
+  CaptureLayout,
   DetectedTile,
   DetectionRole,
   NormalizedBounds,
@@ -10,6 +11,7 @@ import type { CaptureQualityIssueKind } from "./capture-quality";
 import { classifyBatchLogits } from "./classifier-output";
 import { locateGuidedTiles } from "./guided-layout";
 import type { PixelFrame } from "./guided-layout";
+import { locateSingleRowTiles } from "./single-row-layout";
 import {
   combineTileTensors,
   cropTileTensor,
@@ -35,12 +37,14 @@ export async function recognizePixelFrame(
     tensor: Float32Array,
     dimensions: readonly [number, 3, number, number],
   ) => Promise<Float32Array>,
+  captureLayout: CaptureLayout = "guided",
 ): Promise<RecognitionResult> {
   const exposureIssue = inspectFrameExposure(frame);
   if (exposureIssue !== null) {
     throw new GuidedRecognitionError(exposureIssue.kind, exposureIssue.message);
   }
-  const layout = locateGuidedTiles(frame);
+  const layout =
+    captureLayout === "natural" ? locateSingleRowTiles(frame) : locateGuidedTiles(frame);
   if (layout.kind === "failure") {
     throw new GuidedRecognitionError("layout", layout.message);
   }

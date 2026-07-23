@@ -25,7 +25,7 @@ export type GuidedLayoutResult =
       readonly message: string;
     };
 
-interface Component {
+export interface Component {
   readonly area: number;
   readonly bottom: number;
   readonly left: number;
@@ -33,7 +33,7 @@ interface Component {
   readonly top: number;
 }
 
-function candidateComponents(frame: PixelFrame): readonly Component[] {
+export function candidateComponents(frame: PixelFrame): readonly Component[] {
   const { data, height, width } = frame;
   const size = width * height;
   const mask = new Uint8Array(size);
@@ -110,7 +110,7 @@ function candidateComponents(frame: PixelFrame): readonly Component[] {
   return components;
 }
 
-function normalized(component: Component, frame: PixelFrame): NormalizedBounds {
+export function normalized(component: Component, frame: PixelFrame): NormalizedBounds {
   const horizontalPadding = (component.right - component.left + 1) * 0.035;
   const verticalPadding = (component.bottom - component.top + 1) * 0.025;
   const x = Math.max(0, component.left - horizontalPadding);
@@ -129,11 +129,11 @@ function centerY(component: Component): number {
   return (component.top + component.bottom) / 2;
 }
 
-function widthOf(component: Component): number {
+export function widthOf(component: Component): number {
   return component.right - component.left + 1;
 }
 
-function median(values: readonly number[]): number {
+export function median(values: readonly number[]): number {
   const sorted = values.toSorted((left, right) => left - right);
   return sorted[Math.floor(sorted.length / 2)] ?? 0;
 }
@@ -162,7 +162,7 @@ function groupByGaps(row: readonly Component[]): Component[][] {
   return groups;
 }
 
-function clusterRows(components: readonly Component[]): Component[][] {
+export function clusterRows(components: readonly Component[]): Component[][] {
   const rows: Component[][] = [];
   for (const component of components.toSorted((left, right) => centerY(left) - centerY(right))) {
     const height = component.bottom - component.top + 1;

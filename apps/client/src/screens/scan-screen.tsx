@@ -1,7 +1,7 @@
 import type { TileId } from "@richii/score-core";
-import { ActionButton, color, space } from "@richii/ui";
+import { ActionButton, SegmentedControl, color, space } from "@richii/ui";
 import { reviewRecognition } from "@richii/vision";
-import type { DetectedTile, RecognitionResult } from "@richii/vision";
+import type { CaptureLayout, DetectedTile, RecognitionResult } from "@richii/vision";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
@@ -43,6 +43,11 @@ function orderedMeldGroups(detections: readonly DetectedTile[]): (TileId | undef
     );
 }
 
+const layoutOptions: readonly { label: string; value: CaptureLayout }[] = [
+  { label: "Natural", value: "natural" },
+  { label: "Guided", value: "guided" },
+];
+
 type RecognitionState =
   | { readonly kind: "idle" }
   | { readonly kind: "running" }
@@ -59,6 +64,11 @@ export function ScanScreen() {
   const [photoSource, setPhotoSource] = useState<"camera" | "library">("camera");
   const [importError, setImportError] = useState<string | null>(null);
   const [recognition, setRecognition] = useState<RecognitionState>({ kind: "idle" });
+  // Natural (single-row) is the default: it reads a hand the way it sits on the
+  // table. Its concealed/called split is a guess, so it demands a structure
+  // confirmation at review; guided keeps melds and dora on their own rows.
+  const [captureLayout, setCaptureLayout] = useState<CaptureLayout>("natural");
+  const [structureConfirmed, setStructureConfirmed] = useState(false);
   const camera = useRef<CameraView>(null);
 
   useEffect(() => {
@@ -118,8 +128,14 @@ export function ScanScreen() {
       return;
     }
     setRecognition({ kind: "running" });
+    setStructureConfirmed(false);
     try {
-      const result = await tileRecognition.recognize({ height: 1, uri: photoUri, width: 1 });
+      const result = await tileRecognition.recognize({
+        height: 1,
+        layout: captureLayout,
+        uri: photoUri,
+        width: 1,
+      });
       const review = reviewRecognition(result, recognitionReviewThreshold);
       setRecognition({
         initialReviewCount: review.reviewDetectionIds.length,
@@ -188,6 +204,14 @@ export function ScanScreen() {
     recognition.kind === "complete"
       ? reviewRecognition(recognition.result, recognitionReviewThreshold)
       : null;
+  const requireStructureConfirmation = captureLayout === "natural";
+  const tilesReady = currentRecognitionReview?.readyToConfirm === true;
+  const structureReady = !requireStructureConfirmation || structureConfirmed;
+  const continueLabel = !tilesReady
+    ? `Resolve ${currentRecognitionReview?.reviewDetectionIds.length ?? 0} tiles to continue`
+    : structureReady
+      ? "Continue with reviewed tiles"
+      : "Confirm the hand structure to continue";
 
   if (permission === null) {
     return (
@@ -254,11 +278,30 @@ export function ScanScreen() {
               {photoSource === "camera" ? "Capture ready for review" : "Photo ready for review"}
             </Text>
             <Text style={styles.reviewBody}>
-              Beta recognition runs entirely on this device. Place the concealed hand upright and
-              separated on a dark plain surface with the winning tile after a larger gap, any called
-              melds or kans on a second row below it, and one dora indicator on the bottom row.
-              Every result still needs your confirmation.
+              Beta recognition runs entirely on this device. Use a dark, plain surface and keep
+              tiles upright; every result still needs your confirmation.
             </Text>
+            {recognition.kind === "complete" ? null : (
+              <View style={styles.layoutChoice}>
+                <Text style={styles.layoutLabel}>CAPTURE LAYOUT</Text>
+                <SegmentedControl
+                  accessibilityLabel="Capture layout"
+                  onChange={(value) => {
+                    setCaptureLayout(value);
+                    setRecognition((current) =>
+                      current.kind === "failure" ? { kind: "idle" } : current,
+                    );
+                  }}
+                  options={layoutOptions}
+                  value={captureLayout}
+                />
+                <Text style={styles.layoutHint}>
+                  {captureLayout === "natural"
+                    ? "Natural — one row: the hand with the winning tile after a larger gap, any called melds or kans set apart to the right, then one dora indicator last. The concealed/called split is confirmed at review."
+                    : "Guided — the concealed hand on top with the winning tile after a larger gap, any called melds or kans on a second row, and one dora indicator on the bottom row."}
+                </Text>
+              </View>
+            )}
             {recognition.kind === "running" ? (
               <View accessibilityLiveRegion="polite" style={styles.recognitionStatus}>
                 <ActivityIndicator color={color.accent} />
@@ -291,7 +334,10 @@ export function ScanScreen() {
                     result,
                   })
                 }
+                onConfirmStructureChange={setStructureConfirmed}
+                requireStructureConfirmation={requireStructureConfirmation}
                 result={recognition.result}
+                structureConfirmed={structureConfirmed}
               />
             ) : null}
             <View style={styles.reviewActions}>
@@ -309,12 +355,8 @@ export function ScanScreen() {
               />
               {recognition.kind === "complete" ? (
                 <ActionButton
-                  disabled={currentRecognitionReview?.readyToConfirm !== true}
-                  label={
-                    currentRecognitionReview?.readyToConfirm === true
-                      ? "Continue with reviewed tiles"
-                      : `Resolve ${currentRecognitionReview?.reviewDetectionIds.length ?? 0} tiles to continue`
-                  }
+                  disabled={!tilesReady || !structureReady}
+                  label={continueLabel}
                   onPress={() =>
                     reviewRecognizedTiles(recognition.result, recognition.initialReviewCount)
                   }
@@ -490,6 +532,21 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "700",
     letterSpacing: 1.5,
+  },
+  layoutChoice: { gap: space.x2, marginBottom: space.x4 },
+  layoutHint: {
+    color: color.inkMuted,
+    fontFamily: "serif",
+    fontSize: 13,
+    lineHeight: 19,
+    marginTop: space.x2,
+  },
+  layoutLabel: {
+    color: color.inkMuted,
+    fontFamily: "monospace",
+    fontSize: 9,
+    fontWeight: "700",
+    letterSpacing: 1.2,
   },
   permissionActions: {
     alignItems: "flex-start",

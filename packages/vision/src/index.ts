@@ -17,6 +17,7 @@ export type {
   RecognitionModelManifest,
 } from "./domain/model-manifest";
 export type {
+  CaptureLayout,
   DetectionRole,
   DetectedTile,
   ImageFrame,
