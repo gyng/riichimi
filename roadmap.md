@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: **2026-07-23T09:34:14+08:00**
+Last updated: **2026-07-24T02:00:00+08:00**
 
 ## Product objective
 
@@ -42,10 +42,23 @@ Exit gate: representative guided scans meet documented accuracy and latency targ
 
 ## P1 — rules and session completeness
 
-- Cross-check a generated scoring corpus against an independent implementation and retain every discrepancy as a regression test.
-- Add common Japanese casual/platform rules as named versioned profiles without branching in UI components.
-- Add editable completed rounds, result-card sharing, and game-summary export.
+- Cross-check the scoring engine against published tables and canonical worked hands; retain every discrepancy as a regression test. (Done for the payment table and closed/open/ambiguous worked hands; keep extending as rules grow.)
+- Game-summary export (done) and result-card sharing built on top of it.
+- **Editable completed rounds.** Requires a replayable event log first: `declareRiichi` is not currently recorded as an event, so editing a past round and recomputing downstream would lose riichi-stick timing and silently corrupt scores. A Fable architect pass owns the design; implementation is delegated from that design. The feature must never silently change scores — every recompute is auditable and reversible.
+- **Named, versioned, immutable ruleset profiles**, added without branching in UI components:
+  - Tenhou and Mahjong Soul (Jantama) variants.
+  - EMA (European Mahjong Association) competition rules.
+  - M.League rules.
+  - JPML (Japan Professional Mahjong League, rulebook A) rules.
+  These differ across aka dora, open tanyao (kuitan), kiriage mangan, kazoe cap (sanbaiman vs yonbaiman), double-wind-pair fu, uma/oka, starting/return points, tobi/busting, and nagashi mangan — so `ScoringRules` and the session model must grow beyond the current WRC-only shape (e.g. `countedLimit` is presently fixed to `"yonbaiman"`, double-wind pair fu is fixed at +2). Expand the scoring cross-check corpus per profile as each lands.
+- **House-rule editor** — let users compose and persist a custom ruleset profile from the same option set, with validation, sensible presets, and immutable per-table pinning.
 - Expand WebMCP only for proven high-value tasks; preserve visible effects, schema validation, and human control.
+
+## P1 — experience, localization, and audio
+
+- **Mobile-first UI pass.** Design the primary layouts for narrow phones first (48px+ touch targets, thumb reach, one-handed scoring, bottom-anchored primary actions), then scale up to desktop — rather than adapting a desktop layout down. Re-audit every screen against real device widths and large text.
+- **Win announcer (Mahjong Soul style).** Announce the winning hand and its yaku/score. Build a TTS **port/abstraction** so the voice backend is swappable: start with the browser Web Speech API (Web TTS), and keep the interface ready for later on-device engines (Piper, Moonshine). Respect reduced-motion and quiet/mute preferences; never block scoring on audio, and keep audio out of the domain (adapter only).
+- **Internationalization, especially CJK.** Extract all user-facing strings behind an i18n layer; support Japanese and Chinese alongside English, with correct CJK typography, tile/term names, and pluralization. Keep number/point/date formatting locale-correct at the interface layer without leaking locale or `Intl`/clock access into the domain.
 
 ## P2 — operational polish
 
