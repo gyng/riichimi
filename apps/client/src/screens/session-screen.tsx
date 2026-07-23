@@ -403,7 +403,10 @@ export function SessionScreen() {
             <ActionButton
               disabled={session.state.undoStack.length === 0}
               label="Undo last change"
-              onPress={session.undo}
+              onPress={() => {
+                session.undo();
+                setEditStatus(null);
+              }}
               variant="paper"
             />
           </View>

@@ -1128,16 +1128,23 @@ export function ManualCalculator({
                 {editPlayerName(index)}: {signedPoints(change)}
               </Text>
             ))}
-            {editReview.changedRounds.length > 0 ? (
-              <>
-                <Text style={styles.editConfirmSubhead}>Later rounds that shift</Text>
-                {editReview.changedRounds.map((change) => (
-                  <Text key={change.roundId} style={styles.editConfirmNote}>
-                    {describeChangedRound(change)}
-                  </Text>
-                ))}
-              </>
-            ) : null}
+            {(() => {
+              // The re-scored round always changes; only surface the DOWNSTREAM
+              // rounds whose context shifted (matching the session-screen editor).
+              const laterChanges = editReview.changedRounds.filter(
+                (change) => change.roundId !== editRoundId,
+              );
+              return laterChanges.length > 0 ? (
+                <>
+                  <Text style={styles.editConfirmSubhead}>Later rounds that shift</Text>
+                  {laterChanges.map((change) => (
+                    <Text key={change.roundId} style={styles.editConfirmNote}>
+                      {describeChangedRound(change)}
+                    </Text>
+                  ))}
+                </>
+              ) : null;
+            })()}
             {editReview.warnings.map((warning, index) => (
               <Text key={index} style={styles.editConfirmWarning}>
                 {describeEditWarning(warning)}
