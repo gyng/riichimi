@@ -298,7 +298,6 @@ export function SessionScreen() {
         <View style={styles.topBar}>
           <Text style={styles.rules}>{tableRules.label.toUpperCase()} · PINNED</Text>
         </View>
-        <Text style={styles.kicker}>ACTIVE TABLE</Text>
         <Text accessibilityRole="header" style={styles.roundTitle}>
           {windNames[table.roundWind]} {table.handNumber}
         </Text>
@@ -782,8 +781,8 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: space.x5,
     justifyContent: "space-between",
-    marginBottom: space.x5,
-    padding: space.x5,
+    marginBottom: space.x3,
+    padding: space.x3,
   },
   centered: {
     alignItems: "center",
@@ -815,8 +814,8 @@ const styles = StyleSheet.create({
   content: {
     alignSelf: "center",
     maxWidth: 1000,
-    padding: space.x5,
-    paddingBottom: space.x8,
+    padding: space.x3,
+    paddingBottom: space.x7,
     width: "100%",
   },
   dealerCard: { borderColor: color.accent, borderWidth: 2 },
@@ -902,7 +901,7 @@ const styles = StyleSheet.create({
     fontFamily: "serif",
     fontSize: 18,
     lineHeight: 28,
-    marginBottom: space.x6,
+    marginBottom: space.x4,
     maxWidth: 720,
   },
   kicker: {
@@ -929,26 +928,29 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 1,
     gap: space.x4,
-    marginBottom: space.x5,
-    padding: space.x5,
+    marginBottom: space.x3,
+    padding: space.x3,
   },
-  panelTitle: { color: color.ink, fontFamily: "serif", fontSize: 23, fontWeight: "800" },
+  panelTitle: { color: color.ink, fontFamily: "serif", fontSize: 17, fontWeight: "800" },
   playerCard: {
     backgroundColor: color.paper,
     borderColor: color.line,
-    borderRadius: 14,
+    borderRadius: 12,
     borderWidth: 1,
-    flex: 1,
-    gap: space.x2,
-    minWidth: 210,
-    padding: space.x4,
+    flexBasis: 150,
+    flexGrow: 1,
+    gap: space.x1,
+    // Two seats per row on a phone: at 210 a single card filled the width and
+    // the four seats cost most of the screen.
+    minWidth: 150,
+    padding: space.x3,
   },
-  playerGrid: { flexDirection: "row", flexWrap: "wrap", gap: space.x3, marginBottom: space.x5 },
-  playerName: { color: color.ink, fontFamily: "serif", fontSize: 19, fontWeight: "700" },
+  playerGrid: { flexDirection: "row", flexWrap: "wrap", gap: space.x2, marginBottom: space.x3 },
+  playerName: { color: color.ink, fontFamily: "serif", fontSize: 16, fontWeight: "700" },
   playerScore: {
     color: color.ink,
     fontFamily: "serif",
-    fontSize: 31,
+    fontSize: 22,
     fontWeight: "800",
     letterSpacing: -0.8,
     marginBottom: space.x2,
@@ -964,7 +966,7 @@ const styles = StyleSheet.create({
   roundTitle: {
     color: color.ink,
     fontFamily: "serif",
-    fontSize: 48,
+    fontSize: 30,
     fontWeight: "800",
     letterSpacing: -1.5,
     lineHeight: 52,

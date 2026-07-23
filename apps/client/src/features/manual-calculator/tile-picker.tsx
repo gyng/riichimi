@@ -24,12 +24,14 @@ export function TilePicker({ isDisabled, onSelect, showRedFives = false }: TileP
           <Text style={styles.label}>{row.label.toUpperCase()}</Text>
           <View style={styles.tiles}>
             {row.tiles.map((tile) => (
-              <MahjongTile
-                disabled={isDisabled(tile)}
-                key={tile}
-                onPress={() => onSelect(tile)}
-                tile={tile}
-              />
+              <View key={tile} style={styles.slot}>
+                <MahjongTile
+                  disabled={isDisabled(tile)}
+                  fill
+                  onPress={() => onSelect(tile)}
+                  tile={tile}
+                />
+              </View>
             ))}
           </View>
         </View>
@@ -39,12 +41,14 @@ export function TilePicker({ isDisabled, onSelect, showRedFives = false }: TileP
           <Text style={styles.label}>RED FIVES</Text>
           <View style={styles.tiles}>
             {redFiveIds.map((tile) => (
-              <MahjongTile
-                disabled={isDisabled(tile)}
-                key={tile}
-                onPress={() => onSelect(tile)}
-                tile={tile}
-              />
+              <View key={tile} style={styles.slot}>
+                <MahjongTile
+                  disabled={isDisabled(tile)}
+                  fill
+                  onPress={() => onSelect(tile)}
+                  tile={tile}
+                />
+              </View>
             ))}
           </View>
         </View>
@@ -60,21 +64,15 @@ const styles = StyleSheet.create({
     fontSize: 9,
     fontWeight: "700",
     letterSpacing: 1.2,
-    minWidth: 74,
-    paddingTop: 18,
+    marginBottom: 4,
   },
   root: {
     gap: space.x3,
   },
-  rowSection: {
-    alignItems: "flex-start",
-    flexDirection: "row",
-    gap: space.x3,
-  },
-  tiles: {
-    flex: 1,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 6,
-  },
+  // The label sits above the tiles: beside them it stole 86px of width, which
+  // wrapped every nine-tile suit onto three lines on a phone.
+  rowSection: { alignItems: "stretch" },
+  slot: { flexBasis: 0, flexGrow: 1, flexShrink: 1, maxWidth: 42, minWidth: 0 },
+  // One suit, one row: each tile takes an equal share of the width.
+  tiles: { flexDirection: "row", gap: 4 },
 });

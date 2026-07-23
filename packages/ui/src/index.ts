@@ -5,7 +5,7 @@ export { CounterControl } from "./molecules/counter-control";
 export { MethodCard } from "./molecules/method-card";
 export { SegmentedControl } from "./molecules/segmented-control";
 export { CalculatorLanding } from "./organisms/calculator-landing";
-export { TopAppBar } from "./organisms/top-app-bar";
+export { TopAppBar, TopAppBarAction } from "./organisms/top-app-bar";
 export { color, radius, space } from "./tokens/theme";
 export type { ActionButtonProps } from "./atoms/action-button";
 export type { MahjongTileProps } from "./atoms/mahjong-tile";

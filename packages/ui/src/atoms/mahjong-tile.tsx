@@ -49,6 +49,9 @@ export function tileAccessibleName(tile: TileId): string {
 
 export interface MahjongTileProps {
   readonly disabled?: boolean;
+  /** Fill the parent's width instead of sitting at the fixed tile size, so a
+      picker can fit a whole suit on one row at any screen width. */
+  readonly fill?: boolean;
   readonly onPress?: () => void;
   readonly selected?: boolean;
   readonly tile: TileId;
@@ -56,6 +59,7 @@ export interface MahjongTileProps {
 
 export function MahjongTile({
   disabled = false,
+  fill = false,
   onPress,
   selected = false,
   tile,
@@ -79,7 +83,7 @@ export function MahjongTile({
     return (
       <View
         accessibilityLabel={tileAccessibleName(tile)}
-        style={[styles.tile, selected && styles.selected]}
+        style={[styles.tile, fill && styles.fill, selected && styles.selected]}
       >
         {content}
       </View>
@@ -95,6 +99,7 @@ export function MahjongTile({
       onPress={onPress}
       style={({ pressed }) => [
         styles.tile,
+        fill && styles.fill,
         selected && styles.selected,
         pressed && styles.pressed,
         disabled && styles.disabled,
@@ -140,6 +145,7 @@ const styles = StyleSheet.create({
   suited: {
     alignItems: "center",
   },
+  fill: { minHeight: 0, minWidth: 0, width: "100%" },
   // A tile is the one deliberate exception to the 48x48 target minimum: a suit
   // row shows all nine ranks, which cannot each be 48 wide on a narrow phone
   // without wrapping mid-suit and breaking the row people scan. Height stays

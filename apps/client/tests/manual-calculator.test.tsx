@@ -129,16 +129,19 @@ describe("ManualCalculator", () => {
     expect(screen.getByText(/Tap one hand tile to mark the winning tile/)).toBeOnTheScreen();
   });
 
-  it("persists a red-five profile and exposes red tiles only for that profile", async () => {
+  it("offers red tiles only when the active profile has them", async () => {
     await render(<CalculatorUnderTest />);
 
     expect(screen.queryByRole("button", { name: "red five characters" })).not.toBeOnTheScreen();
-    await fireEvent.press(screen.getByRole("radio", { name: "WRC 2025 · red-five table" }));
+  });
 
-    expect(rulesPreferenceStorage.saveRulesPreference).toHaveBeenCalledWith(
-      "wrc-2025-red-five-table",
-    );
-    expect(screen.getByRole("button", { name: "red five characters" })).toBeOnTheScreen();
+  it("exposes red tiles for a stored red-five profile", async () => {
+    jest
+      .mocked(rulesPreferenceStorage.loadRulesPreference)
+      .mockResolvedValueOnce("wrc-2025-red-five-table");
+    await render(<CalculatorUnderTest />);
+
+    expect(await screen.findByRole("button", { name: "red five characters" })).toBeOnTheScreen();
     expect(screen.getByRole("button", { name: "red five circles" })).toBeOnTheScreen();
     expect(screen.getByRole("button", { name: "red five bamboo" })).toBeOnTheScreen();
   });
@@ -158,6 +161,8 @@ describe("ManualCalculator", () => {
       // Ron method seeded (Bo won by ron off Aki).
       expect(screen.getByRole("radio", { name: "Ron", checked: true })).toBeOnTheScreen();
       // Context fields are editable defaults in edit mode, not locked to the table.
+      // They sit behind the round-context disclosure so a hand needs less scrolling.
+      await fireEvent.press(screen.getByRole("button", { name: "Round and seat details" }));
       expect(screen.getByLabelText("Seat wind")).toBeOnTheScreen();
       expect(screen.getByLabelText("Increase Honba")).toBeOnTheScreen();
     });

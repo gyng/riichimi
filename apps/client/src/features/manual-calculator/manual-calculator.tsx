@@ -53,7 +53,6 @@ import { useScoreHistory } from "../../state/score-history-context";
 import { useRules } from "../../state/rules-context";
 import { useWebMcpTools, webMcpResult } from "../../infrastructure/webmcp";
 import type { RecognitionDraft } from "../recognition/recognition-draft";
-import { RulesProfileControl } from "../rules/rules-profile-control";
 import { ScoreResultPanel } from "./score-result-panel";
 import { TilePicker } from "./tile-picker";
 
@@ -251,6 +250,8 @@ export function ManualCalculator({
   const [editError, setEditError] = useState<SessionEditError | null>(null);
   const [pendingCommand, setPendingCommand] = useState<SessionEditCommand | null>(null);
   const [announceWins, setAnnounceWins] = useAnnouncerPreference();
+  // Round context is set once per table, so it stays folded away during a hand.
+  const [showContextDetail, setShowContextDetail] = useState(false);
   const concealedCapacity = 14 - melds.length * 3;
   const isClosed = melds.every((meld) => meld.kind === "quad" && !meld.open);
 
@@ -732,18 +733,16 @@ export function ManualCalculator({
     <SafeAreaView edges={bodyEdges} style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <View style={styles.topBar}>
-          <Text style={styles.rulesLabel}>{activeRules.label.toUpperCase()}</Text>
-        </View>
-        <Text style={styles.kicker}>MANUAL SCORE LEDGER</Text>
-        <Text accessibilityRole="header" style={styles.title}>
-          Build the hand. Audit every point.
-        </Text>
-        <Text style={styles.intro}>
-          Add the complete winning hand, tap its winning tile, then record the table context. The
-          calculator checks every legal interpretation and returns the highest-value score.
-        </Text>
-        <View style={styles.exampleAction}>
-          <ActionButton label="Try a scored example" onPress={loadExample} variant="paper" />
+          <Text accessibilityRole="header" style={styles.compactTitle}>
+            Score a hand
+          </Text>
+          <Pressable
+            accessibilityLabel="Scoring rules setup"
+            accessibilityRole="link"
+            onPress={() => router.push("/settings")}
+          >
+            <Text style={styles.rulesLabel}>{activeRules.label.toUpperCase()}</Text>
+          </Pressable>
         </View>
 
         {recognitionDraft === undefined ? null : (
@@ -774,8 +773,6 @@ export function ManualCalculator({
             </Text>
           </View>
         )}
-
-        <RulesProfileControl lockedProfileId={activeTable?.rulesProfileId} />
 
         {activeTable === null ? null : (
           <View style={styles.sessionBanner}>
@@ -832,11 +829,14 @@ export function ManualCalculator({
 
         <Section
           description={`${concealedTiles.length} of ${concealedCapacity} concealed tiles · tap a tile to mark the winner`}
-          title="1. Winning hand"
+          title="Hand"
         >
           <View accessibilityLabel="Concealed hand" style={styles.handRow}>
             {concealedTiles.length === 0 ? (
-              <Text style={styles.empty}>Choose “Hand tile” below, then add your tiles.</Text>
+              <View style={styles.emptyHand}>
+                <Text style={styles.empty}>Add tiles below.</Text>
+                <ActionButton label="Try a scored example" onPress={loadExample} variant="paper" />
+              </View>
             ) : (
               concealedTiles.map((tile, index) => (
                 <View key={`${tile}-${index}`} style={styles.tileWithRemove}>
@@ -892,7 +892,7 @@ export function ManualCalculator({
           description={
             pickerTarget === "chi" ? "For chi, choose the lowest tile in the sequence." : undefined
           }
-          title="2. Add tiles and calls"
+          title="Tiles"
         >
           <View accessibilityLabel="Tile destination" style={styles.chipRow}>
             {pickerOptions.map((option) => {
@@ -930,7 +930,7 @@ export function ManualCalculator({
           )}
         </Section>
 
-        <Section title="3. Indicators">
+        <Section title="Dora">
           <Text style={styles.fieldLabel}>DORA INDICATORS</Text>
           <View style={styles.indicatorRow}>
             {doraIndicators.length === 0 ? (
@@ -975,7 +975,7 @@ export function ManualCalculator({
           )}
         </Section>
 
-        <Section title="4. Win context">
+        <Section title="Context">
           <View style={styles.contextGrid}>
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>WIN METHOD</Text>
@@ -986,105 +986,126 @@ export function ManualCalculator({
                 value={method}
               />
             </View>
-            <View style={styles.field}>
-              <Text style={styles.fieldLabel}>SEAT WIND</Text>
-              {contextEditable ? (
-                <SegmentedControl
-                  accessibilityLabel="Seat wind"
-                  onChange={setPlayerWind}
-                  options={windOptions}
-                  value={seatWind}
-                />
-              ) : (
-                <Text style={styles.linkedValue}>{seatWind.toUpperCase()} · FROM TABLE</Text>
-              )}
-            </View>
-            <View style={styles.field}>
-              <Text style={styles.fieldLabel}>ROUND WIND</Text>
-              {contextEditable ? (
-                <SegmentedControl
-                  accessibilityLabel="Round wind"
-                  onChange={(value) => {
-                    setRoundWind(value);
-                    resetResult();
-                  }}
-                  options={windOptions}
-                  value={roundWind}
-                />
-              ) : (
-                <Text style={styles.linkedValue}>{roundWind.toUpperCase()} · FROM TABLE</Text>
-              )}
-            </View>
-            <View style={styles.field}>
-              <Text style={styles.fieldLabel}>RIICHI</Text>
-              <SegmentedControl
-                accessibilityLabel="Riichi declaration"
-                onChange={chooseRiichi}
-                options={riichiOptions}
-                value={riichi}
-              />
-            </View>
-            <View style={styles.field}>
-              <Text style={styles.fieldLabel}>SPECIAL WIN</Text>
-              <SegmentedControl
-                accessibilityLabel="Special win"
-                onChange={(value) => {
-                  setSpecialEvent(value);
-                  resetResult();
-                }}
-                options={currentSpecialOptions}
-                value={specialEvent}
-              />
-            </View>
           </View>
 
-          {riichi === "none" ? null : (
-            <Pressable
-              accessibilityRole="checkbox"
-              aria-checked={ippatsu}
-              accessibilityState={{ checked: ippatsu }}
-              onPress={() => {
-                setIppatsu((value) => !value);
-                resetResult();
-              }}
-              style={styles.checkboxRow}
-            >
-              <View style={[styles.checkbox, ippatsu && styles.checkedBox]}>
-                <Text style={styles.checkmark}>{ippatsu ? "✓" : ""}</Text>
-              </View>
-              <Text style={styles.checkboxLabel}>Ippatsu</Text>
-            </Pressable>
-          )}
-
-          {contextEditable ? (
-            <View style={styles.counterRow}>
-              <CounterControl
-                label="Honba"
-                maximum={20}
-                onChange={(value) => {
-                  setHonba(value);
-                  resetResult();
-                }}
-                value={honba}
-              />
-              <CounterControl
-                label="Riichi sticks"
-                maximum={20}
-                onChange={(value) => {
-                  setRiichiSticks(value);
-                  resetResult();
-                }}
-                value={riichiSticks}
-              />
-            </View>
-          ) : (
-            <Text style={styles.linkedSummary}>
-              {honba} honba · {riichiSticks} riichi sticks inherited from the active table
+          <Pressable
+            accessibilityLabel="Round and seat details"
+            accessibilityRole="button"
+            accessibilityState={{ expanded: showContextDetail }}
+            aria-expanded={showContextDetail}
+            onPress={() => setShowContextDetail((visible) => !visible)}
+            style={styles.disclosure}
+          >
+            <Text style={styles.disclosureLabel}>
+              {`${seatWind.toUpperCase()} seat · ${roundWind.toUpperCase()} round · ${riichi === "none" ? "no riichi" : riichi} · ${honba} honba`}
             </Text>
+            <Text style={styles.disclosureChevron}>{showContextDetail ? "−" : "+"}</Text>
+          </Pressable>
+
+          {!showContextDetail ? null : (
+            <>
+              <View style={styles.contextGrid}>
+                <View style={styles.field}>
+                  <Text style={styles.fieldLabel}>SEAT WIND</Text>
+                  {contextEditable ? (
+                    <SegmentedControl
+                      accessibilityLabel="Seat wind"
+                      onChange={setPlayerWind}
+                      options={windOptions}
+                      value={seatWind}
+                    />
+                  ) : (
+                    <Text style={styles.linkedValue}>{seatWind.toUpperCase()} · FROM TABLE</Text>
+                  )}
+                </View>
+                <View style={styles.field}>
+                  <Text style={styles.fieldLabel}>ROUND WIND</Text>
+                  {contextEditable ? (
+                    <SegmentedControl
+                      accessibilityLabel="Round wind"
+                      onChange={(value) => {
+                        setRoundWind(value);
+                        resetResult();
+                      }}
+                      options={windOptions}
+                      value={roundWind}
+                    />
+                  ) : (
+                    <Text style={styles.linkedValue}>{roundWind.toUpperCase()} · FROM TABLE</Text>
+                  )}
+                </View>
+                <View style={styles.field}>
+                  <Text style={styles.fieldLabel}>RIICHI</Text>
+                  <SegmentedControl
+                    accessibilityLabel="Riichi declaration"
+                    onChange={chooseRiichi}
+                    options={riichiOptions}
+                    value={riichi}
+                  />
+                </View>
+                <View style={styles.field}>
+                  <Text style={styles.fieldLabel}>SPECIAL WIN</Text>
+                  <SegmentedControl
+                    accessibilityLabel="Special win"
+                    onChange={(value) => {
+                      setSpecialEvent(value);
+                      resetResult();
+                    }}
+                    options={currentSpecialOptions}
+                    value={specialEvent}
+                  />
+                </View>
+              </View>
+
+              {riichi === "none" ? null : (
+                <Pressable
+                  accessibilityRole="checkbox"
+                  aria-checked={ippatsu}
+                  accessibilityState={{ checked: ippatsu }}
+                  onPress={() => {
+                    setIppatsu((value) => !value);
+                    resetResult();
+                  }}
+                  style={styles.checkboxRow}
+                >
+                  <View style={[styles.checkbox, ippatsu && styles.checkedBox]}>
+                    <Text style={styles.checkmark}>{ippatsu ? "✓" : ""}</Text>
+                  </View>
+                  <Text style={styles.checkboxLabel}>Ippatsu</Text>
+                </Pressable>
+              )}
+
+              {contextEditable ? (
+                <View style={styles.counterRow}>
+                  <CounterControl
+                    label="Honba"
+                    maximum={20}
+                    onChange={(value) => {
+                      setHonba(value);
+                      resetResult();
+                    }}
+                    value={honba}
+                  />
+                  <CounterControl
+                    label="Riichi sticks"
+                    maximum={20}
+                    onChange={(value) => {
+                      setRiichiSticks(value);
+                      resetResult();
+                    }}
+                    value={riichiSticks}
+                  />
+                </View>
+              ) : (
+                <Text style={styles.linkedSummary}>
+                  {honba} honba · {riichiSticks} riichi sticks inherited from the active table
+                </Text>
+              )}
+              {!isClosed ? (
+                <Text style={styles.note}>Open calls disable riichi, ippatsu, and ura-dora.</Text>
+              ) : null}
+            </>
           )}
-          {!isClosed ? (
-            <Text style={styles.note}>Open calls disable riichi, ippatsu, and ura-dora.</Text>
-          ) : null}
         </Section>
 
         <View style={styles.calculateRow}>
@@ -1197,6 +1218,40 @@ export function ManualCalculator({
 }
 
 const styles = StyleSheet.create({
+  disclosure: {
+    alignItems: "center",
+    borderColor: color.line,
+    borderRadius: 10,
+    borderWidth: 1,
+    flexDirection: "row",
+    gap: space.x3,
+    justifyContent: "space-between",
+    marginTop: space.x3,
+    minHeight: 48,
+    paddingHorizontal: space.x3,
+  },
+  disclosureChevron: {
+    color: color.accent,
+    fontFamily: "monospace",
+    fontSize: 18,
+    fontWeight: "800",
+  },
+  disclosureLabel: {
+    color: color.inkMuted,
+    flex: 1,
+    fontFamily: "monospace",
+    fontSize: 11,
+    fontWeight: "700",
+    letterSpacing: 0.6,
+  },
+  compactTitle: {
+    color: color.ink,
+    fontFamily: "serif",
+    fontSize: 22,
+    fontWeight: "800",
+    letterSpacing: -0.5,
+  },
+  emptyHand: { alignItems: "center", flexDirection: "row", flexWrap: "wrap", gap: space.x3 },
   announceRow: {
     alignItems: "center",
     flexDirection: "row",
@@ -1241,13 +1296,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: space.x4,
     paddingVertical: 10,
   },
-  chipRow: { flexDirection: "row", flexWrap: "wrap", gap: space.x2, marginBottom: space.x5 },
+  chipRow: { flexDirection: "row", flexWrap: "wrap", gap: space.x2, marginBottom: space.x3 },
   chipText: { color: color.inkMuted, fontFamily: "serif", fontSize: 13, fontWeight: "700" },
   content: {
     alignSelf: "center",
     maxWidth: 1000,
-    padding: space.x5,
-    paddingBottom: space.x8,
+    padding: space.x3,
+    paddingBottom: space.x7,
     width: "100%",
   },
   contextGrid: { flexDirection: "row", flexWrap: "wrap", gap: space.x5 },
@@ -1500,25 +1555,25 @@ const styles = StyleSheet.create({
   section: {
     backgroundColor: color.paper,
     borderColor: color.line,
-    borderRadius: 16,
+    borderRadius: 14,
     borderWidth: 1,
-    marginBottom: space.x5,
-    padding: space.x5,
+    marginBottom: space.x3,
+    padding: space.x3,
   },
   sectionDescription: {
     color: color.inkMuted,
     fontFamily: "serif",
-    fontSize: 14,
-    lineHeight: 21,
-    marginBottom: space.x4,
+    fontSize: 12,
+    lineHeight: 17,
+    marginBottom: space.x2,
   },
   sectionTitle: {
     color: color.ink,
     fontFamily: "serif",
-    fontSize: 25,
+    fontSize: 18,
     fontWeight: "800",
-    letterSpacing: -0.4,
-    marginBottom: space.x2,
+    letterSpacing: -0.3,
+    marginBottom: space.x1,
   },
   sessionBanner: {
     backgroundColor: color.jade,

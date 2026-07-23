@@ -47,3 +47,35 @@ Do not split a component solely to satisfy a taxonomy. Split when a concept has 
 - Large-text and screen-reader testing
 - Reduced-motion support
 - Plain-language error recovery
+
+## Density budget
+
+Riichimi is used at the table, mid-hand, one-handed. Reading costs a turn, and
+so does scrolling past explanation to reach a control. Prose that explains what
+a screen is for belongs in documentation, not on a play surface.
+
+Measured at 390 by 844 (the reference phone), a route should stay within about
+two screens of content, and the surfaces used during a hand should put their
+primary control in the first screen:
+
+| Route      | Screens                                        |
+| ---------- | ---------------------------------------------- |
+| Home       | 1.0                                            |
+| Scan       | 1.0                                            |
+| Folio      | 1.0                                            |
+| Setup      | 1.0                                            |
+| Table      | 1.7                                            |
+| Calculator | 1.6 (about 2.0 with a table's winner controls) |
+
+Three rules keep it there:
+
+- **Setup is not play.** Rules, house rules, and language live on Setup. They are
+  chosen once, so keeping them beside the tile picker only costs scrolling.
+- **Rare context folds away.** Seat, round, riichi, honba, and sticks sit behind
+  one disclosure; win method stays out because it changes every hand.
+- **A suit is one row.** The tile picker sizes tiles to the available width so
+  nine ranks fit on a single line. Its label sits above the tiles: beside them it
+  took 86px of width and wrapped every suit onto three lines.
+
+No route may scroll horizontally at that width. Both are cheap to re-measure in
+the browser, and a regression shows up as a screen count rather than an opinion.

@@ -1,4 +1,4 @@
-import { TopAppBar } from "@riichimi/ui";
+import { TopAppBar, TopAppBarAction } from "@riichimi/ui";
 import type { TopAppBarItem } from "@riichimi/ui";
 import { router, usePathname } from "expo-router";
 
@@ -36,6 +36,15 @@ export function AppNavigationBar() {
       onBrandPress={() => {
         router.navigate("/");
       }}
+      trailing={
+        <TopAppBarAction
+          active={pathname === "/settings"}
+          label={messages.nav.setup}
+          onPress={() => {
+            router.navigate("/settings");
+          }}
+        />
+      }
     />
   );
 }

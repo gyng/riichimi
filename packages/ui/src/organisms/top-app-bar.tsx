@@ -80,6 +80,29 @@ export function TopAppBar({
   );
 }
 
+/** A secondary bar destination, set apart from the primary ones. */
+export function TopAppBarAction({
+  active,
+  label,
+  onPress,
+}: {
+  readonly active: boolean;
+  readonly label: string;
+  readonly onPress: () => void;
+}) {
+  return (
+    <Pressable
+      accessibilityLabel={label}
+      accessibilityRole="link"
+      accessibilityState={{ selected: active }}
+      onPress={onPress}
+      style={({ pressed }) => [styles.item, active && styles.itemActive, pressed && styles.pressed]}
+    >
+      <Text style={[styles.itemLabel, active && styles.itemLabelActive]}>{label}</Text>
+    </Pressable>
+  );
+}
+
 const styles = StyleSheet.create({
   bar: {
     alignItems: "center",

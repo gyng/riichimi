@@ -35,6 +35,7 @@ export interface Messages {
     readonly home: string;
     readonly manual: string;
     readonly scan: string;
+    readonly setup: string;
     readonly table: string;
   };
 }
@@ -74,7 +75,14 @@ export const messages: Record<Locale, Messages> = {
       note: "Scoring terms (han, fu, yakuman) stay in their usual form in every language. Translation is still in progress, so some screens remain in English.",
     },
     localeName: "English",
-    nav: { history: "History", home: "home", manual: "Manual", scan: "Scan", table: "Table" },
+    nav: {
+      history: "History",
+      home: "home",
+      manual: "Manual",
+      scan: "Scan",
+      setup: "Setup",
+      table: "Table",
+    },
   },
   ja: {
     home: {
@@ -105,7 +113,14 @@ export const messages: Record<Locale, Messages> = {
       note: "翻・符・役満などの用語は、どの言語でも通常の表記のままにしています。翻訳は作業中のため、一部の画面は英語のままです。",
     },
     localeName: "日本語",
-    nav: { history: "履歴", home: "ホーム", manual: "手入力", scan: "撮影", table: "卓" },
+    nav: {
+      history: "履歴",
+      home: "ホーム",
+      manual: "手入力",
+      scan: "撮影",
+      setup: "設定",
+      table: "卓",
+    },
   },
   "zh-Hans": {
     home: {
@@ -136,7 +151,14 @@ export const messages: Record<Locale, Messages> = {
       note: "番、符、役满等术语在各语言下均保持惯用写法。翻译仍在进行中，部分页面暂为英文。",
     },
     localeName: "中文",
-    nav: { history: "记录", home: "首页", manual: "手动", scan: "扫描", table: "牌桌" },
+    nav: {
+      history: "记录",
+      home: "首页",
+      manual: "手动",
+      scan: "扫描",
+      setup: "设置",
+      table: "牌桌",
+    },
   },
 };
 

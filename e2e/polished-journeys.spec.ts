@@ -207,12 +207,15 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   const faviconResponse = await page.request.get("/favicon.ico");
   expect(faviconResponse.ok()).toBe(true);
 
+  // Rules are setup, so they live on Setup rather than beside the tile picker.
+  await page.getByRole("link", { name: "Setup" }).click();
+  await expect(page).toHaveURL(/\/settings$/);
   await page.getByRole("radio", { name: "WRC 2025 · red-five table" }).click();
   await expect(page.getByRole("radio", { name: "WRC 2025 · red-five table" })).toBeChecked();
   await page.reload();
   await expect(page.getByRole("radio", { name: "WRC 2025 · red-five table" })).toBeChecked();
 
-  await page.getByRole("button", { name: "Enter tiles manually" }).click();
+  await page.getByRole("link", { name: "Manual" }).click();
   await expect(page).toHaveURL(/\/manual$/);
   await expect(page.getByRole("button", { name: "red five characters" })).toBeVisible();
   await page.getByRole("button", { name: "Try a scored example" }).click();
