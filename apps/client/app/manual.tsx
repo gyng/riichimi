@@ -5,6 +5,7 @@ import { useLocalSearchParams } from "expo-router";
 export default function ManualRoute() {
   const parameters = useLocalSearchParams<{
     recognizedDora?: string;
+    recognizedMelds?: string;
     recognizedModel?: string;
     recognizedReviewedCount?: string;
     recognizedTiles?: string;
@@ -13,6 +14,7 @@ export default function ManualRoute() {
   }>();
   const recognitionDraft = parseRecognitionDraft({
     dora: parameters.recognizedDora,
+    melds: parameters.recognizedMelds,
     modelVersion: parameters.recognizedModel,
     reviewedCount: parameters.recognizedReviewedCount,
     tiles: parameters.recognizedTiles,

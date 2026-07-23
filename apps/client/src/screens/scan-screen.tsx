@@ -1,6 +1,7 @@
+import type { TileId } from "@richii/score-core";
 import { ActionButton, color, space } from "@richii/ui";
 import { reviewRecognition } from "@richii/vision";
-import type { RecognitionResult } from "@richii/vision";
+import type { DetectedTile, RecognitionResult } from "@richii/vision";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
@@ -13,6 +14,34 @@ import {
   RecognitionReviewPanel,
   recognitionReviewThreshold,
 } from "../features/recognition/recognition-review-panel";
+import { inferMeld, serializeRecognizedMelds } from "../features/recognition/recognition-draft";
+
+// Group meld-role detections back into their called sets, left-to-right within a
+// group and by group order, using the `meld-<group>-<tile>` ids the recognizer
+// assigns. Returns the proposed tile id for each tile (undefined if unreadable).
+function orderedMeldGroups(detections: readonly DetectedTile[]): (TileId | undefined)[][] {
+  const groups = new Map<number, DetectedTile[]>();
+  for (const detection of detections) {
+    if (detection.role !== "meld") {
+      continue;
+    }
+    const match = /^meld-(\d+)-/.exec(detection.id);
+    if (match?.[1] === undefined) {
+      continue;
+    }
+    const groupIndex = Number(match[1]);
+    const group = groups.get(groupIndex) ?? [];
+    group.push(detection);
+    groups.set(groupIndex, group);
+  }
+  return [...groups.entries()]
+    .toSorted(([left], [right]) => left - right)
+    .map(([, tiles]) =>
+      tiles
+        .toSorted((left, right) => left.bounds.x - right.bounds.x)
+        .map(({ alternatives, tile }) => tile ?? alternatives[0]?.tile),
+    );
+}
 
 type RecognitionState =
   | { readonly kind: "idle" }
@@ -117,16 +146,27 @@ export function ScanScreen() {
     const tiles = hand.map(({ alternatives, tile }) => tile ?? alternatives[0]?.tile);
     const winningIndex = hand.findIndex(({ role }) => role === "winning");
     const doraTile = dora?.tile ?? dora?.alternatives[0]?.tile;
+    const meldGroups = orderedMeldGroups(result.detections);
+    // A called meld occupies one set slot, so a valid hand has 14 - 3 per meld
+    // concealed tiles. Each group must classify into a legal meld.
+    const expectedConcealed = 14 - meldGroups.length * 3;
+    const meldTileGroups = meldGroups.map((group) =>
+      group.filter((tile): tile is TileId => tile !== undefined),
+    );
+    const meldsInferable = meldTileGroups.every(
+      (group, index) => group.length === meldGroups[index]?.length && inferMeld(group) !== null,
+    );
     if (
-      hand.length !== 14 ||
+      hand.length !== expectedConcealed ||
       tiles.some((tile) => tile === undefined) ||
       winningIndex < 0 ||
-      doraTile === undefined
+      doraTile === undefined ||
+      !meldsInferable
     ) {
       setRecognition({
         kind: "failure",
         message:
-          "One or more tiles could not be proposed. Retake the photo or enter them manually.",
+          "One or more tiles or called melds could not be proposed. Retake the photo or enter them manually.",
       });
       return;
     }
@@ -134,6 +174,7 @@ export function ScanScreen() {
       pathname: "/manual",
       params: {
         recognizedDora: doraTile,
+        recognizedMelds: serializeRecognizedMelds(meldTileGroups),
         recognizedModel: result.modelVersion,
         recognizedReviewedCount: String(reviewedCount),
         recognizedTiles: tiles.join(","),

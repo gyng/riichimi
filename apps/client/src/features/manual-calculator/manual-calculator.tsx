@@ -221,7 +221,7 @@ export function ManualCalculator({
   const [concealedTiles, setConcealedTiles] = useState<readonly TileId[]>(
     recognitionDraft?.concealedTiles ?? [],
   );
-  const [melds, setMelds] = useState<readonly DeclaredMeld[]>([]);
+  const [melds, setMelds] = useState<readonly DeclaredMeld[]>(recognitionDraft?.melds ?? []);
   const [winningIndex, setWinningIndex] = useState<number | null>(
     recognitionDraft?.winningIndex ?? null,
   );

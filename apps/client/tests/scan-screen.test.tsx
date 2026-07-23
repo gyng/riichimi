@@ -142,6 +142,7 @@ describe("ScanScreen", () => {
     expect(router.push).toHaveBeenCalledWith({
       params: {
         recognizedDora: "9s",
+        recognizedMelds: "",
         recognizedModel: "guided-crop-v0-test",
         recognizedReviewedCount: "1",
         recognizedTiles: handTiles.join(","),
