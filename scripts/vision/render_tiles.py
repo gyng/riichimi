@@ -1,15 +1,22 @@
 # SPDX-License-Identifier: CC-BY-SA-4.0
-"""Headless Blender generator for synthetic-physical tile-face crops.
+"""Headless Blender generator for synthetic-physical riichi tiles.
 
-Renders standing riichi tiles from the pinned CC0 FluffyStuff glyph artwork as
-physically based 3D objects (ivory body, engraved glyph, glossy coat) under
-randomized camera pose, studio softbox lighting, and surface imperfections,
-then writes labeled face crops to ``<output>/train/<label>/*.png``.
+Tiles are modelled two-tone like real riichi tiles — a bone-white glyph face
+(from the pinned CC0 FluffyStuff artwork) bonded to a warm yellow/amber back and
+sides — as physically based 3D objects under randomized pose, lighting, and
+surface imperfection. There are two modes:
 
-Those crops plug into ``train-tile-classifier.py --real-crops <output>`` exactly
-like the real physical-photo crops, adding realistic 3D lighting, specular
-glare, and geometry that the 2D augmentation in ``train-tile-classifier.py``
-cannot express.
+* ``--mode crops`` (default, phase 1): single glossy tiles at randomized camera
+  pose, depth of field, camera roll, studio softbox lighting, and white-balance
+  drift, written as labeled face crops to ``<output>/train/<label>/*.png``.
+  These plug into ``train-tile-classifier.py --real-crops <output>`` exactly like
+  the real physical-photo crops, adding realistic 3D lighting, specular glare, and
+  geometry the 2D augmentation cannot express.
+* ``--mode hand`` (phase 2): a 14-tile hand plus a winning-gap and one dora
+  indicator, written as ``<output>/hands/hand-###.png`` with a ``.json`` of
+  per-tile label, role, and 2D bounding box. Scaffolding for a future learned
+  localizer (nothing consumes it yet). Hand tiles are matte and lit by a single
+  wide front light so face-on tiles read evenly; see ``render_hands``.
 
 Provenance and gate discipline
 ------------------------------
@@ -23,9 +30,10 @@ Provenance and gate discipline
 
 Determinism
 -----------
-Every sample is driven by ``random.Random(seed, class, sample)`` so a given
-``--seed`` reproduces the corpus bit-for-bit (modulo the renderer's own
-GPU/driver determinism, which the pipeline does not depend on for labels).
+Every sample is seeded from ``--seed`` (crops per (class, sample), hands per
+hand index) so a given seed reproduces the layout and labels; pixels are subject
+to the renderer's own GPU/driver determinism, which the pipeline does not depend
+on for labels.
 
 Run headless (Blender 5.1+, EEVEE):
 
@@ -33,10 +41,6 @@ Run headless (Blender 5.1+, EEVEE):
         --glyphs /path/to/FluffyStuff/Export/Regular \
         --output /path/to/render-crops \
         --samples-per-class 8 --seed 1234
-
-Phase 2 (not yet implemented) will add full-hand layouts with per-tile bounding
-boxes for a future learned localizer; the scene builder here is factored to be
-reused by that path.
 """
 
 from __future__ import annotations
@@ -191,8 +195,8 @@ def make_tile(name: str, body: bpy.types.Material, face: bpy.types.Material) -> 
     margin = 0.72  # glyph occupies this fraction; CLIP leaves an ivory border
     for loop in front.loops:
         co = loop.vert.co
-        u = (co.x / TILE_W + 0.5 - 0.5) / margin + 0.5
-        v = (co.z / TILE_H + 0.5 - 0.5) / margin + 0.5
+        u = (co.x / TILE_W) / margin + 0.5
+        v = (co.z / TILE_H) / margin + 0.5
         loop[uv].uv = (u, v)
     bm.to_mesh(mesh)
     bm.free()
@@ -420,7 +424,14 @@ def render_crops(args: argparse.Namespace) -> None:
 
 
 def draw_hand(rng: random.Random) -> tuple[list[str], str]:
-    """14 hand labels (max four physical copies each) plus one dora indicator."""
+    """14 hand labels (max four physical copies each) plus one dora indicator.
+
+    Caps at four per label but treats a red five (0m) and its normal five (5m)
+    as independent, so the draw is not guaranteed to be a legal hand. That is
+    intentional: this feeds a localizer, which learns tile position and identity,
+    not hand legality — arbitrary but labelled arrangements are fine (and add
+    variety). Do not "fix" this into a legal-hand generator without a reason.
+    """
     remaining = {label: 4 for label in GLYPH_FILES}
     hand: list[str] = []
     while len(hand) < 14:
