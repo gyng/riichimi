@@ -1,10 +1,12 @@
 import type { Wind } from "@richii/score-core";
 import { scoringRulesProfile } from "@richii/rules";
+import { formatSessionSummaryText, summarizeSession } from "@richii/session-core";
 import { ActionButton, color, space } from "@richii/ui";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -34,6 +36,8 @@ export function SessionScreen() {
   const [names, setNames] = useState(["Player 1", "Player 2", "Player 3", "Player 4"]);
   const [tenpai, setTenpai] = useState<readonly number[]>([]);
   const [confirmEnd, setConfirmEnd] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   if (session.loading) {
     return (
@@ -105,11 +109,23 @@ export function SessionScreen() {
 
   const table = session.state.table;
   const tableRules = scoringRulesProfile(table.rulesProfileId);
+  const summary = showSummary ? summarizeSession(session.state) : null;
+  const summaryText = summary === null ? "" : formatSessionSummaryText(summary);
 
   function toggleTenpai(index: number) {
     setTenpai((current) =>
       current.includes(index) ? current.filter((item) => item !== index) : [...current, index],
     );
+  }
+
+  function copySummary() {
+    if (Platform.OS === "web" && typeof navigator !== "undefined" && navigator.clipboard) {
+      void navigator.clipboard.writeText(summaryText).then(() => setCopied(true));
+    }
+  }
+
+  function signedPoints(value: number): string {
+    return value === 0 ? "±0" : `${value > 0 ? "+" : "−"}${points(Math.abs(value))}`;
   }
 
   return (
@@ -251,6 +267,56 @@ export function SessionScreen() {
                 </Text>
               </View>
             ))
+          )}
+        </View>
+
+        <View style={styles.panel}>
+          <View style={styles.historyHeader}>
+            <Text accessibilityRole="header" style={styles.panelTitle}>
+              Game summary
+            </Text>
+            <ActionButton
+              label={showSummary ? "Hide summary" : "Show summary"}
+              onPress={() => {
+                setShowSummary((current) => !current);
+                setCopied(false);
+              }}
+              variant="paper"
+            />
+          </View>
+          {summary === null ? (
+            <Text style={styles.muted}>
+              Final standings, a win and draw tally, and a copyable round log.
+            </Text>
+          ) : (
+            <>
+              {summary.standings.map((entry) => (
+                <View key={entry.playerId} style={styles.standingRow}>
+                  <Text style={styles.standingRank}>{entry.placement}</Text>
+                  <Text style={styles.standingName}>{entry.name}</Text>
+                  <Text style={styles.standingScore}>{points(entry.score)}</Text>
+                  <Text style={styles.standingNet}>{signedPoints(entry.net)}</Text>
+                </View>
+              ))}
+              <Text
+                accessibilityLabel="Shareable game summary"
+                selectable
+                style={styles.summaryText}
+              >
+                {summaryText}
+              </Text>
+              {Platform.OS === "web" ? (
+                <View style={styles.primaryAction}>
+                  <ActionButton
+                    label={copied ? "Copied" : "Copy summary"}
+                    onPress={copySummary}
+                    variant="paper"
+                  />
+                </View>
+              ) : (
+                <Text style={styles.muted}>Select the text above to copy it.</Text>
+              )}
+            </>
           )}
         </View>
 
@@ -450,6 +516,48 @@ const styles = StyleSheet.create({
   safeArea: { backgroundColor: color.canvas, flex: 1 },
   selectedChip: { backgroundColor: color.ink, borderColor: color.ink },
   selectedChipText: { color: color.white },
+  standingName: { color: color.ink, flex: 1, fontFamily: "serif", fontSize: 16, fontWeight: "700" },
+  standingNet: {
+    color: color.inkMuted,
+    fontFamily: "monospace",
+    fontSize: 12,
+    minWidth: 72,
+    textAlign: "right",
+  },
+  standingRank: {
+    color: color.accent,
+    fontFamily: "serif",
+    fontSize: 18,
+    fontWeight: "800",
+    minWidth: 20,
+  },
+  standingRow: {
+    alignItems: "center",
+    borderTopColor: color.line,
+    borderTopWidth: 1,
+    flexDirection: "row",
+    gap: space.x3,
+    paddingVertical: space.x3,
+  },
+  standingScore: {
+    color: color.ink,
+    fontFamily: "serif",
+    fontSize: 18,
+    fontWeight: "800",
+    minWidth: 84,
+    textAlign: "right",
+  },
+  summaryText: {
+    backgroundColor: color.canvas,
+    borderColor: color.line,
+    borderRadius: 8,
+    borderWidth: 1,
+    color: color.ink,
+    fontFamily: "monospace",
+    fontSize: 12,
+    lineHeight: 18,
+    padding: space.x3,
+  },
   tenpaiChip: {
     backgroundColor: color.canvas,
     borderColor: color.line,

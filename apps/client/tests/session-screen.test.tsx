@@ -72,4 +72,22 @@ describe("SessionScreen", () => {
 
     expect(screen.getByText("WRC 2025 · RED-FIVE TABLE · PINNED")).toBeOnTheScreen();
   });
+
+  it("reveals a copyable game summary reflecting the round history", async () => {
+    await render(<SessionUnderTest />);
+    await fireEvent.press(await screen.findByRole("button", { name: "Start East 1" }));
+    await fireEvent.press(screen.getByRole("checkbox", { name: "Player 1" }));
+    await fireEvent.press(screen.getByRole("checkbox", { name: "Player 3" }));
+    await fireEvent.press(screen.getByRole("button", { name: "Record draw & advance" }));
+
+    await fireEvent.press(screen.getByRole("button", { name: "Show summary" }));
+
+    const block = screen.getByLabelText("Shareable game summary");
+    expect(block).toHaveTextContent(/1 round \(0 wins, 1 draw\)/);
+    expect(block).toHaveTextContent(/1\. Player 1 — 26,500 \(\+1,500\)/);
+    expect(block).toHaveTextContent(/Exhaustive draw — 2 tenpai/);
+
+    await fireEvent.press(screen.getByRole("button", { name: "Hide summary" }));
+    expect(screen.queryByLabelText("Shareable game summary")).toBeNull();
+  });
 });

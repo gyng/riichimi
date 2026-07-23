@@ -15,3 +15,5 @@ export type {
   WinCommand,
   WinRecord,
 } from "./domain/session";
+export { formatSessionSummaryText, summarizeSession } from "./domain/summary";
+export type { RoundSummaryLine, SessionSummary, StandingEntry } from "./domain/summary";
