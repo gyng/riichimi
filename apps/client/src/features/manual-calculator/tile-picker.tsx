@@ -1,6 +1,8 @@
 import { canonicalTileIds, redFiveIds } from "@riichimi/score-core";
 import type { TileId } from "@riichimi/score-core";
 import { MahjongTile, color, space } from "@riichimi/ui";
+
+import { useLocale } from "../../state/locale-context";
 import { StyleSheet, Text, View } from "react-native";
 
 const rows = [
@@ -17,11 +19,13 @@ export interface TilePickerProps {
 }
 
 export function TilePicker({ isDisabled, onSelect, showRedFives = false }: TilePickerProps) {
+  const { t } = useLocale();
+
   return (
     <View style={styles.root}>
       {rows.map((row) => (
         <View key={row.label} style={styles.rowSection}>
-          <Text style={styles.label}>{row.label.toUpperCase()}</Text>
+          <Text style={styles.label}>{t(row.label).toUpperCase()}</Text>
           <View style={styles.tiles}>
             {row.tiles.map((tile) => (
               <View key={tile} style={styles.slot}>
@@ -38,7 +42,7 @@ export function TilePicker({ isDisabled, onSelect, showRedFives = false }: TileP
       ))}
       {showRedFives ? (
         <View style={styles.rowSection}>
-          <Text style={styles.label}>RED FIVES</Text>
+          <Text style={styles.label}>{t("Red fives").toUpperCase()}</Text>
           <View style={styles.tiles}>
             {redFiveIds.map((tile) => (
               <View key={tile} style={styles.slot}>

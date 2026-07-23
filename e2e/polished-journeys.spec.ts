@@ -85,7 +85,7 @@ test("dogfoods the polished mobile scoring and table flows through WebMCP", asyn
     .poll(() => page.evaluate(() => window.riichimiWebMcpTest.names()))
     .toContain("riichimi.manual.load_example");
   await executeTool(page, "riichimi.manual.load_example");
-  await expect(page.getByText(/14 of 14 concealed tiles/)).toBeVisible();
+  await expect(page.getByText(/14\/14 ·/)).toBeVisible();
   const scoreResult = await executeTool(page, "riichimi.manual.calculate");
   expect(scoreResult).toMatchObject({ structuredContent: { kind: "success" } });
   const mobileScore = page.getByText("2 han · 20 fu").filter({ visible: true });
@@ -283,7 +283,7 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   await expect(page.getByLabel("Captured hand reference")).toBeVisible();
   await expect(page.getByText("OFFLINE RECOGNITION · REVIEW REQUIRED")).toBeVisible();
   await expect(page.getByText(/2 uncertain reads were confirmed or corrected/)).toBeVisible();
-  await expect(page.getByText(/14 of 14 concealed tiles/)).toBeVisible();
+  await expect(page.getByText(/14\/14 ·/)).toBeVisible();
   await page.screenshot({
     fullPage: true,
     path: "docs/checkpoints/2026-07-23-13-v1-recognized-draft-desktop.png",

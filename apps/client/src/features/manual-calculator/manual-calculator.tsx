@@ -51,6 +51,7 @@ import { useAnnouncerPreference } from "../announcer/use-announcer-preference";
 import { createRoundCommandMetadata, useSession } from "../../state/session-context";
 import { useScoreHistory } from "../../state/score-history-context";
 import { useRules } from "../../state/rules-context";
+import { useLocale } from "../../state/locale-context";
 import { useWebMcpTools, webMcpResult } from "../../infrastructure/webmcp";
 import type { RecognitionDraft } from "../recognition/recognition-draft";
 import { ScoreResultPanel } from "./score-result-panel";
@@ -59,32 +60,37 @@ import { TilePicker } from "./tile-picker";
 type PickerTarget = "hand" | "chi" | "pon" | "open-kan" | "closed-kan" | "dora" | "ura";
 type SpecialEvent = "normal" | "rinshan" | "haitei" | "houtei" | "chankan" | FirstTurnWin;
 
-const methodOptions = [
-  { label: "Tsumo", value: "tsumo" },
-  { label: "Ron", value: "ron" },
-] as const;
+type Translate = (source: string) => string;
 
-const windOptions = [
-  { label: "East", value: "east" },
-  { label: "South", value: "south" },
-  { label: "West", value: "west" },
-  { label: "North", value: "north" },
-] as const;
+const methodOptionsFor = (t: Translate) =>
+  [
+    { label: t("Tsumo"), value: "tsumo" },
+    { label: t("Ron"), value: "ron" },
+  ] as const;
 
-const riichiOptions = [
-  { label: "None", value: "none" },
-  { label: "Riichi", value: "riichi" },
-  { label: "Double", value: "double-riichi" },
-] as const;
+const windOptionsFor = (t: Translate) =>
+  [
+    { label: t("East"), value: "east" },
+    { label: t("South"), value: "south" },
+    { label: t("West"), value: "west" },
+    { label: t("North"), value: "north" },
+  ] as const;
 
-const pickerOptions: readonly { label: string; value: PickerTarget }[] = [
-  { label: "Hand tile", value: "hand" },
-  { label: "Chi", value: "chi" },
-  { label: "Pon", value: "pon" },
-  { label: "Open kan", value: "open-kan" },
-  { label: "Closed kan", value: "closed-kan" },
-  { label: "Dora", value: "dora" },
-  { label: "Ura", value: "ura" },
+const riichiOptionsFor = (t: Translate) =>
+  [
+    { label: t("None"), value: "none" },
+    { label: t("Riichi"), value: "riichi" },
+    { label: t("Double"), value: "double-riichi" },
+  ] as const;
+
+const pickerOptionsFor = (t: Translate): readonly { label: string; value: PickerTarget }[] => [
+  { label: t("Hand tile"), value: "hand" },
+  { label: t("Chi"), value: "chi" },
+  { label: t("Pon"), value: "pon" },
+  { label: t("Open kan"), value: "open-kan" },
+  { label: t("Closed kan"), value: "closed-kan" },
+  { label: t("Dora"), value: "dora" },
+  { label: t("Ura"), value: "ura" },
 ];
 
 const seatWinds: readonly Wind[] = ["east", "south", "west", "north"];
@@ -132,25 +138,26 @@ function meldTiles(meld: DeclaredMeld): readonly TileId[] {
 function specialOptions(
   method: WinMethod,
   seatWind: Wind,
+  t: Translate,
 ): readonly { label: string; value: SpecialEvent }[] {
   if (method === "tsumo") {
     return [
-      { label: "Normal", value: "normal" },
-      { label: "After kan", value: "rinshan" },
-      { label: "Last draw", value: "haitei" },
+      { label: t("Normal"), value: "normal" },
+      { label: t("After kan"), value: "rinshan" },
+      { label: t("Last draw"), value: "haitei" },
       seatWind === "east"
-        ? { label: "Tenhou", value: "tenhou" }
-        : { label: "Chiihou", value: "chiihou" },
+        ? { label: t("Tenhou"), value: "tenhou" }
+        : { label: t("Chiihou"), value: "chiihou" },
     ] as const;
   }
 
   const options: { label: string; value: SpecialEvent }[] = [
-    { label: "Normal", value: "normal" },
-    { label: "Robbed kan", value: "chankan" },
-    { label: "Last discard", value: "houtei" },
+    { label: t("Normal"), value: "normal" },
+    { label: t("Robbed kan"), value: "chankan" },
+    { label: t("Last discard"), value: "houtei" },
   ];
   if (seatWind !== "east") {
-    options.push({ label: "Renhou", value: "renhou" });
+    options.push({ label: t("Renhou"), value: "renhou" });
   }
   return options;
 }
@@ -220,6 +227,11 @@ export function ManualCalculator({
   readonly recognitionDraft?: RecognitionDraft | undefined;
   readonly referencePhoto?: string | undefined;
 }) {
+  const { t } = useLocale();
+  const methodOptions = methodOptionsFor(t);
+  const windOptions = windOptionsFor(t);
+  const riichiOptions = riichiOptionsFor(t);
+  const pickerOptions = pickerOptionsFor(t);
   const session = useSession();
   const scoreHistory = useScoreHistory();
   const rulesPreference = useRules();
@@ -268,6 +280,7 @@ export function ManualCalculator({
   const currentSpecialOptions: readonly { label: string; value: SpecialEvent }[] = specialOptions(
     method,
     seatWind,
+    t,
   );
   const activeTable = session.state?.table ?? null;
   const searchParams = useLocalSearchParams<{ editRound?: string }>();
@@ -751,7 +764,7 @@ export function ManualCalculator({
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <View style={styles.topBar}>
           <Text accessibilityRole="header" style={styles.compactTitle}>
-            Score a hand
+            {t("Score a hand")}
           </Text>
           <Pressable
             accessibilityLabel="Scoring rules setup"
@@ -765,7 +778,7 @@ export function ManualCalculator({
         {recognitionDraft === undefined ? null : (
           <View style={styles.recognitionBanner}>
             <Text style={styles.recognitionBannerKicker}>
-              OFFLINE RECOGNITION · REVIEW REQUIRED
+              {t("OFFLINE RECOGNITION \u00b7 REVIEW REQUIRED")}
             </Text>
             <Text style={styles.recognitionBannerTitle}>
               {recognitionDraft.reviewedCount === 0
@@ -778,7 +791,9 @@ export function ManualCalculator({
 
         {referencePhoto === undefined ? null : (
           <View style={styles.referencePanel}>
-            <Text style={styles.sessionBannerKicker}>CAPTURE REFERENCE · KEPT ON THIS DEVICE</Text>
+            <Text style={styles.sessionBannerKicker}>
+              {t("CAPTURE REFERENCE \u00b7 KEPT ON THIS DEVICE")}
+            </Text>
             <Image
               accessibilityLabel="Captured hand reference"
               resizeMode="contain"
@@ -786,7 +801,7 @@ export function ManualCalculator({
               style={styles.referenceImage}
             />
             <Text style={styles.referenceNote}>
-              Keep this image open while correcting the tiles below. It is not uploaded.
+              {t("Keep this image open while correcting the tiles below. It is not uploaded.")}
             </Text>
           </View>
         )}
@@ -804,7 +819,7 @@ export function ManualCalculator({
               </Text>
             </View>
             <View style={styles.sessionChoice}>
-              <Text style={styles.fieldLabel}>WINNER</Text>
+              <Text style={styles.fieldLabel}>{t("WINNER")}</Text>
               <SegmentedControl
                 accessibilityLabel="Winning player"
                 onChange={(value) => {
@@ -829,7 +844,7 @@ export function ManualCalculator({
             </View>
             {method === "ron" ? (
               <View style={styles.sessionChoice}>
-                <Text style={styles.fieldLabel}>DISCARDER</Text>
+                <Text style={styles.fieldLabel}>{t("DISCARDER")}</Text>
                 <SegmentedControl
                   accessibilityLabel="Discarding player"
                   onChange={(value) => {
@@ -845,14 +860,18 @@ export function ManualCalculator({
         )}
 
         <Section
-          description={`${concealedTiles.length} of ${concealedCapacity} concealed tiles · tap a tile to mark the winner`}
-          title="Hand"
+          description={`${concealedTiles.length}/${concealedCapacity} · ${t("tap a tile to mark the winner")}`}
+          title={t("Hand")}
         >
           <View accessibilityLabel="Concealed hand" style={styles.handRow}>
             {concealedTiles.length === 0 ? (
               <View style={styles.emptyHand}>
-                <Text style={styles.empty}>Add tiles below.</Text>
-                <ActionButton label="Try a scored example" onPress={loadExample} variant="paper" />
+                <Text style={styles.empty}>{t("Add tiles below.")}</Text>
+                <ActionButton
+                  label={t("Try a scored example")}
+                  onPress={loadExample}
+                  variant="paper"
+                />
               </View>
             ) : (
               concealedTiles.map((tile, index) => (
@@ -891,7 +910,7 @@ export function ManualCalculator({
                       accessibilityRole="button"
                       onPress={() => removeMeld(index)}
                     >
-                      <Text style={styles.removeLink}>Remove</Text>
+                      <Text style={styles.removeLink}>{t("Remove")}</Text>
                     </Pressable>
                   </View>
                   <View style={styles.meldTiles}>
@@ -903,13 +922,59 @@ export function ManualCalculator({
               ))}
             </View>
           )}
+          <Text style={styles.fieldLabel}>{t("DORA INDICATORS")}</Text>
+          <View style={styles.indicatorRow}>
+            {doraIndicators.length === 0 ? (
+              <Text style={styles.empty}>{t("Add at least one dora indicator.")}</Text>
+            ) : null}
+            {doraIndicators.map((tile, index) => (
+              <Pressable
+                accessibilityLabel={`Remove dora indicator ${tileAccessibleName(tile)}`}
+                accessibilityRole="button"
+                key={`${tile}-${index}`}
+                onPress={() => {
+                  setDoraIndicators((tiles) => tiles.filter((_, tileIndex) => tileIndex !== index));
+                  resetResult();
+                }}
+              >
+                <MahjongTile tile={tile} />
+              </Pressable>
+            ))}
+          </View>
+          {riichi === "none" ? null : (
+            <>
+              <Text style={styles.fieldLabel}>{t("URA-DORA INDICATORS")}</Text>
+              <View style={styles.indicatorRow}>
+                {uraDoraIndicators.length === 0 ? (
+                  <Text style={styles.empty}>{t("Optional")}</Text>
+                ) : null}
+                {uraDoraIndicators.map((tile, index) => (
+                  <Pressable
+                    accessibilityLabel={`Remove ura-dora indicator ${tileAccessibleName(tile)}`}
+                    accessibilityRole="button"
+                    key={`${tile}-${index}`}
+                    onPress={() => {
+                      setUraDoraIndicators((tiles) =>
+                        tiles.filter((_, tileIndex) => tileIndex !== index),
+                      );
+                      resetResult();
+                    }}
+                  >
+                    <MahjongTile tile={tile} />
+                  </Pressable>
+                ))}
+              </View>
+            </>
+          )}
         </Section>
 
         <Section
           description={
-            pickerTarget === "chi" ? "For chi, choose the lowest tile in the sequence." : undefined
+            pickerTarget === "chi"
+              ? t("For chi, choose the lowest tile in the sequence.")
+              : undefined
           }
-          title="Tiles"
+          title={t("Tiles")}
         >
           <View accessibilityLabel="Tile destination" style={styles.chipRow}>
             {pickerOptions.map((option) => {
@@ -942,60 +1007,15 @@ export function ManualCalculator({
           />
           {inventory.issues.length === 0 ? null : (
             <Text accessibilityLiveRegion="polite" style={styles.warning}>
-              A tile cannot appear more than four times.
+              {t("A tile cannot appear more than four times.")}
             </Text>
           )}
         </Section>
 
-        <Section title="Dora">
-          <Text style={styles.fieldLabel}>DORA INDICATORS</Text>
-          <View style={styles.indicatorRow}>
-            {doraIndicators.length === 0 ? (
-              <Text style={styles.empty}>Add at least one dora indicator.</Text>
-            ) : null}
-            {doraIndicators.map((tile, index) => (
-              <Pressable
-                accessibilityLabel={`Remove dora indicator ${tileAccessibleName(tile)}`}
-                accessibilityRole="button"
-                key={`${tile}-${index}`}
-                onPress={() => {
-                  setDoraIndicators((tiles) => tiles.filter((_, tileIndex) => tileIndex !== index));
-                  resetResult();
-                }}
-              >
-                <MahjongTile tile={tile} />
-              </Pressable>
-            ))}
-          </View>
-          {riichi === "none" ? null : (
-            <>
-              <Text style={styles.fieldLabel}>URA-DORA INDICATORS</Text>
-              <View style={styles.indicatorRow}>
-                {uraDoraIndicators.length === 0 ? <Text style={styles.empty}>Optional</Text> : null}
-                {uraDoraIndicators.map((tile, index) => (
-                  <Pressable
-                    accessibilityLabel={`Remove ura-dora indicator ${tileAccessibleName(tile)}`}
-                    accessibilityRole="button"
-                    key={`${tile}-${index}`}
-                    onPress={() => {
-                      setUraDoraIndicators((tiles) =>
-                        tiles.filter((_, tileIndex) => tileIndex !== index),
-                      );
-                      resetResult();
-                    }}
-                  >
-                    <MahjongTile tile={tile} />
-                  </Pressable>
-                ))}
-              </View>
-            </>
-          )}
-        </Section>
-
-        <Section title="Context">
+        <Section title={t("Context")}>
           <View style={styles.contextGrid}>
             <View style={styles.field}>
-              <Text style={styles.fieldLabel}>WIN METHOD</Text>
+              <Text style={styles.fieldLabel}>{t("WIN METHOD")}</Text>
               <SegmentedControl
                 accessibilityLabel="Win method"
                 onChange={setWinMethod}
@@ -1023,7 +1043,7 @@ export function ManualCalculator({
             <>
               <View style={styles.contextGrid}>
                 <View style={styles.field}>
-                  <Text style={styles.fieldLabel}>SEAT WIND</Text>
+                  <Text style={styles.fieldLabel}>{t("SEAT WIND")}</Text>
                   {contextEditable ? (
                     <SegmentedControl
                       accessibilityLabel="Seat wind"
@@ -1036,7 +1056,7 @@ export function ManualCalculator({
                   )}
                 </View>
                 <View style={styles.field}>
-                  <Text style={styles.fieldLabel}>ROUND WIND</Text>
+                  <Text style={styles.fieldLabel}>{t("ROUND WIND")}</Text>
                   {contextEditable ? (
                     <SegmentedControl
                       accessibilityLabel="Round wind"
@@ -1052,7 +1072,7 @@ export function ManualCalculator({
                   )}
                 </View>
                 <View style={styles.field}>
-                  <Text style={styles.fieldLabel}>RIICHI</Text>
+                  <Text style={styles.fieldLabel}>{t("RIICHI")}</Text>
                   <SegmentedControl
                     accessibilityLabel="Riichi declaration"
                     onChange={chooseRiichi}
@@ -1061,7 +1081,7 @@ export function ManualCalculator({
                   />
                 </View>
                 <View style={styles.field}>
-                  <Text style={styles.fieldLabel}>SPECIAL WIN</Text>
+                  <Text style={styles.fieldLabel}>{t("SPECIAL WIN")}</Text>
                   <SegmentedControl
                     accessibilityLabel="Special win"
                     onChange={(value) => {
@@ -1088,14 +1108,14 @@ export function ManualCalculator({
                   <View style={[styles.checkbox, ippatsu && styles.checkedBox]}>
                     <Text style={styles.checkmark}>{ippatsu ? "✓" : ""}</Text>
                   </View>
-                  <Text style={styles.checkboxLabel}>Ippatsu</Text>
+                  <Text style={styles.checkboxLabel}>{t("Ippatsu")}</Text>
                 </Pressable>
               )}
 
               {contextEditable ? (
                 <View style={styles.counterRow}>
                   <CounterControl
-                    label="Honba"
+                    label={t("Honba")}
                     maximum={20}
                     onChange={(value) => {
                       setHonba(value);
@@ -1104,7 +1124,7 @@ export function ManualCalculator({
                     value={honba}
                   />
                   <CounterControl
-                    label="Riichi sticks"
+                    label={t("Riichi sticks")}
                     maximum={20}
                     onChange={(value) => {
                       setRiichiSticks(value);
@@ -1119,14 +1139,20 @@ export function ManualCalculator({
                 </Text>
               )}
               {!isClosed ? (
-                <Text style={styles.note}>Open calls disable riichi, ippatsu, and ura-dora.</Text>
+                <Text style={styles.note}>
+                  {t("Open calls disable riichi, ippatsu, and ura-dora.")}
+                </Text>
               ) : null}
             </>
           )}
         </Section>
 
         <View style={styles.calculateRow}>
-          <ActionButton label="Calculate maximum score" onPress={calculate} variant="vermilion" />
+          <ActionButton
+            label={t("Calculate maximum score")}
+            onPress={calculate}
+            variant="vermilion"
+          />
           <Text style={styles.calculateNote}>
             {activeRules.redFives ? "RED FIVES ENABLED" : "NO RED FIVES"} · KIRIAGE MANGAN
           </Text>
@@ -1148,18 +1174,18 @@ export function ManualCalculator({
             <View style={[styles.checkbox, announceWins && styles.checkedBox]}>
               <Text style={styles.checkmark}>{announceWins ? "✓" : ""}</Text>
             </View>
-            <Text style={styles.checkboxLabel}>Announce the result out loud</Text>
+            <Text style={styles.checkboxLabel}>{t("Announce the result out loud")}</Text>
           </Pressable>
         ) : null}
         {result === null ? null : <ScoreResultPanel result={result} />}
         {activeTable === null && result?.kind === "success" ? (
           <View style={styles.savedNotice}>
             <View style={styles.savedCopy}>
-              <Text style={styles.savedKicker}>SAVED LOCALLY</Text>
-              <Text style={styles.savedTitle}>This audit is in your score folio.</Text>
+              <Text style={styles.savedKicker}>{t("SAVED LOCALLY")}</Text>
+              <Text style={styles.savedTitle}>{t("This audit is in your score folio.")}</Text>
             </View>
             <ActionButton
-              label="View recent scores"
+              label={t("View recent scores")}
               onPress={() => router.push("/history")}
               variant="paper"
             />
@@ -1167,9 +1193,9 @@ export function ManualCalculator({
         ) : null}
         {activeTable !== null && !editMode && result?.kind === "success" ? (
           <View style={styles.recordResult}>
-            <Text style={styles.recordTitle}>Score checked. Ready to update the table.</Text>
+            <Text style={styles.recordTitle}>{t("Score checked. Ready to update the table.")}</Text>
             <ActionButton
-              label="Record result & advance round"
+              label={t("Record result & advance round")}
               onPress={recordScoredTableResult}
               variant="vermilion"
             />
@@ -1178,9 +1204,13 @@ export function ManualCalculator({
         {editMode && result?.kind === "success" && editReview === null ? (
           <View style={styles.recordResult}>
             <Text style={styles.recordTitle}>
-              Re-scored this hand. Review the change before it replaces the recorded round.
+              {t("Re-scored this hand. Review the change before it replaces the recorded round.")}
             </Text>
-            <ActionButton label="Save correction" onPress={previewCorrection} variant="vermilion" />
+            <ActionButton
+              label={t("Save correction")}
+              onPress={previewCorrection}
+              variant="vermilion"
+            />
           </View>
         ) : null}
         {editMode && editError !== null && editReview === null ? (
@@ -1190,8 +1220,8 @@ export function ManualCalculator({
         ) : null}
         {editMode && editReview !== null ? (
           <View accessibilityLiveRegion="polite" style={styles.editConfirm}>
-            <Text style={styles.editConfirmTitle}>Confirm this correction</Text>
-            <Text style={styles.editConfirmSubhead}>Final score changes</Text>
+            <Text style={styles.editConfirmTitle}>{t("Confirm this correction")}</Text>
+            <Text style={styles.editConfirmSubhead}>{t("Final score changes")}</Text>
             {editReview.scoreChanges.map((change, index) => (
               <Text key={index} style={styles.editConfirmScoreLine}>
                 {editPlayerName(index)}: {signedPoints(change)}
@@ -1205,7 +1235,7 @@ export function ManualCalculator({
               );
               return laterChanges.length > 0 ? (
                 <>
-                  <Text style={styles.editConfirmSubhead}>Later rounds that shift</Text>
+                  <Text style={styles.editConfirmSubhead}>{t("Later rounds that shift")}</Text>
                   {laterChanges.map((change) => (
                     <Text key={change.roundId} style={styles.editConfirmNote}>
                       {describeChangedRound(change)}
@@ -1221,11 +1251,15 @@ export function ManualCalculator({
             ))}
             <View style={styles.editConfirmActions}>
               <ActionButton
-                label="Update this round"
+                label={t("Update this round")}
                 onPress={confirmCorrection}
                 variant="vermilion"
               />
-              <ActionButton label="Keep as recorded" onPress={cancelCorrection} variant="paper" />
+              <ActionButton
+                label={t("Keep as recorded")}
+                onPress={cancelCorrection}
+                variant="paper"
+              />
             </View>
           </View>
         ) : null}

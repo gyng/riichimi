@@ -12,6 +12,16 @@ describe("locale resolution", () => {
     expect(resolveLocale("zh-CN")).toBe("zh-Hans");
   });
 
+  it("sends readers of traditional characters to the traditional set", () => {
+    // Script wins when stated; otherwise the region decides.
+    expect(resolveLocale("zh-Hant")).toBe("zh-Hant");
+    expect(resolveLocale("zh-Hant-TW")).toBe("zh-Hant");
+    expect(resolveLocale("zh-TW")).toBe("zh-Hant");
+    expect(resolveLocale("zh-HK")).toBe("zh-Hant");
+    expect(resolveLocale("zh-MO")).toBe("zh-Hant");
+    expect(resolveLocale("zh-SG")).toBe("zh-Hans");
+  });
+
   it("falls back to English for an unknown or absent locale", () => {
     expect(resolveLocale(null)).toBe("en");
     expect(resolveLocale("de-DE")).toBe("en");

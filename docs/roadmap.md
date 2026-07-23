@@ -53,10 +53,10 @@ Status vocabulary: **Shipped** · **In progress** · **Planned** · **Blocked**.
 
 ### 1. Translate the remaining screens
 
-The boundary, the locales, and the language control all ship; what remains is
-content. The app shell and the home screen are translated, and the calculator,
-scan, table, and folio screens are still English — the language control says so
-rather than implying complete coverage.
+The boundary, four locales, and the language control ship, and the app shell,
+home, setup, scan, and calculator are translated. The table and folio screens
+are still English — the language control says so rather than implying complete
+coverage.
 
 Two things follow the last screen being translated: device-language detection
 should replace the current explicit-choice-only default (until then a Japanese

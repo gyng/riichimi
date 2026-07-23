@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
+import { translate } from "../i18n/catalog";
 import { messages } from "../i18n/messages";
 import type { Locale, Messages } from "../i18n/messages";
 import {
@@ -12,12 +13,15 @@ interface LocaleContextValue {
   readonly locale: Locale;
   readonly messages: Messages;
   readonly selectLocale: (locale: Locale) => void;
+  /** Translate an English source string for the active locale. */
+  readonly t: (source: string) => string;
 }
 
 const LocaleContext = createContext<LocaleContextValue>({
   locale: "en",
   messages: messages.en,
   selectLocale: () => {},
+  t: (source) => source,
 });
 
 export function LocaleProvider({ children }: { readonly children: ReactNode }) {
@@ -49,7 +53,14 @@ export function LocaleProvider({ children }: { readonly children: ReactNode }) {
   }
 
   return (
-    <LocaleContext.Provider value={{ locale, messages: messages[locale], selectLocale }}>
+    <LocaleContext.Provider
+      value={{
+        locale,
+        messages: messages[locale],
+        selectLocale,
+        t: (source) => translate(locale, source),
+      }}
+    >
       {children}
     </LocaleContext.Provider>
   );

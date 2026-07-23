@@ -14,6 +14,7 @@ import { bodyEdges } from "../components/screen-insets";
 
 import sampleHandImage from "../../assets/samples/guided-sample-hand.png";
 import { tileRecognition } from "../infrastructure/tile-recognition";
+import { useLocale } from "../state/locale-context";
 import {
   RecognitionReviewPanel,
   recognitionReviewThreshold,
@@ -47,9 +48,11 @@ function orderedMeldGroups(detections: readonly DetectedTile[]): (TileId | undef
     );
 }
 
-const layoutOptions: readonly { label: string; value: CaptureLayout }[] = [
-  { label: "Natural", value: "natural" },
-  { label: "Guided", value: "guided" },
+const layoutOptionsFor = (
+  t: (source: string) => string,
+): readonly { label: string; value: CaptureLayout }[] => [
+  { label: t("Natural"), value: "natural" },
+  { label: t("Guided"), value: "guided" },
 ];
 
 // A bundled example hand so the whole scan → recognize → review flow can be
@@ -73,6 +76,8 @@ type RecognitionState =
     };
 
 export function ScanScreen() {
+  const { t } = useLocale();
+  const layoutOptions = layoutOptionsFor(t);
   const [permission, requestPermission] = useCameraPermissions();
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [photoSource, setPhotoSource] = useState<"camera" | "library">("camera");
@@ -272,18 +277,18 @@ export function ScanScreen() {
             variant="vermilion"
           />
           <ActionButton
-            label="Enter tiles manually"
+            label={t("Enter tiles manually")}
             onPress={() => router.replace("/manual")}
             variant="paper"
           />
           <ActionButton
-            label="Choose an existing photo"
+            label={t("Choose an existing photo")}
             onPress={() => {
               void choosePhoto();
             }}
             variant="paper"
           />
-          <ActionButton label="Try a sample hand" onPress={loadSampleHand} variant="paper" />
+          <ActionButton label={t("Try a sample hand")} onPress={loadSampleHand} variant="paper" />
         </View>
         <Text style={styles.permissionSampleNote}>
           No camera on this device? “Try a sample hand” runs the offline recognizer on a bundled
@@ -317,7 +322,7 @@ export function ScanScreen() {
             </Text>
             {recognition.kind === "complete" ? null : (
               <View style={styles.layoutChoice}>
-                <Text style={styles.layoutLabel}>CAPTURE LAYOUT</Text>
+                <Text style={styles.layoutLabel}>{t("CAPTURE LAYOUT")}</Text>
                 <SegmentedControl
                   accessibilityLabel="Capture layout"
                   onChange={(value) => {
@@ -350,12 +355,14 @@ export function ScanScreen() {
             ) : null}
             {recognition.kind === "complete" ? (
               <View accessibilityLiveRegion="polite" style={styles.recognitionResult}>
-                <Text style={styles.recognitionKicker}>OFFLINE BETA · DRAFT ONLY</Text>
+                <Text style={styles.recognitionKicker}>{t("OFFLINE BETA \u00b7 DRAFT ONLY")}</Text>
                 <Text style={styles.recognitionTitle}>
                   {`15 tiles read · ${currentRecognitionReview?.reviewDetectionIds.length ?? 0} need review`}
                 </Text>
                 <Text style={styles.recognitionCopy}>
-                  Compare every proposed tile with the reference before calculating the score.
+                  {t(
+                    "Compare every proposed tile with the reference before calculating the score.",
+                  )}
                 </Text>
               </View>
             ) : null}
@@ -398,7 +405,7 @@ export function ScanScreen() {
               ) : (
                 <ActionButton
                   disabled={recognition.kind === "running"}
-                  label="Read 14 tiles offline"
+                  label={t("Read 14 tiles offline")}
                   onPress={() => {
                     void recognizePhoto();
                   }}
@@ -406,7 +413,7 @@ export function ScanScreen() {
                 />
               )}
               <ActionButton
-                label="Enter tiles from this photo"
+                label={t("Enter tiles from this photo")}
                 onPress={() =>
                   router.push({ pathname: "/manual", params: { referencePhoto: photoUri } })
                 }
@@ -434,18 +441,18 @@ export function ScanScreen() {
           <View accessibilityLabel="Tile alignment guide" style={styles.guide}>
             {captureLayout === "natural" ? (
               <View style={[styles.guideBand, styles.guideBandWide]}>
-                <Text style={styles.guideBandLabel}>HAND · MELDS · DORA LAST</Text>
+                <Text style={styles.guideBandLabel}>{t("HAND \u00b7 MELDS \u00b7 DORA LAST")}</Text>
               </View>
             ) : (
               <>
                 <View style={[styles.guideBand, styles.guideBandWide]}>
-                  <Text style={styles.guideBandLabel}>HAND</Text>
+                  <Text style={styles.guideBandLabel}>{t("HAND")}</Text>
                 </View>
                 <View style={[styles.guideBand, styles.guideBandWide]}>
-                  <Text style={styles.guideBandLabel}>MELDS · IF ANY</Text>
+                  <Text style={styles.guideBandLabel}>{t("MELDS \u00b7 IF ANY")}</Text>
                 </View>
                 <View style={[styles.guideBand, styles.guideBandNarrow]}>
-                  <Text style={styles.guideBandLabel}>DORA</Text>
+                  <Text style={styles.guideBandLabel}>{t("DORA")}</Text>
                 </View>
               </>
             )}
@@ -458,20 +465,24 @@ export function ScanScreen() {
             </Text>
             <View style={styles.captureActions}>
               <ActionButton
-                label="Capture hand"
+                label={t("Capture hand")}
                 onPress={() => {
                   void capturePhoto();
                 }}
                 variant="vermilion"
               />
               <ActionButton
-                label="Choose photo"
+                label={t("Choose photo")}
                 onPress={() => {
                   void choosePhoto();
                 }}
                 variant="paper"
               />
-              <ActionButton label="Try a sample hand" onPress={loadSampleHand} variant="paper" />
+              <ActionButton
+                label={t("Try a sample hand")}
+                onPress={loadSampleHand}
+                variant="paper"
+              />
             </View>
             {importError === null ? null : (
               <Text accessibilityLiveRegion="polite" style={styles.cameraError}>

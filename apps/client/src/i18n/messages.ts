@@ -1,4 +1,4 @@
-export const supportedLocales = ["en", "ja", "zh-Hans"] as const;
+export const supportedLocales = ["en", "ja", "zh-Hans", "zh-Hant"] as const;
 
 export type Locale = (typeof supportedLocales)[number];
 
@@ -150,13 +150,52 @@ export const messages: Record<Locale, Messages> = {
       label: "界面语言",
       note: "番、符、役满等术语在各语言下均保持惯用写法。翻译仍在进行中，部分页面暂为英文。",
     },
-    localeName: "中文",
+    localeName: "简体中文",
     nav: {
       history: "记录",
       home: "首页",
       manual: "手动",
       scan: "扫描",
       setup: "设置",
+      table: "牌桌",
+    },
+  },
+
+  "zh-Hant": {
+    home: {
+      headline: "計算和牌點數",
+      historyBody: "點數依據保存在本機，牌桌上有疑問時隨時可查。",
+      historyKicker: "點數存檔",
+      historyRevisit: "查看最近的結果",
+      historySaved: "已保存",
+      historyStart: "保存下一次結果",
+      intro:
+        "拍攝牌面或手動輸入。Riichimi 只詢問牌桌上無法看到的資訊，並列出每一點的來源——全部在本機完成。",
+      kicker: "和牌點數計算器",
+      manualAction: "手動輸入牌",
+      manualBody: "沒有相機也能得到同樣可核對的結果。重要的判斷不會被自動化隱藏。",
+      manualIndex: "02 / 手動",
+      manualTitle: "完全自己掌控",
+      scanAction: "拍攝和牌",
+      scanBody: "對準取景框拍攝，辨識牌張、副露、和牌張與寶牌指示牌。",
+      scanIndex: "01 / 推薦",
+      scanTitle: "讓牌自己說話",
+      sessionKicker: "03 / 牌桌對局",
+      sessionResume: "回到進行中的牌桌",
+      sessionStart: "開始四人牌桌",
+    },
+    language: {
+      kicker: "介面語言 · 本機",
+      label: "介面語言",
+      note: "番、符、役滿等術語在各語言下均保持慣用寫法。翻譯仍在進行中，部分頁面暫為英文。",
+    },
+    localeName: "繁體中文",
+    nav: {
+      history: "紀錄",
+      home: "首頁",
+      manual: "手動",
+      scan: "掃描",
+      setup: "設定",
       table: "牌桌",
     },
   },
@@ -174,10 +213,15 @@ export function resolveLocale(candidate: string | null): Locale {
   if (isLocale(candidate)) {
     return candidate;
   }
-  // "ja-JP" -> "ja"; "zh-Hans-CN" / "zh-CN" -> "zh-Hans".
-  const language = candidate.split("-")[0]?.toLowerCase() ?? "";
+  // "ja-JP" -> "ja". For Chinese, script and region decide which set of
+  // characters a reader expects: Taiwan, Hong Kong, and Macau read traditional.
+  const [language = "", ...rest] = candidate.toLowerCase().split("-");
   if (language === "ja") {
     return "ja";
   }
-  return language === "zh" ? "zh-Hans" : "en";
+  if (language !== "zh") {
+    return "en";
+  }
+  const traditional = rest.some((part) => ["hant", "tw", "hk", "mo"].includes(part));
+  return traditional ? "zh-Hant" : "zh-Hans";
 }
