@@ -7,6 +7,8 @@ export {
   undoLastSessionChange,
 } from "./application/session";
 export type { ReplayFailure, ReplayResult } from "./application/session";
+export { reconstructSessionFromSnapshots } from "./application/migrate-session";
+export type { SessionReconstruction } from "./application/migrate-session";
 export type {
   DrawCommand,
   DrawEvent,

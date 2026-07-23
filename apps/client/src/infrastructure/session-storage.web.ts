@@ -1,18 +1,32 @@
 import type { SessionState } from "@richii/session-core";
 
-import { parseStoredSession } from "./stored-session";
+import { parseStoredSession, serializeStoredSession } from "./stored-session";
 
-const storageKey = "richii.session.v1";
+const storageKeyV2 = "richii.session.v2";
+const storageKeyV1 = "richii.session.v1";
 
 export async function loadStoredSession(): Promise<SessionState | null> {
-  const value = globalThis.localStorage?.getItem(storageKey) ?? null;
-  return value === null ? null : parseStoredSession(value);
+  const stored = globalThis.localStorage;
+  const v2 = stored?.getItem(storageKeyV2) ?? null;
+  if (v2 !== null) {
+    return parseStoredSession(v2);
+  }
+  const v1 = stored?.getItem(storageKeyV1) ?? null;
+  return v1 === null ? null : parseStoredSession(v1);
 }
 
 export async function saveStoredSession(state: SessionState | null): Promise<void> {
-  if (state === null) {
-    globalThis.localStorage?.removeItem(storageKey);
+  const stored = globalThis.localStorage;
+  if (stored === undefined) {
     return;
   }
-  globalThis.localStorage?.setItem(storageKey, JSON.stringify(state));
+  if (state === null) {
+    stored.removeItem(storageKeyV2);
+    stored.removeItem(storageKeyV1);
+    return;
+  }
+  stored.setItem(storageKeyV2, serializeStoredSession(state));
+  // Only retire the legacy key once a v2 write has succeeded, so a migration
+  // defect can never destroy the original data before it is safely re-stored.
+  stored.removeItem(storageKeyV1);
 }
