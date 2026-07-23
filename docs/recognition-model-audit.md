@@ -52,6 +52,19 @@ Exported-browser dogfood uses a guided composite derived from the held-out CC BY
 
 Source photos are downloaded only by the reproducible preparation script and are not committed. The manifest pins URL, page, license, SHA-256, exact boxes or deterministic grids, labels, and train/evaluation partition. Training/evaluation partitioning happens by source photograph before augmentation.
 
+## Synthetic-physical 3D renders (training augmentation)
+
+`scripts/vision/render_tiles.py` renders standing tiles from the pinned CC0 glyph artwork as physically based 3D objects (ivory body, engraved glyph, glossy coat) in Blender 5.1+ EEVEE, under randomized camera pose, studio softbox lighting, and surface imperfections. It emits labeled face crops in the `train/<label>/` layout that `train-tile-classifier.py --real-crops` already consumes, adding realistic 3D lighting, specular glare, reflection, and geometry that the flat 2D augmentation cannot express.
+
+This is a **training-side augmentation source only**, held to the same discipline as every other synthetic input:
+
+- Renders are written to the `train` partition and must never enter `eval`. Held-out evaluation stays real, source-separated physical photographs.
+- Their worth is measured **solely** by lift on the real held-out crops (`evaluate-physical-crops.py`), never by how realistic they look and never as release evidence. No accuracy is claimed from renders.
+- Provenance is clean and reproducible: the CC0 FluffyStuff seed pinned at `26e127b`, procedurally built from a committed, seeded script; renders inherit `CC-BY-SA-4.0` like the model.
+- `render_tiles.py` is authoritative; `scripts/vision/tile_base.blend` is a self-contained reference scene for inspection.
+
+The renderer does not change the shipped model or the production acceptance contract below. Any promotion still requires the real 500-hand representative set.
+
 ## Alternatives investigated
 
 - `pjura/mahjong_vision` is useful classifier prior art but targets Mahjong Soul screenshots, not physical tiles.

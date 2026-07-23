@@ -31,6 +31,22 @@ python3 -m venv /tmp/richii-vision-venv
 
 Synthetic validation measures whether the training and export pipeline works; it is not physical-photo release evidence. Public-domain physical-photo smoke evaluation and representative guided-hand evaluation are reported separately.
 
+## Synthetic-physical 3D renders (Blender)
+
+`render_tiles.py` is a headless Blender 5.1+ generator that renders standing riichi tiles from the same pinned CC0 glyph artwork as physically based 3D objects — ivory body, engraved glyph, glossy coat — under randomized camera pose, studio softbox lighting, and surface imperfections. Its value over the 2D augmentation in `train-tile-classifier.py` is realistic 3D lighting, specular glare, reflection, and geometry that flat compositing cannot express.
+
+```sh
+# Blender 5.1+ on PATH; reuses the /tmp/richii-tiles-source clone above.
+blender -b -P scripts/vision/render_tiles.py -- \
+  --glyphs /tmp/richii-tiles-source/Export/Regular \
+  --output /tmp/richii-render-crops \
+  --samples-per-class 8 --seed 1234
+```
+
+Output is `<output>/train/<label>/*.png`, the exact layout `train-tile-classifier.py --real-crops` already consumes, so the renders act as a third training source alongside the 2D-synthetic and real-photo crops. `tile_base.blend` is a self-contained reference scene for visual inspection; `render_tiles.py` is the authoritative, procedural generator.
+
+These renders are **training-side only**. They are written to the `train` partition and must never enter `eval` — held-out evaluation stays real, source-separated physical photos. Their worth is measured solely by lift on the real held-out crops via `evaluate-physical-crops.py`, never as release evidence. A sample render is in `docs/recognition-render-sample.png`.
+
 ## License and release status
 
 The generated classifier is distributed under `CC-BY-SA-4.0`. Physical-photo training combines one CC BY-SA 3.0 source and two CC BY-SA 4.0 sources under the compatible later license; the glyph seed is CC0. See the model asset README and `physical-photo-crops.json` for provenance and source-separated partitions.

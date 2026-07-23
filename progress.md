@@ -1,6 +1,6 @@
 # Progress
 
-Last updated: **2026-07-23T09:34:14+08:00**
+Last updated: **2026-07-23T18:44:49+08:00**
 
 ## Current state
 
@@ -96,6 +96,14 @@ Richii is a polished, local-first scoring and table-session app on mobile-width 
 - Browser dogfood first submits a deliberately blurred derivative of the held-out physical fixture, verifies the dedicated blur message without loading a score draft, then replaces it with the clear fixture and completes V1 recognition normally.
 - The final browser journeys pass in 5.3 seconds. The shared entry is 1,290,977 bytes, a 1,876-byte (`0.15%`) increase; the model and lazy inference payloads are unchanged.
 - The full quality gate passes with 107 framework-free tests and 41 Expo component tests.
+
+### 2026-07-23T18:44:49+08:00 — synthetic-physical 3D tile renderer (phase 1: crops)
+
+- Added `scripts/vision/render_tiles.py`, a headless Blender 5.1+ EEVEE generator that renders standing tiles from the pinned CC0 glyph artwork as physically based 3D objects (ivory body, engraved glyph, glossy coat) under randomized camera pose, studio softbox lighting, and surface imperfections.
+- Output is labeled face crops in the `train/<label>/` layout `train-tile-classifier.py --real-crops` already consumes, so renders act as a third training source adding realistic 3D lighting, specular glare, reflection, and geometry the 2D augmentation cannot express.
+- Verified end to end: headless run produced correctly labeled, well-exposed, pose/lighting-varied crops across man/pin/sou and red-five classes. Fixed two authoring defects found by the smoke test (front-face material index orphaned by `materials.clear()`; compounding light jitter across samples).
+- Committed the authoritative generator, a self-contained `tile_base.blend` reference scene, `docs/recognition-render-sample.png`, and provenance/discipline docs.
+- Discipline held: renders are training-side only, written to `train`, never `eval`; worth is measured solely by lift on the real held-out crops via `evaluate-physical-crops.py`, never as release evidence. The shipped model and the 500-hand production gate are unchanged. Phase 2 (full-hand layouts with per-tile boxes for a future localizer) is scoped but not built.
 
 ## Visual evidence
 
