@@ -54,4 +54,13 @@ describe("recognizePixelFrame", () => {
     await expect(recognizePixelFrame(frame, classifier)).rejects.toThrow(/needs exactly 14/);
     expect(classifier).not.toHaveBeenCalled();
   });
+
+  it("rejects severe glare before layout or model initialization", async () => {
+    const frame = guidedFrame();
+    frame.data.fill(255, 0, Math.floor(frame.data.length * 0.2));
+    const classifier = jest.fn<Promise<Float32Array>, []>();
+
+    await expect(recognizePixelFrame(frame, classifier)).rejects.toMatchObject({ code: "glare" });
+    expect(classifier).not.toHaveBeenCalled();
+  });
 });

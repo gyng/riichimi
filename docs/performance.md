@@ -57,6 +57,17 @@ Recorded on 2026-07-23 after physical-corpus expansion, V1 promotion, rules prof
 
 The rules UI and persistence changes remain far below the 10% bundle trigger. V1 replaces—not adds to—the exported model payload, while the retained V0 rollback artifact is not imported and does not ship in the static export. No further application/build/test optimization is warranted at this checkpoint.
 
+### Capture-quality diagnostics check
+
+Recorded on 2026-07-23 after the four-category capture preflight:
+
+- Shared entry: 1,290,977 bytes, up 1,876 bytes (`0.15%`).
+- Full export: 3,914,038 bytes, also up 1,876 bytes; model and lazy inference chunks are unchanged.
+- Two Playwright journeys: 5.3 seconds, now including a blurred-photo rejection, replacement, clear-photo inference, and two confirmation actions.
+- Full check: 107 framework-free tests and 41 Expo component tests.
+
+The diagnostics sample sharpness at a two-pixel stride and complete before model inference. Their bundle and browser-test changes are below every optimization trigger; no special optimization is warranted.
+
 ## Feedback-loop budgets
 
 - Formatting should remain below 2 seconds locally.

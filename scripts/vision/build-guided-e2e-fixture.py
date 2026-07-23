@@ -18,6 +18,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--crops", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--blurred-output", type=Path)
     args = parser.parse_args()
 
     prepared = json.loads((args.crops / "prepared.json").read_text(encoding="utf-8"))["crops"]
@@ -51,6 +52,9 @@ def main() -> None:
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     canvas.save(args.output, optimize=True)
+    if args.blurred_output is not None:
+        args.blurred_output.parent.mkdir(parents=True, exist_ok=True)
+        canvas.filter(ImageFilter.GaussianBlur(2)).save(args.blurred_output, optimize=True)
 
 
 if __name__ == "__main__":

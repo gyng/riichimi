@@ -225,7 +225,7 @@ export function ScanScreen() {
             ) : null}
             {recognition.kind === "failure" ? (
               <Text accessibilityLiveRegion="polite" style={styles.recognitionError}>
-                {recognition.message} Reposition the tiles and retry, or use manual entry.
+                {recognition.message} Retry with another photo, or use manual entry.
               </Text>
             ) : null}
             {recognition.kind === "complete" ? (

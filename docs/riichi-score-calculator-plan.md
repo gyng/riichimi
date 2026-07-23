@@ -11,6 +11,7 @@ Build a mobile and web riichi mahjong calculator that turns a photo of a winning
 - Complete: a device-local, deduplicated 20-entry score folio with hand, context, yaku, payment, removal, clear confirmation, and reload recovery.
 - Complete: local four-player sessions with riichi deposits, transfers, draws, dealer/round progression, history, recovery, deletion, and undo.
 - Complete: camera permission/capture flow, camera and gallery photo review, Android pending-picker recovery, photo-reference manual fallback, recognition contracts, confidence review, structural checks, tile-by-tile correction, winner reassignment, and a hard no-score-until-reviewed transition.
+- Complete: deterministic local blur, glare, edge-crop, and excessive-perspective diagnostics with specific retry guidance and manual escape paths.
 - Complete: a tested model-release manifest gate for artifact integrity, provenance, input shape, full class coverage, evaluation size, and accuracy thresholds.
 - Complete: persisted WRC 2025 and explicit red-five-table profiles drive the tile picker and scorer, migrate safely, and pin atomically to a table through reload and undo.
 - Complete: progressive-enhancement WebMCP discovery and typed tools for app state, rules selection, navigation, manual scoring, score-history inspection, local table mutation, and undo, with visible browser dogfood coverage.

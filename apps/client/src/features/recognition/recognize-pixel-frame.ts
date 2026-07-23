@@ -1,5 +1,7 @@
 import type { DetectedTile, RecognitionResult } from "@richii/vision";
 
+import { inspectFrameExposure, inspectLocatedCapture } from "./capture-quality";
+import type { CaptureQualityIssueKind } from "./capture-quality";
 import { classifyBatchLogits } from "./classifier-output";
 import { locateGuidedTiles } from "./guided-layout";
 import type { PixelFrame } from "./guided-layout";
@@ -13,8 +15,11 @@ import {
 export const guidedRecognitionModelVersion = "guided-crop-v1-0fc698d5";
 
 export class GuidedRecognitionError extends Error {
-  constructor(message: string) {
+  readonly code: CaptureQualityIssueKind | "layout";
+
+  constructor(code: CaptureQualityIssueKind | "layout", message: string) {
     super(message);
+    this.code = code;
     this.name = "GuidedRecognitionError";
   }
 }
@@ -26,9 +31,17 @@ export async function recognizePixelFrame(
     dimensions: readonly [number, 3, number, number],
   ) => Promise<Float32Array>,
 ): Promise<RecognitionResult> {
+  const exposureIssue = inspectFrameExposure(frame);
+  if (exposureIssue !== null) {
+    throw new GuidedRecognitionError(exposureIssue.kind, exposureIssue.message);
+  }
   const layout = locateGuidedTiles(frame);
   if (layout.kind === "failure") {
-    throw new GuidedRecognitionError(layout.message);
+    throw new GuidedRecognitionError("layout", layout.message);
+  }
+  const qualityIssue = inspectLocatedCapture(frame, layout);
+  if (qualityIssue !== null) {
+    throw new GuidedRecognitionError(qualityIssue.kind, qualityIssue.message);
   }
   const bounds = [...layout.hand, layout.dora];
   const batch = combineTileTensors(bounds.map((item) => cropTileTensor(frame, item)));

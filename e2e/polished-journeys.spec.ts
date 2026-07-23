@@ -233,7 +233,18 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   const fileChooserPromise = page.waitForEvent("filechooser");
   await page.getByRole("button", { name: "Choose an existing photo" }).click();
   const fileChooser = await fileChooserPromise;
-  await fileChooser.setFiles("e2e/fixtures/guided-hand.png");
+  await fileChooser.setFiles("e2e/fixtures/guided-hand-blurred.png");
+  await expect(page.getByText("Photo ready for review")).toBeVisible();
+  await page.getByRole("button", { name: "Read 14 tiles offline" }).click();
+  await expect(page.getByText(/photo is too blurry to read safely/)).toBeVisible();
+  await page.screenshot({
+    path: "docs/checkpoints/2026-07-23-14-blur-recovery-guidance-desktop.png",
+  });
+
+  const replacementChooserPromise = page.waitForEvent("filechooser");
+  await page.getByRole("button", { name: "Choose another photo" }).click();
+  const replacementChooser = await replacementChooserPromise;
+  await replacementChooser.setFiles("e2e/fixtures/guided-hand.png");
   await expect(page.getByText("Photo ready for review")).toBeVisible();
   await page.screenshot({ path: "docs/checkpoints/2026-07-23-06-gallery-review-desktop.png" });
   await page.getByRole("button", { name: "Read 14 tiles offline" }).click();

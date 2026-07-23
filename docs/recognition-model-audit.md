@@ -17,6 +17,17 @@ The implemented system deliberately narrows the visual problem:
 
 This obtains useful automation now while preserving the manual path for arbitrary table layouts, calls, kans, glare, overlaps, and unfamiliar tile art.
 
+## Capture-quality gate
+
+Inference is not the first response to every image. Before accepting classifier output, the client runs deterministic, offline diagnostics over the same normalized pixel frame:
+
+- clipped-pixel coverage detects severe glare or overexposure before layout;
+- normalized bounds reject tiles touching the frame edge;
+- hand-height scale and aspect-ratio spread reject excessive perspective after localization; and
+- sampled Laplacian variance rejects a located but insufficiently sharp hand.
+
+Each failure produces dedicated recovery guidance and leaves photo replacement, retry, and manual entry available. Thresholds are conservative integration defaults and still require representative phone/device tuning; they are not included in the model's accuracy claim.
+
 ## Shipped candidate
 
 - Model: `apps/client/assets/models/tile-classifier-v1.onnx`

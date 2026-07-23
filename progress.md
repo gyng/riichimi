@@ -1,6 +1,6 @@
 # Progress
 
-Last updated: **2026-07-23T09:20:42+08:00**
+Last updated: **2026-07-23T09:34:14+08:00**
 
 ## Current state
 
@@ -88,6 +88,15 @@ Richii is a polished, local-first scoring and table-session app on mobile-width 
 - Browser dogfood found and fixed a preference-hydration race and missing web `aria-checked` state. The final two exported journeys pass in 5.4 seconds.
 - The final quality gate passes with 107 framework-free tests, 35 Expo component tests, a 5.45-second warm export, and a 1,289,101-byte shared entry. V1 replaces the exported V0 payload, so the active model size is unchanged.
 
+### 2026-07-23T09:34:14+08:00 — capture-quality recovery guidance
+
+- Added deterministic, device-local diagnostics before classifier acceptance: clipped-pixel exposure detects strong glare, frame bounds catch cropped tiles, geometry consistency catches excessive perspective, and sampled Laplacian variance catches a localized-but-blurry hand.
+- Every issue has a specific recovery instruction and preserves choose-another-photo, retry, and photograph-backed manual entry. Structural layout failures remain distinct from image-quality failures.
+- Added six focused diagnostic/integration tests covering the good path, all four failure categories, and proof that severe glare stops before model initialization.
+- Browser dogfood first submits a deliberately blurred derivative of the held-out physical fixture, verifies the dedicated blur message without loading a score draft, then replaces it with the clear fixture and completes V1 recognition normally.
+- The final browser journeys pass in 5.3 seconds. The shared entry is 1,290,977 bytes, a 1,876-byte (`0.15%`) increase; the model and lazy inference payloads are unchanged.
+- The full quality gate passes with 107 framework-free tests and 41 Expo component tests.
+
 ## Visual evidence
 
 - [Mobile landing](docs/checkpoints/2026-07-23-01-home-mobile.png)
@@ -103,6 +112,7 @@ Richii is a polished, local-first scoring and table-session app on mobile-width 
 - [V1 physical recognition with two flagged reads](docs/checkpoints/2026-07-23-11-v1-recognition-review-desktop.png)
 - [V1 recognition review completed](docs/checkpoints/2026-07-23-12-v1-recognition-complete-desktop.png)
 - [V1 photograph-backed recognized draft](docs/checkpoints/2026-07-23-13-v1-recognized-draft-desktop.png)
+- [Blur-specific recovery guidance](docs/checkpoints/2026-07-23-14-blur-recovery-guidance-desktop.png)
 
 ## Verification commands
 
