@@ -42,6 +42,8 @@ import type { ReactNode } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { bodyEdges } from "../../components/screen-insets";
+
 import { createRoundCommandMetadata, useSession } from "../../state/session-context";
 import { useScoreHistory } from "../../state/score-history-context";
 import { useRules } from "../../state/rules-context";
@@ -718,10 +720,9 @@ export function ManualCalculator({
   ]);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView edges={bodyEdges} style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <View style={styles.topBar}>
-          <ActionButton label="Back" onPress={() => router.back()} variant="paper" />
           <Text style={styles.rulesLabel}>{activeRules.label.toUpperCase()}</Text>
         </View>
         <Text style={styles.kicker}>MANUAL SCORE LEDGER</Text>

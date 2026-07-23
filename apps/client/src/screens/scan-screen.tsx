@@ -10,6 +10,8 @@ import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { bodyEdges } from "../components/screen-insets";
+
 import sampleHandImage from "../../assets/samples/guided-sample-hand.png";
 import { tileRecognition } from "../infrastructure/tile-recognition";
 import {
@@ -235,7 +237,7 @@ export function ScanScreen() {
 
   if (permission === null) {
     return (
-      <SafeAreaView style={styles.centered}>
+      <SafeAreaView edges={bodyEdges} style={styles.centered}>
         <ActivityIndicator color={color.accent} />
         <Text style={styles.status}>Checking camera availability…</Text>
       </SafeAreaView>
@@ -244,7 +246,7 @@ export function ScanScreen() {
 
   if (!permission.granted && photoUri === null) {
     return (
-      <SafeAreaView style={styles.permissionScreen}>
+      <SafeAreaView edges={bodyEdges} style={styles.permissionScreen}>
         <Text style={styles.kicker}>CAMERA / PRIVATE BY DEFAULT</Text>
         <Text accessibilityRole="header" style={styles.permissionTitle}>
           Show us the tiles.{"\n"}Keep the photo here.
@@ -291,7 +293,7 @@ export function ScanScreen() {
 
   if (photoUri !== null) {
     return (
-      <SafeAreaView style={styles.captureScreen}>
+      <SafeAreaView edges={bodyEdges} style={styles.captureScreen}>
         <ScrollView contentContainerStyle={styles.photoReviewContent}>
           <Image
             accessibilityLabel="Captured mahjong hand"
@@ -414,9 +416,8 @@ export function ScanScreen() {
   return (
     <View style={styles.captureScreen}>
       <CameraView ref={camera} facing="back" style={styles.camera}>
-        <SafeAreaView style={styles.cameraChrome}>
+        <SafeAreaView edges={bodyEdges} style={styles.cameraChrome}>
           <View style={styles.cameraHeader}>
-            <ActionButton label="Close" onPress={() => router.back()} variant="paper" />
             <Text style={styles.guideLabel}>ALIGN HAND · MELDS · DORA</Text>
           </View>
           <View accessibilityLabel="Tile alignment guide" style={styles.guide}>

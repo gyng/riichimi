@@ -4,6 +4,8 @@ import { useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { bodyEdges } from "../components/screen-insets";
+
 import type { ScoreHistoryEntry } from "../features/score-history/score-history";
 import { useScoreHistory } from "../state/score-history-context";
 
@@ -38,7 +40,7 @@ export function ScoreHistoryScreen() {
 
   if (history.loading) {
     return (
-      <SafeAreaView style={styles.centered}>
+      <SafeAreaView edges={bodyEdges} style={styles.centered}>
         <ActivityIndicator color={color.accent} />
         <Text style={styles.muted}>Opening the score folio…</Text>
       </SafeAreaView>
@@ -46,10 +48,9 @@ export function ScoreHistoryScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView edges={bodyEdges} style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.topBar}>
-          <ActionButton label="Back" onPress={() => router.back()} variant="paper" />
           <Text style={styles.rules}>SAVED LOCALLY · LAST 20</Text>
         </View>
 
