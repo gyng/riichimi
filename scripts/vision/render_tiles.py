@@ -45,10 +45,10 @@ import argparse
 import math
 import random
 import sys
-from pathlib import PurePath
+from pathlib import Path, PurePath
 
 import bpy
-from mathutils import Euler, Vector
+from mathutils import Euler, Quaternion, Vector
 
 # Label -> FluffyStuff glyph filename. Mirrors ASSET_NAMES in
 # train-tile-classifier.py so labels match the classifier's class set.
@@ -160,19 +160,20 @@ def build_face_material() -> bpy.types.Material:
     # Engraved glyph: recess the painted strokes for an edge shadow.
     bump = nodes.new("ShaderNodeBump")
     bump.invert = True
-    bump.inputs["Strength"].default_value = 0.28
-    bump.inputs["Distance"].default_value = 0.0015
+    bump.inputs["Strength"].default_value = 0.42
+    bump.inputs["Distance"].default_value = 0.0022
     links.new(glyph.outputs["Alpha"], bump.inputs["Height"])
     links.new(bump.outputs["Normal"], bsdf.inputs["Normal"])
     _coat(bsdf)
     return material
 
 
-def build_tile(body: bpy.types.Material, face: bpy.types.Material) -> bpy.types.Object:
+def make_tile(name: str, body: bpy.types.Material, face: bpy.types.Material) -> bpy.types.Object:
+    """Build one standing tile object; ``face`` carries the glyph for this tile."""
     import bmesh  # local import: only needed while authoring geometry
 
-    _reset("Tile", "object")
-    mesh = bpy.data.meshes.new("Tile")
+    _reset(name, "object")
+    mesh = bpy.data.meshes.new(name)
     bm = bmesh.new()
     bmesh.ops.create_cube(bm, size=1.0)
     for vert in bm.verts:
@@ -192,13 +193,13 @@ def build_tile(body: bpy.types.Material, face: bpy.types.Material) -> bpy.types.
     bm.to_mesh(mesh)
     bm.free()
 
-    tile = bpy.data.objects.new("Tile", mesh)
+    tile = bpy.data.objects.new(name, mesh)
     bpy.context.collection.objects.link(tile)
     tile.location = (0.0, 0.0, TILE_H / 2)  # rest on the table plane
     for polygon in mesh.polygons:
         polygon.use_smooth = True
     # Front face gets the glyph material; assign after the mesh exists so the
-    # index survives (materials.clear() would orphan it — see build below).
+    # index survives (materials.clear() would orphan it).
     tile.data.materials.append(body)
     tile.data.materials.append(face)
     front_polygon = min(mesh.polygons, key=lambda p: p.normal.y)
@@ -210,7 +211,27 @@ def build_tile(body: bpy.types.Material, face: bpy.types.Material) -> bpy.types.
     return tile
 
 
+def face_material_for(label: str, glyph_root: str, cache: dict) -> bpy.types.Material:
+    """A per-label face material with its glyph loaded (cached by label)."""
+    if label in cache:
+        return cache[label]
+    material = build_face_material()
+    material.name = f"Face_{label}"
+    image = bpy.data.images.load(f"{glyph_root}/{GLYPH_FILES[label]}", check_existing=True)
+    material.node_tree.nodes["Glyph"].image = image
+    # Hand tiles are viewed nearer head-on across a row; a strong coat throws a
+    # broad specular reflection of the key into the camera and washes the glyph.
+    # Soften the coat for hand mode only. Crop mode is unaffected because it never
+    # routes through face_material_for.
+    bsdf = material.node_tree.nodes["Principled BSDF"]
+    if "Coat Weight" in bsdf.inputs:
+        bsdf.inputs["Coat Weight"].default_value = 0.12
+    cache[label] = material
+    return material
+
+
 def build_environment() -> tuple[bpy.types.Object, bpy.types.Object, list[bpy.types.Object]]:
+    _reset("Light", "object")  # drop the factory 1000 W point light; we light explicitly
     _reset("Table", "object")
     bpy.ops.mesh.primitive_plane_add(size=4.0, location=(0, 0, 0.0))
     table = bpy.context.active_object
@@ -294,8 +315,10 @@ def configure_render(width: int, height: int, samples: int) -> None:
 
 
 def place_camera(camera: bpy.types.Object, rng: random.Random) -> None:
-    azimuth = math.radians(rng.uniform(-35, 35))
-    elevation = math.radians(rng.uniform(6, 42))
+    # Azimuth kept moderate so the glyph face dominates the crop; a wide swing
+    # exposes the ivory side, which the light/low-chroma face locator confuses.
+    azimuth = math.radians(rng.uniform(-25, 25))
+    elevation = math.radians(rng.uniform(6, 40))
     distance = rng.uniform(0.62, 0.92)
     target = Vector((0.0, 0.0, TILE_H * rng.uniform(0.45, 0.55)))
     offset = Vector((
@@ -304,8 +327,17 @@ def place_camera(camera: bpy.types.Object, rng: random.Random) -> None:
         distance * math.sin(elevation) + TILE_H * 0.5,
     ))
     camera.location = target + offset
-    camera.rotation_euler = (target - camera.location).to_track_quat("-Z", "Y").to_euler()
+    look = (target - camera.location).to_track_quat("-Z", "Y")
+    # Small handheld roll about the view axis.
+    view_axis = look @ Vector((0.0, 0.0, -1.0))
+    roll = Quaternion(view_axis, math.radians(rng.uniform(-5, 5)))
+    camera.rotation_euler = (roll @ look).to_euler()
     camera.data.lens = rng.uniform(38, 85)
+    # Depth of field: tile sharp, table/background falls off like a phone macro.
+    dof = camera.data.dof
+    dof.use_dof = True
+    dof.focus_distance = (target - camera.location).length
+    dof.aperture_fstop = rng.uniform(4.0, 11.0)
 
 
 def jitter_scene(tile: bpy.types.Object, softboxes: list[bpy.types.Object], rng: random.Random) -> None:
@@ -321,6 +353,13 @@ def jitter_scene(tile: bpy.types.Object, softboxes: list[bpy.types.Object], rng:
     key = bpy.data.objects.get("Key")
     if key:
         key.data.energy = 22.0 * rng.uniform(0.8, 1.25)
+        # White-balance drift: warm tungsten <-> cool daylight, as phones vary.
+        warmth = rng.uniform(-1.0, 1.0)
+        key.data.color = (
+            1.0, 0.86 + 0.11 * (warmth * 0.5 + 0.5), 0.72 + 0.26 * (warmth * 0.5 + 0.5),
+        ) if warmth >= 0 else (
+            0.80 + 0.19 * (warmth + 1.0), 0.90 + 0.09 * (warmth + 1.0), 1.0,
+        )
     background = bpy.context.scene.world.node_tree.nodes.get("Background")
     if background:
         background.inputs["Strength"].default_value = rng.uniform(0.28, 0.5)
@@ -331,28 +370,13 @@ def jitter_scene(tile: bpy.types.Object, softboxes: list[bpy.types.Object], rng:
     )
 
 
-def parse_args() -> argparse.Namespace:
-    argv = sys.argv[sys.argv.index("--") + 1 :] if "--" in sys.argv else []
-    parser = argparse.ArgumentParser(description="Render synthetic-physical tile-face crops.")
-    parser.add_argument("--glyphs", required=True, help="FluffyStuff Export/Regular directory")
-    parser.add_argument("--output", required=True, help="crop output root (writes train/<label>/)")
-    parser.add_argument("--samples-per-class", type=int, default=8)
-    parser.add_argument("--seed", type=int, default=1234)
-    parser.add_argument("--width", type=int, default=320)
-    parser.add_argument("--height", type=int, default=400)
-    parser.add_argument("--render-samples", type=int, default=32)
-    parser.add_argument("--only", nargs="*", default=None, help="limit to these labels (smoke test)")
-    return parser.parse_args(argv)
-
-
-def main() -> None:
-    args = parse_args()
+def render_crops(args: argparse.Namespace) -> None:
+    """Phase 1: labeled single-tile face crops -> <output>/train/<label>/*.png."""
     glyph_root = args.glyphs.rstrip("/\\")
     labels = args.only if args.only else list(GLYPH_FILES)
-
     body = build_body_material()
     face = build_face_material()
-    tile = build_tile(body, face)
+    tile = make_tile("Tile", body, face)
     _, camera, softboxes = build_environment()
     configure_render(args.width, args.height, args.render_samples)
     glyph_node = face.node_tree.nodes["Glyph"]
@@ -360,18 +384,176 @@ def main() -> None:
     scene = bpy.context.scene
     total = 0
     for class_index, label in enumerate(labels):
-        glyph_path = f"{glyph_root}/{GLYPH_FILES[label]}"
-        image = bpy.data.images.load(glyph_path, check_existing=True)
-        glyph_node.image = image
+        glyph_node.image = bpy.data.images.load(
+            f"{glyph_root}/{GLYPH_FILES[label]}", check_existing=True
+        )
         for sample_index in range(args.samples_per_class):
             rng = random.Random(args.seed + class_index * 1_000_003 + sample_index * 7_919)
             place_camera(camera, rng)
             jitter_scene(tile, softboxes, rng)
-            out = f"{args.output}/train/{label}/{label}-{sample_index:03d}.png"
-            scene.render.filepath = out
+            scene.render.filepath = f"{args.output}/train/{label}/{label}-{sample_index:03d}.png"
             bpy.ops.render.render(write_still=True)
             total += 1
     print(f"RENDERED {total} crops for {len(labels)} labels -> {PurePath(args.output) / 'train'}", flush=True)
+
+
+def draw_hand(rng: random.Random) -> tuple[list[str], str]:
+    """14 hand labels (max four physical copies each) plus one dora indicator."""
+    remaining = {label: 4 for label in GLYPH_FILES}
+    hand: list[str] = []
+    while len(hand) < 14:
+        label = rng.choice([lbl for lbl, n in remaining.items() if n > 0])
+        remaining[label] -= 1
+        hand.append(label)
+    dora = rng.choice(list(GLYPH_FILES))
+    return hand, dora
+
+
+def image_bbox(scene, camera, obj, width: int, height: int) -> list[int]:
+    import bpy_extras
+
+    xs, ys = [], []
+    for corner in obj.bound_box:
+        ndc = bpy_extras.object_utils.world_to_camera_view(
+            scene, camera, obj.matrix_world @ Vector(corner)
+        )
+        xs.append(min(max(ndc.x, 0.0), 1.0))
+        ys.append(min(max(ndc.y, 0.0), 1.0))
+    left = round(min(xs) * width)
+    right = round(max(xs) * width)
+    top = round((1.0 - max(ys)) * height)  # camera-view y is bottom-up
+    bottom = round((1.0 - min(ys)) * height)
+    return [left, top, right - left, bottom - top]
+
+
+def render_hands(args: argparse.Namespace) -> None:
+    """Phase 2: full 14+dora hand layouts -> <output>/hands/hand-###.png + .json.
+
+    The layout follows the capture guide: 14 upright separated hand tiles with a
+    larger gap before the winning (14th) tile and one dora indicator below. Each
+    hand ships per-tile bounding boxes for a future learned localizer; the shipped
+    recognizer still uses the deterministic connected-component locator.
+    """
+    import json
+
+    glyph_root = args.glyphs.rstrip("/\\")
+    body = build_body_material()
+    cache: dict = {}
+    # Fifteen reusable tile objects; face material + transform swap per hand.
+    slots = [make_tile(f"Tile_{i:02d}", body, face_material_for("1m", glyph_root, cache)) for i in range(15)]
+    _, camera, softboxes = build_environment()
+    # Widen the table for the ~2.9-unit row.
+    bpy.data.objects["Table"].scale = (2.5, 2.5, 1.0)
+    # The row spans ~2.8 units; the crop-mode key light is too local. Broaden it
+    # into an overhead softlight that rakes the whole row of faces from the front.
+    # A sun lights the whole 2.8-unit row evenly (an area light at row centre
+    # falls off, blowing out the middle while the ends stay dark). Keep the area
+    # Key as a soft frontal fill.
+    key = bpy.data.objects["Key"]
+    key.data.size = 3.5
+    key.data.energy = 3.0  # gentle frontal fill only; the sun is the even key
+    key.location = (0.0, -1.3, 1.4)
+    key.rotation_euler = (Vector((0, 0, TILE_H * 0.5)) - key.location).to_track_quat("-Z", "Y").to_euler()
+    key["base_energy"] = key.data.energy
+    _reset("Sun", "object")
+    sun_data = bpy.data.lights.new("Sun", "SUN")
+    sun_data.energy = 2.0
+    sun_data.angle = math.radians(4)
+    sun = bpy.data.objects.new("Sun", sun_data)
+    bpy.context.collection.objects.link(sun)
+    # Standing tiles have VERTICAL faces; a high sun rakes them and lights only
+    # the table. Aim the rays low and frontal (into +Y, slightly down and to the
+    # side) so they strike the faces near head-on while grazing the table — bright
+    # ivory faces, dark felt. Slightly off-axis keeps specular out of the camera.
+    ray_dir = Vector((0.25, 1.0, -0.5)).normalized()  # sun sits front-left-low
+    sun.rotation_euler = ray_dir.to_track_quat("-Z", "Y").to_euler()
+    # The crop-mode softboxes sit ~0.5u from the row centre and flood the middle
+    # tiles while the ends stay dark; the sun covers the whole row evenly instead.
+    for box in softboxes:
+        box.hide_render = True
+    configure_render(args.width_hand, args.height_hand, args.render_samples)
+    scene = bpy.context.scene
+    background = scene.world.node_tree.nodes.get("Background")
+    if background:  # hand mode never calls jitter_scene, so set world level here
+        background.inputs["Strength"].default_value = 0.30
+
+    pitch = TILE_W + 0.02
+    win_gap = 0.10
+    xs = [i * pitch + (win_gap if i == 13 else 0.0) for i in range(14)]
+    centre = sum(xs) / len(xs)
+    total = 0
+    for hand_index in range(args.hands):
+        rng = random.Random(args.seed + hand_index * 2_654_435_761)
+        labels, dora = draw_hand(rng)
+        records = []
+        for i in range(14):
+            tile = slots[i]
+            tile.data.materials[1] = face_material_for(labels[i], glyph_root, cache)
+            tile.location = (
+                xs[i] - centre + rng.uniform(-0.004, 0.004),
+                rng.uniform(-0.004, 0.004),
+                TILE_H / 2,
+            )
+            tile.rotation_euler = Euler((
+                math.radians(rng.uniform(-2, 2)), 0.0, math.radians(rng.uniform(-3, 3)),
+            ))
+            records.append((tile, labels[i], "winning" if i == 13 else "concealed"))
+        dora_tile = slots[14]
+        dora_tile.data.materials[1] = face_material_for(dora, glyph_root, cache)
+        # Negative Y is toward the camera, so the dora sits below/in front of the row.
+        dora_tile.location = (rng.uniform(-0.05, 0.05), -0.40, TILE_H / 2)
+        dora_tile.rotation_euler = Euler((0.0, 0.0, math.radians(rng.uniform(-3, 3))))
+        records.append((dora_tile, dora, "dora"))
+
+        # Front camera framing the full ~2.8-unit row; DoF focuses on the row.
+        target = Vector((0.0, 0.0, TILE_H * 0.5))
+        camera.location = (rng.uniform(-0.06, 0.06), -3.2 + rng.uniform(-0.15, 0.15), 1.05 + rng.uniform(-0.08, 0.15))
+        camera.rotation_euler = (target - camera.location).to_track_quat("-Z", "Y").to_euler()
+        camera.data.lens = rng.uniform(34, 42)
+        camera.data.dof.use_dof = True
+        camera.data.dof.focus_distance = (target - camera.location).length
+        camera.data.dof.aperture_fstop = rng.uniform(8.0, 16.0)
+        sun.data.energy = 2.0 * rng.uniform(0.85, 1.2)  # mild exposure variation
+        bpy.context.view_layer.update()
+        scene.render.filepath = f"{args.output}/hands/hand-{hand_index:03d}.png"
+        bpy.ops.render.render(write_still=True)
+        boxes = [
+            {"label": lbl, "role": role, "bbox": image_bbox(scene, camera, t, args.width_hand, args.height_hand)}
+            for t, lbl, role in records
+        ]
+        meta = {"image": f"hand-{hand_index:03d}.png", "width": args.width_hand,
+                "height": args.height_hand, "tiles": boxes, "schemaVersion": 1}
+        Path(f"{args.output}/hands/hand-{hand_index:03d}.json").write_text(
+            json.dumps(meta, indent=2) + "\n", encoding="utf-8"
+        )
+        total += 1
+    print(f"RENDERED {total} hands (image + boxes) -> {PurePath(args.output) / 'hands'}", flush=True)
+
+
+def parse_args() -> argparse.Namespace:
+    argv = sys.argv[sys.argv.index("--") + 1 :] if "--" in sys.argv else []
+    parser = argparse.ArgumentParser(description="Render synthetic-physical tiles.")
+    parser.add_argument("--mode", choices=("crops", "hand"), default="crops")
+    parser.add_argument("--glyphs", required=True, help="FluffyStuff Export/Regular directory")
+    parser.add_argument("--output", required=True, help="output root")
+    parser.add_argument("--samples-per-class", type=int, default=8)
+    parser.add_argument("--hands", type=int, default=8, help="hand-mode scene count")
+    parser.add_argument("--seed", type=int, default=1234)
+    parser.add_argument("--width", type=int, default=320)
+    parser.add_argument("--height", type=int, default=400)
+    parser.add_argument("--width-hand", type=int, default=960)
+    parser.add_argument("--height-hand", type=int, default=360)
+    parser.add_argument("--render-samples", type=int, default=32)
+    parser.add_argument("--only", nargs="*", default=None, help="crops: limit to these labels")
+    return parser.parse_args(argv)
+
+
+def main() -> None:
+    args = parse_args()
+    if args.mode == "hand":
+        render_hands(args)
+    else:
+        render_crops(args)
 
 
 if __name__ == "__main__":
