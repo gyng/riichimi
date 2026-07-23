@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400"><defs id="teastf-defs4">
+    <mask maskUnits="userSpaceOnUse" id="teastf-mask4222-0">
+      <rect ry="40" y="652.28" x="0" height="400.78" width="300.06" id="teastf-rect4224-8" style="opacity:1;fill:#ff3737;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    </mask>
+    <filter style="color-interpolation-filters:sRGB" id="teastf-filter4198-8">
+      <feGaussianBlur stdDeviation="2.51 2.51" result="blur" id="teastf-feGaussianBlur4200-3" />
+    </filter>
+    <mask maskUnits="userSpaceOnUse" id="teastf-mask4216-0">
+      <rect ry="40" y="-1325.6" x="-451.94" height="400.78" width="300.06" id="teastf-rect4218-5" style="opacity:1;fill:#ff3737;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" transform="scale(-1,-1)" />
+    </mask>
+    </defs>
+  <g id="teastf-layer1" transform="translate(0,-652.36)">
+    <rect style="opacity:1;fill:#f5f0eb;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="teastf-rect4164" width="300.06" height="400.78" x="0" y="652.28" ry="40" />
+    <path transform="translate(-1.34e-7,-1.34e-6)" style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#teastf-filter4198-8)" d="M -4.77,775.07 C -9.65,741.99 -16.85,674.24 -1.28,652.06 19,625.94 233.5,631.63 263.31,653.91 276.21,662.65 70.35,663.12 47.1,691.74 24.39,719.11 0.65,818.19 -4.77,775.07 Z" id="teastf-path4166" mask="url(#teastf-mask4222-0)" />
+    <path id="teastf-path4221" d="m 151.74,1025.02 c -3.33,-9.31 -10.25,-68.45 5.32,-90.63 20.28,-26.12 219.44,-16.46 231.56,-9.93 11.07,5.32 -178.6,0.06 -204.85,34.87 -21.59,30 -26.5,82.18 -32.02,65.69 z" style="fill:#000000;fill-opacity:0.2;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#teastf-filter4198-8)" transform="matrix(-1,0,0,-1,451.94,1977.89)" mask="url(#teastf-mask4216-0)" />
+  </g>
+<defs id="teasta-defs4">
+    </defs>
+  <g id="teasta-layer1" transform="translate(0,-652.36)">
+    <g id="teasta-g4182" transform="matrix(0.9,0,0,0.98,22.48,21.08)">
+      <path id="teasta-path4169" d="M 233.63,755.29 C 178.13,766.78 64.37,790.8 58.64,785.71 42.66,774.84 25.69,781.45 35.79,796.11 c 16.24,27.58 41.08,52.95 53.05,82.84 2.29,4.33 4.58,5.01 6.87,4.98 34.89,0.6 59.62,-7.14 92.96,-10 5.25,-0.51 12.18,5.2 16.08,3.49 3.45,-1.88 4.89,-8.57 5.8,-12.76 6.86,-25.42 28.05,-47.68 39.9,-72.71 1.51,-2.99 9.85,-3.55 9.78,-6.44 -1.22,-10.82 -17.3,-30.71 -26.6,-30.22 z m -23.14,33.58 c 12.46,-0.3 -0.4,25.05 -5.5,26.11 -5.68,0.84 -6.59,-7.3 -13.56,-7.45 -5.23,0.55 -4.04,3.93 -9.44,5.54 -32.92,6.46 -57.05,8.76 -91.4,12.14 -4.33,0.11 -15.07,-17.22 -9.01,-18.63 40.94,-9.94 109.78,-17.44 128.91,-17.71 z m -16.39,50.03 c 4.01,6.87 -2.84,13.8 -7.81,14.56 -30.19,4.52 -78.25,12.15 -82.01,8.23 -2.67,-2.84 -8.08,-10.98 -7.22,-16.54 11.14,-3.72 92.3,-14.42 97.04,-6.26 z" style="fill:#142896;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path id="teasta-path4165" d="m 123.1,656.13 c -18.37,-7.4 -20.37,5.83 -17.9,14.34 6.21,20.2 14.43,28.63 24.54,42.68 1.81,2.42 3.81,7.06 3.5,9.27 l -2.8,207.6 c 0.02,6.5 -1.22,27.06 -5.34,23.81 -16.26,-12.36 -21.17,-19.29 -47.24,-51.55 -11.14,-14.93 -19.89,-6.94 -6.37,12.59 42.46,54.62 46.08,59.83 46.71,115.11 1.62,29.18 31.76,24.65 34.57,6.14 3.43,-19.97 -1.65,-51.78 -1.85,-73.76 -0.77,-84.03 -0.86,-158.34 12.85,-239.53 2.59,-12.67 22.99,-23.07 33.97,-26.71 4.87,-1.62 10.29,-13.97 0.9,-14.45 -25.18,-2.65 -52.28,-15.55 -75.54,-25.53 z" style="fill:#142896;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path id="teasta-path4167" d="m 90.06,749.96 c -28.5,-1.31 -7.41,15.79 -1,15.35 35.47,-3.22 93.93,-11.66 130.1,-19.89 2.5,-0.08 -0.19,-17.19 -17.34,-18.92 -5.21,-0.25 -4.32,2.6 -10.48,4.84 -27.63,6 -76.16,20.22 -101.28,18.62 z" style="fill:#142896;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path id="teasta-path4178" d="M 101.08,860.47 C 81.04,899.28 62.61,913.1 1.98,939.29 -21.48,948.68 -19.81,962.94 8.63,953.18 85.8,923.2 101.98,904.48 114.56,868.13 Z" style="fill:#142896;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path id="teasta-path4180" d="m 148.9,861.24 c 24.81,28.94 58.74,106.95 77.56,95.37 14.85,-9.54 33.95,-10.67 42.07,-8.48 10.62,2.8 11.13,7.75 17.08,10.97 15.63,6.59 12.36,-2.02 6.94,-9.59 -14.04,-21.6 -80.57,-34.67 -122.31,-92.57 z" style="fill:#142896;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+  </g>
+</svg>

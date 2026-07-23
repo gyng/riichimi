@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400"><defs id="t2pf-defs4">
+    <mask maskUnits="userSpaceOnUse" id="t2pf-mask4222-0">
+      <rect ry="40" y="652.28" x="0" height="400.78" width="300.06" id="t2pf-rect4224-8" style="opacity:1;fill:#ff3737;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    </mask>
+    <filter style="color-interpolation-filters:sRGB" id="t2pf-filter4198-8">
+      <feGaussianBlur stdDeviation="2.51 2.51" result="blur" id="t2pf-feGaussianBlur4200-3" />
+    </filter>
+    <mask maskUnits="userSpaceOnUse" id="t2pf-mask4216-0">
+      <rect ry="40" y="-1325.6" x="-451.94" height="400.78" width="300.06" id="t2pf-rect4218-5" style="opacity:1;fill:#ff3737;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" transform="scale(-1,-1)" />
+    </mask>
+    </defs>
+  <g id="t2pf-layer1" transform="translate(0,-652.36)">
+    <rect style="opacity:1;fill:#f5f0eb;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t2pf-rect4164" width="300.06" height="400.78" x="0" y="652.28" ry="40" />
+    <path transform="translate(-1.34e-7,-1.34e-6)" style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#t2pf-filter4198-8)" d="M -4.77,775.07 C -9.65,741.99 -16.85,674.24 -1.28,652.06 19,625.94 233.5,631.63 263.31,653.91 276.21,662.65 70.35,663.12 47.1,691.74 24.39,719.11 0.65,818.19 -4.77,775.07 Z" id="t2pf-path4166" mask="url(#t2pf-mask4222-0)" />
+    <path id="t2pf-path4221" d="m 151.74,1025.02 c -3.33,-9.31 -10.25,-68.45 5.32,-90.63 20.28,-26.12 219.44,-16.46 231.56,-9.93 11.07,5.32 -178.6,0.06 -204.85,34.87 -21.59,30 -26.5,82.18 -32.02,65.69 z" style="fill:#000000;fill-opacity:0.2;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#t2pf-filter4198-8)" transform="matrix(-1,0,0,-1,451.94,1977.89)" mask="url(#t2pf-mask4216-0)" />
+  </g>
+<defs id="t2pa-defs4">
+    </defs>
+  <g id="t2pa-layer1" transform="translate(0,-652.36)">
+    <g id="t2pa-g7625" transform="translate(-3.57e-7,-0.82)">
+      <g transform="matrix(0.77,0,0,0.77,512.08,490.48)" id="t2pa-g4360">
+        <circle style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:17.22;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t2pa-path15137" cx="-472.78" cy="341.26" r="107.57" />
+        <circle style="opacity:1;fill:#000037;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0" id="t2pa-path15137-2" cx="-472.78" cy="341.63" r="87.81" />
+        <g id="t2pa-g4247" transform="matrix(0.1,0,0,0.09,-506.33,359.11)">
+          <path d="m -93.33,-74.13 a 163.92,163.92 0 0 1 -224.6,-13.08 163.92,163.92 0 0 1 0,-224.98 163.92,163.92 0 0 1 224.6,-13.08" mask="none" style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:125.71;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t2pa-circle15184" />
+        </g>
+        <use x="0" y="0" id="t2pa-use4252" transform="matrix(0.5,-0.87,0.87,0.5,-532.67,-238.47)" width="100%" height="100%" href="#t2pa-g4247" />
+        <use x="0" y="0" id="t2pa-use4254" transform="matrix(0.5,-0.87,0.87,0.5,-533.75,-239.04)" width="100%" height="100%" href="#t2pa-use4252" />
+        <use x="0" y="0" id="t2pa-use4256" transform="matrix(0.5,-0.87,0.87,0.5,-533.75,-239.04)" width="100%" height="100%" href="#t2pa-use4254" />
+        <use x="0" y="0" id="t2pa-use4258" transform="matrix(0.5,-0.87,0.87,0.5,-533.75,-239.04)" width="100%" height="100%" href="#t2pa-use4256" />
+        <use x="0" y="0" id="t2pa-use4260" transform="matrix(0.5,-0.87,0.87,0.5,-533.75,-239.04)" width="100%" height="100%" href="#t2pa-use4258" />
+        <circle style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:12.29;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t2pa-path15154-5" cx="-472.93" cy="341.52" r="18.19" />
+      </g>
+      <g id="t2pa-g7557" transform="matrix(0.77,0,0,0.77,512.08,692.98)">
+        <circle r="107.57" cy="341.26" cx="-472.78" id="t2pa-circle7559" style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:17.22;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+        <circle r="87.81" cy="341.63" cx="-472.78" id="t2pa-circle7561" style="opacity:1;fill:#000037;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0" />
+        <g transform="matrix(0.1,0,0,0.09,-506.33,359.11)" id="t2pa-g7563">
+          <path d="m -93.33,-74.13 a 163.92,163.92 0 0 1 -224.6,-13.08 163.92,163.92 0 0 1 0,-224.98 163.92,163.92 0 0 1 224.6,-13.08" id="t2pa-path7565" style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:125.71;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" mask="none" />
+        </g>
+        <use height="100%" width="100%" transform="matrix(0.5,-0.87,0.87,0.5,-532.67,-238.47)" id="t2pa-use7567" y="0" x="0" href="#t2pa-g4247" />
+        <use height="100%" width="100%" transform="matrix(0.5,-0.87,0.87,0.5,-533.75,-239.04)" id="t2pa-use7569" y="0" x="0" href="#t2pa-use4252" />
+        <use height="100%" width="100%" transform="matrix(0.5,-0.87,0.87,0.5,-533.75,-239.04)" id="t2pa-use7571" y="0" x="0" href="#t2pa-use4254" />
+        <use height="100%" width="100%" transform="matrix(0.5,-0.87,0.87,0.5,-533.75,-239.04)" id="t2pa-use7573" y="0" x="0" href="#t2pa-use4256" />
+        <use height="100%" width="100%" transform="matrix(0.5,-0.87,0.87,0.5,-533.75,-239.04)" id="t2pa-use7575" y="0" x="0" href="#t2pa-use4258" />
+        <circle r="18.19" cy="341.52" cx="-472.93" id="t2pa-circle7577" style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:12.29;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400"><defs id="t3pf-defs4">
+    <mask maskUnits="userSpaceOnUse" id="t3pf-mask4222-0">
+      <rect ry="40" y="652.28" x="0" height="400.78" width="300.06" id="t3pf-rect4224-8" style="opacity:1;fill:#ff3737;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    </mask>
+    <filter style="color-interpolation-filters:sRGB" id="t3pf-filter4198-8">
+      <feGaussianBlur stdDeviation="2.51 2.51" result="blur" id="t3pf-feGaussianBlur4200-3" />
+    </filter>
+    <mask maskUnits="userSpaceOnUse" id="t3pf-mask4216-0">
+      <rect ry="40" y="-1325.6" x="-451.94" height="400.78" width="300.06" id="t3pf-rect4218-5" style="opacity:1;fill:#ff3737;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" transform="scale(-1,-1)" />
+    </mask>
+    </defs>
+  <g id="t3pf-layer1" transform="translate(0,-652.36)">
+    <rect style="opacity:1;fill:#f5f0eb;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t3pf-rect4164" width="300.06" height="400.78" x="0" y="652.28" ry="40" />
+    <path transform="translate(-1.34e-7,-1.34e-6)" style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#t3pf-filter4198-8)" d="M -4.77,775.07 C -9.65,741.99 -16.85,674.24 -1.28,652.06 19,625.94 233.5,631.63 263.31,653.91 276.21,662.65 70.35,663.12 47.1,691.74 24.39,719.11 0.65,818.19 -4.77,775.07 Z" id="t3pf-path4166" mask="url(#t3pf-mask4222-0)" />
+    <path id="t3pf-path4221" d="m 151.74,1025.02 c -3.33,-9.31 -10.25,-68.45 5.32,-90.63 20.28,-26.12 219.44,-16.46 231.56,-9.93 11.07,5.32 -178.6,0.06 -204.85,34.87 -21.59,30 -26.5,82.18 -32.02,65.69 z" style="fill:#000000;fill-opacity:0.2;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#t3pf-filter4198-8)" transform="matrix(-1,0,0,-1,451.94,1977.89)" mask="url(#t3pf-mask4216-0)" />
+  </g>
+<defs id="t3pa-defs4">
+    </defs>
+  <g id="t3pa-layer1" transform="translate(0,-652.36)">
+    <g id="t3pa-g7705" transform="translate(4.7e-7,0.02)">
+      <g id="t3pa-g7649" transform="matrix(1.02,0,0,1.02,286.17,231.36)">
+        <circle r="59.76" cy="485.49" cx="-205.98" id="t3pa-circle7651" style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+        <circle r="45.07" cy="485.49" cx="-205.98" id="t3pa-circle7653" style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+        <circle r="38.81" cy="485.49" cx="-205.98" id="t3pa-circle7655" style="opacity:1;fill:#000037;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+        <path style="opacity:1;fill:none;fill-opacity:0.3;fill-rule:nonzero;stroke:#ffffff;stroke-width:6.6;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:13.2, 13.2;stroke-dashoffset:0;stroke-opacity:1" id="t3pa-path7657" d="m -188.25,-484.06 a 21.07,21.07 0 0 1 -20.67,21.06 21.07,21.07 0 0 1 -21.45,-20.27 21.07,21.07 0 0 1 19.87,-21.83 21.07,21.07 0 0 1 22.2,19.45" transform="matrix(1,-0.01,-0.01,-1,0,0)" />
+        <circle r="7.85" cy="485.49" cx="-205.98" id="t3pa-circle7659" style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+        <circle r="3.59" cy="485.49" cx="-205.98" id="t3pa-circle7661" style="opacity:1;fill:#000037;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      </g>
+      <g transform="matrix(1.02,0,0,1.02,360.65,355.77)" id="t3pa-g7677">
+        <circle style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t3pa-circle7679" cx="-205.98" cy="485.49" r="59.76" />
+        <circle style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t3pa-circle7681" cx="-205.98" cy="485.49" r="45.07" />
+        <circle style="opacity:1;fill:#b93c3c;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t3pa-circle7683" cx="-205.98" cy="485.49" r="38.81" />
+        <path transform="matrix(1,-0.01,-0.01,-1,0,0)" d="m -188.25,-484.06 a 21.07,21.07 0 0 1 -20.67,21.06 21.07,21.07 0 0 1 -21.45,-20.27 21.07,21.07 0 0 1 19.87,-21.83 21.07,21.07 0 0 1 22.2,19.45" id="t3pa-path7685" style="opacity:1;fill:none;fill-opacity:0.3;fill-rule:nonzero;stroke:#ffffff;stroke-width:6.6;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:13.2, 13.2;stroke-dashoffset:0;stroke-opacity:1" />
+        <circle style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t3pa-circle7687" cx="-205.98" cy="485.49" r="7.85" />
+        <circle style="opacity:1;fill:#b93c3c;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t3pa-circle7689" cx="-205.98" cy="485.49" r="3.59" />
+      </g>
+      <g transform="matrix(1.02,0,0,1.02,435.14,480.3)" id="t3pa-g7691">
+        <circle style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t3pa-circle7693" cx="-205.98" cy="485.49" r="59.76" />
+        <circle style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t3pa-circle7695" cx="-205.98" cy="485.49" r="45.07" />
+        <circle style="opacity:1;fill:#000037;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t3pa-circle7697" cx="-205.98" cy="485.49" r="38.81" />
+        <path transform="matrix(1,-0.01,-0.01,-1,0,0)" d="m -188.25,-484.06 a 21.07,21.07 0 0 1 -20.67,21.06 21.07,21.07 0 0 1 -21.45,-20.27 21.07,21.07 0 0 1 19.87,-21.83 21.07,21.07 0 0 1 22.2,19.45" id="t3pa-path7699" style="opacity:1;fill:none;fill-opacity:0.3;fill-rule:nonzero;stroke:#ffffff;stroke-width:6.6;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:13.2, 13.2;stroke-dashoffset:0;stroke-opacity:1" />
+        <circle style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t3pa-circle7701" cx="-205.98" cy="485.49" r="7.85" />
+        <circle style="opacity:1;fill:#000037;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t3pa-circle7703" cx="-205.98" cy="485.49" r="3.59" />
+      </g>
+    </g>
+  </g>
+</svg>

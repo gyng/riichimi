@@ -1,5 +1,6 @@
 export { ActionButton } from "./atoms/action-button";
 export { MahjongTile, tileAccessibleName } from "./atoms/mahjong-tile";
+export { TileDisplayProvider, useTileDisplay } from "./atoms/tile-display-context";
 export { SectionLabel } from "./atoms/section-label";
 export { CounterControl } from "./molecules/counter-control";
 export { MethodCard } from "./molecules/method-card";

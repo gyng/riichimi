@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400"><defs id="t1pf-defs4">
+    <mask maskUnits="userSpaceOnUse" id="t1pf-mask4222-0">
+      <rect ry="40" y="652.28" x="0" height="400.78" width="300.06" id="t1pf-rect4224-8" style="opacity:1;fill:#ff3737;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    </mask>
+    <filter style="color-interpolation-filters:sRGB" id="t1pf-filter4198-8">
+      <feGaussianBlur stdDeviation="2.51 2.51" result="blur" id="t1pf-feGaussianBlur4200-3" />
+    </filter>
+    <mask maskUnits="userSpaceOnUse" id="t1pf-mask4216-0">
+      <rect ry="40" y="-1325.6" x="-451.94" height="400.78" width="300.06" id="t1pf-rect4218-5" style="opacity:1;fill:#ff3737;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" transform="scale(-1,-1)" />
+    </mask>
+    </defs>
+  <g id="t1pf-layer1" transform="translate(0,-652.36)">
+    <rect style="opacity:1;fill:#f5f0eb;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t1pf-rect4164" width="300.06" height="400.78" x="0" y="652.28" ry="40" />
+    <path transform="translate(-1.34e-7,-1.34e-6)" style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#t1pf-filter4198-8)" d="M -4.77,775.07 C -9.65,741.99 -16.85,674.24 -1.28,652.06 19,625.94 233.5,631.63 263.31,653.91 276.21,662.65 70.35,663.12 47.1,691.74 24.39,719.11 0.65,818.19 -4.77,775.07 Z" id="t1pf-path4166" mask="url(#t1pf-mask4222-0)" />
+    <path id="t1pf-path4221" d="m 151.74,1025.02 c -3.33,-9.31 -10.25,-68.45 5.32,-90.63 20.28,-26.12 219.44,-16.46 231.56,-9.93 11.07,5.32 -178.6,0.06 -204.85,34.87 -21.59,30 -26.5,82.18 -32.02,65.69 z" style="fill:#000000;fill-opacity:0.2;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#t1pf-filter4198-8)" transform="matrix(-1,0,0,-1,451.94,1977.89)" mask="url(#t1pf-mask4216-0)" />
+  </g>
+<defs id="t1pa-defs4">
+    </defs>
+  <g id="t1pa-layer1" transform="translate(0,-652.36)">
+    <g id="t1pa-g6641" transform="matrix(0.89,0,0,0.89,-207.39,341.03)">
+      <circle r="160" cy="572.36" cx="400" id="t1pa-path5446" style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:10.03;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <circle r="145" cy="572.36" cx="400" id="t1pa-path5448" style="opacity:1;fill:#000037;fill-opacity:1;fill-rule:nonzero;stroke:#000037;stroke-width:10.03;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <g transform="translate(0.35,0)" id="t1pa-g5971">
+        <path style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:8.96;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 392.33,496.48 c -8.27,-82.94 24.08,-82.94 15.29,0" id="t1pa-path5460" />
+        <g id="t1pa-g5914" transform="translate(-31,-64.5)">
+          <use height="100%" width="100%" id="t1pa-use5880" transform="matrix(0.94,0.34,-0.34,0.94,250.39,-36.97)" y="0" x="0" href="#t1pa-path5460" />
+          <use height="100%" width="100%" id="t1pa-use5882" transform="matrix(0.77,0.64,-0.64,0.77,491.62,-58.03)" y="0" x="0" href="#t1pa-path5460" />
+          <use height="100%" width="100%" id="t1pa-use5884" transform="matrix(0.5,0.87,-0.87,0.5,725.51,4.68)" y="0" x="0" href="#t1pa-path5460" />
+          <use height="100%" width="100%" id="t1pa-use5886" transform="matrix(0.17,0.98,-0.98,0.17,923.85,143.61)" y="0" x="0" href="#t1pa-path5460" />
+          <use height="100%" width="100%" id="t1pa-use5888" transform="matrix(-0.17,0.98,-0.98,-0.17,1062.7,341.99)" y="0" x="0" href="#t1pa-path5460" />
+          <use height="100%" width="100%" id="t1pa-use5890" transform="matrix(-0.5,0.87,-0.87,-0.5,1125.34,575.9)" y="0" x="0" href="#t1pa-path5460" />
+          <use height="100%" width="100%" id="t1pa-use5892" transform="matrix(-0.77,0.64,-0.64,-0.77,1104.19,817.12)" y="0" x="0" href="#t1pa-path5460" />
+          <use height="100%" width="100%" id="t1pa-use5894" transform="matrix(-0.94,0.34,-0.34,-0.94,1001.82,1036.57)" y="0" x="0" href="#t1pa-path5460" />
+          <use height="100%" width="100%" id="t1pa-use5896" transform="matrix(-1,0,0,-1,830.56,1207.77)" y="0" x="0" href="#t1pa-path5460" />
+          <use height="100%" width="100%" id="t1pa-use5898" transform="matrix(-0.94,-0.34,0.34,-0.94,611.08,1310.07)" y="0" x="0" href="#t1pa-path5460" />
+          <use height="100%" width="100%" id="t1pa-use5900" transform="matrix(-0.77,-0.64,0.64,-0.77,369.85,1331.13)" y="0" x="0" href="#t1pa-path5460" />
+          <use height="100%" width="100%" id="t1pa-use5902" transform="matrix(-0.5,-0.87,0.87,-0.5,135.96,1268.42)" y="0" x="0" href="#t1pa-path5460" />
+          <use height="100%" width="100%" id="t1pa-use5904" transform="matrix(-0.17,-0.98,0.98,-0.17,-62.37,1129.49)" y="0" x="0" href="#t1pa-path5460" />
+          <use height="100%" width="100%" id="t1pa-use5906" transform="matrix(0.17,-0.98,0.98,0.17,-201.23,931.11)" y="0" x="0" href="#t1pa-path5460" />
+          <use height="100%" width="100%" id="t1pa-use5908" transform="matrix(0.5,-0.87,0.87,0.5,-263.87,697.2)" y="0" x="0" href="#t1pa-path5460" />
+          <use height="100%" width="100%" id="t1pa-use5910" transform="matrix(0.77,-0.64,0.64,0.77,-242.72,455.97)" y="0" x="0" href="#t1pa-path5460" />
+          <use height="100%" width="100%" id="t1pa-use5912" transform="matrix(0.94,-0.34,0.34,0.94,-140.34,236.53)" y="0" x="0" href="#t1pa-path5460" />
+        </g>
+      </g>
+      <circle r="84.47" cy="572.36" cx="400" id="t1pa-path5454" style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000037;stroke-width:10.24;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <circle r="72.31" cy="572.36" cx="400" id="t1pa-path5992" style="opacity:1;fill:#b93c3c;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:12;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <g transform="translate(-0.18,0.09)" id="t1pa-g6038">
+        <path style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:23.11;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 401.33,554.24 c -3.15,-9.94 -29.57,-32.57 -1.22,-34.02 29.37,1.6 0.87,23.53 -1.72,34.18" id="t1pa-path5994" />
+        <path style="fill:none;fill-rule:evenodd;stroke:#b93c3c;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 400,555.19 0,-25.66" id="t1pa-path6018" />
+        <circle style="opacity:1;fill:#b93c3c;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t1pa-path6028" cx="400" cy="527.83" r="4.82" />
+        <path style="fill:none;fill-rule:evenodd;stroke:#b93c3c;stroke-width:4;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 404.69,557.49 6.57,-16.11" id="t1pa-path6030" />
+        <use x="0" y="0" id="t1pa-use6032" width="100%" height="100%" transform="matrix(-1,0,0,1,799.94,0)" href="#t1pa-path6030" />
+      </g>
+      <circle r="16.03" cy="572.36" cx="400" id="t1pa-path6010" style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#b93c3c;stroke-width:6.67;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <circle r="8.54" cy="572.36" cx="400" id="t1pa-path6016" style="opacity:1;fill:#b93c3c;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <use height="100%" width="100%" transform="matrix(0.31,-0.95,0.95,0.31,-267.97,775.89)" id="t1pa-use6047" y="0" x="0" href="#t1pa-g6038" />
+      <use height="100%" width="100%" transform="matrix(0.31,-0.95,0.95,0.31,-267.97,775.89)" id="t1pa-use6049" y="0" x="0" href="#t1pa-use6047" />
+      <use height="100%" width="100%" transform="matrix(0.31,-0.95,0.95,0.31,-267.97,775.89)" id="t1pa-use6051" y="0" x="0" href="#t1pa-use6049" />
+      <use height="100%" width="100%" transform="matrix(0.31,-0.95,0.95,0.31,-267.97,775.89)" id="t1pa-use6053" y="0" x="0" href="#t1pa-use6051" />
+    </g>
+  </g>
+</svg>

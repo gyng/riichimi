@@ -2,6 +2,8 @@ import type { TileId } from "@riichimi/score-core";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { color, radius } from "../tokens/theme";
+import { tileArt } from "./tile-art";
+import { useTileDisplay } from "./tile-display-context";
 
 const honourGlyphs = {
   east: "東",
@@ -57,6 +59,15 @@ export interface MahjongTileProps {
   readonly tile: TileId;
 }
 
+/** The rank shorthand shown in the corner when a player asks for it. */
+function cornerLabel(tile: TileId): string | null {
+  if (isHonourTile(tile)) {
+    return null;
+  }
+  const suit = tile.endsWith("m") ? "m" : tile.endsWith("p") ? "p" : "s";
+  return `${tile[0] === "0" ? "5" : tile[0]}${suit}`;
+}
+
 export function MahjongTile({
   disabled = false,
   fill = false,
@@ -64,19 +75,18 @@ export function MahjongTile({
   selected = false,
   tile,
 }: MahjongTileProps) {
-  const isHonour = isHonourTile(tile);
-  const isRedFive = tile.startsWith("0");
-  const suitGlyph = tile.endsWith("m") ? "萬" : tile.endsWith("p") ? "筒" : "索";
-  const suitColor = tile.endsWith("p") ? color.jade : tile.endsWith("s") ? "#2D7045" : color.accent;
-  const content = isHonour ? (
-    <Text style={[styles.honour, tile === "red" && styles.redHonour]}>{honourGlyphs[tile]}</Text>
-  ) : (
-    <View style={styles.suited}>
-      <Text style={[styles.rank, { color: isRedFive ? color.accent : color.ink }]}>
-        {isRedFive ? "5" : tile[0]}
-      </Text>
-      <Text style={[styles.suit, { color: suitColor }]}>{suitGlyph}</Text>
-    </View>
+  const { showRankLabels } = useTileDisplay();
+  const Art = tileArt[tile];
+  const corner = showRankLabels ? cornerLabel(tile) : null;
+  const content = (
+    <>
+      <Art height="100%" preserveAspectRatio="xMidYMid meet" width="100%" />
+      {corner === null ? null : (
+        <View accessibilityElementsHidden style={styles.corner}>
+          <Text style={styles.cornerLabel}>{corner}</Text>
+        </View>
+      )}
+    </>
   );
 
   if (onPress === undefined) {
@@ -111,39 +121,24 @@ export function MahjongTile({
 }
 
 const styles = StyleSheet.create({
+  corner: {
+    backgroundColor: "rgba(255,253,247,0.9)",
+    borderRadius: 3,
+    paddingHorizontal: 2,
+    position: "absolute",
+    right: 2,
+    top: 2,
+  },
+  cornerLabel: { color: color.ink, fontFamily: "monospace", fontSize: 8, fontWeight: "800" },
   disabled: {
     opacity: 0.28,
-  },
-  honour: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 24,
-    fontWeight: "800",
   },
   pressed: {
     transform: [{ translateY: 2 }],
   },
-  rank: {
-    fontFamily: "serif",
-    fontSize: 20,
-    fontWeight: "800",
-    lineHeight: 22,
-  },
-  redHonour: {
-    color: color.accent,
-  },
   selected: {
     borderColor: color.accent,
     borderWidth: 3,
-  },
-  suit: {
-    fontFamily: "serif",
-    fontSize: 14,
-    fontWeight: "700",
-    lineHeight: 16,
-  },
-  suited: {
-    alignItems: "center",
   },
   fill: { minHeight: 0, minWidth: 0, width: "100%" },
   // A tile is the one deliberate exception to the 48x48 target minimum: a suit
@@ -152,11 +147,12 @@ const styles = StyleSheet.create({
   // comfortably above the minimum and tiles keep a real gap between them.
   tile: {
     alignItems: "center",
-    aspectRatio: 0.72,
-    backgroundColor: color.white,
-    borderColor: color.ink,
+    aspectRatio: 0.75,
+    backgroundColor: "transparent",
+    borderColor: "transparent",
     borderRadius: radius.tile,
-    borderWidth: 1,
+    borderWidth: 2,
+    overflow: "hidden",
     justifyContent: "center",
     minHeight: 52,
     minWidth: 38,

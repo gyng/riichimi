@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400"><defs id="t2sf-defs4">
+    <mask maskUnits="userSpaceOnUse" id="t2sf-mask4222-0">
+      <rect ry="40" y="652.28" x="0" height="400.78" width="300.06" id="t2sf-rect4224-8" style="opacity:1;fill:#ff3737;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    </mask>
+    <filter style="color-interpolation-filters:sRGB" id="t2sf-filter4198-8">
+      <feGaussianBlur stdDeviation="2.51 2.51" result="blur" id="t2sf-feGaussianBlur4200-3" />
+    </filter>
+    <mask maskUnits="userSpaceOnUse" id="t2sf-mask4216-0">
+      <rect ry="40" y="-1325.6" x="-451.94" height="400.78" width="300.06" id="t2sf-rect4218-5" style="opacity:1;fill:#ff3737;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" transform="scale(-1,-1)" />
+    </mask>
+    </defs>
+  <g id="t2sf-layer1" transform="translate(0,-652.36)">
+    <rect style="opacity:1;fill:#f5f0eb;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t2sf-rect4164" width="300.06" height="400.78" x="0" y="652.28" ry="40" />
+    <path transform="translate(-1.34e-7,-1.34e-6)" style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#t2sf-filter4198-8)" d="M -4.77,775.07 C -9.65,741.99 -16.85,674.24 -1.28,652.06 19,625.94 233.5,631.63 263.31,653.91 276.21,662.65 70.35,663.12 47.1,691.74 24.39,719.11 0.65,818.19 -4.77,775.07 Z" id="t2sf-path4166" mask="url(#t2sf-mask4222-0)" />
+    <path id="t2sf-path4221" d="m 151.74,1025.02 c -3.33,-9.31 -10.25,-68.45 5.32,-90.63 20.28,-26.12 219.44,-16.46 231.56,-9.93 11.07,5.32 -178.6,0.06 -204.85,34.87 -21.59,30 -26.5,82.18 -32.02,65.69 z" style="fill:#000000;fill-opacity:0.2;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#t2sf-filter4198-8)" transform="matrix(-1,0,0,-1,451.94,1977.89)" mask="url(#t2sf-mask4216-0)" />
+  </g>
+<defs id="t2sa-defs4">
+    </defs>
+  <g id="t2sa-layer1" transform="translate(0,-652.36)">
+    <g id="t2sa-g4384">
+      <g transform="matrix(0.96,0,0,0.96,6.11,26.8)" id="t2sa-g4337">
+        <ellipse style="opacity:1;fill:#004900;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t2sa-ellipse4339" cx="135.05" cy="680.43" rx="24.68" ry="19.1" />
+        <ellipse cy="680.43" cx="164.02" id="t2sa-ellipse4341" style="opacity:1;fill:#004900;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" rx="24.68" ry="19.1" />
+        <ellipse cy="829.8" cx="133.84" id="t2sa-ellipse4343" style="opacity:1;fill:#004900;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" rx="24.68" ry="19.1" />
+        <path style="fill:none;fill-rule:evenodd;stroke:#004900;stroke-width:55;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 149.58,818.82 0,-134.67" id="t2sa-path4345" />
+        <ellipse style="opacity:1;fill:#004900;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t2sa-ellipse4347" cx="165.64" cy="829.8" rx="24.68" ry="19.1" />
+        <ellipse style="opacity:1;fill:#004900;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t2sa-ellipse4349" cx="160.99" cy="748.83" rx="32.79" ry="25.37" />
+        <ellipse cy="748.83" cx="138.32" id="t2sa-ellipse4351" style="opacity:1;fill:#004900;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" rx="32.79" ry="25.37" />
+        <path style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:12.51;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 149.58,685.72 0,37.84" id="t2sa-path4353" />
+        <path id="t2sa-path4355" d="m 149.58,777.56 0,46.73" style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:12.51;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        <ellipse ry="8.7" rx="8.99" style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t2sa-ellipse4357" cx="149.58" cy="683.53" />
+        <path id="t2sa-path4359" d="m 140.23,761.82 c 4.23,-6.44 15.56,-6.16 19.12,0" style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:10.43;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        <path style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:10.43;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 140.23,743.53 c 4.23,-6.44 15.56,-6.16 19.12,0" id="t2sa-path4361" />
+      </g>
+      <g id="t2sa-g4320" transform="matrix(0.96,0,0,0.96,6.11,235.24)">
+        <ellipse ry="19.1" rx="24.68" cy="680.43" cx="135.05" id="t2sa-ellipse4322" style="opacity:1;fill:#004900;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+        <ellipse ry="19.1" rx="24.68" style="opacity:1;fill:#004900;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t2sa-ellipse4324" cx="164.02" cy="680.43" />
+        <ellipse ry="19.1" rx="24.68" style="opacity:1;fill:#004900;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t2sa-ellipse4326" cx="133.84" cy="829.8" />
+        <path id="t2sa-path4328" d="m 149.58,818.82 0,-134.67" style="fill:none;fill-rule:evenodd;stroke:#004900;stroke-width:55;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        <ellipse ry="19.1" rx="24.68" cy="829.8" cx="165.64" id="t2sa-ellipse4330" style="opacity:1;fill:#004900;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+        <ellipse ry="25.37" rx="32.79" cy="748.83" cx="160.99" id="t2sa-ellipse4332" style="opacity:1;fill:#004900;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+        <ellipse ry="25.37" rx="32.79" style="opacity:1;fill:#004900;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="t2sa-ellipse4334" cx="138.32" cy="748.83" />
+        <path id="t2sa-path4336" d="m 149.58,685.72 0,37.84" style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:12.51;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        <path style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:12.51;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 149.58,777.56 0,46.73" id="t2sa-path4338" />
+        <ellipse cy="683.53" cx="149.58" id="t2sa-ellipse4342" style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" rx="8.99" ry="8.7" />
+        <path style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:10.43;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 140.23,761.82 c 4.23,-6.44 15.56,-6.16 19.12,0" id="t2sa-path4344" />
+        <path id="t2sa-path4335" d="m 140.23,743.53 c 4.23,-6.44 15.56,-6.16 19.12,0" style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:10.43;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      </g>
+    </g>
+  </g>
+</svg>

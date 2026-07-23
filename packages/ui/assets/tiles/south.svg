@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400"><defs id="tsouthf-defs4">
+    <mask maskUnits="userSpaceOnUse" id="tsouthf-mask4222-0">
+      <rect ry="40" y="652.28" x="0" height="400.78" width="300.06" id="tsouthf-rect4224-8" style="opacity:1;fill:#ff3737;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    </mask>
+    <filter style="color-interpolation-filters:sRGB" id="tsouthf-filter4198-8">
+      <feGaussianBlur stdDeviation="2.51 2.51" result="blur" id="tsouthf-feGaussianBlur4200-3" />
+    </filter>
+    <mask maskUnits="userSpaceOnUse" id="tsouthf-mask4216-0">
+      <rect ry="40" y="-1325.6" x="-451.94" height="400.78" width="300.06" id="tsouthf-rect4218-5" style="opacity:1;fill:#ff3737;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" transform="scale(-1,-1)" />
+    </mask>
+    </defs>
+  <g id="tsouthf-layer1" transform="translate(0,-652.36)">
+    <rect style="opacity:1;fill:#f5f0eb;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="tsouthf-rect4164" width="300.06" height="400.78" x="0" y="652.28" ry="40" />
+    <path transform="translate(-1.34e-7,-1.34e-6)" style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#tsouthf-filter4198-8)" d="M -4.77,775.07 C -9.65,741.99 -16.85,674.24 -1.28,652.06 19,625.94 233.5,631.63 263.31,653.91 276.21,662.65 70.35,663.12 47.1,691.74 24.39,719.11 0.65,818.19 -4.77,775.07 Z" id="tsouthf-path4166" mask="url(#tsouthf-mask4222-0)" />
+    <path id="tsouthf-path4221" d="m 151.74,1025.02 c -3.33,-9.31 -10.25,-68.45 5.32,-90.63 20.28,-26.12 219.44,-16.46 231.56,-9.93 11.07,5.32 -178.6,0.06 -204.85,34.87 -21.59,30 -26.5,82.18 -32.02,65.69 z" style="fill:#000000;fill-opacity:0.2;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#tsouthf-filter4198-8)" transform="matrix(-1,0,0,-1,451.94,1977.89)" mask="url(#tsouthf-mask4216-0)" />
+  </g>
+<defs id="tsoutha-defs4">
+    </defs>
+  <g id="tsoutha-layer1" transform="translate(0,-652.36)">
+    <g id="tsoutha-g4184" transform="matrix(1,0,0,1,-10.1,-17.44)">
+      <g id="tsoutha-g4195" transform="matrix(0.97,0,0,1,4.83,0)">
+        <path style="fill:#19328c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m 180.01,689.47 c -6.61,-0.49 -30.38,25.26 -36.61,34.32 -5.7,6.91 4.79,11.13 8.86,16.98 5.13,8.06 1.22,89.91 -8.34,135.14 l 15.47,-2.31 c 10.15,-37.07 17.66,-105.92 25.26,-112.08 7.23,-5.65 23.67,-5.05 21.68,-13.42 -4.13,-18.67 -20.45,-58.43 -26.32,-58.64 z" id="tsoutha-path4166" />
+        <path style="fill:#19328c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m 122.02,796.93 c -18.92,0.88 -28.8,10.7 -1.05,14.5 32.7,1.34 100.91,-5.96 100.99,-15.21 0.5,-12.39 -9.68,-30.36 -15.73,-30.25 -4.81,0.07 -14.61,6.08 -15.5,13.35 -0.77,8.52 -50.99,16.59 -68.72,17.61 z" id="tsoutha-path4168" />
+        <path style="fill:#19328c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m 153.67,848.85 c 25.63,-10.56 45.93,-20.43 70.17,-33.79 8.5,-4.4 16.46,4.65 14.72,10.49 -1.13,3.8 -14.09,26.77 -2.7,27.66 -10.3,8.03 -38.07,31.8 -54,67.8 l -24.83,-2.1 c 10.66,-26.67 51.37,-71.18 48.61,-74.1 -4.7,-5.09 -42.15,13.54 -50.34,11.19 z" id="tsoutha-path4170" />
+        <path style="fill:#19328c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="M 58.29,893.37 C 98.37,871.74 187.21,852.18 258.85,851.07 c 9.12,-0.56 30.91,52.37 30.72,61.52 -0.6,26.03 -45.43,88.5 -73.25,126.12 -5.79,6.42 -18.9,4.85 -27.7,-0.62 l -47.54,-31.56 c -4.8,-4.05 -3,-12.59 5.05,-7.74 10.64,6.55 32.41,14.86 44.47,16.43 11.07,1.47 48.14,-86.15 50.35,-100.93 1.3,-6.71 -7.48,-39.24 -23.33,-40.27 -107.24,3.99 -143.15,35.8 -157.54,37.25 z" id="tsoutha-path4172" />
+        <path style="fill:#19328c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m 35.18,856.07 c -8.33,2.47 -5.54,12.92 -4.36,19.23 9.77,43.25 46.33,125.35 53.64,130.24 22.5,12.48 31.3,4.16 30.91,-5.25 -1.14,-9.12 -30.28,-84.44 -48.58,-124.2 -6.32,-12.7 -22.05,-22.44 -31.62,-20.03 z" id="tsoutha-path4174" />
+        <path style="fill:#19328c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m 69.2,835.83 c -13.71,-6.45 -9.28,-18.13 9.26,-11.1 42.11,15.72 58.24,41.97 72,93.68 l -15.47,4.2 C 121.71,873.69 105.9,855.55 69.2,835.83 Z" id="tsoutha-path4176" />
+        <path style="fill:#19328c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m 121.22,943.33 c -15.91,5.9 -13.03,-18.01 -2.26,-21.03 74.13,-23.15 77.6,-21.16 90,-16.23 11.85,4.76 16.09,21.95 0.35,21.1 -31.19,-1.97 -55.59,2.55 -88.09,16.16 z" id="tsoutha-path4178" />
+        <path style="fill:#19328c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m 124.26,959.25 c -10.22,2.71 -7.02,18.27 3.28,15.95 26.74,-5.66 45.57,-9.03 73.05,-13 8.28,-1.37 8.02,-22.58 0.54,-25.88 -10.09,-3.03 -11.22,3.62 -15.65,6.11 -12.14,6.21 -37.22,10.45 -61.21,16.82 z" id="tsoutha-path4180" />
+        <path style="fill:#19328c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m 146.8,925.41 c 2.23,25.8 4.91,54.75 1.75,80.55 l 17.52,9.64 c 3.13,-29.67 6.51,-63.2 4.25,-92.87 z" id="tsoutha-path4182" />
+      </g>
+    </g>
+  </g>
+</svg>

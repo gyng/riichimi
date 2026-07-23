@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { bodyEdges } from "../components/screen-insets";
 import { LanguageControl } from "../features/i18n/language-control";
 import { RulesProfileControl } from "../features/rules/rules-profile-control";
+import { TileLabelControl } from "../features/rules/tile-label-control";
 import { useSession } from "../state/session-context";
 
 /**
@@ -23,6 +24,7 @@ export function SettingsScreen() {
         </Text>
         <View style={styles.section}>
           <RulesProfileControl lockedProfileId={session.state?.table.rulesProfileId} />
+          <TileLabelControl />
           <LanguageControl />
         </View>
       </ScrollView>
