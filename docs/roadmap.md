@@ -33,6 +33,11 @@ Status vocabulary: **Shipped** · **In progress** · **Planned** · **Blocked**.
   data: counted-limit capping, yakuman stacking and caps, optional ura-dora, and
   a profile-controlled double-wind pair fu. Mahjong Soul is deliberately held —
   see [rules profiles](rules-profiles.md) for why, and for what is not modelled.
+- **House rule editor.** A table can state its own rules (red fives, kuitan,
+  round-up mangan, ura-dora, counted limit, yakuman stacking, double-wind fu) as
+  a named local profile beside the published ones. Stored rules are parsed as
+  untrusted input, and editing is blocked while a table is pinned to them so a
+  hand already scored cannot be re-valued underneath the table.
 - **Win announcer.** `announceWin` produces structured announcement data, a
   narrow `SpeechPort` carries the device capability (Web Speech today, native
   reporting unavailable), and an opt-in per-device toggle speaks the result
@@ -40,14 +45,7 @@ Status vocabulary: **Shipped** · **In progress** · **Planned** · **Blocked**.
 
 ## Planned
 
-### 1. House rule editor
-
-Let a table express local rules directly (red fives, kuitan, kiriage, and the
-knobs added in item 1) as a named local profile, clearly distinguished from
-published rulesets the way `WRC 2025 · red-five table` already is. Depends on the
-knob set from item 1 being settled.
-
-### 2. Internationalisation, especially CJK
+### 1. Internationalisation, especially CJK
 
 Extract user-facing copy behind a translation boundary and verify Japanese and
 Chinese rendering: line breaking, font fallback, numeral and honorific handling,

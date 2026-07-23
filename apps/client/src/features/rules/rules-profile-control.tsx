@@ -1,8 +1,4 @@
-import {
-  isScoringRulesProfileId,
-  scoringRulesProfile,
-  scoringRulesProfiles,
-} from "@riichimi/rules";
+import { scoringRulesProfile, scoringRulesProfiles } from "@riichimi/rules";
 import { SegmentedControl, color, space } from "@riichimi/ui";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -10,10 +6,14 @@ import { useRules } from "../../state/rules-context";
 
 import type { ScoringRules } from "@riichimi/score-core";
 
-const options = scoringRulesProfiles.map((profile) => ({
-  label: profile.label,
-  value: profile.id,
-}));
+import { HouseRulesEditor } from "./house-rules-editor";
+import { houseRulesProfileId, houseScoringRules } from "./house-rules";
+import { parseRulesPreference } from "./rules-preference";
+
+const options = [
+  ...scoringRulesProfiles.map((profile) => ({ label: profile.label, value: profile.id })),
+  { label: "House rules", value: houseRulesProfileId },
+];
 
 /**
  * Describe a profile from its actual options rather than prose, so the summary
@@ -38,7 +38,9 @@ export function RulesProfileControl({
   readonly lockedProfileId?: string | undefined;
 }) {
   const rules = useRules();
-  const selected = scoringRulesProfile(lockedProfileId ?? rules.activeRules.id);
+  const activeId = lockedProfileId ?? rules.activeRules.id;
+  const isHouse = activeId === houseRulesProfileId;
+  const selected = isHouse ? houseScoringRules(rules.houseRules) : scoringRulesProfile(activeId);
   const locked = lockedProfileId !== undefined;
 
   return (
@@ -61,15 +63,18 @@ export function RulesProfileControl({
           <SegmentedControl
             accessibilityLabel="Scoring rules profile"
             onChange={(value) => {
-              if (isScoringRulesProfileId(value)) {
-                rules.selectProfile(value);
-              }
+              rules.selectProfile(parseRulesPreference(value));
             }}
             options={options}
             value={selected.id}
           />
         </View>
       )}
+      {isHouse ? (
+        <View style={styles.editor}>
+          <HouseRulesEditor locked={locked} />
+        </View>
+      ) : null}
       {rules.storageError === null ? null : (
         <Text accessibilityLiveRegion="polite" style={styles.error}>
           {rules.storageError}
@@ -84,6 +89,7 @@ const styles = StyleSheet.create({
   // content and overflow the screen instead of wrapping.
   control: { flexGrow: 1, flexShrink: 1, minWidth: 240 },
   copy: { flex: 1, minWidth: 250 },
+  editor: { width: "100%" },
   error: { color: color.accent, fontFamily: "serif", fontSize: 13, width: "100%" },
   kicker: {
     color: color.jade,

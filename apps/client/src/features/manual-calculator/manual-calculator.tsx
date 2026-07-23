@@ -1041,6 +1041,7 @@ export function ManualCalculator({
           {riichi === "none" ? null : (
             <Pressable
               accessibilityRole="checkbox"
+              aria-checked={ippatsu}
               accessibilityState={{ checked: ippatsu }}
               onPress={() => {
                 setIppatsu((value) => !value);
@@ -1095,6 +1096,7 @@ export function ManualCalculator({
         {speech.available ? (
           <Pressable
             accessibilityRole="checkbox"
+            aria-checked={announceWins}
             accessibilityState={{ checked: announceWins }}
             onPress={() => {
               const next = !announceWins;

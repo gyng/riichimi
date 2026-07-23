@@ -15,7 +15,8 @@ export interface ScoringRules {
   readonly maxYakumanMultiple: number | null;
   readonly redFives: boolean;
   readonly revision: string;
-  readonly sourceUrl: `https://${string}`;
+  /** Published rules cite their source; a table's own house rules have none. */
+  readonly sourceUrl: `https://${string}` | null;
   /** Whether ura-dora indicators count for a riichi hand. */
   readonly uraDora: boolean;
   /**

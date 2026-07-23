@@ -366,6 +366,7 @@ export function SessionScreen() {
               return (
                 <Pressable
                   accessibilityRole="checkbox"
+                  aria-checked={selected}
                   accessibilityState={{ checked: selected }}
                   key={player.id}
                   onPress={() => toggleTenpai(index)}
@@ -471,6 +472,7 @@ export function SessionScreen() {
                                 <Pressable
                                   accessibilityLabel={`${player.name} tenpai`}
                                   accessibilityRole="checkbox"
+                                  aria-checked={selected}
                                   accessibilityState={{ checked: selected }}
                                   key={player.id}
                                   onPress={() =>
@@ -495,6 +497,7 @@ export function SessionScreen() {
                                 <Pressable
                                   accessibilityLabel={`${player.name} riichi`}
                                   accessibilityRole="checkbox"
+                                  aria-checked={selected}
                                   accessibilityState={{ checked: selected }}
                                   key={player.id}
                                   onPress={() =>
@@ -542,6 +545,7 @@ export function SessionScreen() {
                                 <Pressable
                                   accessibilityLabel={`Winner ${player.name}`}
                                   accessibilityRole="radio"
+                                  aria-checked={selected}
                                   accessibilityState={{ checked: selected }}
                                   key={player.id}
                                   onPress={() => selectWinner(index)}
@@ -569,6 +573,7 @@ export function SessionScreen() {
                                     <Pressable
                                       accessibilityLabel={`Discarder ${player.name}`}
                                       accessibilityRole="radio"
+                                      aria-checked={selected}
                                       accessibilityState={{ checked: selected }}
                                       key={player.id}
                                       onPress={() => setDraftDiscarder(index)}

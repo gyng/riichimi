@@ -217,6 +217,7 @@ export function RecognitionReviewPanel({
           {requireStructureConfirmation ? (
             <Pressable
               accessibilityRole="checkbox"
+              aria-checked={structureConfirmed}
               accessibilityState={{ checked: structureConfirmed }}
               onPress={() => onConfirmStructureChange?.(!structureConfirmed)}
               style={styles.structureConfirm}
