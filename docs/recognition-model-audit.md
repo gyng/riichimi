@@ -69,21 +69,21 @@ The renderer does not change the shipped model or the production acceptance cont
 
 A first controlled A/B added 296 renders (8 per class, uniform weight) to the 107 real training crops, identical hyperparameters, evaluated on the same 46 source-separated held-out real crops:
 
-| Metric | real only | + renders | Δ |
-| --- | --- | --- | --- |
-| top-1 | 93.48% | 91.30% | −2.17pp |
-| accepted accuracy @0.75 | 100% | 100% | 0 |
+| Metric                  | real only      | + renders      | Δ       |
+| ----------------------- | -------------- | -------------- | ------- |
+| top-1                   | 93.48%         | 91.30%         | −2.17pp |
+| accepted accuracy @0.75 | 100%           | 100%           | 0       |
 | accepted coverage @0.75 | 73.91% (34/46) | 78.26% (36/46) | +4.35pp |
 
 Every delta is one to two crops on a 46-crop set — inside the noise floor. This does **not** establish lift; raw top-1 slipped while confident coverage rose slightly. Renders were ~53% of physical variants at this ratio.
 
 A second run down-weighted the renders to ~1:1 (111 renders, 3 per class) and improved realism (depth of field, white-balance drift, camera roll, stronger engraving, tighter azimuth):
 
-| Metric | real only | + renders (1:1, realism) | Δ |
-| --- | --- | --- | --- |
-| top-1 | 93.48% | 93.48% | 0 |
-| accepted accuracy @0.75 | 100% | 100% | 0 |
-| accepted coverage @0.75 | 73.91% (34/46) | 76.09% (35/46) | +2.17pp |
+| Metric                  | real only      | + renders (1:1, realism) | Δ       |
+| ----------------------- | -------------- | ------------------------ | ------- |
+| top-1                   | 93.48%         | 93.48%                   | 0       |
+| accepted accuracy @0.75 | 100%           | 100%                     | 0       |
+| accepted coverage @0.75 | 73.91% (34/46) | 76.09% (35/46)           | +2.17pp |
 
 Down-weighting removed the top-1 regression (back to parity) and left a one-crop coverage gain — still inside the noise floor. Conclusion after two runs: renders are, at best, harmless-to-marginal; they are **not** a promotion lever. The decisive blocker is measurement resolution — a 46-crop held-out set cannot resolve an effect smaller than ~2 crops. Real progress requires a far larger real held-out set, not more synthetic tuning. The shipped model is unchanged.
 
