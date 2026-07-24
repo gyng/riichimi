@@ -56,7 +56,11 @@ import { bodyEdges } from "../../components/screen-insets";
 
 import { speech } from "../../infrastructure/speech";
 import { useAnnouncer } from "../../state/announcer-context";
-import { announcementText } from "../announcer/announcement-text";
+import {
+  announcementLead,
+  announcementTail,
+  announcementText,
+} from "../announcer/announcement-text";
 import { createRoundCommandMetadata, useSession } from "../../state/session-context";
 import { useScoreHistory } from "../../state/score-history-context";
 import { useRules } from "../../state/rules-context";
@@ -576,16 +580,35 @@ export function ManualCalculator({
     const scoreResult = scoreHand(scoreInput);
     setResult(scoreResult);
     const earned = celebrateWins ? celebrationFor(scoreResult) : null;
-    if (earned !== null) {
-      celebrationKey.current += 1;
-      setCelebration({ key: celebrationKey.current, value: earned });
-    }
+    let fired = false;
+    const fireCelebration = () => {
+      if (!fired && earned !== null) {
+        fired = true;
+        celebrationKey.current += 1;
+        setCelebration({ key: celebrationKey.current, value: earned });
+      }
+    };
+
     if (scoreResult.kind === "success" && activeTable === null) {
       scoreHistory.record(scoreInput, scoreResult);
     }
     // Announcing is opt-in and never gates the score: the panel is already set.
     if (scoreResult.kind === "success" && announceWins && speech.available) {
-      speech.speak(announcementText(announceWin(scoreResult)));
+      const announcement = announceWin(scoreResult);
+      if (earned !== null) {
+        // Sync: read the yaku out, then stamp the limit as its climax is spoken.
+        speech.speak(announcementLead(announcement), {
+          onEnd: () => {
+            speech.speak(announcementTail(announcement), { onStart: fireCelebration });
+            // Safety net in case the start event never arrives.
+            globalThis.setTimeout(fireCelebration, 400);
+          },
+        });
+      } else {
+        speech.speak(announcementText(announcement));
+      }
+    } else {
+      fireCelebration();
     }
     return scoreResult;
   }

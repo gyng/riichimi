@@ -1,4 +1,4 @@
-import { announcementText } from "./announcement-text";
+import { announcementLead, announcementTail, announcementText } from "./announcement-text";
 
 describe("announcementText", () => {
   it("speaks the method, headline yaku, value, and points", () => {
@@ -38,5 +38,20 @@ describe("announcementText", () => {
         points: 12000,
       }),
     ).toBe("Tsumo. 5 han. 12,000 points.");
+  });
+
+  it("splits into a yaku lead and a limit climax for a synced reveal", () => {
+    const yakuman = {
+      fu: null,
+      han: null,
+      headline: ["Suuankou"],
+      limit: "yakuman",
+      method: "tsumo",
+      points: 32000,
+    } as const;
+
+    // The lead reads the method and yaku; the tail lands the limit and points.
+    expect(announcementLead(yakuman)).toBe("Tsumo. Suuankou.");
+    expect(announcementTail(yakuman)).toBe("yakuman. 32,000 points.");
   });
 });
