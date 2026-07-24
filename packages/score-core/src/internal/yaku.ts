@@ -19,12 +19,61 @@ import type { NormalizedHand } from "./normalize-hand";
 const dragons: readonly Dragon[] = ["white", "green", "red"];
 const winds: readonly Wind[] = ["east", "south", "west", "north"];
 
+// The Japanese name in kanji for each yaku, keyed by id so the display and the
+// announcer can lead with it. Dragon and wind value-honour ids resolve to the
+// specific tile (白/發/中, 自風/場風). A missing id falls back to the English name.
+const JAPANESE: Readonly<Record<string, string>> = {
+  riichi: "立直",
+  "double-riichi": "ダブル立直",
+  ippatsu: "一発",
+  "menzen-tsumo": "門前清自摸和",
+  pinfu: "平和",
+  tanyao: "断幺九",
+  iipeikou: "一盃口",
+  "yakuhai-white": "白",
+  "yakuhai-green": "發",
+  "yakuhai-red": "中",
+  "yakuhai-seat": "自風",
+  "yakuhai-round": "場風",
+  haitei: "海底摸月",
+  houtei: "河底撈魚",
+  rinshan: "嶺上開花",
+  chankan: "槍槓",
+  "sanshoku-doujun": "三色同順",
+  ittsuu: "一気通貫",
+  chanta: "混全帯幺九",
+  chiitoitsu: "七対子",
+  toitoi: "対々和",
+  sanankou: "三暗刻",
+  "sanshoku-doukou": "三色同刻",
+  sankantsu: "三槓子",
+  shousangen: "小三元",
+  honroutou: "混老頭",
+  junchan: "純全帯幺九",
+  honitsu: "混一色",
+  chinitsu: "清一色",
+  ryanpeikou: "二盃口",
+  renhou: "人和",
+  "kokushi-musou": "国士無双",
+  suuankou: "四暗刻",
+  daisangen: "大三元",
+  shousuushii: "小四喜",
+  daisuushii: "大四喜",
+  tsuuiisou: "字一色",
+  chinroutou: "清老頭",
+  ryuuiisou: "緑一色",
+  "chuuren-poutou": "九蓮宝燈",
+  suukantsu: "四槓子",
+  tenhou: "天和",
+  chiihou: "地和",
+};
+
 function yaku(id: string, name: string, romanized: string, han: number): Yaku {
-  return { han, id, name, romanized };
+  return { han, id, japanese: JAPANESE[id] ?? name, name, romanized };
 }
 
 function yakuman(id: string, name: string, romanized: string, value: 1 | 2 = 1): Yakuman {
-  return { id, name, romanized, value };
+  return { id, japanese: JAPANESE[id] ?? name, name, romanized, value };
 }
 
 function isTripletLike(

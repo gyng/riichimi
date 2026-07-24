@@ -60,6 +60,7 @@ const result: ScoreSuccess = {
     {
       han: 1,
       id: "menzen-tsumo",
+      japanese: "門前清自摸和",
       name: "Fully concealed hand",
       romanized: "Menzen tsumo",
     },

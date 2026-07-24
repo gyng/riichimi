@@ -25,9 +25,9 @@ describe("announceWin", () => {
     const announcement = announceWin(
       success({
         yaku: [
-          { han: 1, id: "riichi", name: "立直", romanized: "Riichi" },
-          { han: 3, id: "junchan", name: "純全帯幺九", romanized: "Junchan" },
-          { han: 2, id: "sanshoku", name: "三色同順", romanized: "Sanshoku" },
+          { han: 1, id: "riichi", japanese: "立直", name: "Riichi", romanized: "Riichi" },
+          { han: 3, id: "junchan", japanese: "純全帯幺九", name: "Perfect ends", romanized: "Junchan" }, // prettier-ignore
+          { han: 2, id: "sanshoku", japanese: "三色同順", name: "Mixed sequences", romanized: "Sanshoku" }, // prettier-ignore
         ],
       }),
     );
@@ -44,8 +44,10 @@ describe("announceWin", () => {
         han: null,
         limit: "yakuman",
         totalGain: 32000,
-        yaku: [{ han: 1, id: "riichi", name: "立直", romanized: "Riichi" }],
-        yakuman: [{ id: "suuankou", name: "四暗刻", romanized: "Suuankou", value: 1 }],
+        yaku: [{ han: 1, id: "riichi", japanese: "立直", name: "Riichi", romanized: "Riichi" }],
+        yakuman: [
+          { id: "suuankou", japanese: "四暗刻", name: "Four concealed triplets", romanized: "Suuankou", value: 1 }, // prettier-ignore
+        ],
       }),
     );
 

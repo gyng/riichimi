@@ -3,13 +3,19 @@ import type { HandValidationIssue } from "./hand";
 export interface Yaku {
   readonly han: number;
   readonly id: string;
+  /** English name. */
   readonly name: string;
+  /** Japanese name in kanji, e.g. 立直. */
+  readonly japanese: string;
   readonly romanized: string;
 }
 
 export interface Yakuman {
   readonly id: string;
+  /** English name. */
   readonly name: string;
+  /** Japanese name in kanji, e.g. 四暗刻. */
+  readonly japanese: string;
   readonly romanized: string;
   /** 1 for a normal yakuman; 2 for a single yaku that pays double (e.g. the
       13-wait kokushi or suuankou tanki) under a ruleset that recognizes it. */

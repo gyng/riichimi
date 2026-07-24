@@ -69,8 +69,9 @@ export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
       {(result.yakuman.length > 0 ? result.yakuman : result.yaku).map((item) => (
         <View key={item.id} style={styles.lineItem}>
           <View style={styles.lineCopy}>
-            <Text style={styles.lineTitle}>{item.name}</Text>
+            <Text style={styles.japanese}>{item.japanese}</Text>
             <Text style={styles.reading}>{item.romanized}</Text>
+            <Text style={styles.english}>{item.name}</Text>
           </View>
           <Text style={styles.value}>
             {"han" in item ? `${item.han} ${t("han")}` : `${item.value}×`}
@@ -182,11 +183,24 @@ const styles = StyleSheet.create({
     fontFamily: "serif",
     fontSize: 13,
   },
-  // The yaku's reading, brushed — the calligraphic counterpart to the plain name.
-  reading: {
-    color: "#EAF3EE",
+  // The yaku, Japanese first in the brush, with the reading and the English
+  // name stepping down beneath it.
+  japanese: {
+    color: color.white,
     fontFamily: "YujiSyuku",
-    fontSize: 17,
+    fontSize: 24,
+    lineHeight: 30,
+  },
+  reading: {
+    color: "#C7D6CF",
+    fontFamily: "serif",
+    fontSize: 13,
+    marginTop: 2,
+  },
+  english: {
+    color: "#8FA69D",
+    fontFamily: "serif",
+    fontSize: 11,
     marginTop: 1,
   },
   lineTitle: {
