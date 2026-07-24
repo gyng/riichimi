@@ -1,5 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
 
+import type { RecognitionResult } from "@riichimi/vision";
+
 import { RecognitionReviewPanel } from "./recognition-review-panel";
 
 describe("RecognitionReviewPanel", () => {
@@ -105,7 +107,7 @@ describe("RecognitionReviewPanel", () => {
   });
 
   it("folds a mis-read called set back into the concealed hand at review", async () => {
-    const onChange = jest.fn();
+    const onChange = jest.fn<void, [RecognitionResult]>();
     await render(
       <RecognitionReviewPanel
         initialReviewCount={0}
@@ -157,8 +159,8 @@ describe("RecognitionReviewPanel", () => {
       }),
     );
     // None of the folded tiles keep the meld role.
-    const [[folded]] = onChange.mock.calls;
-    expect(folded.detections.some((d: { role: string }) => d.role === "meld")).toBe(false);
+    const folded = onChange.mock.calls[0]?.[0];
+    expect(folded?.detections.some(({ role }) => role === "meld")).toBe(false);
   });
 
   it("shows the concealed and called split for an ambiguous single-row capture", async () => {

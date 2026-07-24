@@ -51,3 +51,43 @@ Coverage floors reveal unexamined code, but 100% execution does not prove correc
 ## Defects
 
 Every defect fix starts with the smallest reproducing test at the lowest suitable layer. The test should fail before the fix and stay as a permanent regression example.
+
+## What the gate enforces
+
+`npm run check` runs formatting, linting, **type checking**, the domain suite with
+coverage floors, and the component suite with its own floors. Type checking was
+added after 37 module-resolution errors survived a green run: oxlint's type-aware
+rules are not a substitute for `tsc`, and the two now both run.
+
+## Coverage floors, and what is deliberately not chased
+
+Floors are a ratchet against regression, not a target. They sit just under what
+the suite reaches, so a drop fails the gate and a gain can be locked in.
+
+Domain packages sit near complete. The statements that remain uncovered are two
+kinds, and both should stay that way:
+
+- **Compiler-mandated guards.** `noUncheckedIndexedAccess` forces an `undefined`
+  check on an index that the surrounding loop bounds already guarantee. Reaching
+  them needs an input the type system forbids.
+- **Exhaustiveness defaults.** `const exhaustive: never = event` exists so a new
+  variant fails to compile. Calling it requires casting past the type that makes
+  it work.
+
+Faking either produces a test that executes a line and proves nothing.
+
+The client's floors are lower and split by area on purpose:
+
+- **Components, i18n, recognition** are held high. Behaviour lives there.
+- **Platform adapters and the WebMCP bridge** are held to the global ratchet.
+  They wrap ONNX, Expo storage, and the browser's model-context API, so a unit
+  test would mostly assert that a mock was called. The browser dogfood drives all
+  three for real — the WebMCP journey executes the actual tools, and the scan
+  journey runs the actual model — which is worth more than a mocked line count.
+
+## Translation coverage
+
+`src/i18n/coverage.test.ts` scans the source tree for user-facing literals that
+do not go through `t`. It is checked against a deliberately introduced string to
+confirm it fails when copy is missed, because a scanner that cannot fail is
+decoration.

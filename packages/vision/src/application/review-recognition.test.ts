@@ -101,3 +101,51 @@ describe("chooseWinningDetection", () => {
     expect(() => chooseWinningDetection(result, "dora")).toThrow(/concealed hand tile/);
   });
 });
+
+describe("guarding programmer errors", () => {
+  const concealed = {
+    alternatives: [{ confidence: 0.9, tile: "1m" }],
+    bounds: { height: 0.4, width: 0.1, x: 0.1, y: 0.2 },
+    confidence: 0.9,
+    id: "hand-0",
+    role: "concealed",
+    tile: "1m",
+  } as const;
+  const result = { detections: [concealed], modelVersion: "test" } as const;
+
+  it("refuses a confidence threshold outside the probability range", () => {
+    expect(() => reviewRecognition(result, 0)).toThrow(RangeError);
+    expect(() => reviewRecognition(result, -0.5)).toThrow(RangeError);
+    expect(() => reviewRecognition(result, 1.5)).toThrow(RangeError);
+    // The ends of the range are legitimate.
+    expect(() => reviewRecognition(result, 1)).not.toThrow();
+  });
+
+  it("refuses to correct a detection that is not in the result", () => {
+    expect(() => correctDetection(result, "missing", { role: "concealed", tile: "2m" })).toThrow(
+      /does not exist/,
+    );
+  });
+
+  it("refuses to mark a missing detection as the winning tile", () => {
+    expect(() => chooseWinningDetection(result, "missing")).toThrow(/does not exist/);
+  });
+
+  it("refuses to mark an indicator or a called tile as the winning tile", () => {
+    for (const role of ["dora", "ura", "meld"] as const) {
+      const other = { detections: [{ ...concealed, role }], modelVersion: "test" } as const;
+      expect(() => chooseWinningDetection(other, "hand-0")).toThrow(/concealed hand tile/);
+    }
+  });
+
+  it("sorts a tile with no reading behind one that has a reading", () => {
+    const unread = { ...concealed, id: "hand-1", role: "unknown", tile: null } as const;
+    const review = reviewRecognition(
+      { detections: [unread, concealed], modelVersion: "test" },
+      0.5,
+    );
+
+    // The unreadable tile is what needs attention first.
+    expect(review.reviewDetectionIds[0]).toBe("hand-1");
+  });
+});

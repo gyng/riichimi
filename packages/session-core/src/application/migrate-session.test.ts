@@ -169,3 +169,44 @@ describe("reconstructSessionFromSnapshots", () => {
     expect(replayed).toMatchObject({ kind: "replayed", table: final.table });
   });
 });
+
+describe("reconstructing from an unusable trace", () => {
+  it("refuses an empty snapshot trace rather than inventing a table", () => {
+    expect(() => reconstructSessionFromSnapshots([])).toThrow(/empty snapshot trace/);
+  });
+
+  it("falls back to the newest snapshot when a step cannot be explained", () => {
+    const start = session();
+    // A jump that no single legacy action produces: two rounds appear at once,
+    // so the trace cannot be turned into an event log.
+    const jumped = applyWin(
+      applyDraw(start, {
+        id: "r1",
+        occurredAt: "2026-07-23T00:01:00.000Z",
+        tenpaiPlayerIndices: [],
+      }),
+      {
+        discarderIndex: 0,
+        id: "r2",
+        occurredAt: "2026-07-23T00:02:00.000Z",
+        payments: { fromDiscarder: 1000, kind: "ron", total: 1000 },
+        winnerIndex: 1,
+      },
+    );
+
+    const result = reconstructSessionFromSnapshots([start.table, jumped.table]);
+
+    // The table is preserved exactly; only the ability to edit history is lost.
+    expect(result.state.table).toEqual(jumped.table);
+    expect(result.state.events).toEqual([]);
+  });
+
+  it("preserves a single-snapshot trace as a baseline with no editable history", () => {
+    const start = session();
+
+    const result = reconstructSessionFromSnapshots([start.table]);
+
+    expect(result.state.table).toEqual(start.table);
+    expect(result.state.events).toEqual([]);
+  });
+});

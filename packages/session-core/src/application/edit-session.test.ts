@@ -99,7 +99,7 @@ describe("editSessionRound — recompute", () => {
     expect(edited.state.table).toEqual(fromScratch.table);
     expect(edited.review.scoreChanges).toEqual(
       fromScratch.table.players.map(
-        (player, index) => player.score - original.table.players[index]!.score,
+        (player, index) => player.score - (original.table.players[index]?.score ?? 0),
       ),
     );
     // A dealer win at East 1 now repeats, shifting the later rounds' context.

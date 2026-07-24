@@ -10,7 +10,7 @@
   "scripts": {
     "android": "npm run android --workspace @riichimi/client",
     "build:web": "npm run build:web --workspace @riichimi/client",
-    "check": "npm run format:check && npm run lint && npm run test:coverage && npm run test:ui",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run test:coverage && npm run test:ui",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
     "ios": "npm run ios --workspace @riichimi/client",
@@ -23,7 +23,8 @@
     "test:ui": "npm run test --workspace @riichimi/client",
     "test:unit": "vitest run",
     "test:watch": "vitest",
-    "web": "npm run web --workspace @riichimi/client"
+    "web": "npm run web --workspace @riichimi/client",
+    "typecheck": "tsc --noEmit -p packages/score-core/tsconfig.json && tsc --noEmit -p packages/session-core/tsconfig.json && tsc --noEmit -p packages/vision/tsconfig.json && tsc --noEmit -p packages/rules/tsconfig.json && tsc --noEmit -p packages/ui/tsconfig.json && tsc --noEmit -p apps/client/tsconfig.json"
   },
   "devDependencies": {
     "@playwright/test": "1.61.1",

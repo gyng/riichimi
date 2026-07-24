@@ -3,7 +3,7 @@
   "compilerOptions": {
     "moduleSuffixes": [".native", ""],
     "noEmit": true,
-    "types": ["jest", "react", "webmcp-types"]
+    "types": ["jest", "node", "react", "webmcp-types"]
   },
   "include": [
     "app/**/*.ts",
@@ -13,6 +13,7 @@
     "tests/**/*.ts",
     "tests/**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "expo-env.d.ts",
+    "../../types/assets.d.ts"
   ]
 }

@@ -11,11 +11,15 @@ export default defineConfig({
       ],
       provider: "v8",
       reporter: ["text", "html", "lcov"],
+      // Held just under what the suite reaches, so a regression trips the gate.
+      // The last uncovered statements are compiler-mandated `undefined` guards
+      // inside bounded loops and `never` exhaustiveness defaults: unreachable by
+      // construction, and faking a call to them would test nothing.
       thresholds: {
-        branches: 85,
-        functions: 90,
-        lines: 90,
-        statements: 90,
+        branches: 93,
+        functions: 100,
+        lines: 97,
+        statements: 97,
       },
     },
     include: ["packages/**/*.test.ts"],
