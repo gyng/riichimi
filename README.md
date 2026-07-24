@@ -1,51 +1,69 @@
 # Riichimi
 
-Local-first riichi mahjong scoring for mobile and web, with auditable WRC-based rules profiles, camera-assisted entry, and persistent four-player table sessions.
+Score a riichi mahjong hand at the table. Point a camera at the tiles or tap them in, and get the han, fu, and exact payments with every point explained. Everything runs on the device.
 
-The current app includes a complete manual calculator, persisted WRC 2025 and explicit red-five-table profiles, a device-local score folio, camera or gallery capture, a rights-traceable offline guided-recognition beta with mandatory photo-backed review, yaku/fu/payment explanations, durable local table state, automatic transfers and round advancement, round history, undo, and progressive-enhancement WebMCP tools for agent-assisted navigation, scoring, history inspection, rules selection, and table operation. The promoted V1 recognizer reaches 93.48% top-1 on 46 source-separated physical crops while retaining 100% accuracy among reads accepted above its conservative threshold; a strict release gate prevents that limited result from being presented as production accuracy. Product sequencing lives in [`docs/riichi-score-calculator-plan.md`](docs/riichi-score-calculator-plan.md), with training, provenance, evidence, and limitations in the [`recognition model audit`](docs/recognition-model-audit.md).
+**[Try it](https://gyng.github.io/riichimi/)** · no install, no account, works offline after first load.
 
-## Prerequisites
+<p align="center">
+  <img src="docs/screenshots/calculator.png" alt="A scored hand showing 2 han, 20 fu, the yaku that made it, and the fu audit" width="270">
+  <img src="docs/screenshots/scan-review.png" alt="The camera reading fifteen tiles offline, flagging two for confirmation" width="270">
+  <img src="docs/screenshots/table.png" alt="A four-player table at East 1 with each seat's score" width="270">
+</p>
 
-- Node.js 22.13 or newer; Node 24 LTS is recommended
-- npm 11 or newer
-- Android Studio or Xcode only when running a native simulator
+## What it does
 
-## Start
+- **Reads the tiles.** A photo becomes a hand, offline. Every read is shown with its confidence and nothing scores until you confirm it.
+- **Explains the score.** Han, fu, yaku, and who pays what — not just a number.
+- **Runs the table.** Riichi sticks, honba, dealer rotation, transfers, and undo. Any round can be re-scored, and later rounds are replayed.
+- **Follows your rules.** Tenhou, EMA, M.League, JPML A, WRC — or your table's own house rules.
+- **Speaks four languages.** English, 日本語, 简体中文, 繁體中文.
+
+<p align="center">
+  <img src="docs/screenshots/calculator-wide.png" alt="The calculator on a wide screen, hand and tile picker side by side" width="820">
+</p>
+
+## Run it
 
 ```sh
 npm install
 npm run web
 ```
 
-Use `npm start` for the Expo development menu, or `npm run android` / `npm run ios` for a native target.
+`npm start` opens the Expo menu; `npm run android` / `npm run ios` target a simulator.
 
-Native recognition uses ONNX Runtime React Native and therefore needs an Expo custom development build; it is not available in Expo Go. Web recognition lazy-loads the local model runtime only after you ask it to read a guided photo.
+Native recognition uses ONNX Runtime React Native, so it needs an Expo development build rather than Expo Go. On web the model loads only when you ask for a read.
 
-After `npm run build:web`, use `npm run serve:web` to serve the static export with working clean-route reloads and direct links.
-
-## Quality gate
+## Checks
 
 ```sh
-npm run check
+npm run check        # format, lint, typecheck, both test suites with coverage floors
 npm run build:web
-npm run test:e2e
+npm run test:e2e     # browser dogfood against the real export and the real model
+npm run screenshots  # regenerate the images above by driving the app
 ```
 
-`npm run lint` uses Oxlint's tsgolint integration for both type-aware lint rules and TypeScript 7 project diagnostics. Oxfmt is the only formatter. The Playwright suite runs two focused browser dogfood rounds against the exported site, including a complete scored-hand-to-table transfer and real gallery-photo model inference, and regenerates the dated visual checkpoints in [`docs/checkpoints`](docs/checkpoints/README.md).
-
-## Workspace map
+## Layout
 
 ```text
-apps/client       Universal React 19 + Expo application
-packages/ui       Shared atomic React Native UI
-packages/score-core  Framework-free mahjong domain foundation
-packages/session-core  Pure table progression and score-transfer policy
-packages/rules    Versioned ruleset references and profiles
-packages/vision   Platform-neutral recognition contracts and post-processing
-docs              Product, architecture, design, testing, and ADRs
-e2e               Critical-journey specifications
+apps/client            Expo + React 19 application
+packages/score-core    Mahjong scoring. No React, no clock, no storage.
+packages/session-core  Table progression as an event log with pure replay
+packages/rules         Ruleset profiles, each citing a primary source
+packages/vision        Recognition contracts and post-processing
+packages/ui            Shared components
+docs                   Plan, architecture, decisions, testing strategy
 ```
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`AGENTS.md`](AGENTS.md) before implementation work.
+## Honest limits
 
-Performance budgets and profiling triggers live in [`docs/performance.md`](docs/performance.md). Security reporting and the currently accepted upstream Expo advisory are documented in [`SECURITY.md`](SECURITY.md).
+Recognition is a **review-gated beta**. It reaches 93.48% top-1 on a 46-crop physical set, and 100% accuracy among reads it accepts above its own threshold — which is why nothing scores without your confirmation. That figure is not production accuracy, and [the model audit](docs/recognition-model-audit.md) says exactly what it is and is not.
+
+Mahjong Soul is deliberately absent from the rulesets: two of its options are not stated on its official page, and it is the one ruleset paying single-yaku double yakuman, which the engine does not detect. [Why that matters](docs/rules-profiles.md).
+
+The translations are machine-produced and have not been read by a player in those languages.
+
+## Credits
+
+Tile art from [FluffyStuff/riichi-mahjong-tiles](https://github.com/FluffyStuff/riichi-mahjong-tiles), public domain under CC0. See [tile art](docs/tile-art.md) for how it is prepared.
+
+[Contributing](CONTRIBUTING.md) · [Engineering instructions](AGENTS.md) · [Security](SECURITY.md)

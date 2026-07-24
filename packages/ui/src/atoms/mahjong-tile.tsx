@@ -154,8 +154,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     overflow: "hidden",
     justifyContent: "center",
-    minHeight: 52,
-    minWidth: 38,
+    // A definite width, not a floor: the art has an intrinsic 300x400 size, so a
+    // min-only rule let it expand to full size wherever nothing else constrained
+    // it. Height follows from the aspect ratio.
+    width: 38,
     shadowColor: color.ink,
     shadowOffset: { height: 2, width: 0 },
     shadowOpacity: 0.16,

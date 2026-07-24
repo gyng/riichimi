@@ -54,7 +54,7 @@ export function TopAppBar({
         {compact ? null : <Text style={styles.brandLabel}>{brandLabel}</Text>}
       </Pressable>
 
-      <View accessibilityLabel="Primary" style={styles.nav}>
+      <View accessibilityLabel="Primary" style={[styles.nav, compact && styles.navCompact]}>
         {items.map((item) => (
           <Pressable
             accessibilityLabel={item.label}
@@ -116,8 +116,9 @@ const styles = StyleSheet.create({
     paddingVertical: space.x3,
   },
   barCompact: {
-    gap: space.x2,
-    paddingHorizontal: space.x4,
+    flexWrap: "nowrap",
+    gap: 0,
+    paddingHorizontal: space.x2,
   },
   brand: {
     alignItems: "center",
@@ -158,8 +159,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     justifyContent: "center",
     minHeight: 48,
-    minWidth: 48,
-    paddingHorizontal: space.x2,
+    minWidth: 44,
+    paddingHorizontal: space.x1,
   },
   itemActive: {
     borderBottomColor: color.accent,
@@ -182,6 +183,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: space.x1,
   },
+  navCompact: { flexGrow: 1, flexShrink: 1, gap: 0 },
   pressed: {
     opacity: 0.7,
   },
