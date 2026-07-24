@@ -13,6 +13,11 @@ declare module "*.png" {
   export default asset;
 }
 
+declare module "*.ttf" {
+  const asset: number;
+  export default asset;
+}
+
 declare module "*.svg" {
   import type { ComponentType } from "react";
   import type { SvgProps } from "react-native-svg";

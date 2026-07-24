@@ -65,6 +65,10 @@ import { useWebMcpTools, webMcpResult } from "../../infrastructure/webmcp";
 import type { RecognitionDraft } from "../recognition/recognition-draft";
 import { ScoreResultPanel } from "./score-result-panel";
 import { TilePicker } from "./tile-picker";
+import { celebrationFor } from "../celebration/celebration";
+import type { Celebration } from "../celebration/celebration";
+import { CelebrationOverlay } from "../celebration/celebration-overlay";
+import { CelebrationBanner } from "../celebration/celebration-banner";
 
 type PickerTarget = "hand" | "chi" | "pon" | "open-kan" | "closed-kan" | "dora" | "ura";
 type SpecialEvent = "normal" | "rinshan" | "haitei" | "houtei" | "chankan" | FirstTurnWin;
@@ -271,6 +275,10 @@ export function ManualCalculator({
   const [honba, setHonba] = useState(0);
   const [riichiSticks, setRiichiSticks] = useState(0);
   const [result, setResult] = useState<ScoreHandResult | null>(null);
+  // A limit hand fires a one-shot celebration overlay; the key remounts it so a
+  // second mangan in a row plays again. It never gates the score.
+  const [celebration, setCelebration] = useState<{ value: Celebration; key: number } | null>(null);
+  const celebrationKey = useRef(0);
   const [sessionWinnerIndex, setSessionWinnerIndex] = useState(0);
   const [discarderIndex, setDiscarderIndex] = useState(1);
   const [editReview, setEditReview] = useState<EditReview | null>(null);
@@ -567,6 +575,11 @@ export function ManualCalculator({
     };
     const scoreResult = scoreHand(scoreInput);
     setResult(scoreResult);
+    const earned = celebrationFor(scoreResult);
+    if (earned !== null) {
+      celebrationKey.current += 1;
+      setCelebration({ key: celebrationKey.current, value: earned });
+    }
     if (scoreResult.kind === "success" && activeTable === null) {
       scoreHistory.record(scoreInput, scoreResult);
     }
@@ -1251,6 +1264,12 @@ export function ManualCalculator({
           </View>
         ) : null}
       </ScrollView>
+      {celebration === null ? null : (
+        <View key={celebration.key} pointerEvents="none" style={styles.celebrationLayer}>
+          <CelebrationOverlay celebration={celebration.value} onDone={() => setCelebration(null)} />
+          <CelebrationBanner celebration={celebration.value} />
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -1462,6 +1481,7 @@ const styles = StyleSheet.create({
   },
   removeLink: { color: color.accent, fontFamily: "serif", fontSize: 12, fontWeight: "700" },
   removeText: { color: color.white, fontSize: 15, lineHeight: 17 },
+  celebrationLayer: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0, zIndex: 40 },
   rulesChip: { justifyContent: "center", minHeight: 44, paddingVertical: 8 },
   rulesLabel: {
     color: color.inkMuted,

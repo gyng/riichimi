@@ -70,7 +70,7 @@ export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
         <View key={item.id} style={styles.lineItem}>
           <View style={styles.lineCopy}>
             <Text style={styles.lineTitle}>{item.name}</Text>
-            <Text style={styles.lineNote}>{item.romanized}</Text>
+            <Text style={styles.reading}>{item.romanized}</Text>
           </View>
           <Text style={styles.value}>
             {"han" in item ? `${item.han} ${t("han")}` : `${item.value}×`}
@@ -181,6 +181,13 @@ const styles = StyleSheet.create({
     color: "#C7D6CF",
     fontFamily: "serif",
     fontSize: 13,
+  },
+  // The yaku's reading, brushed — the calligraphic counterpart to the plain name.
+  reading: {
+    color: "#EAF3EE",
+    fontFamily: "YujiSyuku",
+    fontSize: 17,
+    marginTop: 1,
   },
   lineTitle: {
     color: color.white,
