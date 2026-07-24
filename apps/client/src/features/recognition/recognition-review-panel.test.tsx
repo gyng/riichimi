@@ -245,4 +245,47 @@ describe("RecognitionReviewPanel", () => {
       }),
     );
   });
+
+  it("keeps a deliberately selected confident tile selected rather than snapping to a flag", async () => {
+    await render(
+      <RecognitionReviewPanel
+        initialReviewCount={1}
+        onChange={jest.fn()}
+        result={{
+          detections: [
+            {
+              alternatives: [{ confidence: 0.4, tile: "1m" }],
+              bounds: { height: 0.4, width: 0.1, x: 0.1, y: 0.2 },
+              confidence: 0.4,
+              id: "hand-0",
+              role: "winning",
+              tile: "1m",
+            },
+            {
+              alternatives: [{ confidence: 0.99, tile: "2m" }],
+              bounds: { height: 0.4, width: 0.1, x: 0.2, y: 0.2 },
+              confidence: 0.99,
+              id: "hand-1",
+              role: "concealed",
+              tile: "2m",
+            },
+          ],
+          modelVersion: "test",
+        }}
+      />,
+    );
+
+    // The low-confidence winning tile is seeded as the selection.
+    expect(screen.getByText("SELECTED · Winning tile 1")).toBeOnTheScreen();
+
+    // Choosing the confident tile from the list must stick, even though a flag
+    // is still outstanding — inspecting any tile is the point of the overlay.
+    await fireEvent.press(
+      screen.getByRole("button", {
+        name: "Hand tile 2, 2 characters, 99 percent confidence",
+      }),
+    );
+
+    expect(screen.getByText("SELECTED · Hand tile 2")).toBeOnTheScreen();
+  });
 });

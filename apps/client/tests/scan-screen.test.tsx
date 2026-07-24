@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react-native";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
+import { Image } from "react-native";
 
 import { ScanScreen } from "../src/screens/scan-screen";
 import { tileRecognition } from "../src/infrastructure/tile-recognition";
@@ -22,6 +23,15 @@ jest.mock("expo-image-picker", () => ({
 jest.mock("../src/infrastructure/tile-recognition", () => ({
   tileRecognition: { recognize: jest.fn() },
 }));
+
+// jest-expo's ImageLoader mock is incompatible with this React Native's promise
+// -style Image.getSize; give the screen a working size so the photo aspect (and
+// the box overlay it drives) can be measured in tests.
+beforeEach(() => {
+  jest.spyOn(Image, "getSize").mockImplementation((_uri, success) => {
+    success(300, 150);
+  });
+});
 
 describe("ScanScreen", () => {
   it("keeps the calculator usable when camera access is unavailable", async () => {
@@ -140,7 +150,7 @@ describe("ScanScreen", () => {
     });
     // Reading starts on its own once a photo exists; no extra tap to begin.
     expect(await screen.findByText("15 tiles read · 1 need review")).toBeOnTheScreen();
-    expect(screen.getByRole("button", { name: "Resolve 1 tiles to continue" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Resolve 1 tile to continue" })).toBeDisabled();
     await fireEvent.press(
       screen.getByRole("button", { name: "Use 2 characters for selected tile" }),
     );

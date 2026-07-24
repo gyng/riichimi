@@ -17,8 +17,12 @@ import { tileRecognition } from "../infrastructure/tile-recognition";
 import { useLocale } from "../state/locale-context";
 import {
   RecognitionReviewPanel,
+  detectionLabel,
+  orderedDetections,
   recognitionReviewThreshold,
 } from "../features/recognition/recognition-review-panel";
+import { TileBoundsOverlay } from "../features/recognition/tile-bounds-overlay";
+import type { TileBoundsBox } from "../features/recognition/tile-bounds-overlay";
 import { inferMeld, serializeRecognizedMelds } from "../features/recognition/recognition-draft";
 
 // Group meld-role detections back into their called sets, left-to-right within a
@@ -83,6 +87,11 @@ export function ScanScreen() {
   const [photoSource, setPhotoSource] = useState<"camera" | "library">("camera");
   const [importError, setImportError] = useState<string | null>(null);
   const [recognition, setRecognition] = useState<RecognitionState>({ kind: "idle" });
+  // The photo overlay and the review list share one highlighted tile.
+  const [selectedTileId, setSelectedTileId] = useState<string | null>(null);
+  // The photo is drawn at its true aspect so the normalized boxes map by
+  // percentage; until measured, the layout falls back to a neutral banner ratio.
+  const [photoAspect, setPhotoAspect] = useState<number | null>(null);
   // Natural (single-row) is the default: it reads a hand the way it sits on the
   // table. Its concealed/called split is a guess, so it demands a structure
   // confirmation at review; guided keeps melds and dora on their own rows.
@@ -111,6 +120,34 @@ export function ScanScreen() {
       active = false;
     };
   }, []);
+
+  useEffect(() => {
+    setPhotoAspect(null);
+    setSelectedTileId(null);
+    let active = true;
+    if (photoUri !== null) {
+      try {
+        Image.getSize(
+          photoUri,
+          (width, height) => {
+            if (active && height > 0) {
+              setPhotoAspect(width / height);
+            }
+          },
+          () => {
+            // A photo whose size can't be read still reviews fine; the boxes
+            // just fall back to the banner ratio rather than the photo's own.
+          },
+        );
+      } catch {
+        // Some platforms cannot size a given URI synchronously; the fallback
+        // ratio keeps the review usable.
+      }
+    }
+    return () => {
+      active = false;
+    };
+  }, [photoUri]);
 
   async function capturePhoto() {
     const photo = await camera.current?.takePictureAsync({ quality: 0.75 });
@@ -241,11 +278,23 @@ export function ScanScreen() {
       : null;
   const requireStructureConfirmation = captureLayout === "natural";
   const tilesReady = currentRecognitionReview?.readyToConfirm === true;
+  const outstandingReview = currentRecognitionReview?.reviewDetectionIds.length ?? 0;
   const continueLabel = !tilesReady
-    ? `Resolve ${currentRecognitionReview?.reviewDetectionIds.length ?? 0} tiles to continue`
+    ? `${t("Resolve")} ${outstandingReview} ${t(outstandingReview === 1 ? "tile to continue" : "tiles to continue")}`
     : requireStructureConfirmation
       ? t("Confirm split & continue")
-      : "Continue with reviewed tiles";
+      : t("Continue with reviewed tiles");
+  const overlayBoxes: readonly TileBoundsBox[] =
+    recognition.kind === "complete"
+      ? orderedDetections(recognition.result).map((detection, index) => ({
+          badge:
+            detection.role === "dora" ? "D" : detection.role === "meld" ? "M" : String(index + 1),
+          bounds: detection.bounds,
+          id: detection.id,
+          label: detectionLabel(detection, index, t),
+          needsReview: (currentRecognitionReview?.reviewDetectionIds ?? []).includes(detection.id),
+        }))
+      : [];
 
   if (permission === null) {
     return (
@@ -313,11 +362,24 @@ export function ScanScreen() {
     return (
       <SafeAreaView edges={bodyEdges} style={styles.captureScreen}>
         <ScrollView contentContainerStyle={styles.photoReviewContent}>
-          <Image
-            accessibilityLabel="Captured mahjong hand"
-            source={{ uri: photoUri }}
-            style={styles.preview}
-          />
+          <View style={styles.previewFrame}>
+            <Image
+              accessibilityLabel="Captured mahjong hand"
+              source={{ uri: photoUri }}
+              style={
+                photoAspect === null
+                  ? styles.preview
+                  : [styles.previewMeasured, { aspectRatio: photoAspect }]
+              }
+            />
+            {recognition.kind === "complete" ? (
+              <TileBoundsOverlay
+                boxes={overlayBoxes}
+                onSelect={setSelectedTileId}
+                selectedId={selectedTileId}
+              />
+            ) : null}
+          </View>
           <View style={styles.reviewPanel}>
             <Text style={styles.reviewTitle}>
               {photoSource === "camera"
@@ -344,8 +406,12 @@ export function ScanScreen() {
                 />
                 <Text style={styles.layoutHint}>
                   {captureLayout === "natural"
-                    ? "Natural — one row: the hand with the winning tile after a larger gap, any called melds or kans set apart to the right, then one dora indicator last. The concealed/called split is confirmed at review."
-                    : "Guided — the concealed hand on top with the winning tile after a larger gap, any called melds or kans on a second row, and one dora indicator on the bottom row."}
+                    ? t(
+                        "Natural — one row: the hand with the winning tile after a larger gap, any called melds or kans set apart to the right, then one dora indicator last. The concealed/called split is confirmed at review.",
+                      )
+                    : t(
+                        "Guided — the concealed hand on top with the winning tile after a larger gap, any called melds or kans on a second row, and one dora indicator on the bottom row.",
+                      )}
                 </Text>
               </View>
             )}
@@ -364,7 +430,7 @@ export function ScanScreen() {
               <View accessibilityLiveRegion="polite" style={styles.recognitionResult}>
                 <Text style={styles.recognitionKicker}>{t("OFFLINE BETA \u00b7 DRAFT ONLY")}</Text>
                 <Text style={styles.recognitionTitle}>
-                  {`15 tiles read · ${currentRecognitionReview?.reviewDetectionIds.length ?? 0} need review`}
+                  {`${recognition.result.detections.length} ${t("tiles read")} · ${outstandingReview} ${t("need review")}`}
                 </Text>
               </View>
             ) : null}
@@ -378,8 +444,10 @@ export function ScanScreen() {
                     result,
                   })
                 }
+                onSelectId={setSelectedTileId}
                 requireStructureConfirmation={requireStructureConfirmation}
                 result={recognition.result}
+                selectedId={selectedTileId}
               />
             ) : null}
             <View style={styles.reviewActions}>
@@ -462,8 +530,12 @@ export function ScanScreen() {
           <View style={styles.shutterArea}>
             <Text style={styles.cameraHint}>
               {captureLayout === "natural"
-                ? "One row: hand, a larger gap before the winner, then any called sets, then one dora."
-                : "Hand on the top line, any called sets on the middle line, one dora on the bottom."}
+                ? t(
+                    "One row: hand, a larger gap before the winner, then any called sets, then one dora.",
+                  )
+                : t(
+                    "Hand on the top line, any called sets on the middle line, one dora on the bottom.",
+                  )}
             </Text>
             <View style={styles.captureActions}>
               <ActionButton
@@ -633,6 +705,10 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     width: "100%",
   },
+  // Once the photo's true size is known it is drawn to its own rectangle so the
+  // normalized detection boxes overlay exactly, with no letterbox to offset them.
+  previewFrame: { position: "relative", width: "100%" },
+  previewMeasured: { resizeMode: "cover", width: "100%" },
   reviewActions: {
     flexDirection: "row",
     flexWrap: "wrap",

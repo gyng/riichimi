@@ -43,7 +43,7 @@ function meldGroupsOf(result: RecognitionResult): readonly MeldGroup[] {
     }));
 }
 
-function orderedDetections(result: RecognitionResult): readonly DetectedTile[] {
+export function orderedDetections(result: RecognitionResult): readonly DetectedTile[] {
   const hand = result.detections
     .filter(({ role }) => role === "concealed" || role === "winning")
     .toSorted((left, right) => left.bounds.x - right.bounds.x);
@@ -60,18 +60,20 @@ function orderedDetections(result: RecognitionResult): readonly DetectedTile[] {
   return [...hand, ...melds, ...dora];
 }
 
-function detectionLabel(detection: DetectedTile, index: number): string {
+type Translate = (source: string) => string;
+
+export function detectionLabel(detection: DetectedTile, index: number, t: Translate): string {
   if (detection.role === "dora") {
-    return "Dora indicator";
+    return t("Dora indicator");
   }
   if (detection.role === "meld") {
     const [group, tile] = meldOrder(detection);
-    return `Meld ${group + 1} tile ${tile + 1}`;
+    return `${t("Meld")} ${group + 1} ${t("tile")} ${tile + 1}`;
   }
   if (detection.role === "winning") {
-    return `Winning tile ${index + 1}`;
+    return `${t("Winning tile")} ${index + 1}`;
   }
-  return `Hand tile ${index + 1}`;
+  return `${t("Hand tile")} ${index + 1}`;
 }
 
 function proposedTile(detection: DetectedTile): TileId | null {
@@ -90,6 +92,10 @@ export interface RecognitionReviewPanelProps {
       single-row layout) and must be explicitly confirmed before scoring. */
   readonly requireStructureConfirmation?: boolean;
   readonly result: RecognitionResult;
+  /** Selection can be lifted so the photo overlay and the list share one
+      highlighted tile. Omit both for the panel to own selection itself. */
+  readonly selectedId?: string | null;
+  readonly onSelectId?: (id: string | null) => void;
 }
 
 export function RecognitionReviewPanel({
@@ -97,6 +103,8 @@ export function RecognitionReviewPanel({
   onChange,
   requireStructureConfirmation = false,
   result,
+  selectedId: controlledSelectedId,
+  onSelectId,
 }: RecognitionReviewPanelProps) {
   const { t } = useLocale();
   const review = reviewRecognition(result, recognitionReviewThreshold);
@@ -120,22 +128,41 @@ export function RecognitionReviewPanel({
     }
     onChange(corrected);
   }
-  const [selectedId, setSelectedId] = useState<string | null>(
+  const controlled = onSelectId !== undefined;
+  const [internalSelectedId, setInternalSelectedId] = useState<string | null>(
     review.reviewDetectionIds[0] ?? detections[0]?.id ?? null,
   );
+  const selectedId = controlled ? (controlledSelectedId ?? null) : internalSelectedId;
+  const setSelectedId = (id: string | null) => {
+    if (onSelectId !== undefined) {
+      onSelectId(id);
+    } else {
+      setInternalSelectedId(id);
+    }
+  };
   const [showAllTiles, setShowAllTiles] = useState(false);
   const selected = detections.find(({ id }) => id === selectedId) ?? null;
   const issueIds = new Set(review.reviewDetectionIds);
-  const nextIssueId = review.reviewDetectionIds[0];
-  const selectedNeedsReview = selectedId !== null && issueIds.has(selectedId);
   const totalReviewCount = Math.max(initialReviewCount, review.reviewDetectionIds.length);
 
+  // Only ever *seed* a selection (first flagged tile, else the first tile). Once
+  // something is selected — by the effect, a list tap, or a box tap — it sticks,
+  // so the reviewer can inspect any tile, not just the flagged ones. Advancing
+  // to the next flag happens on resolve, in chooseTile.
+  const firstReviewId = review.reviewDetectionIds[0];
+  const firstDetectionId = detections[0]?.id;
   useEffect(() => {
-    if (nextIssueId !== undefined && !selectedNeedsReview) {
-      setSelectedId(nextIssueId);
-      setShowAllTiles(false);
+    if (selectedId === null) {
+      const seed = firstReviewId ?? firstDetectionId ?? null;
+      if (seed !== null) {
+        if (onSelectId !== undefined) {
+          onSelectId(seed);
+        } else {
+          setInternalSelectedId(seed);
+        }
+      }
     }
-  }, [nextIssueId, selectedNeedsReview]);
+  }, [selectedId, firstReviewId, firstDetectionId, onSelectId]);
 
   const countsWithoutSelected = useMemo(() => {
     const counts = new Map<string, number>();
@@ -155,7 +182,15 @@ export function RecognitionReviewPanel({
     }
     const role = selected.role === "unknown" ? "concealed" : selected.role;
     setShowAllTiles(false);
-    onChange(correctDetection(result, selected.id, { role, tile }));
+    const corrected = correctDetection(result, selected.id, { role, tile });
+    onChange(corrected);
+    // Settling a flagged tile advances to the next one still needing a look, so
+    // confirming a run of low-confidence reads stays a single stream of taps.
+    const remaining = reviewRecognition(corrected, recognitionReviewThreshold).reviewDetectionIds;
+    const next = remaining.find((id) => id !== selected.id);
+    if (next !== undefined) {
+      setSelectedId(next);
+    }
   }
 
   return (
@@ -165,24 +200,26 @@ export function RecognitionReviewPanel({
           <Text style={styles.kicker}>{t("TILE-BY-TILE REVIEW")}</Text>
           <Text accessibilityRole="header" style={styles.title}>
             {review.reviewDetectionIds.length === 0
-              ? "Recognition review complete"
-              : `${review.reviewDetectionIds.length} ${review.reviewDetectionIds.length === 1 ? "tile needs" : "tiles need"} confirmation`}
+              ? t("Recognition review complete")
+              : `${review.reviewDetectionIds.length} ${t(review.reviewDetectionIds.length === 1 ? "tile needs confirmation" : "tiles need confirmation")}`}
           </Text>
         </View>
         <Text accessibilityLiveRegion="polite" style={styles.progress}>
-          {totalReviewCount - review.reviewDetectionIds.length} / {totalReviewCount} reviewed
+          {totalReviewCount - review.reviewDetectionIds.length} / {totalReviewCount} {t("reviewed")}
         </Text>
       </View>
 
       <Text style={styles.instructions}>
-        {review.readyToConfirm ? t("Check the row against the photo.") : t("Red needs a look.")}
+        {review.readyToConfirm
+          ? t("Check the row against the photo.")
+          : t("Outlined tiles need a look.")}
       </Text>
 
       {showStructure ? (
         <View accessibilityLabel="Hand structure" style={styles.structure}>
           <Text style={styles.structureKicker}>{t("HAND STRUCTURE")}</Text>
           <Text accessibilityRole="header" style={styles.structureTitle}>
-            {`${concealedCount} concealed ${concealedCount === 1 ? "tile" : "tiles"} · ${meldGroups.length} called ${meldGroups.length === 1 ? "set" : "sets"}`}
+            {`${concealedCount} ${t(concealedCount === 1 ? "concealed tile" : "concealed tiles")} · ${meldGroups.length} ${t(meldGroups.length === 1 ? "called set" : "called sets")}`}
           </Text>
           <Text style={styles.structureCopy}>
             {t("Called sets are read as open. Adjust in the calculator.")}
@@ -196,7 +233,7 @@ export function RecognitionReviewPanel({
                 })}
               </View>
               <ActionButton
-                label={`Called set ${group.index + 1} isn't a call — move to hand`}
+                label={`${t("Called set")} ${group.index + 1} ${t("isn't a call — move to hand")}`}
                 onPress={() => foldMeldIntoHand(group)}
                 variant="paper"
               />
@@ -213,7 +250,7 @@ export function RecognitionReviewPanel({
       <View accessibilityLabel="Recognized tiles" style={styles.detections}>
         {detections.map((detection, index) => {
           const tile = proposedTile(detection);
-          const label = detectionLabel(detection, index);
+          const label = detectionLabel(detection, index, t);
           const needsReview = issueIds.has(detection.id);
           return (
             <Pressable
@@ -239,7 +276,16 @@ export function RecognitionReviewPanel({
               ) : (
                 <MahjongTile tile={tile} />
               )}
-              <Text style={styles.confidence}>{Math.round(detection.confidence * 100)}%</Text>
+              {/* Confidence is shown only where it drives a decision — on the
+                  flagged tiles — paired with a word so the flag never rests on
+                  colour alone. Confident tiles stay uncluttered. */}
+              {needsReview ? (
+                <Text style={styles.reviewFlag}>
+                  {t("CHECK")} · {Math.round(detection.confidence * 100)}%
+                </Text>
+              ) : (
+                <Text style={styles.confidenceOk}>✓</Text>
+              )}
             </Pressable>
           );
         })}
@@ -248,7 +294,7 @@ export function RecognitionReviewPanel({
       {selected === null ? null : (
         <View style={styles.editor}>
           <Text style={styles.editorKicker}>
-            SELECTED · {detectionLabel(selected, detections.indexOf(selected))}
+            {t("SELECTED")} · {detectionLabel(selected, detections.indexOf(selected), t)}
           </Text>
           <Text style={styles.editorTitle}>{t("Confirm or replace this tile")}</Text>
           <View style={styles.suggestions}>
@@ -262,14 +308,14 @@ export function RecognitionReviewPanel({
               >
                 <MahjongTile selected={selected.tile === tile} tile={tile} />
                 <Text style={styles.suggestionLabel}>
-                  {selected.tile === tile ? "CONFIRM" : "USE"}
+                  {selected.tile === tile ? t("CONFIRM") : t("USE")}
                 </Text>
               </Pressable>
             ))}
           </View>
           <View style={styles.editorActions}>
             <ActionButton
-              label={showAllTiles ? "Hide complete tile picker" : "Choose from all tiles"}
+              label={showAllTiles ? t("Hide complete tile picker") : t("Choose from all tiles")}
               onPress={() => setShowAllTiles((visible) => !visible)}
               variant="paper"
             />
@@ -277,7 +323,9 @@ export function RecognitionReviewPanel({
               <ActionButton
                 disabled={selected.role === "winning"}
                 label={
-                  selected.role === "winning" ? "Marked as winning tile" : "Mark as winning tile"
+                  selected.role === "winning"
+                    ? t("Marked as winning tile")
+                    : t("Mark as winning tile")
                 }
                 onPress={() => onChange(chooseWinningDetection(result, selected.id))}
                 variant="paper"
@@ -320,11 +368,18 @@ const styles = StyleSheet.create({
   },
   checkboxChecked: { backgroundColor: color.ink },
   checkmark: { color: color.white, fontSize: 13, fontWeight: "800" },
-  confidence: {
-    color: color.inkMuted,
+  confidenceOk: {
+    color: color.jade,
+    fontFamily: "monospace",
+    fontSize: 10,
+    fontWeight: "700",
+  },
+  reviewFlag: {
+    color: color.accent,
     fontFamily: "monospace",
     fontSize: 9,
-    fontWeight: "700",
+    fontWeight: "800",
+    letterSpacing: 0.4,
   },
   detection: {
     alignItems: "center",
