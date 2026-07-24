@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { AppNavigationBar } from "../src/components/app-navigation-bar";
 import { LocaleProvider } from "../src/state/locale-context";
+import { AnnouncerProvider } from "../src/state/announcer-context";
 import { TileLabelProvider } from "../src/state/tile-display-context";
 import { SessionProvider } from "../src/state/session-context";
 import { ScoreHistoryProvider } from "../src/state/score-history-context";
@@ -16,22 +17,24 @@ export default function RootLayout() {
   return (
     <LocaleProvider>
       <TileLabelProvider>
-        <RulesProvider>
-          <ScoreHistoryProvider>
-            <SessionProvider>
-              <WebMcpBridge />
-              <StatusBar style="dark" />
-              <View style={styles.root}>
-                <SafeAreaView edges={["top"]} style={styles.barSafeArea}>
-                  <AppNavigationBar />
-                </SafeAreaView>
-                <View style={styles.body}>
-                  <Stack screenOptions={{ headerShown: false }} />
+        <AnnouncerProvider>
+          <RulesProvider>
+            <ScoreHistoryProvider>
+              <SessionProvider>
+                <WebMcpBridge />
+                <StatusBar style="dark" />
+                <View style={styles.root}>
+                  <SafeAreaView edges={["top"]} style={styles.barSafeArea}>
+                    <AppNavigationBar />
+                  </SafeAreaView>
+                  <View style={styles.body}>
+                    <Stack screenOptions={{ headerShown: false }} />
+                  </View>
                 </View>
-              </View>
-            </SessionProvider>
-          </ScoreHistoryProvider>
-        </RulesProvider>
+              </SessionProvider>
+            </ScoreHistoryProvider>
+          </RulesProvider>
+        </AnnouncerProvider>
       </TileLabelProvider>
     </LocaleProvider>
   );

@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-n
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { bodyEdges } from "../components/screen-insets";
+import { AnnounceControl } from "../features/announcer/announce-control";
 import { LanguageControl } from "../features/i18n/language-control";
 import { RulesProfileControl } from "../features/rules/rules-profile-control";
 import { TileLabelControl } from "../features/rules/tile-label-control";
@@ -31,6 +32,7 @@ export function SettingsScreen() {
         <View style={[styles.section, wide && styles.sectionWide]}>
           <RulesProfileControl lockedProfileId={session.state?.table.rulesProfileId} />
           <TileLabelControl />
+          <AnnounceControl />
           <LanguageControl />
         </View>
       </ScrollView>

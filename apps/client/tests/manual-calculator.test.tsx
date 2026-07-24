@@ -7,6 +7,8 @@ import { ManualCalculator } from "../src/features/manual-calculator/manual-calcu
 import * as rulesPreferenceStorage from "../src/infrastructure/rules-preference-storage";
 import * as scoreHistoryStorage from "../src/infrastructure/score-history-storage";
 import * as sessionStorage from "../src/infrastructure/session-storage";
+import { AnnouncerProvider } from "../src/state/announcer-context";
+import { LocaleProvider } from "../src/state/locale-context";
 import { RulesProvider } from "../src/state/rules-context";
 import { ScoreHistoryProvider } from "../src/state/score-history-context";
 import { SessionProvider } from "../src/state/session-context";
@@ -42,11 +44,15 @@ jest.mock("../src/infrastructure/speech", () => ({
 
 function CalculatorUnderTest() {
   return (
-    <RulesProvider>
-      <ScoreHistoryProvider>
-        <ManualCalculator />
-      </ScoreHistoryProvider>
-    </RulesProvider>
+    <LocaleProvider>
+      <AnnouncerProvider>
+        <RulesProvider>
+          <ScoreHistoryProvider>
+            <ManualCalculator />
+          </ScoreHistoryProvider>
+        </RulesProvider>
+      </AnnouncerProvider>
+    </LocaleProvider>
   );
 }
 
@@ -69,13 +75,17 @@ function seededSession(): SessionState {
 
 function CalculatorInSession() {
   return (
-    <RulesProvider>
-      <ScoreHistoryProvider>
-        <SessionProvider>
-          <ManualCalculator />
-        </SessionProvider>
-      </ScoreHistoryProvider>
-    </RulesProvider>
+    <LocaleProvider>
+      <AnnouncerProvider>
+        <RulesProvider>
+          <ScoreHistoryProvider>
+            <SessionProvider>
+              <ManualCalculator />
+            </SessionProvider>
+          </ScoreHistoryProvider>
+        </RulesProvider>
+      </AnnouncerProvider>
+    </LocaleProvider>
   );
 }
 
@@ -84,17 +94,34 @@ beforeEach(() => {
 });
 
 describe("ManualCalculator", () => {
-  it("stays silent until announcing is turned on, then speaks the scored result", async () => {
-    const { speech } = jest.requireMock<{
-      speech: { cancel: jest.Mock; speak: jest.Mock };
-    }>("../src/infrastructure/speech");
+  it("stays silent when the announce preference is off", async () => {
+    const { speech } = jest.requireMock<{ speech: { speak: jest.Mock } }>(
+      "../src/infrastructure/speech",
+    );
     await render(<CalculatorUnderTest />);
 
     await fireEvent.press(screen.getByRole("button", { name: "Try a scored example" }));
     await fireEvent.press(screen.getByRole("button", { name: "Calculate" }));
-    expect(speech.speak).not.toHaveBeenCalled();
 
-    await fireEvent.press(screen.getByRole("checkbox", { name: /Announce result/ }));
+    expect(speech.speak).not.toHaveBeenCalled();
+  });
+
+  it("speaks the scored result when the announce preference is on", async () => {
+    jest
+      .mocked(
+        jest.requireMock<{ loadAnnouncerPreference: jest.Mock }>(
+          "../src/infrastructure/announcer-preference-storage",
+        ).loadAnnouncerPreference,
+      )
+      .mockResolvedValueOnce(true);
+    const { speech } = jest.requireMock<{ speech: { speak: jest.Mock } }>(
+      "../src/infrastructure/speech",
+    );
+    await render(<CalculatorUnderTest />);
+    // Let the stored preference resolve before scoring.
+    await screen.findByRole("button", { name: "Try a scored example" });
+
+    await fireEvent.press(screen.getByRole("button", { name: "Try a scored example" }));
     await fireEvent.press(screen.getByRole("button", { name: "Calculate" }));
 
     expect(speech.speak).toHaveBeenCalledWith(
