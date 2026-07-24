@@ -38,7 +38,8 @@ export async function manipulateAsync(
   const resize = actions.find((action) => action.resize !== undefined)?.resize;
   const ratio = image.height === 0 ? 1 : image.width / image.height;
   const width =
-    resize?.width ?? (resize?.height !== undefined ? Math.round(resize.height * ratio) : image.width);
+    resize?.width ??
+    (resize?.height !== undefined ? Math.round(resize.height * ratio) : image.width);
   const height =
     resize?.height ??
     (resize?.width !== undefined ? Math.round(resize.width / (ratio || 1)) : image.height);

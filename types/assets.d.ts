@@ -3,18 +3,19 @@
 // package's sources into its own program, so a declaration that lives in only
 // one of them leaves the other unable to resolve the import.
 
+// The web (Vite) build resolves these assets to their served URL strings.
 declare module "*.onnx" {
-  const asset: number;
+  const asset: string;
   export default asset;
 }
 
 declare module "*.png" {
-  const asset: number;
+  const asset: string;
   export default asset;
 }
 
 declare module "*.ttf" {
-  const asset: number;
+  const asset: string;
   export default asset;
 }
 

@@ -45,16 +45,6 @@ export default defineConfig({
         replacement: fromHere("./web/shims/expo-image-manipulator.ts"),
       },
     ],
-    extensions: [
-      ".web.tsx",
-      ".web.ts",
-      ".web.js",
-      ".tsx",
-      ".ts",
-      ".jsx",
-      ".js",
-      ".mjs",
-      ".json",
-    ],
+    extensions: [".web.tsx", ".web.ts", ".web.js", ".tsx", ".ts", ".jsx", ".js", ".mjs", ".json"],
   },
 });

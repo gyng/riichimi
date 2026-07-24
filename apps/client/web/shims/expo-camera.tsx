@@ -14,7 +14,11 @@ export interface CameraPermission {
 }
 
 const GRANTED: CameraPermission = { canAskAgain: true, granted: true, status: "granted" };
-const UNDETERMINED: CameraPermission = { canAskAgain: true, granted: false, status: "undetermined" };
+const UNDETERMINED: CameraPermission = {
+  canAskAgain: true,
+  granted: false,
+  status: "undetermined",
+};
 const DENIED: CameraPermission = { canAskAgain: false, granted: false, status: "denied" };
 
 function cameraReachable(): boolean {
@@ -26,7 +30,7 @@ async function queryPermission(): Promise<CameraPermission> {
     return DENIED;
   }
   try {
-    const status = await navigator.permissions.query({ name: "camera" as PermissionName });
+    const status = await navigator.permissions.query({ name: "camera" });
     if (status.state === "granted") {
       return GRANTED;
     }

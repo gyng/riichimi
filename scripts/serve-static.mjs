@@ -49,7 +49,11 @@ async function findFile(pathname) {
 async function handleRequest(request, response) {
   try {
     const pathname = new URL(request.url ?? "/", `http://${host}:${port}`).pathname;
-    const file = await findFile(pathname);
+    // A path with no extension is a client-side route: serve the SPA shell so
+    // react-router can resolve it. Only missing assets (with an extension) 404.
+    const file =
+      (await findFile(pathname)) ??
+      (extname(pathname) === "" ? await findFile("/index.html") : null);
     if (file === null) {
       response.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
       response.end("Not found");

@@ -50,9 +50,9 @@ export const router = {
   },
 };
 
-export function useLocalSearchParams<T extends Params = Params>(): T {
+export function useLocalSearchParams(): Params {
   const [params] = useSearchParams();
-  return Object.fromEntries(params.entries()) as T;
+  return Object.fromEntries(params.entries());
 }
 
 export function usePathname(): string {

@@ -32,10 +32,13 @@ jobs:
       - name: Build web client
         run: npm run build:web
         env:
-          # The repository name is the path the site is served from.
-          EXPO_PUBLIC_BASE_URL: /${{ github.event.repository.name }}
-      - name: Serve unknown paths as the app's not-found route
-        run: cp apps/client/dist/+not-found.html apps/client/dist/404.html
+          # The repository name is the path the site is served from. Vite's base
+          # needs the trailing slash so asset URLs and the router basename align.
+          VITE_BASE: /${{ github.event.repository.name }}/
+      - name: Serve unknown paths through the SPA entry
+        # GitHub Pages returns 404.html for any path with no matching file. Serving
+        # the SPA shell there lets react-router resolve client-side deep links.
+        run: cp apps/client/dist/index.html apps/client/dist/404.html
       - name: Upload site
         uses: actions/upload-pages-artifact@v4
         with:

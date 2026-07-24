@@ -1,8 +1,8 @@
 import { createSession } from "@riichimi/session-core";
 
-import { loadRulesPreference, saveRulesPreference } from "./rules-preference-storage.web";
-import { loadScoreHistory } from "./score-history-storage.web";
-import { loadStoredSession, saveStoredSession } from "./session-storage.web";
+import { loadRulesPreference, saveRulesPreference } from "./rules-preference-storage";
+import { loadScoreHistory } from "./score-history-storage";
+import { loadStoredSession, saveStoredSession } from "./session-storage";
 import { serializeStoredSession } from "./stored-session";
 
 // A minimal localStorage so the web adapters can be exercised directly.

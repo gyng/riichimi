@@ -1,19 +1,18 @@
 {
   "extends": ["expo/tsconfig.base", "../../tsconfig.base.json"],
   "compilerOptions": {
-    "moduleSuffixes": [".native", ""],
     "noEmit": true,
-    "types": ["jest", "node", "react", "webmcp-types"]
+    "types": ["jest", "node", "react", "react-dom", "webmcp-types"]
   },
   "include": [
     "app/**/*.ts",
     "app/**/*.tsx",
     "src/**/*.ts",
     "src/**/*.tsx",
+    "web/**/*.ts",
+    "web/**/*.tsx",
     "tests/**/*.ts",
     "tests/**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts",
     "../../types/assets.d.ts"
   ]
 }
