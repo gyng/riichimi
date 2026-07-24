@@ -75,7 +75,7 @@ export function SessionScreen() {
     return (
       <SafeAreaView edges={bodyEdges} style={styles.centered}>
         <ActivityIndicator color={color.accent} />
-        <Text style={styles.muted}>Opening the local table…</Text>
+        <Text style={styles.muted}>{t("Opening the local table…")}</Text>
       </SafeAreaView>
     );
   }
@@ -306,8 +306,7 @@ export function SessionScreen() {
           accessibilityLabel={`${table.honba} honba, ${table.riichiSticks} riichi ${table.riichiSticks === 1 ? "stick" : "sticks"}`}
           style={styles.roundMeta}
         >
-          {table.honba} honba · {table.riichiSticks} riichi stick
-          {table.riichiSticks === 1 ? "" : "s"}
+          {table.honba} {t("honba")} · {table.riichiSticks} {t("riichi sticks")}
         </Text>
 
         <View style={styles.recordBar}>
@@ -613,13 +612,13 @@ export function SessionScreen() {
                             <Text style={styles.muted}>{t("Tsumo \u2014 no discarder.")}</Text>
                           )}
                           <Text style={styles.muted}>
-                            Reassigning keeps the payment as recorded (
+                            {t("Reassigning keeps the payment as recorded.")} ({" "}
                             {record.deltas
                               .map((delta) =>
                                 delta === 0 ? "±0" : `${delta > 0 ? "+" : ""}${points(delta)}`,
                               )
                               .join("  ")}
-                            ). To recompute han, fu, and transfers, re-score the hand.
+                            ) {t("To recompute han, fu, and transfers, re-score the hand.")}
                           </Text>
                           <View style={styles.editorActions}>
                             <ActionButton
@@ -810,7 +809,7 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     borderWidth: 1,
     justifyContent: "center",
-    minHeight: 40,
+    minHeight: 44,
     minWidth: 72,
     paddingHorizontal: space.x3,
   },
@@ -929,7 +928,13 @@ const styles = StyleSheet.create({
     marginTop: space.x4,
     padding: space.x4,
   },
-  endLink: { alignSelf: "flex-start", marginTop: space.x4, paddingVertical: space.x3 },
+  endLink: {
+    alignSelf: "flex-start",
+    justifyContent: "center",
+    marginTop: space.x4,
+    minHeight: 44,
+    paddingVertical: space.x3,
+  },
   endLinkText: {
     color: color.accent,
     fontFamily: "serif",

@@ -784,7 +784,9 @@ export function ManualCalculator({
           <Pressable
             accessibilityLabel="Scoring rules setup"
             accessibilityRole="link"
+            hitSlop={16}
             onPress={() => router.push("/settings")}
+            style={styles.rulesChip}
           >
             <Text style={styles.rulesLabel}>{activeRules.label.toUpperCase()}</Text>
           </Pressable>
@@ -1047,7 +1049,7 @@ export function ManualCalculator({
             style={styles.disclosure}
           >
             <Text style={styles.disclosureLabel}>
-              {`${seatWind.toUpperCase()} seat · ${roundWind.toUpperCase()} round · ${riichi === "none" ? "no riichi" : riichi} · ${honba} honba`}
+              {`${t(windNames[seatWind])} ${t("seat")} · ${t(windNames[roundWind])} ${t("round")} · ${riichi === "none" ? t("no riichi") : t("Riichi")} · ${honba} ${t("honba")}`}
             </Text>
             <Text style={styles.disclosureChevron}>{showContextDetail ? "−" : "+"}</Text>
           </Pressable>
@@ -1457,6 +1459,7 @@ const styles = StyleSheet.create({
   },
   removeLink: { color: color.accent, fontFamily: "serif", fontSize: 12, fontWeight: "700" },
   removeText: { color: color.white, fontSize: 15, lineHeight: 17 },
+  rulesChip: { justifyContent: "center", minHeight: 44, paddingVertical: 8 },
   rulesLabel: {
     color: color.inkMuted,
     fontFamily: "monospace",

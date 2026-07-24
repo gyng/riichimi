@@ -251,7 +251,7 @@ export function ScanScreen() {
     return (
       <SafeAreaView edges={bodyEdges} style={styles.centered}>
         <ActivityIndicator color={color.accent} />
-        <Text style={styles.status}>Checking camera availability…</Text>
+        <Text style={styles.status}>{t("Checking camera availability…")}</Text>
       </SafeAreaView>
     );
   }
@@ -261,11 +261,14 @@ export function ScanScreen() {
       <SafeAreaView edges={bodyEdges} style={styles.permissionScreen}>
         <Text style={styles.kicker}>{t("CAMERA / PRIVATE BY DEFAULT")}</Text>
         <Text accessibilityRole="header" style={styles.permissionTitle}>
-          Show us the tiles.{"\n"}Keep the photo here.
+          {t("Show us the tiles.")}
+          {"\n"}
+          {t("Keep the photo here.")}
         </Text>
         <Text style={styles.permissionBody}>
-          Riichimi asks for camera access only when you choose to scan. Captures stay on this device
-          unless you explicitly choose to contribute an example later.
+          {t(
+            "Riichimi asks for camera access only when you choose to scan. Captures stay on this device unless you explicitly choose to contribute an example later.",
+          )}
         </Text>
         <View style={styles.permissionActions}>
           <ActionButton
@@ -293,8 +296,9 @@ export function ScanScreen() {
           <ActionButton label={t("Try a sample hand")} onPress={loadSampleHand} variant="paper" />
         </View>
         <Text style={styles.permissionSampleNote}>
-          No camera on this device? “Try a sample hand” runs the offline recognizer on a bundled
-          example.
+          {t(
+            "No camera on this device? “Try a sample hand” runs the offline recognizer on a bundled example.",
+          )}
         </Text>
         {importError === null ? null : (
           <Text accessibilityLiveRegion="polite" style={styles.error}>
@@ -348,12 +352,12 @@ export function ScanScreen() {
             {recognition.kind === "running" ? (
               <View accessibilityLiveRegion="polite" style={styles.recognitionStatus}>
                 <ActivityIndicator color={color.accent} />
-                <Text style={styles.status}>Reading 15 tile faces offline…</Text>
+                <Text style={styles.status}>{t("Reading 15 tile faces offline…")}</Text>
               </View>
             ) : null}
             {recognition.kind === "failure" ? (
               <Text accessibilityLiveRegion="polite" style={styles.recognitionError}>
-                {recognition.message} Retry with another photo, or use manual entry.
+                {recognition.message} {t("Retry with another photo, or use manual entry.")}
               </Text>
             ) : null}
             {recognition.kind === "complete" ? (

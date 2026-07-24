@@ -110,7 +110,7 @@ test("dogfoods the polished mobile scoring and table flows through WebMCP", asyn
   });
   await executeTool(page, "riichimi.app.navigate", { destination: "history" });
   await expect(page).toHaveURL(/\/history$/);
-  await expect(page.getByRole("heading", { name: "Every answer leaves a trail." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "History" })).toBeVisible();
   await expect(page.getByText("Fully concealed hand").filter({ visible: true })).toBeVisible();
   await page.reload();
   await expect(page.getByText("2 han · 20 fu").filter({ visible: true })).toBeVisible();

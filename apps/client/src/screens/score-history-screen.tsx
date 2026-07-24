@@ -44,7 +44,7 @@ export function ScoreHistoryScreen() {
     return (
       <SafeAreaView edges={bodyEdges} style={styles.centered}>
         <ActivityIndicator color={color.accent} />
-        <Text style={styles.muted}>Opening the score folio…</Text>
+        <Text style={styles.muted}>{t("Opening the score folio…")}</Text>
       </SafeAreaView>
     );
   }
@@ -59,11 +59,11 @@ export function ScoreHistoryScreen() {
         <View style={styles.header}>
           <Text style={styles.kicker}>{t("SCORE FOLIO")}</Text>
           <Text accessibilityRole="header" style={styles.title}>
-            {t("Every answer leaves a trail.")}
+            {t("History")}
           </Text>
           <Text style={styles.intro}>
-            {t("Hand, context, yaku, and transfer for each.")}
-            Recalculating the same hand refreshes one entry instead of making duplicates.
+            {t("Hand, context, yaku, and transfer for each.")}{" "}
+            {t("Recalculating the same hand refreshes one entry instead of making duplicates.")}
           </Text>
         </View>
 

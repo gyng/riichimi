@@ -22,11 +22,17 @@ function sourceFiles(directory: string): string[] {
  * sentence-like literals, which is where untranslated copy actually hid.
  */
 const textProps = /\b(?:label|title|placeholder)=\{?"([^"]{4,})"/g;
-const sentence = />\s*([A-Z][a-z][A-Za-z0-9 ,.'’—·:;!?()/-]{14,})\s*</g;
+// JSX text sits between a tag close `>` or expression `}` on the left and a tag
+// open `<` or expression `{` on the right. Matching both sides — and allowing
+// curly quotes and ellipsis inside — closes the gaps where raw copy hid next to
+// a {t(...)} call, a {"\n"} break, or a “quoted” phrase.
+const sentence = /[>}]\s*([A-Z][a-z][A-Za-z0-9 ,.'’“”—·…:;!?()/-]{14,})\s*[<{]/g;
 
 // Proper names and identifiers are not copy: they read the same in every locale.
+// Anchored end-to-end so a brand name only exempts itself — a whole sentence that
+// merely begins with "Riichimi" is still copy and must go through the translator.
 const exempt =
-  /^(?:RIICHIMI|Riichimi|WRC|EMA|JPML|M\.League|Tenhou|World Riichi Rules 2025|House rules|English)/;
+  /^(?:RIICHIMI|Riichimi|WRC|EMA|JPML|M\.League|Tenhou|World Riichi Rules 2025|House rules|English)$/;
 
 // Proper nouns and numerals read the same in every language, so a translation
 // identical to the source is correct for these rather than missing.
@@ -101,6 +107,44 @@ describe("interface copy is translatable", () => {
   it("falls back to the source string for copy that has no entry", () => {
     expect(translate("ja", "a string nobody has translated")).toBe(
       "a string nobody has translated",
+    );
+  });
+});
+
+// The scanner above is only a guard if it keeps catching the shapes that once
+// slipped through. These lock in the specific gaps that hid untranslated copy,
+// so loosening the regex or the brand exemption fails a test rather than a user.
+describe("untranslated-copy scanner", () => {
+  const findAll = (source: string): string[] => {
+    sentence.lastIndex = 0;
+    const found: string[] = [];
+    let match = sentence.exec(source);
+    while (match !== null) {
+      if (match[1] !== undefined) {
+        found.push(match[1].trim());
+      }
+      match = sentence.exec(source);
+    }
+    return found;
+  };
+
+  it("catches a raw literal wherever JSX can place it", () => {
+    // After a tag close, after a {t(...)} sibling, terminated by ellipsis, and
+    // with curly quotes — every position that previously escaped the scanner.
+    expect(findAll(">Show us the tiles.{")).toContain("Show us the tiles.");
+    expect(findAll("} Keep the photo here. <")).toContain("Keep the photo here.");
+    expect(findAll(">Reading 15 tile faces offline…<")).toContain("Reading 15 tile faces offline…");
+    expect(findAll(">No camera on “this” device today<")).toContain(
+      "No camera on “this” device today",
+    );
+  });
+
+  it("exempts a brand name only when it stands alone", () => {
+    expect(exempt.test("Riichimi")).toBe(true);
+    expect(exempt.test("House rules")).toBe(true);
+    // A sentence that merely begins with the brand is still copy.
+    expect(exempt.test("Riichimi asks for camera access only when you choose to scan.")).toBe(
+      false,
     );
   });
 });

@@ -81,6 +81,17 @@ async function capture(base) {
     await open(page, base, "/session", PHONE);
     await page.getByRole("button", { name: "Start East 1" }).click();
     await page.getByRole("heading", { name: "East 1" }).waitFor();
+    // Clicking "Start" auto-scrolls the ScrollView; reset every scroll
+    // container so the round title frames at the top of the shot.
+    await page.evaluate(() => {
+      window.scrollTo(0, 0);
+      document.querySelectorAll("*").forEach((element) => {
+        if (element.scrollTop > 0) {
+          element.scrollTop = 0;
+        }
+      });
+    });
+    await page.waitForTimeout(150);
     await shot(page, "table");
 
     // Rulesets and house rules.

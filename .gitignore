@@ -12,3 +12,6 @@ apps/client/expo-env.d.ts
 *.tsbuildinfo
 __pycache__/
 *.py[cod]
+
+# Playwright MCP browser-tool scratch output
+.playwright-mcp/

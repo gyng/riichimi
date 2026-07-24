@@ -32,7 +32,7 @@ export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
     return (
       <View accessibilityLiveRegion="polite" style={[styles.panel, styles.errorPanel]}>
         <Text accessibilityRole="header" style={styles.errorTitle}>
-          {result.kind === "not-winning" ? "Not a complete hand" : "A yaku is still needed"}
+          {result.kind === "not-winning" ? t("Not a complete hand") : t("A yaku is still needed")}
         </Text>
         <Text style={styles.errorItem}>{result.message}</Text>
       </View>
@@ -41,13 +41,13 @@ export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
 
   const title =
     result.limit === null
-      ? `${result.han ?? 0} han · ${result.fu?.rounded ?? 0} fu`
+      ? `${result.han ?? 0} ${t("han")} · ${result.fu?.rounded ?? 0} ${t("fu")}`
       : result.limit.toUpperCase();
   const payment =
     result.payments.kind === "ron"
-      ? `${points(result.payments.fromDiscarder)} from discarder`
+      ? `${points(result.payments.fromDiscarder)} ${t("from discarder")}`
       : result.payments.fromDealer === null
-        ? `${points(result.payments.fromEachNonDealer)} all`
+        ? `${points(result.payments.fromEachNonDealer)} ${t("all")}`
         : `${points(result.payments.fromDealer)} / ${points(result.payments.fromEachNonDealer)}`;
 
   return (
@@ -57,18 +57,22 @@ export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
         {title}
       </Text>
       <Text style={styles.payment}>{payment}</Text>
-      <Text style={styles.total}>Winner receives {points(result.totalGain)} points total</Text>
+      <Text style={styles.total}>
+        {t("Winner receives")} {points(result.totalGain)} {t("points total")}
+      </Text>
 
       <View style={styles.divider} />
 
-      <Text style={styles.sectionTitle}>{result.yakuman.length > 0 ? "Yakuman" : "Yaku"}</Text>
+      <Text style={styles.sectionTitle}>
+        {result.yakuman.length > 0 ? t("Yakuman") : t("Yaku")}
+      </Text>
       {(result.yakuman.length > 0 ? result.yakuman : result.yaku).map((item) => (
         <View key={item.id} style={styles.lineItem}>
           <View style={styles.lineCopy}>
             <Text style={styles.lineTitle}>{item.name}</Text>
             <Text style={styles.lineNote}>{item.romanized}</Text>
           </View>
-          <Text style={styles.value}>{"han" in item ? `${item.han} han` : "1×"}</Text>
+          <Text style={styles.value}>{"han" in item ? `${item.han} ${t("han")}` : "1×"}</Text>
         </View>
       ))}
 
@@ -77,10 +81,13 @@ export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
           <View style={styles.lineCopy}>
             <Text style={styles.lineTitle}>{t("Dora")}</Text>
             <Text style={styles.lineNote}>
-              Visible {result.dora.dora} · Ura {result.dora.uraDora} · Red {result.dora.redDora}
+              {t("Visible")} {result.dora.dora} · {t("Ura")} {result.dora.uraDora} · {t("Red")}{" "}
+              {result.dora.redDora}
             </Text>
           </View>
-          <Text style={styles.value}>{result.dora.total} han</Text>
+          <Text style={styles.value}>
+            {result.dora.total} {t("han")}
+          </Text>
         </View>
       ) : null}
 
@@ -95,14 +102,14 @@ export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
             </View>
           ))}
           <Text style={styles.rounding}>
-            {result.fu.unrounded} fu → {result.fu.rounded} fu
+            {result.fu.unrounded} {t("fu")} → {result.fu.rounded} {t("fu")}
           </Text>
         </>
       ) : null}
 
       {result.riichiBonus > 0 ? (
         <Text style={styles.bonus}>
-          Includes {points(result.riichiBonus)} points in riichi deposits.
+          {t("Includes")} {points(result.riichiBonus)} {t("points in riichi deposits.")}
         </Text>
       ) : null}
     </View>
