@@ -11,7 +11,7 @@ describe("announcementText", () => {
         method: "ron",
         points: 8000,
       }),
-    ).toBe("Ron, Junchan, Sanshoku, 4 han 30 fu, 8,000 points.");
+    ).toBe("Ron. Junchan. Sanshoku. 4 han 30 fu. 8,000 points.");
   });
 
   it("uses the limit name instead of han and fu once a hand reaches one", () => {
@@ -24,7 +24,7 @@ describe("announcementText", () => {
         method: "tsumo",
         points: 32000,
       }),
-    ).toBe("Tsumo, Suuankou, yakuman, 32,000 points.");
+    ).toBe("Tsumo. Suuankou. yakuman. 32,000 points.");
   });
 
   it("still announces a hand with no fu breakdown", () => {
@@ -37,6 +37,6 @@ describe("announcementText", () => {
         method: "tsumo",
         points: 12000,
       }),
-    ).toBe("Tsumo, 5 han, 12,000 points.");
+    ).toBe("Tsumo. 5 han. 12,000 points.");
   });
 });

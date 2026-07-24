@@ -125,7 +125,7 @@ describe("ManualCalculator", () => {
     await fireEvent.press(screen.getByRole("button", { name: "Calculate" }));
 
     expect(speech.speak).toHaveBeenCalledWith(
-      "Tsumo, Menzen tsumo, Pinfu, 2 han 20 fu, 1,500 points.",
+      "Tsumo. Menzen tsumo. Pinfu. 2 han 20 fu. 1,500 points.",
     );
   });
 

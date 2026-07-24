@@ -66,6 +66,6 @@ The translations are machine-produced and have not been read by a player in thos
 
 Tile art from [FluffyStuff/riichi-mahjong-tiles](https://github.com/FluffyStuff/riichi-mahjong-tiles), public domain under CC0. See [tile art](docs/tile-art.md) for how it is prepared.
 
-The limit celebration and yaku readings are brushed in [Yuji Syuku](https://github.com/Kinutafontfactory/Yuji) by the Yuji Project Authors, under the SIL Open Font License 1.1 — bundled subset to the dozen glyphs it uses (`apps/client/assets/fonts/`).
+The celebration is brushed in [Yuji Boku and Yuji Syuku](https://github.com/Kinutafontfactory/Yuji) by the Yuji Project Authors, under the SIL Open Font License 1.1 — Boku stamps the limit, Syuku reads the yaku, each bundled as a subset of the few glyphs it uses (`apps/client/assets/fonts/`).
 
 [Contributing](CONTRIBUTING.md) · [Engineering instructions](AGENTS.md) · [Security](SECURITY.md)

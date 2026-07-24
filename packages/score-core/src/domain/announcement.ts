@@ -8,14 +8,13 @@ import type { LimitName, PaymentBreakdown, ScoreSuccess } from "./score";
 export interface WinAnnouncement {
   readonly fu: number | null;
   readonly han: number | null;
-  /** Yakuman names when the hand is a yakuman, otherwise its highest-han yaku. */
+  /** Every yakuman when the hand is a yakuman, otherwise every yaku, each named
+      so an announcement can read them out one by one, highest value first. */
   readonly headline: readonly string[];
   readonly limit: LimitName | null;
   readonly method: PaymentBreakdown["kind"];
   readonly points: number;
 }
-
-const headlineYakuCount = 2;
 
 export function announceWin(result: ScoreSuccess): WinAnnouncement {
   const headline =
@@ -23,7 +22,6 @@ export function announceWin(result: ScoreSuccess): WinAnnouncement {
       ? result.yakuman.map(({ romanized }) => romanized)
       : result.yaku
           .toSorted((left, right) => right.han - left.han)
-          .slice(0, headlineYakuCount)
           .map(({ romanized }) => romanized);
 
   return {

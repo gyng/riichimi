@@ -29,5 +29,7 @@ export function announcementText(announcement: WinAnnouncement): string {
     valueClause(announcement),
     `${points} points`,
   ].filter((clause): clause is string => clause !== null);
-  return `${clauses.join(", ")}.`;
+  // Full stops between clauses so a voice reads the yaku out one at a time
+  // before landing on the limit and the points.
+  return `${clauses.join(". ")}.`;
 }

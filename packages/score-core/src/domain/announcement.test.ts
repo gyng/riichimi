@@ -32,8 +32,8 @@ describe("announceWin", () => {
       }),
     );
 
-    // Highest han first, capped so an announcement stays speakable.
-    expect(announcement.headline).toEqual(["Junchan", "Sanshoku"]);
+    // Every yaku, highest han first, so an announcement can read them all out.
+    expect(announcement.headline).toEqual(["Junchan", "Sanshoku", "Riichi"]);
     expect(announcement).toMatchObject({ fu: 30, han: 4, method: "ron", points: 8000 });
   });
 

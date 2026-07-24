@@ -5,6 +5,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import yujiBoku from "../assets/fonts/YujiBoku-celebration.ttf";
 import yujiSyuku from "../assets/fonts/YujiSyuku-celebration.ttf";
 
 import { AppNavigationBar } from "../src/components/app-navigation-bar";
@@ -17,9 +18,10 @@ import { RulesProvider } from "../src/state/rules-context";
 import { WebMcpBridge } from "../src/features/webmcp/webmcp-bridge";
 
 export default function RootLayout() {
-  // The brush face for the celebration banner and yaku readings. Loading is
-  // non-blocking: the UI never waits on it and falls back to serif until ready.
-  useFonts({ YujiSyuku: yujiSyuku });
+  // Brush faces for the celebration: Boku (thick) stamps the limit, Syuku
+  // reads the yaku. Loading is non-blocking — the UI never waits on it and
+  // falls back to serif until ready.
+  useFonts({ YujiBoku: yujiBoku, YujiSyuku: yujiSyuku });
   return (
     <LocaleProvider>
       <TileLabelProvider>

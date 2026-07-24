@@ -30,37 +30,42 @@ float fbm(vec2 p){
 }
 void main(){
   vec2 uv = gl_FragCoord.xy / u_res;
+  vec2 c = uv - 0.5; c.x *= u_res.x / u_res.y;   // centred, aspect-corrected
+  float r = length(c);
+  float ang = atan(c.y, c.x);
   float t = u_time;
   vec3 col = vec3(0.0);
 
-  // fire
-  vec2 fp = vec2(uv.x * 3.0, uv.y * 2.2 - t * 1.6);
-  float flame = fbm(fp + fbm(fp * 1.7) * 0.6);
-  float mask = smoothstep(0.98, 0.02, uv.y);
-  float fire = pow(clamp(flame * mask * (0.6 + 0.8 * u_intensity), 0.0, 1.0), 1.5);
+  // fire aura radiating from the centre — the kanji burns from within
+  float fl = fbm(vec2(ang * 3.0 + fbm(c * 4.0) * 1.2, r * 4.0 - t * 2.0));
+  float ring = smoothstep(0.02, 0.32, r) * smoothstep(1.05, 0.32, r);
+  float fire = pow(clamp(fl * ring * (0.7 + 0.7 * u_intensity), 0.0, 1.0), 1.4);
   vec3 fc = mix(vec3(0.6, 0.05, 0.0), vec3(1.0, 0.5, 0.05), smoothstep(0.15, 0.55, fire));
   fc = mix(fc, vec3(1.0, 0.95, 0.75), smoothstep(0.55, 0.95, fire));
-  col += fc * fire * 2.2;
+  col += fc * fire * 2.3;
 
-  // lightning
+  // lightning striking outward from the centre
   if (u_lightning > 0.5){
-    for (int b = 0; b < 3; b++){
-      float fb = float(b);
-      float seg = floor(t * 7.0) + fb * 3.7;
-      float bx = 0.2 + 0.3 * fb + 0.08 * sin(seg * 1.7);
-      float warp = (fbm(vec2(uv.y * 7.0 + fb * 11.0, seg)) - 0.5) * 0.18 * (0.5 + u_intensity);
-      float d = abs(uv.x - (bx + warp));
-      float flick = step(0.55, hash(vec2(seg, fb)));
-      col += vec3(0.75, 0.85, 1.0) * smoothstep(0.010, 0.0, d) * flick * (1.0 + u_intensity);
-      col += vec3(0.35, 0.45, 1.0) * smoothstep(0.06, 0.0, d) * 0.2 * flick;
+    for (int k = 0; k < 3; k++){
+      float fk = float(k);
+      float seg = floor(t * 7.0) + fk * 3.7;
+      float baseAng = fk * 2.094 + seg * 0.25;
+      float jit = (fbm(vec2(r * 9.0, seg + fk * 5.0)) - 0.5) * 0.6;
+      float da = ang - baseAng - jit; da = atan(sin(da), cos(da));
+      float w = 0.04 / max(r, 0.06);
+      float reach = smoothstep(1.0, 0.12, r) * step(0.08, r);
+      float flick = step(0.5, hash(vec2(seg, fk)));
+      col += vec3(0.75, 0.85, 1.0) * smoothstep(w, 0.0, abs(da)) * reach * flick * (1.0 + u_intensity);
+      col += vec3(0.4, 0.5, 1.0) * smoothstep(w * 3.0, 0.0, abs(da)) * reach * 0.25 * flick;
     }
   }
 
-  // entry flash
-  col += vec3(1.0, 0.92, 0.8) * u_flash * 0.6;
+  // entry flash bursting from the centre
+  float centreFlash = u_flash * smoothstep(0.85, 0.0, r);
+  col += vec3(1.0, 0.92, 0.8) * centreFlash * 1.2;
 
   float lum = clamp(max(max(col.r, col.g), col.b), 0.0, 1.0);
-  gl_FragColor = vec4(col, clamp(lum + u_flash * 0.5, 0.0, 1.0) * u_alpha);
+  gl_FragColor = vec4(col, clamp(lum + centreFlash * 0.5, 0.0, 1.0) * u_alpha);
 }`;
 
 function compile(gl: WebGLRenderingContext, type: number, source: string): WebGLShader | null {

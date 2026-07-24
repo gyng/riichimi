@@ -1,0 +1,55 @@
+import type { ChimePort } from "./chime-port";
+
+let context: AudioContext | null = null;
+
+function audio(): AudioContext | null {
+  if (typeof globalThis.AudioContext === "undefined") {
+    return null;
+  }
+  context ??= new globalThis.AudioContext();
+  return context;
+}
+
+// Inharmonic partials give the metallic, slightly clangorous ring of a struck
+// bell rather than the pure tone of a chime — bell-like, but short of a gong.
+const PARTIALS: readonly number[] = [1, 2.02, 2.76, 3.99, 5.4];
+const PARTIAL_GAINS: readonly number[] = [1, 0.5, 0.4, 0.26, 0.16];
+
+export const chime: ChimePort = {
+  get available(): boolean {
+    return typeof globalThis.AudioContext !== "undefined";
+  },
+  strike(intensity: number): void {
+    const ac = audio();
+    if (ac === null) {
+      return;
+    }
+    // A recent tap (the Calculate press) lets a suspended context resume.
+    void ac.resume();
+
+    const level = Math.max(0, Math.min(1, intensity));
+    const now = ac.currentTime;
+    const fundamental = 300 - level * 90; // deeper for the bigger hands
+    const decay = 1.1 + level * 1.4;
+    const peak = 0.26 + level * 0.22;
+
+    const master = ac.createGain();
+    master.gain.setValueAtTime(0.0001, now);
+    master.gain.exponentialRampToValueAtTime(peak, now + 0.006); // sharp strike
+    master.gain.exponentialRampToValueAtTime(0.0001, now + decay);
+    master.connect(ac.destination);
+
+    PARTIALS.forEach((ratio, index) => {
+      const osc = ac.createOscillator();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(fundamental * ratio, now);
+      // A hair of downward glide reads as the metal being struck.
+      osc.frequency.exponentialRampToValueAtTime(fundamental * ratio * 0.992, now + decay);
+      const gain = ac.createGain();
+      gain.gain.value = PARTIAL_GAINS[index] ?? 0.1;
+      osc.connect(gain).connect(master);
+      osc.start(now);
+      osc.stop(now + decay);
+    });
+  },
+};
