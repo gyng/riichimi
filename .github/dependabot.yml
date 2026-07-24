@@ -6,6 +6,11 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    # Do not propose a version until it has been published for at least seven
+    # days. A just-published release is where a compromised package shows up, and
+    # the wait costs nothing on a hobby cadence.
+    cooldown:
+      default-days: 7
     groups:
       expo:
         patterns:
@@ -22,4 +27,18 @@ updates:
           - "@vitest/*"
           - "jest*"
           - "@testing-library/*"
+    ignore:
+      # React and React DOM are pinned by the Expo SDK to the exact versions the
+      # native runtime was built against; `expo install --check` fails on any
+      # other. They move when the SDK moves, in an expo-group bump, not on their
+      # own — a standalone bump only produces a red PR.
+      - dependency-name: "react"
+      - dependency-name: "react-dom"
+      # jest-expo 57 is built on jest 29 internals (@jest/globals, babel-jest at
+      # ^29). jest 30 cannot be adopted until jest-expo supports it, so hold the
+      # major; patches and minors within 29 are still welcome.
+      - dependency-name: "jest"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/jest"
+        update-types: ["version-update:semver-major"]
     versioning-strategy: increase
