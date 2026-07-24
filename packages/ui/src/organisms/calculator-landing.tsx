@@ -6,22 +6,10 @@ import { color, space } from "../tokens/theme";
 /** Every user-facing string, supplied by the app so it can be translated. */
 export interface CalculatorLandingCopy {
   readonly headline: string;
-  readonly historyBody: string;
-  readonly historyKicker: string;
-  readonly historyRevisit: string;
-  readonly historySaved: string;
-  readonly historyStart: string;
-  readonly intro: string;
-  readonly kicker: string;
+  readonly historyEmpty: string;
+  readonly historyLabel: string;
   readonly manualAction: string;
-  readonly manualBody: string;
-  readonly manualIndex: string;
-  readonly manualTitle: string;
   readonly scanAction: string;
-  readonly scanBody: string;
-  readonly scanIndex: string;
-  readonly scanTitle: string;
-  readonly sessionKicker: string;
   readonly sessionResume: string;
   readonly sessionStart: string;
 }
@@ -76,7 +64,11 @@ export function CalculatorLanding({
         accessibilityLabel={hasActiveSession ? copy.sessionResume : copy.sessionStart}
         accessibilityRole="button"
         onPress={onSession}
-        style={({ pressed }) => [styles.row, pressed && styles.pressed]}
+        style={({ pressed }) => [
+          styles.row,
+          hasActiveSession && styles.rowActive,
+          pressed && styles.pressed,
+        ]}
       >
         <Text style={styles.rowLabel}>
           {hasActiveSession ? copy.sessionResume : copy.sessionStart}
@@ -85,15 +77,22 @@ export function CalculatorLanding({
       </Pressable>
 
       <Pressable
-        accessibilityLabel={historyCount === 0 ? copy.historyStart : copy.historyRevisit}
+        accessibilityLabel={historyCount === 0 ? copy.historyEmpty : copy.historyLabel}
         accessibilityRole="button"
+        disabled={historyCount === 0}
         onPress={onHistory}
-        style={({ pressed }) => [styles.row, pressed && styles.pressed]}
+        style={({ pressed }) => [
+          styles.row,
+          historyCount === 0 && styles.rowMuted,
+          pressed && styles.pressed,
+        ]}
       >
         <Text style={styles.rowLabel}>
-          {historyCount === 0 ? copy.historyStart : copy.historyRevisit}
+          {historyCount === 0 ? copy.historyEmpty : copy.historyLabel}
         </Text>
-        <Text style={styles.rowCount}>{String(historyCount).padStart(2, "0")}</Text>
+        {historyCount === 0 ? null : (
+          <Text style={styles.rowCount}>{String(historyCount).padStart(2, "0")}</Text>
+        )}
       </Pressable>
 
       {rulesControl}
@@ -134,7 +133,9 @@ const styles = StyleSheet.create({
     minHeight: 56,
     paddingHorizontal: space.x4,
   },
+  rowActive: { borderColor: color.accent, borderWidth: 2 },
   rowArrow: { color: color.accent, fontFamily: "serif", fontSize: 20, fontWeight: "800" },
+  rowMuted: { opacity: 0.55 },
   rowCount: { color: color.accent, fontFamily: "monospace", fontSize: 15, fontWeight: "800" },
   rowLabel: { color: color.ink, flex: 1, fontFamily: "serif", fontSize: 16, fontWeight: "700" },
   root: {

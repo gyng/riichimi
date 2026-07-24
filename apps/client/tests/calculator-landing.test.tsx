@@ -18,7 +18,7 @@ describe("CalculatorLanding", () => {
         onSession={jest.fn()}
       />,
     );
-    await fireEvent.press(screen.getByRole("button", { name: "Scan a winning hand" }));
+    await fireEvent.press(screen.getByRole("button", { name: "Scan a hand" }));
 
     expect(onScan).toHaveBeenCalledTimes(1);
   });
@@ -37,7 +37,7 @@ describe("CalculatorLanding", () => {
         onSession={jest.fn()}
       />,
     );
-    await fireEvent.press(screen.getByRole("button", { name: "Enter tiles manually" }));
+    await fireEvent.press(screen.getByRole("button", { name: "Enter by hand" }));
 
     expect(onManual).toHaveBeenCalledTimes(1);
   });
@@ -56,7 +56,7 @@ describe("CalculatorLanding", () => {
         onSession={jest.fn()}
       />,
     );
-    await fireEvent.press(screen.getByRole("button", { name: "Revisit recent answers" }));
+    await fireEvent.press(screen.getByRole("button", { name: "Saved scores" }));
 
     expect(onHistory).toHaveBeenCalledTimes(1);
   });

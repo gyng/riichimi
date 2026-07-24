@@ -228,12 +228,12 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   });
 
   await page.goto("/");
-  await page.getByRole("button", { name: "Revisit recent answers" }).click();
+  await page.getByRole("button", { name: "Saved scores" }).click();
   await expect(page).toHaveURL(/\/history$/);
   await expect(page.getByText("2 han · 20 fu").filter({ visible: true })).toBeVisible();
 
   await page.goto("/");
-  await page.getByRole("button", { name: "Scan a winning hand" }).click();
+  await page.getByRole("button", { name: "Scan a hand" }).click();
   await expect(page).toHaveURL(/\/scan$/);
   await expect(page.getByRole("heading", { name: /Show us the tiles/ })).toBeVisible();
   await expect(page.getByRole("button", { name: "Enter tiles manually" })).toBeVisible();

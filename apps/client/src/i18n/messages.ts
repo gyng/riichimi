@@ -5,22 +5,10 @@ export type Locale = (typeof supportedLocales)[number];
 export interface Messages {
   readonly home: {
     readonly headline: string;
-    readonly historyBody: string;
-    readonly historyKicker: string;
-    readonly historyRevisit: string;
-    readonly historySaved: string;
-    readonly historyStart: string;
-    readonly intro: string;
-    readonly kicker: string;
+    readonly historyEmpty: string;
+    readonly historyLabel: string;
     readonly manualAction: string;
-    readonly manualBody: string;
-    readonly manualIndex: string;
-    readonly manualTitle: string;
     readonly scanAction: string;
-    readonly scanBody: string;
-    readonly scanIndex: string;
-    readonly scanTitle: string;
-    readonly sessionKicker: string;
     readonly sessionResume: string;
     readonly sessionStart: string;
   };
@@ -47,27 +35,12 @@ export const messages: Record<Locale, Messages> = {
   en: {
     home: {
       headline: "Score a winning hand",
-      historyBody: "Local score audits, ready when the table asks why.",
-      historyKicker: "SCORE FOLIO",
-      historyRevisit: "Revisit recent answers",
-      historySaved: "SAVED",
-      historyStart: "Keep the next answer",
-      intro:
-        "Scan the tiles or enter them by hand. Riichimi asks only what the table cannot show and explains every point — locally, on this device.",
-      kicker: "Winning hand calculator",
-      manualAction: "Enter tiles manually",
-      manualBody:
-        "Build the same auditable result without camera access. Nothing important is hidden behind automation.",
-      manualIndex: "02 / MANUAL",
-      manualTitle: "Keep full control",
-      scanAction: "Scan a winning hand",
-      scanBody:
-        "Use a guided camera frame to recognize tiles, calls, the winning tile, and dora indicators.",
-      scanIndex: "01 / RECOMMENDED",
-      scanTitle: "Let the tiles speak",
-      sessionKicker: "03 / TABLE SESSION",
-      sessionResume: "Resume the active table",
-      sessionStart: "Start a four-player table",
+      historyEmpty: "No saved scores yet",
+      historyLabel: "Saved scores",
+      manualAction: "Enter by hand",
+      scanAction: "Scan a hand",
+      sessionResume: "Resume table",
+      sessionStart: "Start a table",
     },
     language: {
       kicker: "LANGUAGE · THIS DEVICE",
@@ -87,25 +60,12 @@ export const messages: Record<Locale, Messages> = {
   ja: {
     home: {
       headline: "和了点を計算する",
-      historyBody: "点数の根拠を端末内に保存します。卓で理由を聞かれたときに。",
-      historyKicker: "点数記録",
-      historyRevisit: "最近の結果を見る",
-      historySaved: "保存済み",
-      historyStart: "次の結果を保存する",
-      intro:
-        "牌を撮影するか、手入力してください。卓から読み取れない情報だけを尋ね、点数の根拠をすべて表示します。計算はこの端末内で完結します。",
-      kicker: "和了点計算機",
-      manualAction: "手入力する",
-      manualBody: "カメラなしでも同じ監査可能な結果を作れます。重要な判断を自動化に隠しません。",
-      manualIndex: "02 / 手入力",
-      manualTitle: "すべて自分で決める",
-      scanAction: "和了手を撮影する",
-      scanBody: "ガイド枠に合わせて撮影し、牌・鳴き・和了牌・ドラ表示牌を認識します。",
-      scanIndex: "01 / おすすめ",
-      scanTitle: "牌に語らせる",
-      sessionKicker: "03 / 対局",
-      sessionResume: "進行中の卓に戻る",
-      sessionStart: "四人打ちの卓を始める",
+      historyEmpty: "保存された点数はまだありません",
+      historyLabel: "保存した点数",
+      manualAction: "手入力で計算",
+      scanAction: "撮影して計算",
+      sessionResume: "卓に戻る",
+      sessionStart: "卓を始める",
     },
     language: {
       kicker: "表示言語 · この端末",
@@ -125,25 +85,12 @@ export const messages: Record<Locale, Messages> = {
   "zh-Hans": {
     home: {
       headline: "计算和牌点数",
-      historyBody: "点数依据保存在本机，牌桌上有疑问时随时可查。",
-      historyKicker: "点数存档",
-      historyRevisit: "查看最近的结果",
-      historySaved: "已保存",
-      historyStart: "保存下一次结果",
-      intro:
-        "拍摄牌面或手动输入。Riichimi 只询问牌桌上无法看到的信息，并列出每一点的来源——全部在本机完成。",
-      kicker: "和牌点数计算器",
-      manualAction: "手动输入牌",
-      manualBody: "没有相机也能得到同样可核对的结果。重要的判断不会被自动化隐藏。",
-      manualIndex: "02 / 手动",
-      manualTitle: "完全自己掌控",
-      scanAction: "拍摄和牌",
-      scanBody: "对准取景框拍摄，识别牌张、副露、和牌张与宝牌指示牌。",
-      scanIndex: "01 / 推荐",
-      scanTitle: "让牌自己说话",
-      sessionKicker: "03 / 牌桌对局",
-      sessionResume: "回到进行中的牌桌",
-      sessionStart: "开始四人牌桌",
+      historyEmpty: "尚无保存的点数",
+      historyLabel: "已保存的点数",
+      manualAction: "手动输入",
+      scanAction: "拍摄计算",
+      sessionResume: "返回牌桌",
+      sessionStart: "开始牌桌",
     },
     language: {
       kicker: "界面语言 · 本机",
@@ -164,25 +111,12 @@ export const messages: Record<Locale, Messages> = {
   "zh-Hant": {
     home: {
       headline: "計算和牌點數",
-      historyBody: "點數依據保存在本機，牌桌上有疑問時隨時可查。",
-      historyKicker: "點數存檔",
-      historyRevisit: "查看最近的結果",
-      historySaved: "已保存",
-      historyStart: "保存下一次結果",
-      intro:
-        "拍攝牌面或手動輸入。Riichimi 只詢問牌桌上無法看到的資訊，並列出每一點的來源——全部在本機完成。",
-      kicker: "和牌點數計算器",
-      manualAction: "手動輸入牌",
-      manualBody: "沒有相機也能得到同樣可核對的結果。重要的判斷不會被自動化隱藏。",
-      manualIndex: "02 / 手動",
-      manualTitle: "完全自己掌控",
-      scanAction: "拍攝和牌",
-      scanBody: "對準取景框拍攝，辨識牌張、副露、和牌張與寶牌指示牌。",
-      scanIndex: "01 / 推薦",
-      scanTitle: "讓牌自己說話",
-      sessionKicker: "03 / 牌桌對局",
-      sessionResume: "回到進行中的牌桌",
-      sessionStart: "開始四人牌桌",
+      historyEmpty: "尚無儲存的點數",
+      historyLabel: "已儲存的點數",
+      manualAction: "手動輸入",
+      scanAction: "拍攝計算",
+      sessionResume: "返回牌桌",
+      sessionStart: "開始牌桌",
     },
     language: {
       kicker: "介面語言 · 本機",
