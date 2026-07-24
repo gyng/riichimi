@@ -169,7 +169,7 @@ test("dogfoods the polished mobile scoring and table flows through WebMCP", asyn
     path: "docs/checkpoints/2026-07-23-03-session-mobile.png",
   });
 
-  await page.getByRole("button", { name: "Score a winning hand" }).click();
+  await page.getByRole("button", { name: "Score a hand" }).click();
   await expect(page).toHaveURL(/\/manual$/);
   await expect(page.getByText("ACTIVE TABLE · CONTEXT LINKED")).toBeVisible();
   await expect

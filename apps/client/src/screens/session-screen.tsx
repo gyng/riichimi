@@ -26,7 +26,6 @@ import {
   Text,
   TextInput,
   View,
-  useWindowDimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -54,13 +53,11 @@ function toggle(current: readonly number[], index: number): readonly number[] {
 
 export function SessionScreen() {
   const { t } = useLocale();
-  // Landscape and desktop have width to spare; the seats and the action panels
-  // read better side by side than stacked down a short screen.
-  const { width: viewportWidth } = useWindowDimensions();
-  const wideLayout = viewportWidth >= 700;
   const session = useSession();
   const [names, setNames] = useState(["Player 1", "Player 2", "Player 3", "Player 4"]);
   const [tenpai, setTenpai] = useState<readonly number[]>([]);
+  // A win is the common outcome; the draw path stays folded until it happens.
+  const [showDraw, setShowDraw] = useState(false);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -313,6 +310,15 @@ export function SessionScreen() {
           {table.riichiSticks === 1 ? "" : "s"}
         </Text>
 
+        <View style={styles.recordBar}>
+          <ActionButton
+            label={t("Score a hand")}
+            onPress={() => router.push("/manual")}
+            variant="vermilion"
+          />
+          <Text style={styles.recordHint}>{t("Context carries over.")}</Text>
+        </View>
+
         <View style={styles.playerGrid}>
           {table.players.map((player, index) => {
             const seat = seatNames[(index - table.dealerIndex + 4) % 4];
@@ -328,36 +334,42 @@ export function SessionScreen() {
                 </Text>
                 <Text style={styles.playerName}>{player.name}</Text>
                 <Text style={styles.playerScore}>{points(player.score)}</Text>
-                <ActionButton
-                  disabled={hasDeclared || player.score < 1000}
-                  label={hasDeclared ? "Riichi declared" : t("Declare riichi")}
-                  onPress={() => session.declarePlayerRiichi(index)}
-                  variant="paper"
-                />
+                {hasDeclared ? (
+                  <Text style={styles.riichiDeclared}>{t("Riichi declared")}</Text>
+                ) : (
+                  <Pressable
+                    accessibilityLabel={t("Declare riichi")}
+                    accessibilityRole="button"
+                    accessibilityState={{ disabled: player.score < 1000 }}
+                    disabled={player.score < 1000}
+                    onPress={() => session.declarePlayerRiichi(index)}
+                    style={({ pressed }) => [
+                      styles.riichiPill,
+                      player.score < 1000 && styles.riichiPillDisabled,
+                      pressed && styles.pressed,
+                    ]}
+                  >
+                    <Text style={styles.riichiPillLabel}>{t("Riichi")}</Text>
+                  </Pressable>
+                )}
               </View>
             );
           })}
         </View>
 
-        <View style={wideLayout ? styles.panelRow : undefined}>
-          <View style={[styles.actionPanel, wideLayout && styles.panelInRow]}>
-            <View style={styles.actionCopy}>
-              <Text accessibilityRole="header" style={styles.panelTitle}>
-                {t("Record the next result")}
-              </Text>
-              <Text style={styles.muted}>{t("Context carries over.")}</Text>
-            </View>
-            <ActionButton
-              label={t("Score a winning hand")}
-              onPress={() => router.push("/manual")}
-              variant="vermilion"
-            />
-          </View>
-
-          <View style={[styles.panel, wideLayout && styles.panelInRow]}>
-            <Text accessibilityRole="header" style={styles.panelTitle}>
-              {t("Exhaustive draw")}
-            </Text>
+        <Pressable
+          accessibilityLabel={t("Exhaustive draw")}
+          accessibilityRole="button"
+          accessibilityState={{ expanded: showDraw }}
+          aria-expanded={showDraw}
+          onPress={() => setShowDraw((visible) => !visible)}
+          style={styles.disclosure}
+        >
+          <Text style={styles.disclosureLabel}>{t("Exhaustive draw")}</Text>
+          <Text style={styles.disclosureChevron}>{showDraw ? "−" : "+"}</Text>
+        </Pressable>
+        {showDraw ? (
+          <View style={styles.panel}>
             <Text style={styles.muted}>{t("Tenpai players. Payments are automatic.")}</Text>
             <View style={styles.tenpaiRow}>
               {table.players.map((player, index) => {
@@ -387,12 +399,13 @@ export function SessionScreen() {
                     tenpaiPlayerIndices: tenpai,
                   });
                   setTenpai([]);
+                  setShowDraw(false);
                 }}
                 variant="paper"
               />
             </View>
           </View>
-        </View>
+        ) : null}
 
         <View style={styles.panel}>
           <View style={styles.historyHeader}>
@@ -779,18 +792,70 @@ export function SessionScreen() {
 }
 
 const styles = StyleSheet.create({
-  actionCopy: { flex: 1, minWidth: 240 },
-  actionPanel: {
+  // The per-hand action, first and unmissable.
+  recordBar: {
     alignItems: "center",
-    backgroundColor: color.jade,
-    borderRadius: 16,
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: space.x5,
+    gap: space.x3,
+    marginBottom: space.x4,
+  },
+  recordHint: { color: color.inkMuted, flexShrink: 1, fontFamily: "serif", fontSize: 13 },
+  // Riichi is a per-seat action, but secondary to the score — a compact outline
+  // rather than a full-width button that out-weighed the seat's points.
+  riichiPill: {
+    alignItems: "center",
+    alignSelf: "flex-start",
+    borderColor: color.jade,
+    borderRadius: 999,
+    borderWidth: 1,
+    justifyContent: "center",
+    minHeight: 40,
+    minWidth: 72,
+    paddingHorizontal: space.x3,
+  },
+  riichiPillDisabled: { borderColor: color.line, opacity: 0.5 },
+  riichiPillLabel: {
+    color: color.jade,
+    fontFamily: "monospace",
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 0.8,
+  },
+  riichiDeclared: {
+    alignSelf: "flex-start",
+    color: color.accent,
+    fontFamily: "monospace",
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 0.6,
+    minHeight: 40,
+    paddingTop: 12,
+  },
+  disclosure: {
+    alignItems: "center",
+    borderColor: color.line,
+    borderRadius: 10,
+    borderWidth: 1,
+    flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: space.x3,
-    padding: space.x3,
+    minHeight: 48,
+    paddingHorizontal: space.x4,
   },
+  disclosureChevron: {
+    color: color.accent,
+    fontFamily: "monospace",
+    fontSize: 18,
+    fontWeight: "800",
+  },
+  disclosureLabel: {
+    color: color.ink,
+    fontFamily: "serif",
+    fontSize: 15,
+    fontWeight: "700",
+  },
+  pressed: { opacity: 0.7 },
   centered: {
     alignItems: "center",
     backgroundColor: color.canvas,
@@ -952,9 +1017,6 @@ const styles = StyleSheet.create({
     minWidth: 150,
     padding: space.x3,
   },
-  // Only inside the row: in a column these would stretch and overlap.
-  panelInRow: { flexBasis: 0, flexGrow: 1 },
-  panelRow: { alignItems: "flex-start", flexDirection: "row", gap: space.x3 },
   playerGrid: { flexDirection: "row", flexWrap: "wrap", gap: space.x2, marginBottom: space.x3 },
   playerName: { color: color.ink, fontFamily: "serif", fontSize: 16, fontWeight: "700" },
   playerScore: {

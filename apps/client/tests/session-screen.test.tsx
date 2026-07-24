@@ -59,6 +59,7 @@ describe("SessionScreen", () => {
   it("settles noten payments and exposes undo", async () => {
     await render(<SessionUnderTest />);
     await fireEvent.press(await screen.findByRole("button", { name: "Start East 1" }));
+    await fireEvent.press(screen.getByRole("button", { name: "Exhaustive draw" }));
     await fireEvent.press(screen.getByRole("checkbox", { name: "Player 1" }));
     await fireEvent.press(screen.getByRole("checkbox", { name: "Player 3" }));
     await fireEvent.press(screen.getByRole("button", { name: "Record draw & advance" }));
@@ -84,6 +85,7 @@ describe("SessionScreen", () => {
   it("edits a completed draw round through a confirmed preview and undoes it", async () => {
     await render(<SessionUnderTest />);
     await fireEvent.press(await screen.findByRole("button", { name: "Start East 1" }));
+    await fireEvent.press(screen.getByRole("button", { name: "Exhaustive draw" }));
     await fireEvent.press(screen.getByRole("checkbox", { name: "Player 1" }));
     await fireEvent.press(screen.getByRole("checkbox", { name: "Player 2" }));
     await fireEvent.press(screen.getByRole("button", { name: "Record draw & advance" }));
@@ -155,6 +157,7 @@ describe("SessionScreen", () => {
   it("reveals a copyable game summary reflecting the round history", async () => {
     await render(<SessionUnderTest />);
     await fireEvent.press(await screen.findByRole("button", { name: "Start East 1" }));
+    await fireEvent.press(screen.getByRole("button", { name: "Exhaustive draw" }));
     await fireEvent.press(screen.getByRole("checkbox", { name: "Player 1" }));
     await fireEvent.press(screen.getByRole("checkbox", { name: "Player 3" }));
     await fireEvent.press(screen.getByRole("button", { name: "Record draw & advance" }));
