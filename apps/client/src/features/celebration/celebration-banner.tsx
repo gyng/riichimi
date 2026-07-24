@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
-import { AccessibilityInfo, Animated, Easing, StyleSheet, View } from "react-native";
+import { AccessibilityInfo, Animated, Easing, StyleSheet, Text, View } from "react-native";
 
 import { chime } from "./chime";
 import type { Celebration } from "./celebration";
@@ -99,9 +99,10 @@ export function CelebrationBanner({ celebration }: CelebrationBannerProps) {
 
   // The whole stamp fades out at the end, uncovering the score beneath.
   const rootOpacity = progress.interpolate({ inputRange: [0, 0.78, 1], outputRange: [1, 1, 0] });
-  const burstMax = 1.7 + celebration.tier * 0.16;
-  const burstPeak = Math.min(0.62, 0.4 + celebration.tier * 0.05);
-  const popFrom = 1.5 + celebration.tier * 0.09;
+  const burstMax = 1.6 + celebration.tier * 0.2;
+  const burstPeak = Math.min(0.65, 0.4 + celebration.tier * 0.055);
+  const popFrom = 1.5 + celebration.tier * 0.12;
+  const glow = 14 + celebration.tier * 4;
 
   return (
     <Animated.View
@@ -123,45 +124,66 @@ export function CelebrationBanner({ celebration }: CelebrationBannerProps) {
             outputRange: [popFrom, 0.84, 1],
             extrapolate: "clamp",
           });
-          const burstScale = progress.interpolate({
-            inputRange: [start, start + 0.18],
-            outputRange: [0.2, burstMax],
-            extrapolate: "clamp",
-          });
-          const burstOpacity = progress.interpolate({
-            inputRange: [start, start + 0.03, start + 0.2],
-            outputRange: [0, burstPeak, 0],
-            extrapolate: "clamp",
-          });
+          const ringScale = (factor: number) =>
+            progress.interpolate({
+              inputRange: [start, start + 0.2],
+              outputRange: [0.2, burstMax * factor],
+              extrapolate: "clamp",
+            });
+          const ringOpacity = (peak: number) =>
+            progress.interpolate({
+              inputRange: [start, start + 0.03, start + 0.22],
+              outputRange: [0, peak, 0],
+              extrapolate: "clamp",
+            });
           return (
             <View key={index} style={[styles.cell, { height: cell, width: cell }]}>
+              {/* Twin shockwave rings — the outer one wider and softer. */}
               <Animated.View
                 style={[
-                  styles.burst,
+                  styles.ring,
                   {
-                    borderColor: ink,
+                    borderColor: halo,
                     height: cell,
-                    opacity: burstOpacity,
-                    transform: [{ scale: burstScale }],
+                    opacity: ringOpacity(burstPeak * 0.6),
+                    transform: [{ scale: ringScale(1.35) }],
                     width: cell,
                   },
                 ]}
               />
-              <Animated.Text
+              <Animated.View
                 style={[
-                  styles.char,
+                  styles.ring,
                   {
-                    color: ink,
-                    fontSize,
-                    opacity,
-                    textShadowColor: halo,
-                    textShadowRadius: 12 + celebration.tier * 3,
-                    transform: [{ scale }],
+                    borderColor: ink,
+                    height: cell,
+                    opacity: ringOpacity(burstPeak),
+                    transform: [{ scale: ringScale(1) }],
+                    width: cell,
                   },
                 ]}
-              >
-                {character}
-              </Animated.Text>
+              />
+              {/* An ink outline sits under the coloured fill so the stroke reads
+                  as brushed and dimensional rather than a flat silhouette. */}
+              <Animated.View style={[styles.stack, { opacity, transform: [{ scale }] }]}>
+                <Text style={[styles.layer, styles.outline, { fontSize, lineHeight: cell }]}>
+                  {character}
+                </Text>
+                <Text
+                  style={[
+                    styles.layer,
+                    {
+                      color: ink,
+                      fontSize,
+                      lineHeight: cell,
+                      textShadowColor: halo,
+                      textShadowRadius: glow,
+                    },
+                  ]}
+                >
+                  {character}
+                </Text>
+              </Animated.View>
             </View>
           );
         })}
@@ -171,17 +193,19 @@ export function CelebrationBanner({ celebration }: CelebrationBannerProps) {
 }
 
 const styles = StyleSheet.create({
-  burst: {
-    borderRadius: 999,
-    borderWidth: 3,
-    position: "absolute",
-  },
   cell: { alignItems: "center", justifyContent: "center" },
-  char: {
+  layer: {
+    bottom: 0,
     fontFamily: "YujiBoku",
+    left: 0,
+    position: "absolute",
+    right: 0,
     textAlign: "center",
     textShadowOffset: { height: 0, width: 0 },
+    top: 0,
   },
+  outline: { color: "#160F0B", transform: [{ scale: 1.08 }] },
+  ring: { borderRadius: 999, borderWidth: 4, position: "absolute" },
   root: {
     alignItems: "center",
     bottom: 0,
@@ -192,4 +216,5 @@ const styles = StyleSheet.create({
     top: 0,
   },
   row: { alignItems: "center", flexDirection: "row", justifyContent: "center" },
+  stack: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 },
 });

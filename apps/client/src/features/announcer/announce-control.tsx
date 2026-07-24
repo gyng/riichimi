@@ -5,37 +5,54 @@ import { speech } from "../../infrastructure/speech";
 import { useAnnouncer } from "../../state/announcer-context";
 import { useLocale } from "../../state/locale-context";
 
-/** Setup control for reading a scored win aloud. Hidden where no voice exists. */
+/** Setup controls for the win celebration and the spoken announcement. */
 export function AnnounceControl() {
   const { t } = useLocale();
-  const { announceWins, setAnnounceWins } = useAnnouncer();
-
-  if (!speech.available) {
-    return null;
-  }
+  const { announceWins, setAnnounceWins, celebrateWins, setCelebrateWins } = useAnnouncer();
 
   return (
     <View style={styles.root}>
-      <Text style={styles.kicker}>{t("SOUND · THIS DEVICE")}</Text>
+      <Text style={styles.kicker}>{t("WINS · THIS DEVICE")}</Text>
+
       <Pressable
         accessibilityRole="checkbox"
-        accessibilityState={{ checked: announceWins }}
-        aria-checked={announceWins}
-        onPress={() => {
-          const next = !announceWins;
-          setAnnounceWins(next);
-          if (!next) {
-            speech.cancel();
-          }
-        }}
+        accessibilityState={{ checked: celebrateWins }}
+        aria-checked={celebrateWins}
+        onPress={() => setCelebrateWins(!celebrateWins)}
         style={styles.row}
       >
-        <View style={[styles.checkbox, announceWins && styles.checked]}>
-          <Text style={styles.checkmark}>{announceWins ? "✓" : ""}</Text>
+        <View style={[styles.checkbox, celebrateWins && styles.checked]}>
+          <Text style={styles.checkmark}>{celebrateWins ? "✓" : ""}</Text>
         </View>
-        <Text style={styles.label}>{t("Announce a win out loud")}</Text>
+        <Text style={styles.label}>{t("Celebrate big hands")}</Text>
       </Pressable>
-      <Text style={styles.note}>{t("Reads the han, fu, and points when a hand scores.")}</Text>
+      <Text style={styles.note}>
+        {t("Fire, lightning, and a brush stamp on a mangan or better.")}
+      </Text>
+
+      {speech.available ? (
+        <>
+          <Pressable
+            accessibilityRole="checkbox"
+            accessibilityState={{ checked: announceWins }}
+            aria-checked={announceWins}
+            onPress={() => {
+              const next = !announceWins;
+              setAnnounceWins(next);
+              if (!next) {
+                speech.cancel();
+              }
+            }}
+            style={styles.row}
+          >
+            <View style={[styles.checkbox, announceWins && styles.checked]}>
+              <Text style={styles.checkmark}>{announceWins ? "✓" : ""}</Text>
+            </View>
+            <Text style={styles.label}>{t("Announce a win out loud")}</Text>
+          </Pressable>
+          <Text style={styles.note}>{t("Reads the han, fu, and points when a hand scores.")}</Text>
+        </>
+      ) : null}
     </View>
   );
 }

@@ -12,8 +12,8 @@ describe("CelebrationBanner", () => {
 
     // 役満 is rendered a character at a time so each can reveal on its own.
     // The banner is hidden from assistive tech, so include hidden elements.
-    expect(screen.getByText("役", { includeHiddenElements: true })).toBeOnTheScreen();
-    expect(screen.getByText("満", { includeHiddenElements: true })).toBeOnTheScreen();
+    expect(screen.getAllByText("役", { includeHiddenElements: true }).length).toBeGreaterThan(0);
+    expect(screen.getAllByText("満", { includeHiddenElements: true }).length).toBeGreaterThan(0);
   });
 
   it("falls back to 役満 for a multi-yakuman limit name", async () => {
@@ -23,6 +23,6 @@ describe("CelebrationBanner", () => {
       />,
     );
 
-    expect(screen.getByText("役", { includeHiddenElements: true })).toBeOnTheScreen();
+    expect(screen.getAllByText("役", { includeHiddenElements: true }).length).toBeGreaterThan(0);
   });
 });

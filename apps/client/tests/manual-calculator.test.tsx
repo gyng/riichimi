@@ -36,6 +36,8 @@ jest.mock("../src/infrastructure/session-storage", () => ({
 jest.mock("../src/infrastructure/announcer-preference-storage", () => ({
   loadAnnouncerPreference: jest.fn().mockResolvedValue(false),
   saveAnnouncerPreference: jest.fn().mockResolvedValue(undefined),
+  loadCelebratePreference: jest.fn().mockResolvedValue(true),
+  saveCelebratePreference: jest.fn().mockResolvedValue(undefined),
 }));
 
 jest.mock("../src/infrastructure/speech", () => ({

@@ -17,8 +17,14 @@ export const speech: SpeechPort = {
     if (voice === null) {
       return;
     }
+    const utterance = new globalThis.SpeechSynthesisUtterance(text);
+    // Voice direction: deliberate and deep, so a called hand lands with weight
+    // rather than being rattled off. Web Speech has no emotion prompt, so the
+    // drama is carried by pace and pitch.
+    utterance.rate = 0.88;
+    utterance.pitch = 0.82;
     // Replace anything still queued: the latest score is the one worth hearing.
     voice.cancel();
-    voice.speak(new globalThis.SpeechSynthesisUtterance(text));
+    voice.speak(utterance);
   },
 };

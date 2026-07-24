@@ -284,7 +284,7 @@ export function ManualCalculator({
   const [editReview, setEditReview] = useState<EditReview | null>(null);
   const [editError, setEditError] = useState<SessionEditError | null>(null);
   const [pendingCommand, setPendingCommand] = useState<SessionEditCommand | null>(null);
-  const { announceWins } = useAnnouncer();
+  const { announceWins, celebrateWins } = useAnnouncer();
   // Round context is set once per table, so it stays folded away during a hand.
   const [showContextDetail, setShowContextDetail] = useState(false);
   const concealedCapacity = 14 - melds.length * 3;
@@ -575,7 +575,7 @@ export function ManualCalculator({
     };
     const scoreResult = scoreHand(scoreInput);
     setResult(scoreResult);
-    const earned = celebrationFor(scoreResult);
+    const earned = celebrateWins ? celebrationFor(scoreResult) : null;
     if (earned !== null) {
       celebrationKey.current += 1;
       setCelebration({ key: celebrationKey.current, value: earned });
