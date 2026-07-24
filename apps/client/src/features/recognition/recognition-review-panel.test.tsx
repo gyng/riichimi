@@ -194,11 +194,7 @@ describe("RecognitionReviewPanel", () => {
     );
 
     // Even with no called set, the natural layout must have its split confirmed.
-    expect(
-      screen.getByText(
-        "If any concealed tile is actually part of a called set, add that set in the calculator.",
-      ),
-    ).toBeOnTheScreen();
+    expect(screen.getByText("Add any missed called set in the calculator.")).toBeOnTheScreen();
     // The split is stated so the confirm action names what it is confirming.
     expect(screen.getByText("1 concealed tile · 0 called sets")).toBeOnTheScreen();
   });

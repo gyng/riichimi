@@ -55,9 +55,7 @@ export function RulesProfileControl({
           {selected.label}
         </Text>
         <Text style={styles.note}>
-          {locked
-            ? t("This table keeps the profile chosen at East 1, including through undo and reload.")
-            : describeProfile(selected, t)}
+          {locked ? t("Pinned at East 1.") : describeProfile(selected, t)}
         </Text>
       </View>
       {locked ? null : (

@@ -62,9 +62,7 @@ export function ScoreHistoryScreen() {
             {t("Every answer leaves a trail.")}
           </Text>
           <Text style={styles.intro}>
-            {t(
-              "Revisit the hand, context, yaku, and exact transfer behind recent standalone scores.",
-            )}
+            {t("Hand, context, yaku, and transfer for each.")}
             Recalculating the same hand refreshes one entry instead of making duplicates.
           </Text>
         </View>
@@ -76,11 +74,7 @@ export function ScoreHistoryScreen() {
               <Text accessibilityRole="header" style={styles.emptyTitle}>
                 {t("No saved scores yet")}
               </Text>
-              <Text style={styles.muted}>
-                {t(
-                  "A successful standalone calculation appears here automatically. Table results stay with their round history.",
-                )}
-              </Text>
+              <Text style={styles.muted}>{t("Scores you calculate appear here.")}</Text>
               <View style={styles.emptyAction}>
                 <ActionButton
                   label={t("Score a hand")}
@@ -181,9 +175,7 @@ export function ScoreHistoryScreen() {
 
         {history.entries.length === 0 ? null : confirmClear ? (
           <View style={styles.clearConfirm}>
-            <Text style={styles.clearTitle}>
-              {t("Erase every saved standalone score on this device?")}
-            </Text>
+            <Text style={styles.clearTitle}>{t("Erase every saved score?")}</Text>
             <View style={styles.clearActions}>
               <ActionButton
                 label={t("Keep scores")}

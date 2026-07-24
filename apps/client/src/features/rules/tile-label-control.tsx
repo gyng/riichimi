@@ -23,11 +23,7 @@ export function TileLabelControl() {
         </View>
         <Text style={styles.label}>{t("Show the rank in the tile corner")}</Text>
       </Pressable>
-      <Text style={styles.note}>
-        {t(
-          "Adds a small 5p or 3s to each tile face. Useful while you are still reading tiles by sight.",
-        )}
-      </Text>
+      <Text style={styles.note}>{t("Adds 5p / 3s to each face.")}</Text>
     </View>
   );
 }

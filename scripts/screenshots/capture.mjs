@@ -63,7 +63,7 @@ async function capture(base) {
     // A scored hand: the worked example, calculated, showing real tile faces.
     await open(page, base, "/manual", PHONE);
     await page.getByRole("button", { name: "Try a scored example" }).click();
-    await page.getByRole("button", { name: "Calculate maximum score" }).click();
+    await page.getByRole("button", { name: "Calculate" }).click();
     const phoneScore = page.getByText("2 han · 20 fu").filter({ visible: true }).first();
     await phoneScore.waitFor();
     // Frame the audit, which is the point of the screen.
@@ -92,7 +92,7 @@ async function capture(base) {
     // The same calculator with room to breathe, showing the two-column layout.
     await open(page, base, "/manual", DESKTOP);
     await page.getByRole("button", { name: "Try a scored example" }).click();
-    await page.getByRole("button", { name: "Calculate maximum score" }).click();
+    await page.getByRole("button", { name: "Calculate" }).click();
     // Frame the top, where the hand and the picker sit side by side.
     await page.getByText("2 han · 20 fu").filter({ visible: true }).first().waitFor();
     await page.getByRole("heading", { name: "Score a hand" }).scrollIntoViewIfNeeded();

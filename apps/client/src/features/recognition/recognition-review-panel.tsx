@@ -175,9 +175,7 @@ export function RecognitionReviewPanel({
       </View>
 
       <Text style={styles.instructions}>
-        {review.readyToConfirm
-          ? "All flagged reads have been explicitly confirmed or corrected. Continue with the reviewed draft when the row matches the photo."
-          : "Red outlines need attention. Select one, compare it with the photo, then confirm the proposal or replace it. Scoring stays locked until every issue is resolved."}
+        {review.readyToConfirm ? t("Check the row against the photo.") : t("Red needs a look.")}
       </Text>
 
       {showStructure ? (
@@ -187,8 +185,7 @@ export function RecognitionReviewPanel({
             {`${concealedCount} concealed ${concealedCount === 1 ? "tile" : "tiles"} · ${meldGroups.length} called ${meldGroups.length === 1 ? "set" : "sets"}`}
           </Text>
           <Text style={styles.structureCopy}>
-            Called sets are read as open. Confirm the split matches the photo, then set open or
-            closed — or fix a mis-split — in the calculator.
+            {t("Called sets are read as open. Adjust in the calculator.")}
           </Text>
           {meldGroups.map((group) => (
             <View key={group.index} style={styles.structureGroup}>
@@ -207,8 +204,7 @@ export function RecognitionReviewPanel({
           ))}
           {requireStructureConfirmation && meldGroups.length === 0 ? (
             <Text style={styles.structureCopy}>
-              If any concealed tile is actually part of a called set, add that set in the
-              calculator.
+              {t("Add any missed called set in the calculator.")}
             </Text>
           ) : null}
         </View>

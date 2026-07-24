@@ -91,10 +91,7 @@ export function SessionScreen() {
           <Text accessibilityRole="header" style={styles.title}>
             {t("Let the round remember itself.")}
           </Text>
-          <Text style={styles.intro}>
-            Start at 25,000 points. Riichimi carries the dealer, winds, honba, riichi pool, score
-            transfers, and hand history into each calculation.
-          </Text>
+          <Text style={styles.intro}>{t("Start at 25,000. Everything carries over.")}</Text>
           <RulesProfileControl />
           <View style={styles.panel}>
             <Text accessibilityRole="header" style={styles.panelTitle}>
@@ -348,9 +345,7 @@ export function SessionScreen() {
               <Text accessibilityRole="header" style={styles.panelTitle}>
                 {t("Record the next result")}
               </Text>
-              <Text style={styles.muted}>
-                {t("The calculator inherits this round\u2019s context and applies every transfer.")}
-              </Text>
+              <Text style={styles.muted}>{t("Context carries over.")}</Text>
             </View>
             <ActionButton
               label={t("Score a winning hand")}
@@ -363,11 +358,7 @@ export function SessionScreen() {
             <Text accessibilityRole="header" style={styles.panelTitle}>
               {t("Exhaustive draw")}
             </Text>
-            <Text style={styles.muted}>
-              {t(
-                "Select tenpai players. The 3,000-point noten payment and dealer continuation are automatic.",
-              )}
-            </Text>
+            <Text style={styles.muted}>{t("Tenpai players. Payments are automatic.")}</Text>
             <View style={styles.tenpaiRow}>
               {table.players.map((player, index) => {
                 const selected = tenpai.includes(index);
@@ -606,9 +597,7 @@ export function SessionScreen() {
                               </View>
                             </>
                           ) : (
-                            <Text style={styles.muted}>
-                              {t("Tsumo \u2014 the win is self-drawn, so there is no discarder.")}
-                            </Text>
+                            <Text style={styles.muted}>{t("Tsumo \u2014 no discarder.")}</Text>
                           )}
                           <Text style={styles.muted}>
                             Reassigning keeps the payment as recorded (
@@ -702,9 +691,7 @@ export function SessionScreen() {
             })
           )}
           {legacyHistory ? (
-            <Text style={styles.muted}>
-              {t("Rounds recorded before this update can't be edited.")}
-            </Text>
+            <Text style={styles.muted}>{t("Older rounds can't be edited.")}</Text>
           ) : null}
         </View>
 
@@ -723,9 +710,7 @@ export function SessionScreen() {
             />
           </View>
           {summary === null ? (
-            <Text style={styles.muted}>
-              {t("Final standings, a win and draw tally, and a copyable round log.")}
-            </Text>
+            <Text style={styles.muted}>{t("Standings, tallies, and a copyable log.")}</Text>
           ) : (
             <>
               {summary.standings.map((entry) => (

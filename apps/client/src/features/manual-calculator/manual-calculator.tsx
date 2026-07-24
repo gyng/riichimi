@@ -797,8 +797,8 @@ export function ManualCalculator({
             </Text>
             <Text style={styles.recognitionBannerTitle}>
               {recognitionDraft.reviewedCount === 0
-                ? "All 15 reads cleared the beta threshold. Confirm the winning tile and dora before scoring."
-                : `${recognitionDraft.reviewedCount} ${recognitionDraft.reviewedCount === 1 ? "uncertain read was" : "uncertain reads were"} confirmed or corrected before continuing. Compare the final hand with the photo once more before scoring.`}
+                ? t("Confirm the winning tile and dora.")
+                : `${recognitionDraft.reviewedCount} ${t("corrected \u00b7 check against the photo.")}`}
             </Text>
             <Text style={styles.recognitionModel}>MODEL {recognitionDraft.modelVersion}</Text>
           </View>
@@ -815,9 +815,7 @@ export function ManualCalculator({
               source={{ uri: referencePhoto }}
               style={styles.referenceImage}
             />
-            <Text style={styles.referenceNote}>
-              {t("Keep this image open while correcting the tiles below. It is not uploaded.")}
-            </Text>
+            <Text style={styles.referenceNote}>{t("Not uploaded.")}</Text>
           </View>
         )}
 
@@ -828,9 +826,7 @@ export function ManualCalculator({
                 {editMode ? t("EDITING RECORDED ROUND") : t("ACTIVE TABLE \u00b7 CONTEXT LINKED")}
               </Text>
               <Text style={styles.sessionBannerTitle}>
-                {editMode
-                  ? "Re-score this hand. The round's honba, sticks, and winds are seeded but stay editable."
-                  : "Choose the winner. Riichimi will post the transfer and advance the round."}
+                {editMode ? t("Re-score this hand.") : t("Pick the winner.")}
               </Text>
             </View>
             <View style={styles.sessionChoice}>
@@ -877,7 +873,7 @@ export function ManualCalculator({
         <View style={wideLayout ? styles.columns : undefined}>
           <Section
             style={wideLayout ? styles.column : undefined}
-            description={`${concealedTiles.length}/${concealedCapacity} · ${t("tap a tile to mark the winner")}`}
+            description={`${concealedTiles.length}/${concealedCapacity} · ${t("tap to mark the winner")}`}
             title={t("Hand")}
           >
             <View accessibilityLabel="Concealed hand" style={styles.handRow}>
@@ -988,11 +984,7 @@ export function ManualCalculator({
           </Section>
 
           <Section
-            description={
-              pickerTarget === "chi"
-                ? t("For chi, choose the lowest tile in the sequence.")
-                : undefined
-            }
+            description={pickerTarget === "chi" ? t("Chi: pick the lowest tile.") : undefined}
             style={wideLayout ? styles.column : undefined}
             title={t("Tiles")}
           >
@@ -1160,23 +1152,14 @@ export function ManualCalculator({
                 </Text>
               )}
               {!isClosed ? (
-                <Text style={styles.note}>
-                  {t("Open calls disable riichi, ippatsu, and ura-dora.")}
-                </Text>
+                <Text style={styles.note}>{t("Open hand: no riichi, ippatsu, ura-dora.")}</Text>
               ) : null}
             </>
           )}
         </Section>
 
         <View style={styles.calculateRow}>
-          <ActionButton
-            label={t("Calculate maximum score")}
-            onPress={calculate}
-            variant="vermilion"
-          />
-          <Text style={styles.calculateNote}>
-            {activeRules.redFives ? t("RED FIVES ENABLED") : t("NO RED FIVES")} · KIRIAGE MANGAN
-          </Text>
+          <ActionButton label={t("Calculate")} onPress={calculate} variant="vermilion" />
         </View>
         {speech.available ? (
           <Pressable
@@ -1195,7 +1178,7 @@ export function ManualCalculator({
             <View style={[styles.checkbox, announceWins && styles.checkedBox]}>
               <Text style={styles.checkmark}>{announceWins ? "✓" : ""}</Text>
             </View>
-            <Text style={styles.checkboxLabel}>{t("Announce the result out loud")}</Text>
+            <Text style={styles.checkboxLabel}>{t("Announce result")}</Text>
           </Pressable>
         ) : null}
         {result === null ? null : <ScoreResultPanel result={result} />}
@@ -1203,7 +1186,7 @@ export function ManualCalculator({
           <View style={styles.savedNotice}>
             <View style={styles.savedCopy}>
               <Text style={styles.savedKicker}>{t("SAVED LOCALLY")}</Text>
-              <Text style={styles.savedTitle}>{t("This audit is in your score folio.")}</Text>
+              <Text style={styles.savedTitle}>{t("Saved to your folio.")}</Text>
             </View>
             <ActionButton
               label={t("View recent scores")}
@@ -1224,9 +1207,7 @@ export function ManualCalculator({
         ) : null}
         {editMode && result?.kind === "success" && editReview === null ? (
           <View style={styles.recordResult}>
-            <Text style={styles.recordTitle}>
-              {t("Re-scored this hand. Review the change before it replaces the recorded round.")}
-            </Text>
+            <Text style={styles.recordTitle}>{t("Review before replacing the round.")}</Text>
             <ActionButton
               label={t("Save correction")}
               onPress={previewCorrection}
@@ -1325,20 +1306,19 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     letterSpacing: -0.5,
   },
-  emptyHand: { alignItems: "center", flexDirection: "row", flexWrap: "wrap", gap: space.x3 },
+  emptyHand: {
+    alignItems: "flex-start",
+    flexDirection: "row",
+    flexShrink: 1,
+    flexWrap: "wrap",
+    gap: space.x3,
+  },
   announceRow: {
     alignItems: "center",
     flexDirection: "row",
     gap: space.x2,
     marginBottom: space.x5,
     minHeight: 48,
-  },
-  calculateNote: {
-    color: color.inkMuted,
-    flexShrink: 1,
-    fontFamily: "monospace",
-    fontSize: 10,
-    letterSpacing: 0.8,
   },
   calculateRow: {
     alignItems: "center",

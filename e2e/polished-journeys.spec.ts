@@ -219,7 +219,7 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   await expect(page).toHaveURL(/\/manual$/);
   await expect(page.getByRole("button", { name: "red five characters" })).toBeVisible();
   await page.getByRole("button", { name: "Try a scored example" }).click();
-  await page.getByRole("button", { name: "Calculate maximum score" }).click();
+  await page.getByRole("button", { name: "Calculate" }).click();
   const desktopScore = page.getByText("2 han · 20 fu").filter({ visible: true });
   await expect(desktopScore).toBeVisible();
   await desktopScore.scrollIntoViewIfNeeded();
@@ -282,7 +282,7 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   await expect(page).toHaveURL(/\/manual\?.*recognizedTiles=/);
   await expect(page.getByLabel("Captured hand reference")).toBeVisible();
   await expect(page.getByText("OFFLINE RECOGNITION · REVIEW REQUIRED")).toBeVisible();
-  await expect(page.getByText(/2 uncertain reads were confirmed or corrected/)).toBeVisible();
+  await expect(page.getByText(/^2 corrected · check against the photo\.$/)).toBeVisible();
   await expect(page.getByText(/14\/14 ·/)).toBeVisible();
   await page.screenshot({
     fullPage: true,

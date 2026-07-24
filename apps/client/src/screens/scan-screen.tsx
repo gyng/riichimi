@@ -321,8 +321,7 @@ export function ScanScreen() {
                 : t("Photo ready for review")}
             </Text>
             <Text style={styles.reviewBody}>
-              Beta recognition runs entirely on this device. Use a dark, plain surface and keep
-              tiles upright; every result still needs your confirmation.
+              {t("Runs on this device. Dark plain surface, tiles upright.")}
             </Text>
             {recognition.kind === "complete" ? null : (
               <View style={styles.layoutChoice}>
@@ -362,11 +361,6 @@ export function ScanScreen() {
                 <Text style={styles.recognitionKicker}>{t("OFFLINE BETA \u00b7 DRAFT ONLY")}</Text>
                 <Text style={styles.recognitionTitle}>
                   {`15 tiles read · ${currentRecognitionReview?.reviewDetectionIds.length ?? 0} need review`}
-                </Text>
-                <Text style={styles.recognitionCopy}>
-                  {t(
-                    "Compare every proposed tile with the reference before calculating the score.",
-                  )}
                 </Text>
               </View>
             ) : null}

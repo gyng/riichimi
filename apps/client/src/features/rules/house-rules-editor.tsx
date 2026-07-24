@@ -56,12 +56,8 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
       </Text>
       <Text style={styles.note}>
         {locked
-          ? t(
-              "A table is using these rules. End it before changing them, so a hand already scored cannot be re-valued underneath the table.",
-            )
-          : t(
-              "Not a published ruleset. Everything not listed here follows World Riichi Rules 2025.",
-            )}
+          ? t("In use by a table. End it to edit.")
+          : t("Local profile. Everything else follows WRC 2025.")}
       </Text>
 
       <Text style={styles.fieldLabel}>{t("NAME")}</Text>

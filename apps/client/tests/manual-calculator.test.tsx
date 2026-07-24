@@ -91,11 +91,11 @@ describe("ManualCalculator", () => {
     await render(<CalculatorUnderTest />);
 
     await fireEvent.press(screen.getByRole("button", { name: "Try a scored example" }));
-    await fireEvent.press(screen.getByRole("button", { name: "Calculate maximum score" }));
+    await fireEvent.press(screen.getByRole("button", { name: "Calculate" }));
     expect(speech.speak).not.toHaveBeenCalled();
 
-    await fireEvent.press(screen.getByRole("checkbox", { name: /Announce the result out loud/ }));
-    await fireEvent.press(screen.getByRole("button", { name: "Calculate maximum score" }));
+    await fireEvent.press(screen.getByRole("checkbox", { name: /Announce result/ }));
+    await fireEvent.press(screen.getByRole("button", { name: "Calculate" }));
 
     expect(speech.speak).toHaveBeenCalledWith(
       "Tsumo, Menzen tsumo, Pinfu, 2 han 20 fu, 1,500 points.",
@@ -106,12 +106,12 @@ describe("ManualCalculator", () => {
     await render(<CalculatorUnderTest />);
 
     await fireEvent.press(screen.getByRole("button", { name: "Try a scored example" }));
-    await fireEvent.press(screen.getByRole("button", { name: "Calculate maximum score" }));
+    await fireEvent.press(screen.getByRole("button", { name: "Calculate" }));
 
     expect(screen.getByText("2 han · 20 fu")).toBeOnTheScreen();
     expect(screen.getByText("Fully concealed hand")).toBeOnTheScreen();
     expect(screen.getAllByText("Pinfu")).toHaveLength(2);
-    expect(screen.getByText("This audit is in your score folio.")).toBeOnTheScreen();
+    expect(screen.getByText("Saved to your folio.")).toBeOnTheScreen();
     expect(jest.mocked(scoreHistoryStorage.saveScoreHistory)).toHaveBeenCalledWith(
       expect.objectContaining({
         entries: [
@@ -124,7 +124,7 @@ describe("ManualCalculator", () => {
   it("explains the first missing input instead of producing a partial score", async () => {
     await render(<CalculatorUnderTest />);
 
-    await fireEvent.press(screen.getByRole("button", { name: "Calculate maximum score" }));
+    await fireEvent.press(screen.getByRole("button", { name: "Calculate" }));
 
     expect(screen.getByText(/Tap one hand tile to mark the winning tile/)).toBeOnTheScreen();
   });
@@ -173,7 +173,7 @@ describe("ManualCalculator", () => {
 
       // Re-score the hand as the worked pinfu-tsumo example.
       await fireEvent.press(screen.getByRole("button", { name: "Try a scored example" }));
-      await fireEvent.press(screen.getByRole("button", { name: "Calculate maximum score" }));
+      await fireEvent.press(screen.getByRole("button", { name: "Calculate" }));
       expect(screen.getByText("2 han · 20 fu")).toBeOnTheScreen();
 
       await fireEvent.press(screen.getByRole("button", { name: "Save correction" }));
