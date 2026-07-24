@@ -8,12 +8,10 @@
     "packages/*"
   ],
   "scripts": {
-    "android": "npm run android --workspace @riichimi/client",
     "build:web": "npm run build:web --workspace @riichimi/client",
     "check": "npm run format:check && npm run lint && npm run typecheck && npm run test:coverage && npm run test:ui",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
-    "ios": "npm run ios --workspace @riichimi/client",
     "lint": "oxlint --deny-warnings --report-unused-disable-directives",
     "lint:fix": "oxlint --fix --deny-warnings --report-unused-disable-directives",
     "serve:web": "node scripts/serve-static.mjs",

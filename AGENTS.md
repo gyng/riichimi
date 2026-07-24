@@ -2,7 +2,9 @@
 
 ## Mission
 
-Riichimi is a local-first riichi mahjong score calculator for mobile and web. Its defining experience is a trustworthy path from a guided camera capture to an auditable score with minimal correction. Correctness, explicit uncertainty, accessibility, and user control outrank novelty.
+Riichimi is a local-first riichi mahjong score calculator for the web. Its defining experience is a trustworthy path from a guided camera capture to an auditable score with minimal correction. Correctness, explicit uncertainty, accessibility, and user control outrank novelty.
+
+The client is a web-only Vite app: React Native Web primitives run through Vite/Rolldown, routing is `react-router`, and the Expo/metro toolchain has been retired. React Native ecosystem packages (`expo-*`) survive only as build-time aliases to the web shims under `apps/client/web/` and as type/Jest dependencies; nothing native is bundled or shipped.
 
 Read these before substantial work:
 
@@ -18,9 +20,7 @@ Read these before substantial work:
 Run commands from the repository root.
 
 - `npm install` — install exact workspace dependencies
-- `npm start` — start the universal Expo app
-- `npm run web` — start the web client
-- `npm run android` / `npm run ios` — start a native client
+- `npm start` / `npm run web` — start the Vite dev server
 - `npm run format` — write formatting with Oxfmt
 - `npm run lint` — Oxlint, tsgolint-powered type-aware rules, and TypeScript diagnostics
 - `npm run test:unit` — fast domain/application tests with Vitest
@@ -29,7 +29,7 @@ Run commands from the repository root.
 - `npm run test:e2e` — browser dogfood for visible UI and WebMCP journeys
 - `npm run check` — the required local quality gate
 - `npm run build:web` — create the static web build
-- `npm run serve:web` — serve the export with clean-route/direct-link resolution
+- `npm run serve:web` — serve the build with SPA fallback for react-router deep links
 
 Do not introduce ESLint, Prettier, or a second general-purpose formatter. Oxlint and Oxfmt are the repository standards. Type-aware linting and project type checking are intentionally integrated through `oxlint-tsgolint` and TypeScript 7.
 
@@ -68,7 +68,7 @@ Rules:
 
 ## React and atomic design
 
-React 19, React Native, React Native Web, and Expo Router are the presentation stack.
+React 19, React Native Web, and `react-router` are the presentation stack, bundled by Vite.
 
 Shared UI follows atomic design as a dependency rule, not as a demand for excessive folders:
 
