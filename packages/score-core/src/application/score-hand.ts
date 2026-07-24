@@ -110,7 +110,7 @@ export function scoreHand(input: ScoreHandInput): ScoreHandResult {
       fu: null,
       hand,
       yaku: [],
-      yakuman: evaluateYakuman(hand, null, true),
+      yakuman: evaluateYakuman(hand, null, true, hand.rules.doubleYakuman),
     });
 
     if (candidate !== null) {
@@ -119,7 +119,7 @@ export function scoreHand(input: ScoreHandInput): ScoreHandResult {
   }
 
   if (sevenPairs) {
-    const yakuman = evaluateYakuman(hand, null, false);
+    const yakuman = evaluateYakuman(hand, null, false, hand.rules.doubleYakuman);
     const candidate = createCandidate({
       dora,
       fu: sevenPairsFu(),
@@ -134,7 +134,7 @@ export function scoreHand(input: ScoreHandInput): ScoreHandResult {
   }
 
   for (const interpretation of interpretations) {
-    const yakuman = evaluateYakuman(hand, interpretation, false);
+    const yakuman = evaluateYakuman(hand, interpretation, false, hand.rules.doubleYakuman);
     const yaku = evaluateStandardYaku(hand, interpretation);
     const candidate = createCandidate({
       dora,

@@ -529,3 +529,117 @@ describe("special wins, dora, and yakuman", () => {
     );
   });
 });
+
+describe("single-yaku double yakuman", () => {
+  // A ruleset that recognizes single-yaku double yakuman (Mahjong Soul, many
+  // house tables). The shipped competition profiles deliberately do not.
+  const doubleRules = {
+    ...rules,
+    doubleYakuman: true,
+    id: "double-yakuman-test",
+  } as const satisfies ScoringRules;
+
+  function valueOf(result: ScoreHandResult, id: string): number | undefined {
+    return success(result).yakuman.find((yakuman) => yakuman.id === id)?.value;
+  }
+
+  it("pays a 13-wait kokushi as a double yakuman when the ruleset recognizes it", () => {
+    const result = scoreHand(
+      hand(
+        // All thirteen orphans held; the winning tile completes the pair.
+        ["1m", "9m", "1p", "9p", "1s", "9s", "east", "south", "west", "north", "white", "green", "red", "red"], // prettier-ignore
+        "red",
+        { rules: doubleRules },
+      ),
+    );
+
+    expect(success(result).limit).toBe("double yakuman");
+    expect(valueOf(result, "kokushi-musou")).toBe(2);
+  });
+
+  it("keeps a single-wait kokushi at one yakuman even under that ruleset", () => {
+    const result = scoreHand(
+      hand(
+        // A 1m pair was already held; the winning tile (red) is the last orphan,
+        // so it appears once — a single wait, not the pure 13-sided one.
+        ["1m", "1m", "9m", "1p", "9p", "1s", "9s", "east", "south", "west", "north", "white", "green", "red"], // prettier-ignore
+        "red",
+        { rules: doubleRules },
+      ),
+    );
+
+    expect(success(result).limit).toBe("yakuman");
+    expect(valueOf(result, "kokushi-musou")).toBe(1);
+  });
+
+  it("leaves the 13-wait kokushi single when the ruleset does not pay double", () => {
+    const result = scoreHand(
+      hand(
+        ["1m", "9m", "1p", "9p", "1s", "9s", "east", "south", "west", "north", "white", "green", "red", "red"], // prettier-ignore
+        "red",
+      ),
+    );
+
+    expect(success(result).limit).toBe("yakuman");
+    expect(valueOf(result, "kokushi-musou")).toBe(1);
+  });
+
+  it("pays suuankou tanki as a double yakuman, but a shanpon suuankou as single", () => {
+    const tanki = scoreHand(
+      hand(
+        ["1m", "1m", "1m", "2m", "2m", "2m", "3p", "3p", "3p", "4s", "4s", "4s", "9s", "9s"],
+        "9s",
+        { rules: doubleRules },
+      ),
+    );
+    expect(success(tanki).limit).toBe("double yakuman");
+    expect(valueOf(tanki, "suuankou")).toBe(2);
+
+    const shanpon = scoreHand(
+      hand(
+        ["1m", "1m", "1m", "2m", "2m", "2m", "3p", "3p", "3p", "4s", "4s", "9s", "9s", "9s"],
+        "9s",
+        { context: { ...defaultContext, method: "tsumo" }, rules: doubleRules },
+      ),
+    );
+    expect(success(shanpon).limit).toBe("yakuman");
+    expect(valueOf(shanpon, "suuankou")).toBe(1);
+  });
+
+  it("pays big four winds as a double yakuman under that ruleset", () => {
+    const result = scoreHand(
+      // Won on a wind by ron (shanpon), so it is not also four concealed
+      // triplets — this isolates the daisuushii double.
+      hand(
+        ["east", "east", "east", "south", "south", "south", "west", "west", "west", "north", "north", "north", "1m", "1m"], // prettier-ignore
+        "north",
+        { rules: doubleRules },
+      ),
+    );
+
+    expect(success(result).limit).toBe("double yakuman");
+    expect(valueOf(result, "daisuushii")).toBe(2);
+  });
+
+  it("pays junsei chuuren as a double yakuman, but an impure nine gates as single", () => {
+    const pure = scoreHand(
+      hand(
+        ["1m", "1m", "1m", "2m", "3m", "4m", "5m", "6m", "7m", "8m", "9m", "9m", "9m", "5m"],
+        "5m",
+        { rules: doubleRules },
+      ),
+    );
+    expect(success(pure).limit).toBe("double yakuman");
+    expect(valueOf(pure, "chuuren-poutou")).toBe(2);
+
+    const impure = scoreHand(
+      hand(
+        ["1m", "1m", "1m", "2m", "3m", "4m", "5m", "5m", "6m", "7m", "8m", "9m", "9m", "9m"],
+        "2m",
+        { rules: doubleRules },
+      ),
+    );
+    expect(success(impure).limit).toBe("yakuman");
+    expect(valueOf(impure, "chuuren-poutou")).toBe(1);
+  });
+});

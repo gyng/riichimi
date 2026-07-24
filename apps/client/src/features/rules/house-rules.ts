@@ -7,6 +7,7 @@ export interface HouseRules {
   readonly allowOpenTanyao: boolean;
   readonly countedLimit: "sanbaiman" | "yonbaiman";
   readonly doubleWindPairFu: 2 | 4;
+  readonly doubleYakuman: boolean;
   readonly kiriageMangan: boolean;
   readonly label: string;
   readonly redFives: boolean;
@@ -18,6 +19,7 @@ export const defaultHouseRules: HouseRules = {
   allowOpenTanyao: true,
   countedLimit: "yonbaiman",
   doubleWindPairFu: 2,
+  doubleYakuman: false,
   kiriageMangan: false,
   label: "House rules",
   redFives: true,
@@ -31,7 +33,7 @@ export function houseScoringRules(rules: HouseRules): ScoringRules {
     allowOpenTanyao: rules.allowOpenTanyao,
     countedLimit: rules.countedLimit,
     doubleWindPairFu: rules.doubleWindPairFu,
-    doubleYakuman: false,
+    doubleYakuman: rules.doubleYakuman,
     id: houseRulesProfileId,
     kiriageMangan: rules.kiriageMangan,
     label: rules.label.trim().length > 0 ? rules.label.trim() : defaultHouseRules.label,
@@ -71,6 +73,7 @@ export function parseHouseRules(value: string | null): HouseRules {
     allowOpenTanyao: boolean(record["allowOpenTanyao"], defaultHouseRules.allowOpenTanyao),
     countedLimit: record["countedLimit"] === "sanbaiman" ? "sanbaiman" : "yonbaiman",
     doubleWindPairFu: record["doubleWindPairFu"] === 4 ? 4 : 2,
+    doubleYakuman: boolean(record["doubleYakuman"], defaultHouseRules.doubleYakuman),
     kiriageMangan: boolean(record["kiriageMangan"], defaultHouseRules.kiriageMangan),
     label: typeof label === "string" && label.trim().length > 0 ? label : defaultHouseRules.label,
     redFives: boolean(record["redFives"], defaultHouseRules.redFives),

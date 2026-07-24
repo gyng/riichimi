@@ -323,9 +323,12 @@ export function ManualCalculator({
   const editMode = editContext !== null;
   const contextEditable = activeTable === null || editMode;
   const seededEditRoundRef = useRef<string | null>(null);
-  const activeRules = scoringRulesProfile(
-    activeTable?.rulesProfileId ?? rulesPreference.activeRules.id,
-  );
+  // A table pins its own profile by id; otherwise use the resolved active rules
+  // directly. Re-resolving by id would drop house-rules edits, since the "house"
+  // id is not a reference profile and falls back to WRC.
+  const activeRules = activeTable
+    ? scoringRulesProfile(activeTable.rulesProfileId)
+    : rulesPreference.activeRules;
   const playerOptions =
     activeTable?.players.map((player, index) => ({ label: player.name, value: String(index) })) ??
     [];

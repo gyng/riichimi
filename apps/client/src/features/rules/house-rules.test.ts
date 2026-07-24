@@ -57,4 +57,13 @@ describe("house rules", () => {
   it("names an unnamed profile rather than showing an empty label", () => {
     expect(houseScoringRules({ ...defaultHouseRules, label: "  " }).label).toBe("House rules");
   });
+
+  it("carries the single-yaku double yakuman choice into scoring", () => {
+    const enabled = { ...defaultHouseRules, doubleYakuman: true } as const;
+
+    expect(parseHouseRules(serializeHouseRules(enabled)).doubleYakuman).toBe(true);
+    expect(houseScoringRules(enabled).doubleYakuman).toBe(true);
+    // The default profile leaves it off, matching every shipped competition ruleset.
+    expect(houseScoringRules(defaultHouseRules).doubleYakuman).toBe(false);
+  });
 });

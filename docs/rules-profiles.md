@@ -53,6 +53,16 @@ Two kinds of rule are **not** encoded, because encoding them would imply a preci
 
 **Not a hand score.** Nagashi mangan, uma and oka, placement bonuses, chombo, head-bump versus multiple ron, and abortive draws decide table outcomes rather than the value of a scored hand, which is what `scoreHand` computes. Kan dora is likewise a table procedure: the scorer counts whichever indicators the user enters.
 
-**Not yet confirmed.** Mahjong Soul is deliberately **absent**. Its published ranked-rules page does not state round-up mangan or kazoe handling, and it is the only researched ruleset paying single-yaku **double yakuman** (suuankou tanki, kokushi 13-wait, chuuren 9-wait, daisuushii), which the engine does not detect. Shipping it would mean guessing two options and silently under-paying a double yakuman. A profile that looks official but scores wrong is worse than no profile, so it waits for primary sources and for yakuman detection.
+**Not yet confirmed.** Mahjong Soul is deliberately **absent**. Its published ranked-rules page does not state round-up mangan or kazoe handling, so a profile would have to guess two options. It waits for primary sources.
+
+## Single-yaku double yakuman
+
+The engine detects the single-yaku double yakuman — **13-wait kokushi, suuankou tanki, junsei chuuren, and daisuushii** — and pays them double when a ruleset's `doubleYakuman` flag is on. It is **off in every shipped competition profile**, because they score these as one yakuman:
+
+- **Tenhou** states it directly: 「役満は複合あり、四暗刻単騎・国士無双十三面待ち等はすべてシングル役満」 — four-concealed single-wait, 13-wait kokushi, etc. are all single yakuman ([tenhou.net/man](https://tenhou.net/man/)).
+- **EMA** does not stack yakuman at all ("Yakuman are not cumulative").
+- WRC, M.League, and JPML leave it off absent a primary source that says otherwise — the safe default never over-pays.
+
+The behavior belongs to Mahjong Soul and many casual tables, so it is a **House Rules toggle** ("Single-yaku double yakuman") rather than a claim baked into any official profile.
 
 Rules a profile cannot yet express — JPML playing without ippatsu, for instance — are left out rather than approximated.

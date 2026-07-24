@@ -23,8 +23,8 @@ function yaku(id: string, name: string, romanized: string, han: number): Yaku {
   return { han, id, name, romanized };
 }
 
-function yakuman(id: string, name: string, romanized: string): Yakuman {
-  return { id, name, romanized, value: 1 };
+function yakuman(id: string, name: string, romanized: string, value: 1 | 2 = 1): Yakuman {
+  return { id, name, romanized, value };
 }
 
 function isTripletLike(
@@ -313,10 +313,43 @@ function hasNineGates(hand: NormalizedHand): boolean {
   );
 }
 
+// The pure 13-sided wait: all thirteen orphans were held and the winning tile
+// completed the pair, so it is the one tile now appearing twice.
+function isThirteenOrphanWait(hand: NormalizedHand): boolean {
+  return hand.allHandTiles.filter((tile) => tile === hand.winningTile).length === 2;
+}
+
+// Junsei chuuren: the pure 1112345678999 shape was held and won on any tile, so
+// removing the winning tile leaves exactly that shape.
+function isPureNineGates(hand: NormalizedHand): boolean {
+  const winningRank = tileRank(hand.winningTile);
+
+  if (winningRank === null) {
+    return false;
+  }
+
+  const counts = new Map<number, number>();
+
+  for (const tile of hand.allHandTiles) {
+    const rank = tileRank(tile);
+
+    if (rank !== null) {
+      counts.set(rank, (counts.get(rank) ?? 0) + 1);
+    }
+  }
+
+  counts.set(winningRank, (counts.get(winningRank) ?? 0) - 1);
+
+  return [1, 2, 3, 4, 5, 6, 7, 8, 9].every(
+    (rank) => (counts.get(rank) ?? 0) === (rank === 1 || rank === 9 ? 3 : 1),
+  );
+}
+
 export function evaluateYakuman(
   hand: NormalizedHand,
   interpretation: StandardInterpretation | null,
   thirteenOrphans: boolean,
+  doubleYakuman: boolean,
 ): readonly Yakuman[] {
   const result: Yakuman[] = [];
 
@@ -327,11 +360,13 @@ export function evaluateYakuman(
   }
 
   if (thirteenOrphans) {
-    result.push(yakuman("kokushi-musou", "Thirteen orphans", "Kokushi musou"));
+    const value = doubleYakuman && isThirteenOrphanWait(hand) ? 2 : 1;
+    result.push(yakuman("kokushi-musou", "Thirteen orphans", "Kokushi musou", value));
   }
 
   if (hasNineGates(hand)) {
-    result.push(yakuman("chuuren-poutou", "Nine gates", "Chuuren poutou"));
+    const value = doubleYakuman && isPureNineGates(hand) ? 2 : 1;
+    result.push(yakuman("chuuren-poutou", "Nine gates", "Chuuren poutou", value));
   }
 
   const greenTiles = new Set<CanonicalTileId>(["2s", "3s", "4s", "6s", "8s", "green"]);
@@ -359,7 +394,10 @@ export function evaluateYakuman(
       concealedTriplets === 4 &&
       (hand.context.method === "tsumo" || interpretation.placement.wait === "tanki")
     ) {
-      result.push(yakuman("suuankou", "Four concealed triplets", "Suuankou"));
+      // The single (tanki) wait is what pays double — a shanpon wait completed
+      // by tsumo is a normal suuankou.
+      const value = doubleYakuman && interpretation.placement.wait === "tanki" ? 2 : 1;
+      result.push(yakuman("suuankou", "Four concealed triplets", "Suuankou", value));
     }
 
     if (interpretation.groups.filter(({ kind }) => kind === "quad").length === 4) {
@@ -371,7 +409,7 @@ export function evaluateYakuman(
     }
 
     if (windTriplets === 4) {
-      result.push(yakuman("daisuushii", "Big winds", "Daisuushii"));
+      result.push(yakuman("daisuushii", "Big winds", "Daisuushii", doubleYakuman ? 2 : 1));
     } else if (windTriplets === 3 && isWind(interpretation.decomposition.pair)) {
       result.push(yakuman("shousuushii", "Little winds", "Shousuushii"));
     }

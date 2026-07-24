@@ -30,6 +30,7 @@ const togglesFor = (t: Translate) =>
     { key: "allowOpenTanyao", label: t("Open tanyao (kuitan)") },
     { key: "kiriageMangan", label: t("Round-up mangan") },
     { key: "uraDora", label: t("Ura-dora") },
+    { key: "doubleYakuman", label: t("Single-yaku double yakuman") },
   ] as const satisfies readonly { key: keyof HouseRules; label: string }[];
 
 /**

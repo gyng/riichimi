@@ -72,7 +72,9 @@ export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
             <Text style={styles.lineTitle}>{item.name}</Text>
             <Text style={styles.lineNote}>{item.romanized}</Text>
           </View>
-          <Text style={styles.value}>{"han" in item ? `${item.han} ${t("han")}` : "1×"}</Text>
+          <Text style={styles.value}>
+            {"han" in item ? `${item.han} ${t("han")}` : `${item.value}×`}
+          </Text>
         </View>
       ))}
 

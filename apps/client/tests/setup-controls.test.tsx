@@ -34,6 +34,7 @@ const defaultHouse = {
   allowOpenTanyao: true,
   countedLimit: "yonbaiman",
   doubleWindPairFu: 2,
+  doubleYakuman: false,
   kiriageMangan: false,
   label: "House rules",
   redFives: true,

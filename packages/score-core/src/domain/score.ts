@@ -11,7 +11,9 @@ export interface Yakuman {
   readonly id: string;
   readonly name: string;
   readonly romanized: string;
-  readonly value: 1;
+  /** 1 for a normal yakuman; 2 for a single yaku that pays double (e.g. the
+      13-wait kokushi or suuankou tanki) under a ruleset that recognizes it. */
+  readonly value: 1 | 2;
 }
 
 export interface DoraBreakdown {

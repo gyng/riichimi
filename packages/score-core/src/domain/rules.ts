@@ -7,7 +7,10 @@ export interface ScoringRules {
   readonly countedLimit: "sanbaiman" | "yonbaiman";
   /** Fu for a pair that is both the seat wind and the round wind. */
   readonly doubleWindPairFu: 2 | 4;
-  readonly doubleYakuman: false;
+  /** Whether a single yaku can pay a double yakuman — the 13-wait kokushi,
+      suuankou tanki, junsei chuuren, and daisuushii. Rulesets that do not
+      recognize these (WRC, EMA) leave it false and pay them as one yakuman. */
+  readonly doubleYakuman: boolean;
   readonly id: string;
   readonly kiriageMangan: boolean;
   readonly label: string;

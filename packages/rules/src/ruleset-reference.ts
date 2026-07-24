@@ -37,7 +37,8 @@ export const tenhouRules = {
   id: "tenhou-hanchan",
   kiriageMangan: false,
   label: "Tenhou · ranked",
-  // Composite yakuman stack; Tenhou pays no single-yaku double yakuman.
+  // Composite yakuman stack, but no single-yaku double yakuman: the manual says
+  // 四暗刻単騎・国士無双十三面待ち等はすべてシングル役満 (all single).
   maxYakumanMultiple: null,
   redFives: true,
   revision: "danisen-kuiaka",
