@@ -1,14 +1,10 @@
-import { fileURLToPath, URL } from "node:url";
-
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
 import { defineConfig } from "vitest/config";
 
-const fromHere = (relative: string) => fileURLToPath(new URL(relative, import.meta.url));
-
-// Web-only build: plain DOM and CSS through Vite, with the Expo Router, camera,
-// and asset modules swapped for the web shims under `web/`. Nothing from the
-// React Native toolchain is resolved or bundled any more.
+// Web-only build: plain DOM and CSS through Vite. Nothing is aliased away — the
+// router, camera, and photo-library adapters are ordinary modules under `src/`,
+// and no part of the React Native or Expo toolchain is resolved or bundled.
 export default defineConfig(({ command }) => {
   const production = command === "build";
   return {
@@ -22,7 +18,6 @@ export default defineConfig(({ command }) => {
       // silence dev warnings and the error overlay.
       __DEV__: JSON.stringify(!production),
       global: "globalThis",
-      "process.env.EXPO_OS": JSON.stringify("web"),
       "process.env.NODE_ENV": JSON.stringify(production ? "production" : "development"),
     },
     plugins: [
@@ -30,17 +25,8 @@ export default defineConfig(({ command }) => {
       // Tile art `.svg` imports become plain DOM <svg> React components.
       svgr({ include: "**/*.svg" }),
     ],
-    resolve: {
-      alias: [
-        { find: /^expo-router$/, replacement: fromHere("./web/expo-router.tsx") },
-        { find: /^expo-asset$/, replacement: fromHere("./web/shims/expo-asset.ts") },
-        { find: /^expo-camera$/, replacement: fromHere("./web/shims/expo-camera.tsx") },
-        { find: /^expo-image-picker$/, replacement: fromHere("./web/shims/expo-image-picker.ts") },
-      ],
-      extensions: [".web.tsx", ".web.ts", ".web.js", ".tsx", ".ts", ".jsx", ".js", ".mjs", ".json"],
-    },
     // Component tests run against this same config, so a screen resolves its
-    // shims, tile art, and aliases in a test exactly as it does in the browser.
+    // adapters and tile art in a test exactly as it does in the browser.
     test: {
       environment: "jsdom",
       // A ratchet, not a target: these floors sit just under what the suite

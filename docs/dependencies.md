@@ -23,9 +23,10 @@ exact versions its native runtime was built against; with React Native removed,
 nothing outside this repository has a say, and `react`/`react-dom` are no longer
 held back in the Dependabot config.
 
-Four `expo-*` packages remain as dependencies. Every one of them is aliased to a
-web shim under `apps/client/web/shims/` at build time, so they are type surfaces
-rather than shipped code; they are grouped in Dependabot so they move together.
+No `expo*` or `react-native*` package is installed. The camera, photo library,
+and navigation adapters that used to be shims behind an alias are ordinary
+modules under `apps/client/src/`, so the install tree contains only what the
+browser build actually runs.
 
 ## Checking the tree
 

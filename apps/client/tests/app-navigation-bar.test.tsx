@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { router, usePathname } from "expo-router";
+import { router, usePathname } from "../src/navigation/router";
 
 import type * as LocaleStorage from "../src/infrastructure/locale-preference-storage";
 
 import { AppNavigationBar } from "../src/components/app-navigation-bar";
 import { LocaleProvider } from "../src/state/locale-context";
 
-vi.mock("expo-router", () => ({
+vi.mock("../src/navigation/router", () => ({
   router: { navigate: vi.fn<typeof router.navigate>() },
   usePathname: vi.fn<typeof usePathname>().mockReturnValue("/"),
 }));

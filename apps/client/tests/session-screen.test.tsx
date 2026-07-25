@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { applyWin, createSession } from "@riichimi/session-core";
 import type { SessionState } from "@riichimi/session-core";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { router } from "expo-router";
+import { router } from "../src/navigation/router";
 
 import { SessionScreen } from "../src/screens/session-screen";
 import * as rulesPreferenceStorage from "../src/infrastructure/rules-preference-storage";
@@ -10,7 +10,7 @@ import * as sessionStorage from "../src/infrastructure/session-storage";
 import { RulesProvider } from "../src/state/rules-context";
 import { SessionProvider } from "../src/state/session-context";
 
-vi.mock("expo-router", () => ({
+vi.mock("../src/navigation/router", () => ({
   router: {
     back: vi.fn<typeof router.back>(),
     push: vi.fn<typeof router.push>(),

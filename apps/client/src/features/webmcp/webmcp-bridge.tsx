@@ -1,4 +1,4 @@
-import { router, usePathname } from "expo-router";
+import { router, usePathname } from "../../navigation/router";
 import { isScoringRulesProfileId, scoringRulesProfile } from "@riichimi/rules";
 
 import {

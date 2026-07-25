@@ -12,11 +12,15 @@ updates:
     cooldown:
       default-days: 7
     groups:
-      # The four expo-* packages left are aliased to web shims and move together.
-      expo:
+      # React refuses to run if these two versions differ, so a lone bump of
+      # either is red by construction. They are grouped rather than ignored:
+      # ignoring them was an Expo-era necessity, a group lets them move.
+      react:
         patterns:
-          - "expo*"
-          - "@expo/*"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
       oxc:
         patterns:
           - "oxlint*"

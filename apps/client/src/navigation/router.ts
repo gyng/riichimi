@@ -1,9 +1,8 @@
-import { Outlet, useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
-// Compat shim that lets the app's screens keep importing `expo-router` while the
-// web build runs on react-router. It maps the tiny surface the app uses:
-// imperative `router` navigation, search-param access, the current pathname, and
-// the `Stack`/`Slot` outlets. Aliased in vite.config.ts.
+// Navigation adapter over react-router. Screens report intent — "go to /manual
+// with these params" — without knowing which router is underneath; the route
+// table in `web/app-router.tsx` binds the instance in once at startup.
 type Params = Readonly<Record<string, string | undefined>>;
 type Href = string | { readonly pathname: string; readonly params?: Params };
 
@@ -32,21 +31,22 @@ function href(to: Href): string {
   return query === "" ? to.pathname : `${to.pathname}?${query}`;
 }
 
+/**
+ * Standalone functions rather than methods: callers pass these straight to an
+ * `onPress`, and a method torn off its object is a `this` waiting to go wrong.
+ */
 export const router = {
-  back(): void {
+  back: (): void => {
     globalThis.history.back();
   },
-  navigate(to: Href): void {
+  navigate: (to: Href): void => {
     void instance?.navigate(href(to));
   },
-  push(to: Href): void {
+  push: (to: Href): void => {
     void instance?.navigate(href(to));
   },
-  replace(to: Href): void {
+  replace: (to: Href): void => {
     void instance?.navigate(href(to), { replace: true });
-  },
-  setParams(_params: Params): void {
-    // No route in the app relies on in-place param replacement.
   },
 };
 
@@ -57,15 +57,4 @@ export function useLocalSearchParams(): Params {
 
 export function usePathname(): string {
   return useLocation().pathname;
-}
-
-export function Stack(_props: unknown) {
-  return <Outlet />;
-}
-Stack.Screen = function StackScreen(_props: unknown): null {
-  return null;
-};
-
-export function Slot() {
-  return <Outlet />;
 }

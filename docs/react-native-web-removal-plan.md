@@ -19,12 +19,16 @@ execution notes and what is deliberately left.
 - The celebration stamp runs on the Web Animations API.
 - Component tests are Vitest + jsdom through `apps/client/vite.config.ts`. Jest,
   Jest Expo, `@testing-library/react-native`, and the `.svg` stub are gone.
-- Dead Expo config went with it: `app.json`, `app.config.js`, `expo-env.d.ts`,
-  the `expo`/`expo-font`/`expo-status-bar`/`expo-image-manipulator`/
-  `expo-constants`/`expo-linking`/`expo-speech`/`expo-sqlite` dependencies, and
-  `onnxruntime-react-native`.
+- Every Expo package went with it, along with `app.json`, `app.config.js`,
+  `expo-env.d.ts`, and `onnxruntime-react-native`. The four shims that had been
+  aliased over `expo-router`/`expo-camera`/`expo-image-picker` are now ordinary
+  adapters (`src/navigation/router`, `src/infrastructure/camera`,
+  `src/infrastructure/photo-library`); `expo-asset` was ceremony over a URL the
+  bundler already produced. `vite.config.ts` aliases nothing.
 
-Entry bundle: 1,274,035 → 973,730 bytes (-24%).
+Entry bundle: 1,274,035 → 973,750 bytes (-24%). Lockfile: 850 → 335 packages,
+which is what finally took `react-native` out of the install tree — it had been
+surviving as a transitive peer of `expo`.
 
 ## Gotchas worth remembering
 
@@ -54,9 +58,6 @@ Entry bundle: 1,274,035 → 973,730 bytes (-24%).
   `resolveStyle`. Renaming them to CSS logical properties is cosmetic.
 - **`fontWeight: "700"`** stays quoted at ~85 sites; `Style` widens the type to
   accept it. Numeric weights would be more idiomatic.
-- **Four `expo-*` packages** (`expo-router`, `expo-camera`, `expo-asset`,
-  `expo-image-picker`) are still aliased to shims under `apps/client/web/`.
-  Removing them is an import-path change, not a runtime one.
 - **Accessible names are English.** `aria-label` copy does not go through the
   translator, and the i18n scanner deliberately does not cover it — closing that
   needs catalog entries in every locale. See `src/i18n/coverage.test.ts`.

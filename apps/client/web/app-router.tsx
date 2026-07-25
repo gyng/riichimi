@@ -7,7 +7,7 @@ import ScanRoute from "../app/scan";
 import SessionRoute from "../app/session";
 import SettingsRoute from "../app/settings";
 
-import { bindRouter } from "./expo-router";
+import { bindRouter } from "../src/navigation/router";
 import { RootLayout } from "./root-layout";
 
 // The screens are unchanged from the Expo Router build; only the route table

@@ -3,10 +3,10 @@ import type { ReactNode } from "react";
 import { View } from "@riichimi/ui";
 import type { StyleProp } from "@riichimi/ui";
 
-// Web implementation of the expo-camera slice the scan flow uses. A live preview
-// comes from getUserMedia into a <video>; takePictureAsync grabs the current
-// frame through a canvas and returns it as an object URL. When no camera is
-// reachable the scan screen still works through its upload and sample paths.
+// The device camera. A live preview comes from getUserMedia into a <video>, and
+// a capture grabs the current frame through a canvas as an object URL. When no
+// camera is reachable the scan screen still works through its upload and sample
+// paths, so every failure here is reported rather than thrown.
 export interface CameraPermission {
   readonly granted: boolean;
   readonly canAskAgain: boolean;

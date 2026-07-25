@@ -1,6 +1,6 @@
 import { CalculatorLanding, ScrollView, View, color } from "@riichimi/ui";
 import type { Styles } from "@riichimi/ui";
-import { router } from "expo-router";
+import { router } from "../navigation/router";
 
 import { useLocale } from "../state/locale-context";
 import { useSession } from "../state/session-context";

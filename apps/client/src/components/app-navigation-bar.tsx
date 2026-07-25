@@ -1,6 +1,6 @@
 import { TopAppBar, TopAppBarAction } from "@riichimi/ui";
 import type { TopAppBarItem } from "@riichimi/ui";
-import { router, usePathname } from "expo-router";
+import { router, usePathname } from "../navigation/router";
 
 import { useLocale } from "../state/locale-context";
 import type { Messages } from "../i18n/messages";

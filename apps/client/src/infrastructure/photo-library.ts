@@ -1,7 +1,6 @@
-// Web implementation of the expo-image-picker slice the scan flow uses. A native
-// library picker becomes a file input; the chosen image is exposed as an object
-// URL. There is no cross-launch "pending result" on web — the dialog resolves
-// inline — so getPendingResultAsync always reports nothing pending.
+// Reading a photo out of the device's library. The browser's file input is the
+// picker; the chosen image is handed on as an object URL. A dialog resolves
+// inline here, so nothing is ever left pending across a launch.
 export interface ImagePickerAsset {
   readonly uri: string;
   readonly width: number;
@@ -12,13 +11,6 @@ export interface ImagePickerAsset {
 export type ImagePickerResult =
   | { readonly canceled: true; readonly assets: null }
   | { readonly canceled: false; readonly assets: readonly ImagePickerAsset[] };
-
-export const MediaTypeOptions = { All: "All", Images: "Images", Videos: "Videos" } as const;
-
-export async function requestMediaLibraryPermissionsAsync() {
-  // The browser grants file access per-dialog; there is no standing permission.
-  return { canAskAgain: true, expires: "never", granted: true, status: "granted" } as const;
-}
 
 export async function getPendingResultAsync(): Promise<ImagePickerResult | null> {
   return null;

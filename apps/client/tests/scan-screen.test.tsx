@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
-import * as ImagePicker from "expo-image-picker";
-import { router } from "expo-router";
+import * as ImagePicker from "../src/infrastructure/photo-library";
+import { router } from "../src/navigation/router";
 
 import { ScanScreen } from "../src/screens/scan-screen";
 import { tileRecognition } from "../src/infrastructure/tile-recognition";
 
-vi.mock("expo-router", () => ({
+vi.mock("../src/navigation/router", () => ({
   router: {
     back: vi.fn<typeof router.back>(),
     push: vi.fn<typeof router.push>(),
@@ -14,7 +14,7 @@ vi.mock("expo-router", () => ({
   },
 }));
 
-vi.mock("expo-camera", () => ({
+vi.mock("../src/infrastructure/camera", () => ({
   CameraView: "CameraView",
   useCameraPermissions: () => [
     { canAskAgain: false, granted: false, status: "denied" },
@@ -22,7 +22,7 @@ vi.mock("expo-camera", () => ({
   ],
 }));
 
-vi.mock("expo-image-picker", () => ({
+vi.mock("../src/infrastructure/photo-library", () => ({
   getPendingResultAsync: vi.fn<typeof ImagePicker.getPendingResultAsync>().mockResolvedValue(null),
   launchImageLibraryAsync: vi
     .fn<typeof ImagePicker.launchImageLibraryAsync>()
@@ -72,21 +72,7 @@ describe("ScanScreen", () => {
 
   it("opens an existing photo and carries it into manual correction", async () => {
     vi.mocked(ImagePicker.launchImageLibraryAsync).mockResolvedValueOnce({
-      assets: [
-        {
-          assetId: null,
-          base64: null,
-          duration: null,
-          exif: null,
-          fileName: "hand.jpg",
-          fileSize: 42,
-          height: 600,
-          mimeType: "image/jpeg",
-          type: "image",
-          uri: "file:///hand.jpg",
-          width: 1200,
-        },
-      ],
+      assets: [{ fileName: "hand.jpg", height: 600, uri: "file:///hand.jpg", width: 1200 }],
       canceled: false,
     });
     render(<ScanScreen />);
@@ -107,19 +93,7 @@ describe("ScanScreen", () => {
   it("recognizes a guided photo and opens a reviewable calculator draft", async () => {
     vi.mocked(ImagePicker.launchImageLibraryAsync).mockResolvedValueOnce({
       assets: [
-        {
-          assetId: null,
-          base64: null,
-          duration: null,
-          exif: null,
-          fileName: "guided-hand.jpg",
-          fileSize: 42,
-          height: 600,
-          mimeType: "image/jpeg",
-          type: "image",
-          uri: "file:///guided-hand.jpg",
-          width: 1200,
-        },
+        { fileName: "guided-hand.jpg", height: 600, uri: "file:///guided-hand.jpg", width: 1200 },
       ],
       canceled: false,
     });

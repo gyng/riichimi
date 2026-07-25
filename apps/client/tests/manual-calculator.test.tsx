@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { applyWin, createSession } from "@riichimi/session-core";
 import type { SessionState } from "@riichimi/session-core";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { useLocalSearchParams } from "expo-router";
-import type { router } from "expo-router";
+import { useLocalSearchParams } from "../src/navigation/router";
+import type { router } from "../src/navigation/router";
 
 import { ManualCalculator } from "../src/features/manual-calculator/manual-calculator";
 import * as announcerPreferenceStorage from "../src/infrastructure/announcer-preference-storage";
@@ -17,7 +17,7 @@ import { RulesProvider } from "../src/state/rules-context";
 import { ScoreHistoryProvider } from "../src/state/score-history-context";
 import { SessionProvider } from "../src/state/session-context";
 
-vi.mock("expo-router", () => ({
+vi.mock("../src/navigation/router", () => ({
   router: {
     back: vi.fn<typeof router.back>(),
     push: vi.fn<typeof router.push>(),

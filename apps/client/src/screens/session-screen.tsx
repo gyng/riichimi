@@ -26,7 +26,7 @@ import {
   space,
 } from "@riichimi/ui";
 import type { Styles } from "@riichimi/ui";
-import { router } from "expo-router";
+import { router } from "../navigation/router";
 import { useState } from "react";
 
 import { createRoundCommandMetadata, useSession } from "../state/session-context";

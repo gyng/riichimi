@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import type { router } from "expo-router";
+import type { router } from "../src/navigation/router";
 
 import { SettingsScreen } from "../src/screens/settings-screen";
 import * as houseRulesStorage from "../src/infrastructure/house-rules-storage";
@@ -12,7 +12,7 @@ import { RulesProvider } from "../src/state/rules-context";
 import { SessionProvider } from "../src/state/session-context";
 import { TileLabelProvider } from "../src/state/tile-display-context";
 
-vi.mock("expo-router", () => ({
+vi.mock("../src/navigation/router", () => ({
   router: {
     back: vi.fn<typeof router.back>(),
     navigate: vi.fn<typeof router.navigate>(),

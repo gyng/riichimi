@@ -44,7 +44,7 @@ import {
   useWindowDimensions,
 } from "@riichimi/ui";
 import type { StyleProp, Styles } from "@riichimi/ui";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "../../navigation/router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
@@ -304,8 +304,8 @@ export function ManualCalculator({
     t,
   );
   const activeTable = session.state?.table ?? null;
-  const searchParams = useLocalSearchParams<{ editRound?: string }>();
-  const editRoundParam = searchParams.editRound;
+  const searchParams = useLocalSearchParams();
+  const editRoundParam = searchParams["editRound"];
   const editRoundId =
     typeof editRoundParam === "string" && editRoundParam.length > 0 ? editRoundParam : null;
   const sessionState = session.state;

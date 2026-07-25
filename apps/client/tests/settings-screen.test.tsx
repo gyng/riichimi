@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import type { router } from "expo-router";
+import type { router } from "../src/navigation/router";
 
 import type * as HouseStorage from "../src/infrastructure/house-rules-storage";
 import type * as LocaleStorage from "../src/infrastructure/locale-preference-storage";
@@ -11,7 +11,7 @@ import { LocaleProvider } from "../src/state/locale-context";
 import { RulesProvider } from "../src/state/rules-context";
 import { SessionProvider } from "../src/state/session-context";
 
-vi.mock("expo-router", () => ({
+vi.mock("../src/navigation/router", () => ({
   router: {
     back: vi.fn<typeof router.back>(),
     navigate: vi.fn<typeof router.navigate>(),

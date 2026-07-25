@@ -13,10 +13,10 @@ import {
 import type { Styles } from "@riichimi/ui";
 import { reviewRecognition } from "@riichimi/vision";
 import type { CaptureLayout, DetectedTile, RecognitionResult } from "@riichimi/vision";
-import { Asset } from "expo-asset";
-import { CameraView, useCameraPermissions } from "expo-camera";
-import * as ImagePicker from "expo-image-picker";
-import { router } from "expo-router";
+import { CameraView, useCameraPermissions } from "../infrastructure/camera";
+import type { CameraViewHandle } from "../infrastructure/camera";
+import * as ImagePicker from "../infrastructure/photo-library";
+import { router } from "../navigation/router";
 import { useEffect, useRef, useState } from "react";
 
 import sampleHandImage from "../../assets/samples/guided-sample-hand.png";
@@ -68,12 +68,11 @@ const layoutOptionsFor = (
 
 // A bundled example hand so the whole scan → recognize → review flow can be
 // exercised without a camera (desktop review, or a first look before capturing).
-// It is staged as separate rows, so it pairs with the guided layout.
-// `Asset.fromModule` is the universal way to get a loadable URL for a bundled
-// asset; `Image.resolveAssetSource` does not exist on react-native-web.
+// It is staged as separate rows, so it pairs with the guided layout. The import
+// is already the served URL: the bundler rewrote it at build time.
 const sampleHand = {
   layout: "guided" as const,
-  uri: Asset.fromModule(sampleHandImage).uri,
+  uri: sampleHandImage,
 };
 
 type RecognitionState =
@@ -103,7 +102,7 @@ export function ScanScreen() {
   // table. Its concealed/called split is a guess, so it demands a structure
   // confirmation at review; guided keeps melds and dora on their own rows.
   const [captureLayout, setCaptureLayout] = useState<CaptureLayout>("natural");
-  const camera = useRef<CameraView>(null);
+  const camera = useRef<CameraViewHandle>(null);
   // Reading a photo was never a judgement call, so it starts on its own; the
   // review gate is where the user's judgement actually belongs.
   const readPhotoUri = useRef<string | null>(null);

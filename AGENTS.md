@@ -4,7 +4,7 @@
 
 Riichimi is a local-first riichi mahjong score calculator for the web. Its defining experience is a trustworthy path from a guided camera capture to an auditable score with minimal correction. Correctness, explicit uncertainty, accessibility, and user control outrank novelty.
 
-The client is a web-only Vite app: plain DOM and CSS, routing is `react-router`, and the React Native and Expo/metro toolchains have been retired. `react-native` and `react-native-web` are gone; the RN-shaped names (`View`, `Text`, `Pressable`, `ScrollView`, `TextInput`, `Image`, `ActivityIndicator`) are thin local DOM primitives in `packages/ui/src/primitives/`. Four `expo-*` packages survive only as build-time aliases to the web shims under `apps/client/web/`; nothing native is bundled or shipped.
+The client is a web-only Vite app: plain DOM and CSS, routing is `react-router`. The React Native and Expo toolchains are gone — no `react-native`, `react-native-web`, or `expo*` package is installed, and nothing is aliased away. The RN-shaped names (`View`, `Text`, `Pressable`, `ScrollView`, `TextInput`, `Image`, `ActivityIndicator`) are thin local DOM primitives in `packages/ui/src/primitives/`. The camera, photo library, and router are ordinary adapters under `apps/client/src/`.
 
 Read these before substantial work:
 

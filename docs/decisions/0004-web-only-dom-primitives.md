@@ -62,6 +62,9 @@ Native, which is a deliberate trade — converting each component to `div`/`span
 with CSS Modules remains possible, one component at a time, and is no longer
 blocked by anything.
 
-Four `expo-*` packages (`expo-router`, `expo-camera`, `expo-asset`,
-`expo-image-picker`) survive as build-time aliases to web shims. Removing them
-means replacing an import path, not a runtime, and is deferred.
+The four `expo-*` packages that were aliased to web shims are gone too. They
+were the last thing pulling `react-native` into the install tree as a transitive
+peer, which is why the lockfile drops from 850 entries to 335: those shims are
+now ordinary adapters under `apps/client/src/` (`navigation/router`,
+`infrastructure/camera`, `infrastructure/photo-library`), and `expo-asset` was
+pure ceremony over a URL string the bundler had already produced.
