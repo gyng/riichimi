@@ -19,9 +19,8 @@ const contentTypes = new Map([
   [".wasm", "application/wasm"],
 ]);
 
-function candidatePaths(pathname) {
-  const decoded = decodeURIComponent(pathname);
-  const relative = decoded.replace(/^\/+|\/+$/g, "") || "index.html";
+function candidatePaths(decodedPathname) {
+  const relative = decodedPathname.replace(/^\/+|\/+$/g, "") || "index.html";
   const direct = resolve(root, relative);
   if (direct !== root && !direct.startsWith(`${root}${sep}`)) {
     return [];
@@ -48,7 +47,26 @@ async function findFile(pathname) {
 
 async function handleRequest(request, response) {
   try {
-    const pathname = new URL(request.url ?? "/", `http://${host}:${port}`).pathname;
+    if (request.method !== "GET" && request.method !== "HEAD") {
+      response.writeHead(405, {
+        Allow: "GET, HEAD",
+        "Content-Type": "text/plain; charset=utf-8",
+      });
+      response.end("Method not allowed");
+      return;
+    }
+
+    const rawPathname = new URL(request.url ?? "/", `http://${host}:${port}`).pathname;
+    let pathname;
+    try {
+      pathname = decodeURIComponent(rawPathname);
+    } catch {
+      // Malformed percent-encoding (e.g. "%ZZ") is a bad request, not a server fault.
+      response.writeHead(400, { "Content-Type": "text/plain; charset=utf-8" });
+      response.end("Bad request");
+      return;
+    }
+
     // A path with no extension is a client-side route: serve the SPA shell so
     // react-router can resolve it. Only missing assets (with an extension) 404.
     const file =
@@ -68,7 +86,13 @@ async function handleRequest(request, response) {
       response.end();
       return;
     }
-    createReadStream(file).pipe(response);
+    const stream = createReadStream(file);
+    // A file removed between the stat and the read must not crash the server with
+    // an unhandled stream error; abort the response instead.
+    stream.on("error", () => {
+      response.destroy();
+    });
+    stream.pipe(response);
   } catch {
     response.writeHead(500, { "Content-Type": "text/plain; charset=utf-8" });
     response.end("Internal server error");

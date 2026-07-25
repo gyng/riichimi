@@ -1,6 +1,5 @@
 import type { TileId } from "@riichimi/score-core";
-import type { ComponentType } from "react";
-import type { SvgProps } from "react-native-svg";
+import type { ComponentType, SVGProps } from "react";
 
 import Tile0M from "../../assets/tiles/0m.svg";
 import Tile0P from "../../assets/tiles/0p.svg";
@@ -41,7 +40,7 @@ import TileWEST from "../../assets/tiles/west.svg";
 import TileWHITE from "../../assets/tiles/white.svg";
 
 /** Public-domain tile art from FluffyStuff/riichi-mahjong-tiles (CC0). */
-export const tileArt: Record<TileId, ComponentType<SvgProps>> = {
+export const tileArt: Record<TileId, ComponentType<SVGProps<SVGSVGElement>>> = {
   "0m": Tile0M,
   "0p": Tile0P,
   "0s": Tile0S,

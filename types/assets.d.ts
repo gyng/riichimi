@@ -20,9 +20,9 @@ declare module "*.ttf" {
 }
 
 declare module "*.svg" {
-  import type { ComponentType } from "react";
-  import type { SvgProps } from "react-native-svg";
+  import type { ComponentType, SVGProps } from "react";
 
-  const content: ComponentType<SvgProps>;
+  // svgr emits plain DOM <svg> React components for the web build.
+  const content: ComponentType<SVGProps<SVGSVGElement>>;
   export default content;
 }

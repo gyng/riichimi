@@ -33,9 +33,21 @@ export async function launchImageLibraryAsync(_options?: unknown): Promise<Image
     const finish = (result: ImagePickerResult) => {
       if (!settled) {
         settled = true;
+        window.removeEventListener("focus", onFocus);
         resolve(result);
       }
     };
+    // Not every browser (notably Safari) fires the input's `cancel` event, so a
+    // dismissed dialog would otherwise leave this promise pending forever. Focus
+    // returns to the window when the dialog closes; if no file arrived shortly
+    // after, treat it as a cancellation.
+    function onFocus() {
+      setTimeout(() => {
+        if (!settled && (input.files?.length ?? 0) === 0) {
+          finish({ assets: null, canceled: true });
+        }
+      }, 300);
+    }
     input.addEventListener("change", () => {
       const file = input.files?.[0];
       if (file === undefined) {
@@ -47,8 +59,8 @@ export async function launchImageLibraryAsync(_options?: unknown): Promise<Image
         canceled: false,
       });
     });
-    // Browsers that support it fire `cancel` when the dialog is dismissed.
     input.addEventListener("cancel", () => finish({ assets: null, canceled: true }));
+    window.addEventListener("focus", onFocus);
     input.click();
   });
 }

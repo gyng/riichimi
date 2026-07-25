@@ -149,6 +149,19 @@ export function ScanScreen() {
     };
   }, [photoUri]);
 
+  // Web capture and library picks are object URLs; each retake or re-pick would
+  // otherwise orphan the previous blob for the page's lifetime. Revoke the prior
+  // one when it is replaced — but never on unmount, since a continued scan hands
+  // its `photoUri` to the manual route as `referencePhoto` and it must survive.
+  const previousObjectUrl = useRef<string | null>(null);
+  useEffect(() => {
+    const previous = previousObjectUrl.current;
+    if (previous !== null && previous !== photoUri && previous.startsWith("blob:")) {
+      URL.revokeObjectURL(previous);
+    }
+    previousObjectUrl.current = photoUri;
+  }, [photoUri]);
+
   async function capturePhoto() {
     const photo = await camera.current?.takePictureAsync({ quality: 0.75 });
 
