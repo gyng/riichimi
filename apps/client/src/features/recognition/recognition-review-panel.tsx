@@ -235,7 +235,9 @@ export function RecognitionReviewPanel({
                 })}
               </div>
               <ActionButton
-                label={`${t("Called set")} ${group.index + 1} ${t("isn't a call — move to hand")}`}
+                label={t("Called set {position} isn't a call — move to hand", {
+                  position: group.index + 1,
+                })}
                 onPress={() => foldMeldIntoHand(group)}
                 variant="paper"
               />

@@ -30,7 +30,11 @@ const textProps =
 // assembled by `t` with `{placeholder}` slots, never by a template literal.
 // Composing one in JSX puts the word order of English into every locale, which is
 // exactly the mistake that left "Remove 5 circles from hand" untranslatable.
-const composedName = /aria-label=\{`/g;
+//
+// Every naming prop, not only `aria-label`: a name handed to a component through
+// `label` or `homeLabel` reaches a reader just the same, and watching one spelling
+// let a template through in a `label` while the rule was on `aria-label`.
+const composedName = /(?<![-\w])(?:aria-label|[a-zA-Z]*[Ll]abel)=\{`/g;
 // JSX text sits between a tag close `>` or expression `}` on the left and a tag
 // open `<` or expression `{` on the right. Matching both sides — and allowing
 // curly quotes and ellipsis inside — closes the gaps where raw copy hid next to

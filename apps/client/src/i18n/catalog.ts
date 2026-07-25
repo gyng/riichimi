@@ -10,6 +10,8 @@ import type { Locale } from "./messages";
  */
 const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
   ja: {
+    "Called set {position} isn't a call — move to hand":
+      "副露{position}は鳴きではない — 手牌へ移動",
     "{brand} home": "{brand}ホーム",
     "Decrease {label}": "{label}を減らす",
     "Increase {label}": "{label}を増やす",
@@ -76,7 +78,6 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "COMBINED YAKUMAN": "役満の複合",
     CONFIRM: "確定",
     Calculate: "計算する",
-    "Called set": "副露",
     "Called sets are read as open. Adjust in the calculator.":
       "副露は明るとして読み取ります。計算機で調整できます。",
     "Camera access is blocked": "カメラがブロックされています",
@@ -308,7 +309,6 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     fu: "符",
     han: "翻",
     honba: "本場",
-    "isn't a call — move to hand": "は副露ではない — 手牌へ移動",
     "kazoe yakuman": "数え役満あり",
     "need review": "枚を要確認",
     "no red fives": "赤ドラなし",
@@ -335,6 +335,7 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "yakuman never combine": "役満は複合しない",
   },
   "zh-Hans": {
+    "Called set {position} isn't a call — move to hand": "第{position}组不是副露 — 移入手牌",
     "{brand} home": "{brand}首页",
     "Decrease {label}": "减少{label}",
     "Increase {label}": "增加{label}",
@@ -399,7 +400,6 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "COMBINED YAKUMAN": "役满复合",
     CONFIRM: "确定",
     Calculate: "计算",
-    "Called set": "副露",
     "Called sets are read as open. Adjust in the calculator.": "副露按明牌读取。可在计算器中调整。",
     "Camera access is blocked": "相机已被阻止",
     Cancel: "取消",
@@ -627,7 +627,6 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     fu: "符",
     han: "翻",
     honba: "本场",
-    "isn't a call — move to hand": "不是副露 — 移入手牌",
     "kazoe yakuman": "有累计役满",
     "need review": "张待复核",
     "no red fives": "无红五",
@@ -654,6 +653,7 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "yakuman never combine": "役满不复合",
   },
   "zh-Hant": {
+    "Called set {position} isn't a call — move to hand": "第{position}組不是副露 — 移入手牌",
     "{brand} home": "{brand}首頁",
     "Decrease {label}": "減少{label}",
     "Increase {label}": "增加{label}",
@@ -718,7 +718,6 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "COMBINED YAKUMAN": "役滿複合",
     CONFIRM: "確定",
     Calculate: "計算",
-    "Called set": "副露",
     "Called sets are read as open. Adjust in the calculator.": "副露按明牌讀取。可在計算機中調整。",
     "Camera access is blocked": "相機已被封鎖",
     Cancel: "取消",
@@ -946,7 +945,6 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     fu: "符",
     han: "翻",
     honba: "本場",
-    "isn't a call — move to hand": "不是副露 — 移入手牌",
     "kazoe yakuman": "有累計役滿",
     "need review": "張待複核",
     "no red fives": "無紅五",
