@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import { Pressable, Text, View, useWindowDimensions } from "../primitives";
+import type { Styles } from "../primitives";
 import type { ReactNode } from "react";
 
 import { color, space } from "../tokens/theme";
@@ -39,8 +40,8 @@ export function TopAppBar({
   return (
     <View style={[styles.bar, compact && styles.barCompact]}>
       <Pressable
-        accessibilityLabel={`${brandLabel} home`}
-        accessibilityRole="link"
+        aria-label={`${brandLabel} home`}
+        role="link"
         onPress={onBrandPress}
         style={({ pressed }) => [
           styles.brand,
@@ -48,19 +49,19 @@ export function TopAppBar({
           pressed && styles.pressed,
         ]}
       >
-        <View accessibilityElementsHidden style={styles.brandMark}>
+        <View aria-hidden style={styles.brandMark}>
           <Text style={styles.brandGlyph}>{brandGlyph}</Text>
         </View>
         {compact ? null : <Text style={styles.brandLabel}>{brandLabel}</Text>}
       </Pressable>
 
-      <View accessibilityLabel="Primary" style={[styles.nav, compact && styles.navCompact]}>
+      <View aria-label="Primary" style={[styles.nav, compact && styles.navCompact]}>
         {items.map((item) => (
           <Pressable
-            accessibilityLabel={item.label}
-            accessibilityRole="link"
-            accessibilityState={{ selected: item.active }}
+            aria-current={item.active ? "page" : undefined}
+            aria-label={item.label}
             key={item.key}
+            role="link"
             onPress={item.onPress}
             style={({ pressed }) => [
               styles.item,
@@ -92,10 +93,10 @@ export function TopAppBarAction({
 }) {
   return (
     <Pressable
-      accessibilityLabel={label}
-      accessibilityRole="link"
-      accessibilityState={{ selected: active }}
+      aria-current={active ? "page" : undefined}
+      aria-label={label}
       onPress={onPress}
+      role="link"
       style={({ pressed }) => [styles.item, active && styles.itemActive, pressed && styles.pressed]}
     >
       <Text style={[styles.itemLabel, active && styles.itemLabelActive]}>{label}</Text>
@@ -103,7 +104,7 @@ export function TopAppBarAction({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   bar: {
     alignItems: "center",
     backgroundColor: color.paper,
@@ -191,4 +192,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
-});
+} satisfies Styles;

@@ -1,5 +1,5 @@
-import { color, space } from "@riichimi/ui";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, Text, View, color, space } from "@riichimi/ui";
+import type { Styles } from "@riichimi/ui";
 
 import { useTileLabels } from "../../state/tile-display-context";
 import { useLocale } from "../../state/locale-context";
@@ -12,8 +12,7 @@ export function TileLabelControl() {
     <View style={styles.root}>
       <Text style={styles.kicker}>{t("TILES \u00b7 THIS DEVICE")}</Text>
       <Pressable
-        accessibilityRole="checkbox"
-        accessibilityState={{ checked: showRankLabels }}
+        role="checkbox"
         aria-checked={showRankLabels}
         onPress={() => setShowRankLabels(!showRankLabels)}
         style={styles.row}
@@ -28,7 +27,7 @@ export function TileLabelControl() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   checkbox: {
     alignItems: "center",
     backgroundColor: color.paper,
@@ -61,4 +60,4 @@ const styles = StyleSheet.create({
     padding: space.x4,
   },
   row: { alignItems: "center", flexDirection: "row", gap: space.x3, minHeight: 48 },
-});
+} satisfies Styles;

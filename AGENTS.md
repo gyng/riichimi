@@ -4,7 +4,7 @@
 
 Riichimi is a local-first riichi mahjong score calculator for the web. Its defining experience is a trustworthy path from a guided camera capture to an auditable score with minimal correction. Correctness, explicit uncertainty, accessibility, and user control outrank novelty.
 
-The client is a web-only Vite app: React Native Web primitives run through Vite/Rolldown, routing is `react-router`, and the Expo/metro toolchain has been retired. React Native ecosystem packages (`expo-*`) survive only as build-time aliases to the web shims under `apps/client/web/` and as type/Jest dependencies; nothing native is bundled or shipped.
+The client is a web-only Vite app: plain DOM and CSS, routing is `react-router`, and the React Native and Expo/metro toolchains have been retired. `react-native` and `react-native-web` are gone; the RN-shaped names (`View`, `Text`, `Pressable`, `ScrollView`, `TextInput`, `Image`, `ActivityIndicator`) are thin local DOM primitives in `packages/ui/src/primitives/`. Four `expo-*` packages survive only as build-time aliases to the web shims under `apps/client/web/`; nothing native is bundled or shipped.
 
 Read these before substantial work:
 
@@ -24,7 +24,7 @@ Run commands from the repository root.
 - `npm run format` — write formatting with Oxfmt
 - `npm run lint` — Oxlint, tsgolint-powered type-aware rules, and TypeScript diagnostics
 - `npm run test:unit` — fast domain/application tests with Vitest
-- `npm run test:ui` — React Native component tests with Jest Expo
+- `npm run test:ui` — component tests with Vitest and jsdom
 - `npm run test:coverage` — diagnostic coverage report with enforced floors
 - `npm run test:e2e` — browser dogfood for visible UI and WebMCP journeys
 - `npm run check` — the required local quality gate
@@ -68,10 +68,11 @@ Rules:
 
 ## React and atomic design
 
-React 19, React Native Web, and `react-router` are the presentation stack, bundled by Vite.
+React 19, the DOM, and `react-router` are the presentation stack, bundled by Vite.
 
 Shared UI follows atomic design as a dependency rule, not as a demand for excessive folders:
 
+- **Primitives** — `packages/ui/src/primitives/`: the DOM elements everything is built from, plus the style resolver that turns a style object into CSS. Nothing above this layer touches `document` directly.
 - **Tokens** — color, spacing, typography, motion, radius, and elevation decisions
 - **Atoms** — indivisible controls and text treatments
 - **Molecules** — small combinations that serve one interaction
@@ -145,7 +146,7 @@ Test through stable behavior:
 
 Avoid low-value tests:
 
-- Do not assert private functions, implementation call order, CSS/StyleSheet internals, or framework behavior.
+- Do not assert private functions, implementation call order, CSS internals, or framework behavior.
 - Do not add snapshots for large trees or score objects. Small, reviewed snapshots are acceptable only when the representation itself is the contract.
 - Do not mock pure domain collaborators. Use real domain code.
 - Mock only boundaries that are slow, nondeterministic, destructive, unavailable, or outside our control.
@@ -186,7 +187,7 @@ Coverage floors are guardrails, not goals. New or changed scoring code should no
 - Store only what the product needs and provide deletion controls.
 - Treat model output as untrusted input and validate it before scoring.
 - Pin dependencies through the lockfile and investigate security advisories; do not apply blind breaking upgrades.
-- Keep secrets out of source, Expo public configuration, fixtures, screenshots, and test output.
+- Keep secrets out of source, public build configuration, fixtures, screenshots, and test output.
 
 ## Performance work
 
@@ -200,7 +201,7 @@ Fast feedback is a product and engineering requirement. When application, build,
 
 For app performance, inspect startup, interaction latency, camera-frame work, memory, model initialization, bundle size, and unnecessary React renders. Move CPU-heavy inference and image preprocessing off the UI thread where supported. Do not memoize blindly.
 
-For tooling performance, use Oxlint rule timings, Vitest/Jest slow-test reporting, dependency caching, scoped test commands, and build profiling. Split suites by responsibility before adding concurrency. Never remove valuable assertions, collapse isolation, disable type-aware linting, or weaken coverage merely to make the pipeline faster. Document durable benchmark scripts and performance budgets when a bottleneck becomes important enough to optimize repeatedly.
+For tooling performance, use Oxlint rule timings, Vitest slow-test reporting, dependency caching, scoped test commands, and build profiling. Split suites by responsibility before adding concurrency. Never remove valuable assertions, collapse isolation, disable type-aware linting, or weaken coverage merely to make the pipeline faster. Document durable benchmark scripts and performance budgets when a bottleneck becomes important enough to optimize repeatedly.
 
 ## Definition of done
 

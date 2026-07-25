@@ -1,6 +1,6 @@
 import type { ScoreHandResult } from "@riichimi/score-core";
-import { color, space } from "@riichimi/ui";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View, color, space } from "@riichimi/ui";
+import type { Styles } from "@riichimi/ui";
 import { useLocale } from "../../state/locale-context";
 
 export interface ScoreResultPanelProps {
@@ -15,8 +15,8 @@ export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
   const { t } = useLocale();
   if (result.kind === "invalid") {
     return (
-      <View accessibilityLiveRegion="polite" style={[styles.panel, styles.errorPanel]}>
-        <Text accessibilityRole="header" style={styles.errorTitle}>
+      <View aria-live="polite" style={[styles.panel, styles.errorPanel]}>
+        <Text role="heading" style={styles.errorTitle}>
           {t("Check the hand")}
         </Text>
         {result.issues.map((issue) => (
@@ -30,8 +30,8 @@ export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
 
   if (result.kind === "not-winning" || result.kind === "no-yaku") {
     return (
-      <View accessibilityLiveRegion="polite" style={[styles.panel, styles.errorPanel]}>
-        <Text accessibilityRole="header" style={styles.errorTitle}>
+      <View aria-live="polite" style={[styles.panel, styles.errorPanel]}>
+        <Text role="heading" style={styles.errorTitle}>
           {result.kind === "not-winning" ? t("Not a complete hand") : t("A yaku is still needed")}
         </Text>
         <Text style={styles.errorItem}>{result.message}</Text>
@@ -51,9 +51,9 @@ export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
         : `${points(result.payments.fromDealer)} / ${points(result.payments.fromEachNonDealer)}`;
 
   return (
-    <View accessibilityLiveRegion="polite" style={[styles.panel, styles.successPanel]}>
+    <View aria-live="polite" style={[styles.panel, styles.successPanel]}>
       <Text style={styles.kicker}>{t("MAXIMUM-VALUE INTERPRETATION")}</Text>
-      <Text accessibilityRole="header" style={styles.scoreTitle}>
+      <Text role="heading" style={styles.scoreTitle}>
         {title}
       </Text>
       <Text style={styles.payment}>{payment}</Text>
@@ -119,7 +119,7 @@ export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   bonus: {
     color: color.jade,
     fontFamily: "serif",
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   lineItem: {
     alignItems: "center",
     borderBottomColor: "#43695C",
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: 1,
     flexDirection: "row",
     gap: space.x4,
     paddingVertical: space.x3,
@@ -261,4 +261,4 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "800",
   },
-});
+} satisfies Styles;

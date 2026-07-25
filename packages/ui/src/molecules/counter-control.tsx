@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, Text, View } from "../primitives";
+import type { Styles } from "../primitives";
 
 import { color, radius, space } from "../tokens/theme";
 
@@ -22,22 +23,18 @@ export function CounterControl({
       <Text style={styles.label}>{label}</Text>
       <View style={styles.controls}>
         <Pressable
-          accessibilityLabel={`Decrease ${label}`}
-          accessibilityRole="button"
-          accessibilityState={{ disabled: value <= minimum }}
+          aria-label={`Decrease ${label}`}
           disabled={value <= minimum}
           onPress={() => onChange(value - 1)}
           style={({ pressed }) => [styles.button, pressed && styles.pressed]}
         >
           <Text style={styles.buttonLabel}>−</Text>
         </Pressable>
-        <Text accessibilityLabel={`${label}: ${value}`} style={styles.value}>
+        <Text aria-label={`${label}: ${value}`} style={styles.value}>
           {value}
         </Text>
         <Pressable
-          accessibilityLabel={`Increase ${label}`}
-          accessibilityRole="button"
-          accessibilityState={{ disabled: value >= maximum }}
+          aria-label={`Increase ${label}`}
           disabled={value >= maximum}
           onPress={() => onChange(value + 1)}
           style={({ pressed }) => [styles.button, pressed && styles.pressed]}
@@ -49,7 +46,7 @@ export function CounterControl({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   button: {
     alignItems: "center",
     backgroundColor: color.paper,
@@ -92,4 +89,4 @@ const styles = StyleSheet.create({
     minWidth: 32,
     textAlign: "center",
   },
-});
+} satisfies Styles;

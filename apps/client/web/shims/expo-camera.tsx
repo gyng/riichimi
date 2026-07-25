@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { View } from "react-native";
-import type { StyleProp, ViewStyle } from "react-native";
+import { View } from "@riichimi/ui";
+import type { StyleProp } from "@riichimi/ui";
 
 // Web implementation of the expo-camera slice the scan flow uses. A live preview
 // comes from getUserMedia into a <video>; takePictureAsync grabs the current
@@ -92,7 +92,7 @@ export interface CameraViewHandle {
 
 export interface CameraViewProps {
   readonly facing?: "back" | "front";
-  readonly style?: StyleProp<ViewStyle>;
+  readonly style?: StyleProp;
   readonly children?: ReactNode;
 }
 

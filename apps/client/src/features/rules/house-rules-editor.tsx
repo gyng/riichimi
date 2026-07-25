@@ -1,5 +1,5 @@
-import { SegmentedControl, color, space } from "@riichimi/ui";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, SegmentedControl, Text, TextInput, View, color, space } from "@riichimi/ui";
+import type { Styles } from "@riichimi/ui";
 
 import { useRules } from "../../state/rules-context";
 import type { HouseRules } from "./house-rules";
@@ -52,7 +52,7 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
   return (
     <View style={styles.root}>
       <Text style={styles.kicker}>HOUSE RULES · THIS DEVICE</Text>
-      <Text accessibilityRole="header" style={styles.title}>
+      <Text role="heading" style={styles.title}>
         {t("Rules your table plays by")}
       </Text>
       <Text style={styles.note}>
@@ -63,19 +63,18 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
 
       <Text style={styles.fieldLabel}>{t("NAME")}</Text>
       <TextInput
-        accessibilityLabel="House rules name"
-        editable={!locked}
+        aria-label="House rules name"
         onChangeText={(label) => update({ label })}
         placeholder="House rules"
+        readOnly={locked}
         style={[styles.input, locked && styles.disabled]}
         value={house.label}
       />
 
       {toggles.map((toggle) => (
         <Pressable
-          accessibilityRole="checkbox"
+          role="checkbox"
           aria-checked={house[toggle.key]}
-          accessibilityState={{ checked: house[toggle.key], disabled: locked }}
           disabled={locked}
           key={toggle.key}
           onPress={() => update({ [toggle.key]: !house[toggle.key] })}
@@ -127,7 +126,7 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   checkbox: {
     alignItems: "center",
     backgroundColor: color.paper,
@@ -185,4 +184,4 @@ const styles = StyleSheet.create({
     gap: space.x3,
     minHeight: 48,
   },
-});
+} satisfies Styles;

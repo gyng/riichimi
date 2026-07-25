@@ -1,6 +1,7 @@
+import { describe, expect, it } from "vitest";
 import type { ScoreHandInput, ScoringRules } from "@riichimi/score-core";
 import { scoreHand } from "@riichimi/score-core";
-import { render, screen } from "@testing-library/react-native";
+import { render, screen } from "@testing-library/react";
 
 import { ScoreResultPanel } from "./score-result-panel";
 
@@ -46,19 +47,19 @@ const kokushiThirteenWait: ScoreHandInput = {
 
 describe("ScoreResultPanel", () => {
   it("renders a single-yaku double yakuman as a 2× line under a ruleset that pays it", async () => {
-    await render(<ScoreResultPanel result={scoreHand(kokushiThirteenWait)} />);
+    render(<ScoreResultPanel result={scoreHand(kokushiThirteenWait)} />);
 
-    expect(screen.getByText("Thirteen orphans")).toBeOnTheScreen();
+    expect(screen.getByText("Thirteen orphans")).toBeInTheDocument();
     // The value multiplier is shown, not a hardcoded "1×".
-    expect(screen.getByText("2×")).toBeOnTheScreen();
+    expect(screen.getByText("2×")).toBeInTheDocument();
   });
 
   it("renders a normal yakuman as a 1× line", async () => {
-    await render(
+    render(
       <ScoreResultPanel result={scoreHand({ ...kokushiThirteenWait, rules: doubleRules, winningTile: "red", concealedTiles: ["1m", "1m", "9m", "1p", "9p", "1s", "9s", "east", "south", "west", "north", "white", "green", "red"] })} />, // prettier-ignore
     );
 
-    expect(screen.getByText("Thirteen orphans")).toBeOnTheScreen();
-    expect(screen.getByText("1×")).toBeOnTheScreen();
+    expect(screen.getByText("Thirteen orphans")).toBeInTheDocument();
+    expect(screen.getByText("1×")).toBeInTheDocument();
   });
 });

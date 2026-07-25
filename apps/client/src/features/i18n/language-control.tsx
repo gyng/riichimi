@@ -1,5 +1,5 @@
-import { SegmentedControl, color, space } from "@riichimi/ui";
-import { StyleSheet, Text, View } from "react-native";
+import { SegmentedControl, Text, View, color, space } from "@riichimi/ui";
+import type { Styles } from "@riichimi/ui";
 
 import { supportedLocales, messages as translations } from "../../i18n/messages";
 import { useLocale } from "../../state/locale-context";
@@ -26,7 +26,7 @@ export function LanguageControl() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   kicker: {
     color: color.jade,
     fontFamily: "monospace",
@@ -52,4 +52,4 @@ const styles = StyleSheet.create({
     marginBottom: space.x5,
     padding: space.x4,
   },
-});
+} satisfies Styles;

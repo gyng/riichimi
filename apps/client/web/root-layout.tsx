@@ -1,5 +1,5 @@
-import { color } from "@riichimi/ui";
-import { StyleSheet, View } from "react-native";
+import { View, color } from "@riichimi/ui";
+import type { Styles } from "@riichimi/ui";
 import { Outlet } from "react-router-dom";
 
 import { AppNavigationBar } from "../src/components/app-navigation-bar";
@@ -40,8 +40,8 @@ export function RootLayout() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   bar: { backgroundColor: color.paper },
   body: { flex: 1 },
   root: { flex: 1 },
-});
+} satisfies Styles;

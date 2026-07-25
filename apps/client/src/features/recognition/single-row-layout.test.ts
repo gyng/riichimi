@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { locateSingleRowTiles } from "./single-row-layout";
 import type { PixelFrame } from "./guided-layout";
 

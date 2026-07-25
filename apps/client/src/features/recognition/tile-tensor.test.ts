@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { combineTileTensors, cropTileTensor } from "./tile-tensor";
 
 describe("tile tensor preprocessing", () => {

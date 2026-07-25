@@ -12,11 +12,11 @@ updates:
     cooldown:
       default-days: 7
     groups:
+      # The four expo-* packages left are aliased to web shims and move together.
       expo:
         patterns:
           - "expo*"
           - "@expo/*"
-          - "react-native*"
       oxc:
         patterns:
           - "oxlint*"
@@ -25,20 +25,6 @@ updates:
         patterns:
           - "vitest"
           - "@vitest/*"
-          - "jest*"
           - "@testing-library/*"
-    ignore:
-      # React and React DOM are pinned by the Expo SDK to the exact versions the
-      # native runtime was built against; `expo install --check` fails on any
-      # other. They move when the SDK moves, in an expo-group bump, not on their
-      # own — a standalone bump only produces a red PR.
-      - dependency-name: "react"
-      - dependency-name: "react-dom"
-      # jest-expo 57 is built on jest 29 internals (@jest/globals, babel-jest at
-      # ^29). jest 30 cannot be adopted until jest-expo supports it, so hold the
-      # major; patches and minors within 29 are still welcome.
-      - dependency-name: "jest"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "@types/jest"
-        update-types: ["version-update:semver-major"]
+          - "jsdom"
     versioning-strategy: increase

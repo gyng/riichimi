@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { isLocale, messages, resolveLocale, supportedLocales } from "./messages";
 
 describe("locale resolution", () => {

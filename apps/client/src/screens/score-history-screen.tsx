@@ -1,10 +1,17 @@
-import { ActionButton, MahjongTile, color, space } from "@riichimi/ui";
+import {
+  ActionButton,
+  ActivityIndicator,
+  MahjongTile,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+  color,
+  space,
+} from "@riichimi/ui";
+import type { Styles } from "@riichimi/ui";
 import { router } from "expo-router";
 import { useState } from "react";
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-
-import { bodyEdges } from "../components/screen-insets";
 
 import type { ScoreHistoryEntry } from "../features/score-history/score-history";
 import { useScoreHistory } from "../state/score-history-context";
@@ -42,15 +49,15 @@ export function ScoreHistoryScreen() {
 
   if (history.loading) {
     return (
-      <SafeAreaView edges={bodyEdges} style={styles.centered}>
+      <View style={styles.centered}>
         <ActivityIndicator color={color.accent} />
         <Text style={styles.muted}>{t("Opening the score folio…")}</Text>
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView edges={bodyEdges} style={styles.safeArea}>
+    <View style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.topBar}>
           <Text style={styles.rules}>{t("SAVED LOCALLY \u00b7 LAST 20")}</Text>
@@ -58,7 +65,7 @@ export function ScoreHistoryScreen() {
 
         <View style={styles.header}>
           <Text style={styles.kicker}>{t("SCORE FOLIO")}</Text>
-          <Text accessibilityRole="header" style={styles.title}>
+          <Text role="heading" style={styles.title}>
             {t("History")}
           </Text>
           <Text style={styles.intro}>
@@ -71,7 +78,7 @@ export function ScoreHistoryScreen() {
           <View style={styles.emptyPanel}>
             <Text style={styles.emptyNumber}>零</Text>
             <View style={styles.emptyCopy}>
-              <Text accessibilityRole="header" style={styles.emptyTitle}>
+              <Text role="heading" style={styles.emptyTitle}>
                 {t("No saved scores yet")}
               </Text>
               <Text style={styles.muted}>{t("Scores you calculate appear here.")}</Text>
@@ -96,7 +103,7 @@ export function ScoreHistoryScreen() {
                   <View style={styles.entryHeader}>
                     <View>
                       <Text style={styles.entryMeta}>{calculatedTime(entry.calculatedAt)}</Text>
-                      <Text accessibilityRole="header" style={styles.score}>
+                      <Text role="heading" style={styles.score}>
                         {scoreLabel(entry)}
                       </Text>
                     </View>
@@ -105,7 +112,7 @@ export function ScoreHistoryScreen() {
                     </View>
                   </View>
 
-                  <View accessibilityLabel="Saved concealed hand" style={styles.tiles}>
+                  <View aria-label="Saved concealed hand" style={styles.tiles}>
                     {entry.hand.concealedTiles.map((tile, tileIndex) => (
                       <MahjongTile
                         key={`${entry.id}-${tile}-${tileIndex}`}
@@ -153,8 +160,7 @@ export function ScoreHistoryScreen() {
                   <View style={styles.entryFooter}>
                     <Text style={styles.rulesLabel}>{entry.rules.label}</Text>
                     <Pressable
-                      accessibilityRole="button"
-                      accessibilityLabel={`Remove score ${index + 1}`}
+                      aria-label={`Remove score ${index + 1}`}
                       onPress={() => history.remove(entry.id)}
                       style={styles.removeButton}
                     >
@@ -168,7 +174,7 @@ export function ScoreHistoryScreen() {
         )}
 
         {history.storageError === null ? null : (
-          <Text accessibilityLiveRegion="polite" style={styles.error}>
+          <Text aria-live="polite" style={styles.error}>
             {history.storageError}
           </Text>
         )}
@@ -193,20 +199,16 @@ export function ScoreHistoryScreen() {
             </View>
           </View>
         ) : (
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => setConfirmClear(true)}
-            style={styles.clearLink}
-          >
+          <Pressable onPress={() => setConfirmClear(true)} style={styles.clearLink}>
             <Text style={styles.clearLinkText}>{t("Clear score folio")}</Text>
           </Pressable>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   centered: {
     alignItems: "center",
     backgroundColor: color.canvas,
@@ -363,4 +365,4 @@ const styles = StyleSheet.create({
   },
   yakuName: { color: color.ink, fontFamily: "serif", fontSize: 12, fontWeight: "700" },
   yakuRow: { flexDirection: "row", flexWrap: "wrap", gap: space.x2, marginTop: space.x3 },
-});
+} satisfies Styles;

@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { inspectFrameExposure, inspectLocatedCapture } from "./capture-quality";
 import type { PixelFrame, GuidedLayoutResult } from "./guided-layout";
 

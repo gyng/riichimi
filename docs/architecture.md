@@ -34,11 +34,11 @@ Owns recognition-shaped domain contracts, ports, deterministic post-processing, 
 
 ### `packages/ui`
 
-Owns reusable React Native UI using atomic design. It may depend on React and React Native and consume domain-shaped props. It does not import device adapters or implement scoring policy.
+Owns reusable DOM UI using atomic design, over the primitives in `src/primitives/` that wrap `div`, `span`, `button`, and `input` and resolve style objects to CSS. It may depend on React and consume domain-shaped props. It does not import device adapters or implement scoring policy.
 
 ### `apps/client`
 
-Owns Expo routes, screens, adapter composition, navigation, permissions, and device-specific concerns. Route files are deliberately thin.
+Owns routes, screens, adapter composition, navigation, permissions, and browser-specific concerns. Route files are deliberately thin.
 
 The browser client exposes a small typed WebMCP surface through `document.modelContext` when the host supports it. Tool definitions stay in the interface/infrastructure ring, call the same session and scoring actions as visible controls, and disappear automatically on unmount. WebMCP is progressive enhancement: unsupported or denied registration never impairs manual use.
 
@@ -57,7 +57,7 @@ Until a model clears the release gate, capture stops at an explicit photo-review
 
 ## Persistence
 
-The client persists separate versioned session and score-history documents. Web uses browser local storage; native uses Expo SQLite's key-value adapter. Both implementations satisfy the same module contracts, and stored JSON is narrowed from `unknown`—including nested score summaries—before entering application state. Recalculating the same standalone hand moves one deduplicated entry to the front of the 20-entry score folio. See ADR 0002.
+The client persists separate versioned session and score-history documents in browser local storage, behind module contracts that keep the storage choice out of the application layer. Stored JSON is narrowed from `unknown`—including nested score summaries—before entering application state. Recalculating the same standalone hand moves one deduplicated entry to the front of the 20-entry score folio. See ADR 0002.
 
 ## Agent interaction
 
@@ -65,7 +65,7 @@ WebMCP tools use strict JSON schemas and boundary parsers. Read-only tools are a
 
 ## Static web delivery
 
-Expo emits one HTML document per route. The repository-owned static server resolves clean paths such as `/history` to `history.html`, matching the direct-link contract required from production hosting. Browser dogfood reloads a nested route to prevent client-navigation-only releases.
+Vite emits a single HTML document and `react-router` owns the routes inside it. The repository-owned static server falls back to that document for clean paths such as `/history`, matching the direct-link contract required from production hosting. Browser dogfood reloads a nested route to prevent client-navigation-only releases.
 
 ## Package API discipline
 

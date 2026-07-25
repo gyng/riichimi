@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { recognitionModelClasses } from "@riichimi/vision";
 
 import { classifyBatchLogits } from "./classifier-output";

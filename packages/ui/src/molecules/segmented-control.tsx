@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, Text, View } from "../primitives";
+import type { Styles } from "../primitives";
 
 import { color, radius, space } from "../tokens/theme";
 
@@ -21,19 +22,14 @@ export function SegmentedControl<Value extends string>({
   value,
 }: SegmentedControlProps<Value>) {
   return (
-    <View
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole="radiogroup"
-      style={styles.root}
-    >
+    <View aria-label={accessibilityLabel} role="radiogroup" style={styles.root}>
       {options.map((option) => {
         const selected = option.value === value;
         return (
           <Pressable
             aria-checked={selected}
-            accessibilityLabel={option.label}
-            accessibilityRole="radio"
-            accessibilityState={{ checked: selected }}
+            aria-label={option.label}
+            role="radio"
             key={option.value}
             onPress={() => onChange(option.value)}
             style={({ pressed }) => [
@@ -50,7 +46,7 @@ export function SegmentedControl<Value extends string>({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   label: {
     color: color.inkMuted,
     fontFamily: "serif",
@@ -86,4 +82,4 @@ const styles = StyleSheet.create({
   selectedOption: {
     backgroundColor: color.ink,
   },
-});
+} satisfies Styles;

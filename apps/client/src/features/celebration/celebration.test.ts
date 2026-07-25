@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import type { LimitName, ScoreHandResult } from "@riichimi/score-core";
 import { scoreHand } from "@riichimi/score-core";
 

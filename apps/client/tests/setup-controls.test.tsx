@@ -1,4 +1,6 @@
-import { fireEvent, render, screen } from "@testing-library/react-native";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
+import type { router } from "expo-router";
 
 import { SettingsScreen } from "../src/screens/settings-screen";
 import * as houseRulesStorage from "../src/infrastructure/house-rules-storage";
@@ -10,24 +12,39 @@ import { RulesProvider } from "../src/state/rules-context";
 import { SessionProvider } from "../src/state/session-context";
 import { TileLabelProvider } from "../src/state/tile-display-context";
 
-jest.mock("expo-router", () => ({
-  router: { back: jest.fn(), navigate: jest.fn(), push: jest.fn(), replace: jest.fn() },
+vi.mock("expo-router", () => ({
+  router: {
+    back: vi.fn<typeof router.back>(),
+    navigate: vi.fn<typeof router.navigate>(),
+    push: vi.fn<typeof router.push>(),
+    replace: vi.fn<typeof router.replace>(),
+  },
   usePathname: () => "/settings",
 }));
 
-jest.mock("../src/infrastructure/rules-preference-storage", () => ({
-  loadRulesPreference: jest.fn().mockResolvedValue("tenhou-hanchan"),
-  saveRulesPreference: jest.fn().mockResolvedValue(undefined),
+vi.mock("../src/infrastructure/rules-preference-storage", () => ({
+  loadRulesPreference: vi
+    .fn<typeof rulesStorage.loadRulesPreference>()
+    .mockResolvedValue("tenhou-hanchan"),
+  saveRulesPreference: vi
+    .fn<typeof rulesStorage.saveRulesPreference>()
+    .mockResolvedValue(undefined),
 }));
 
-jest.mock("../src/infrastructure/locale-preference-storage", () => ({
-  loadLocalePreference: jest.fn().mockResolvedValue("en"),
-  saveLocalePreference: jest.fn().mockResolvedValue(undefined),
+vi.mock("../src/infrastructure/locale-preference-storage", () => ({
+  loadLocalePreference: vi.fn<typeof localeStorage.loadLocalePreference>().mockResolvedValue("en"),
+  saveLocalePreference: vi
+    .fn<typeof localeStorage.saveLocalePreference>()
+    .mockResolvedValue(undefined),
 }));
 
-jest.mock("../src/infrastructure/tile-display-storage", () => ({
-  loadTileLabelPreference: jest.fn().mockResolvedValue(false),
-  saveTileLabelPreference: jest.fn().mockResolvedValue(undefined),
+vi.mock("../src/infrastructure/tile-display-storage", () => ({
+  loadTileLabelPreference: vi
+    .fn<typeof tileStorage.loadTileLabelPreference>()
+    .mockResolvedValue(false),
+  saveTileLabelPreference: vi
+    .fn<typeof tileStorage.saveTileLabelPreference>()
+    .mockResolvedValue(undefined),
 }));
 
 const defaultHouse = {
@@ -42,14 +59,14 @@ const defaultHouse = {
   yakumanStacking: "additive",
 } as const;
 
-jest.mock("../src/infrastructure/house-rules-storage", () => ({
-  loadHouseRules: jest.fn(),
-  saveHouseRules: jest.fn().mockResolvedValue(undefined),
+vi.mock("../src/infrastructure/house-rules-storage", () => ({
+  loadHouseRules: vi.fn<typeof houseRulesStorage.loadHouseRules>(),
+  saveHouseRules: vi.fn<typeof houseRulesStorage.saveHouseRules>().mockResolvedValue(undefined),
 }));
 
-jest.mock("../src/infrastructure/session-storage", () => ({
-  loadStoredSession: jest.fn().mockResolvedValue(null),
-  saveStoredSession: jest.fn().mockResolvedValue(undefined),
+vi.mock("../src/infrastructure/session-storage", () => ({
+  loadStoredSession: vi.fn<typeof sessionStorage.loadStoredSession>().mockResolvedValue(null),
+  saveStoredSession: vi.fn<typeof sessionStorage.saveStoredSession>().mockResolvedValue(undefined),
 }));
 
 function setup() {
@@ -67,39 +84,39 @@ function setup() {
 }
 
 beforeEach(() => {
-  jest.mocked(houseRulesStorage.loadHouseRules).mockResolvedValue({ ...defaultHouse });
+  vi.mocked(houseRulesStorage.loadHouseRules).mockResolvedValue({ ...defaultHouse });
 });
 
 describe("setup", () => {
   it("shows the stored profile and describes it from its own options", async () => {
-    await setup();
+    setup();
 
     // Tenhou: red fives, open tanyao, no round-up mangan, kazoe yakuman, ura-dora.
     expect(
       await screen.findByText(/red fives · open tanyao · no round-up mangan/),
-    ).toBeOnTheScreen();
+    ).toBeInTheDocument();
   });
 
   it("remembers a different published ruleset", async () => {
-    await setup();
+    setup();
 
-    await fireEvent.press(screen.getByRole("radio", { name: "EMA Riichi 2016" }));
+    fireEvent.click(screen.getByRole("radio", { name: "EMA Riichi 2016" }));
 
     expect(rulesStorage.saveRulesPreference).toHaveBeenCalledWith("ema-2016");
   });
 
   it("remembers the interface language", async () => {
-    await setup();
+    setup();
 
-    await fireEvent.press(screen.getByRole("radio", { name: "日本語" }));
+    fireEvent.click(screen.getByRole("radio", { name: "日本語" }));
 
     expect(localeStorage.saveLocalePreference).toHaveBeenCalledWith("ja");
   });
 
   it("remembers whether tiles show their rank", async () => {
-    await setup();
+    setup();
 
-    await fireEvent.press(screen.getByRole("checkbox", { name: /rank in the tile corner/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /rank in the tile corner/ }));
 
     expect(tileStorage.saveTileLabelPreference).toHaveBeenCalledWith(true);
   });
@@ -107,10 +124,10 @@ describe("setup", () => {
 
 describe("house rules", () => {
   it("edits an option and keeps the rest of the profile", async () => {
-    await setup();
-    await fireEvent.press(screen.getByRole("radio", { name: "House rules" }));
+    setup();
+    fireEvent.click(screen.getByRole("radio", { name: "House rules" }));
 
-    await fireEvent.press(await screen.findByRole("checkbox", { name: /Red fives count as dora/ }));
+    fireEvent.click(await screen.findByRole("checkbox", { name: /Red fives count as dora/ }));
 
     expect(houseRulesStorage.saveHouseRules).toHaveBeenCalledWith({
       ...defaultHouse,
@@ -119,10 +136,10 @@ describe("house rules", () => {
   });
 
   it("switches how a 13+ han hand is paid", async () => {
-    await setup();
-    await fireEvent.press(screen.getByRole("radio", { name: "House rules" }));
+    setup();
+    fireEvent.click(screen.getByRole("radio", { name: "House rules" }));
 
-    await fireEvent.press(await screen.findByRole("radio", { name: "Cap at sanbaiman" }));
+    fireEvent.click(await screen.findByRole("radio", { name: "Cap at sanbaiman" }));
 
     expect(houseRulesStorage.saveHouseRules).toHaveBeenCalledWith({
       ...defaultHouse,
@@ -131,10 +148,10 @@ describe("house rules", () => {
   });
 
   it("switches whether combined yakuman add up", async () => {
-    await setup();
-    await fireEvent.press(screen.getByRole("radio", { name: "House rules" }));
+    setup();
+    fireEvent.click(screen.getByRole("radio", { name: "House rules" }));
 
-    await fireEvent.press(await screen.findByRole("radio", { name: "Never combine" }));
+    fireEvent.click(await screen.findByRole("radio", { name: "Never combine" }));
 
     expect(houseRulesStorage.saveHouseRules).toHaveBeenCalledWith({
       ...defaultHouse,
@@ -143,13 +160,15 @@ describe("house rules", () => {
   });
 
   it("describes the house profile from the options it was given", async () => {
-    jest
-      .mocked(houseRulesStorage.loadHouseRules)
-      .mockResolvedValue({ ...defaultHouse, redFives: false, uraDora: false });
-    await setup();
+    vi.mocked(houseRulesStorage.loadHouseRules).mockResolvedValue({
+      ...defaultHouse,
+      redFives: false,
+      uraDora: false,
+    });
+    setup();
 
-    await fireEvent.press(screen.getByRole("radio", { name: "House rules" }));
+    fireEvent.click(screen.getByRole("radio", { name: "House rules" }));
 
-    expect(await screen.findByText(/no red fives .* no ura-dora/)).toBeOnTheScreen();
+    expect(await screen.findByText(/no red fives .* no ura-dora/)).toBeInTheDocument();
   });
 });

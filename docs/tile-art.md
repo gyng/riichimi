@@ -29,6 +29,6 @@ python3 scripts/tiles/prepare-tile-assets.py \
 
 ## Rendering
 
-Metro compiles the SVGs into components through `react-native-svg-transformer`, so the art is vector on both web and native. Jest does not run that transformer, so component tests map `.svg` to an inert view — tests assert a tile's accessible name and behaviour, never its artwork.
+Vite compiles the SVGs into React components through `vite-plugin-svgr`, so the art is vector DOM `<svg>`. Component tests run through the same config and render the real art; they assert a tile's accessible name and behaviour, never its artwork.
 
 Rank labels (`5p`, `3s`) can be overlaid in the tile corner from Setup. They are off by default, since the faces are the real thing and a label is a learning aid rather than the default reading.

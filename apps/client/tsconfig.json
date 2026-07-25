@@ -1,8 +1,11 @@
 {
-  "extends": ["expo/tsconfig.base", "../../tsconfig.base.json"],
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    // Carried over from the Expo base this used to extend: some browser packages
+    // the client imports are CommonJS, and their default imports need it.
+    "esModuleInterop": true,
     "noEmit": true,
-    "types": ["jest", "node", "react", "react-dom", "webmcp-types"]
+    "types": ["node", "react", "react-dom", "webmcp-types"]
   },
   "include": [
     "app/**/*.ts",

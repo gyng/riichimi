@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, Text, View } from "../primitives";
+import type { Styles } from "../primitives";
 import type { ReactNode } from "react";
 
 import { color, space } from "../tokens/theme";
@@ -37,22 +38,20 @@ export function CalculatorLanding({
 }: CalculatorLandingProps) {
   return (
     <View style={styles.root}>
-      <Text accessibilityRole="header" style={styles.headline}>
+      <Text role="heading" style={styles.headline}>
         {copy.headline}
       </Text>
 
       <View style={styles.actions}>
         <Pressable
-          accessibilityLabel={copy.scanAction}
-          accessibilityRole="button"
+          aria-label={copy.scanAction}
           onPress={onScan}
           style={({ pressed }) => [styles.primary, pressed && styles.pressed]}
         >
           <Text style={styles.primaryLabel}>{copy.scanAction}</Text>
         </Pressable>
         <Pressable
-          accessibilityLabel={copy.manualAction}
-          accessibilityRole="button"
+          aria-label={copy.manualAction}
           onPress={onManual}
           style={({ pressed }) => [styles.secondary, pressed && styles.pressed]}
         >
@@ -61,8 +60,7 @@ export function CalculatorLanding({
       </View>
 
       <Pressable
-        accessibilityLabel={hasActiveSession ? copy.sessionResume : copy.sessionStart}
-        accessibilityRole="button"
+        aria-label={hasActiveSession ? copy.sessionResume : copy.sessionStart}
         onPress={onSession}
         style={({ pressed }) => [
           styles.row,
@@ -77,8 +75,7 @@ export function CalculatorLanding({
       </Pressable>
 
       <Pressable
-        accessibilityLabel={historyCount === 0 ? copy.historyEmpty : copy.historyLabel}
-        accessibilityRole="button"
+        aria-label={historyCount === 0 ? copy.historyEmpty : copy.historyLabel}
         disabled={historyCount === 0}
         onPress={onHistory}
         style={({ pressed }) => [
@@ -100,7 +97,7 @@ export function CalculatorLanding({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   actions: { flexDirection: "row", flexWrap: "wrap", gap: space.x3, marginTop: space.x4 },
   headline: {
     color: color.ink,
@@ -159,4 +156,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: space.x4,
   },
   secondaryLabel: { color: color.ink, fontFamily: "serif", fontSize: 17, fontWeight: "800" },
-});
+} satisfies Styles;

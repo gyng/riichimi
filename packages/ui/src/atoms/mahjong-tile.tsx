@@ -1,5 +1,6 @@
 import type { TileId } from "@riichimi/score-core";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, Text, View } from "../primitives";
+import type { Styles } from "../primitives";
 
 import { color, radius } from "../tokens/theme";
 import { tileArt } from "./tile-art";
@@ -82,7 +83,7 @@ export function MahjongTile({
     <>
       <Art height="100%" preserveAspectRatio="xMidYMid meet" width="100%" />
       {corner === null ? null : (
-        <View accessibilityElementsHidden style={styles.corner}>
+        <View aria-hidden style={styles.corner}>
           <Text style={styles.cornerLabel}>{corner}</Text>
         </View>
       )}
@@ -92,7 +93,7 @@ export function MahjongTile({
   if (onPress === undefined) {
     return (
       <View
-        accessibilityLabel={tileAccessibleName(tile)}
+        aria-label={tileAccessibleName(tile)}
         style={[styles.tile, fill && styles.fill, selected && styles.selected]}
       >
         {content}
@@ -102,9 +103,8 @@ export function MahjongTile({
 
   return (
     <Pressable
-      accessibilityLabel={tileAccessibleName(tile)}
-      accessibilityRole="button"
-      accessibilityState={{ disabled, selected }}
+      aria-label={tileAccessibleName(tile)}
+      aria-pressed={selected}
       disabled={disabled}
       onPress={onPress}
       style={({ pressed }) => [
@@ -120,7 +120,7 @@ export function MahjongTile({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   corner: {
     backgroundColor: "rgba(255,253,247,0.9)",
     borderRadius: 3,
@@ -158,9 +158,8 @@ const styles = StyleSheet.create({
     // min-only rule let it expand to full size wherever nothing else constrained
     // it. Height follows from the aspect ratio.
     width: 38,
-    shadowColor: color.ink,
-    shadowOffset: { height: 2, width: 0 },
-    shadowOpacity: 0.16,
-    shadowRadius: 0,
+    // A hard, offset edge rather than a blur — a tile sitting on the table, not
+    // floating over it. `color.ink` at 16%.
+    boxShadow: "0 2px 0 rgba(23, 25, 22, 0.16)",
   },
-});
+} satisfies Styles;

@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "../primitives";
+import type { Styles } from "../primitives";
 
 import { ActionButton } from "../atoms/action-button";
 import { color, radius, space } from "../tokens/theme";
@@ -23,12 +24,12 @@ export function MethodCard({
   return (
     <View style={[styles.card, primary && styles.primaryCard]}>
       <View style={styles.headingRow}>
-        <Text accessibilityElementsHidden style={[styles.index, primary && styles.primaryIndex]}>
+        <Text aria-hidden style={[styles.index, primary && styles.primaryIndex]}>
           {index}
         </Text>
         <View style={styles.rule} />
       </View>
-      <Text accessibilityRole="header" style={[styles.title, primary && styles.primaryTitle]}>
+      <Text role="heading" style={[styles.title, primary && styles.primaryTitle]}>
         {title}
       </Text>
       <Text style={[styles.body, primary && styles.primaryBody]}>{body}</Text>
@@ -41,7 +42,7 @@ export function MethodCard({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   body: {
     color: color.inkMuted,
     flexGrow: 1,
@@ -98,4 +99,4 @@ const styles = StyleSheet.create({
     lineHeight: 34,
     marginBottom: space.x3,
   },
-});
+} satisfies Styles;

@@ -1,3 +1,21 @@
+export {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  useWindowDimensions,
+  View,
+} from "./primitives";
+export type {
+  PressableProps,
+  PressableState,
+  Style,
+  StyleProp,
+  Styles,
+  ViewProps,
+} from "./primitives";
 export { ActionButton } from "./atoms/action-button";
 export { MahjongTile, tileAccessibleName } from "./atoms/mahjong-tile";
 export { TileDisplayProvider, useTileDisplay } from "./atoms/tile-display-context";

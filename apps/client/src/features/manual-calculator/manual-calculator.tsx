@@ -31,28 +31,22 @@ import type {
 import {
   ActionButton,
   CounterControl,
+  Image,
   MahjongTile,
+  Pressable,
+  ScrollView,
   SegmentedControl,
+  Text,
+  View,
   color,
   space,
   tileAccessibleName,
+  useWindowDimensions,
 } from "@riichimi/ui";
+import type { StyleProp, Styles } from "@riichimi/ui";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import {
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from "react-native";
-import type { StyleProp, ViewStyle } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-
-import { bodyEdges } from "../../components/screen-insets";
 
 import { speech } from "../../infrastructure/speech";
 import { useAnnouncer } from "../../state/announcer-context";
@@ -223,12 +217,12 @@ function Section({
 }: {
   readonly children: ReactNode;
   readonly description?: string | undefined;
-  readonly style?: StyleProp<ViewStyle>;
+  readonly style?: StyleProp;
   readonly title: string;
 }) {
   return (
     <View style={[styles.section, style]}>
-      <Text accessibilityRole="header" style={styles.sectionTitle}>
+      <Text role="heading" style={styles.sectionTitle}>
         {title}
       </Text>
       {description === undefined ? null : (
@@ -814,16 +808,15 @@ export function ManualCalculator({
   ]);
 
   return (
-    <SafeAreaView edges={bodyEdges} style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+    <View style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.topBar}>
-          <Text accessibilityRole="header" style={styles.compactTitle}>
+          <Text role="heading" style={styles.compactTitle}>
             {t("Score a hand")}
           </Text>
           <Pressable
-            accessibilityLabel="Scoring rules setup"
-            accessibilityRole="link"
-            hitSlop={16}
+            aria-label="Scoring rules setup"
+            role="link"
             onPress={() => router.push("/settings")}
             style={styles.rulesChip}
           >
@@ -851,9 +844,8 @@ export function ManualCalculator({
               {t("CAPTURE REFERENCE \u00b7 KEPT ON THIS DEVICE")}
             </Text>
             <Image
-              accessibilityLabel="Captured hand reference"
-              resizeMode="contain"
-              source={{ uri: referencePhoto }}
+              alt="Captured hand reference"
+              src={referencePhoto}
               style={styles.referenceImage}
             />
             <Text style={styles.referenceNote}>{t("Not uploaded.")}</Text>
@@ -917,7 +909,7 @@ export function ManualCalculator({
             description={`${concealedTiles.length}/${concealedCapacity} · ${t("tap to mark the winner")}`}
             title={t("Hand")}
           >
-            <View accessibilityLabel="Concealed hand" style={styles.handRow}>
+            <View aria-label="Concealed hand" style={styles.handRow}>
               {concealedTiles.length === 0 ? (
                 <View style={styles.emptyHand}>
                   <Text style={styles.empty}>{t("Add tiles below.")}</Text>
@@ -939,8 +931,7 @@ export function ManualCalculator({
                       tile={tile}
                     />
                     <Pressable
-                      accessibilityLabel={`Remove ${tileAccessibleName(tile)} from hand`}
-                      accessibilityRole="button"
+                      aria-label={`Remove ${tileAccessibleName(tile)} from hand`}
                       onPress={() => removeConcealed(index)}
                       style={styles.removeButton}
                     >
@@ -960,8 +951,7 @@ export function ManualCalculator({
                         {meld.open ? "OPEN" : "CLOSED"} {meld.kind.toUpperCase()}
                       </Text>
                       <Pressable
-                        accessibilityLabel={`Remove ${meld.kind}`}
-                        accessibilityRole="button"
+                        aria-label={`Remove ${meld.kind}`}
                         onPress={() => removeMeld(index)}
                       >
                         <Text style={styles.removeLink}>{t("Remove")}</Text>
@@ -983,8 +973,7 @@ export function ManualCalculator({
               ) : null}
               {doraIndicators.map((tile, index) => (
                 <Pressable
-                  accessibilityLabel={`Remove dora indicator ${tileAccessibleName(tile)}`}
-                  accessibilityRole="button"
+                  aria-label={`Remove dora indicator ${tileAccessibleName(tile)}`}
                   key={`${tile}-${index}`}
                   onPress={() => {
                     setDoraIndicators((tiles) =>
@@ -1006,8 +995,7 @@ export function ManualCalculator({
                   ) : null}
                   {uraDoraIndicators.map((tile, index) => (
                     <Pressable
-                      accessibilityLabel={`Remove ura-dora indicator ${tileAccessibleName(tile)}`}
-                      accessibilityRole="button"
+                      aria-label={`Remove ura-dora indicator ${tileAccessibleName(tile)}`}
                       key={`${tile}-${index}`}
                       onPress={() => {
                         setUraDoraIndicators((tiles) =>
@@ -1029,14 +1017,13 @@ export function ManualCalculator({
             style={wideLayout ? styles.column : undefined}
             title={t("Tiles")}
           >
-            <View accessibilityLabel="Tile destination" style={styles.chipRow}>
+            <View aria-label="Tile destination" style={styles.chipRow}>
               {pickerOptions.map((option) => {
                 const selected = pickerTarget === option.value;
                 const closedOnlyDisabled = option.value === "ura" && riichi === "none";
                 return (
                   <Pressable
-                    accessibilityRole="radio"
-                    accessibilityState={{ checked: selected, disabled: closedOnlyDisabled }}
+                    role="radio"
                     disabled={closedOnlyDisabled}
                     key={option.value}
                     onPress={() => setPickerTarget(option.value)}
@@ -1059,7 +1046,7 @@ export function ManualCalculator({
               showRedFives={activeRules.redFives}
             />
             {inventory.issues.length === 0 ? null : (
-              <Text accessibilityLiveRegion="polite" style={styles.warning}>
+              <Text aria-live="polite" style={styles.warning}>
                 {t("A tile cannot appear more than four times.")}
               </Text>
             )}
@@ -1080,9 +1067,7 @@ export function ManualCalculator({
           </View>
 
           <Pressable
-            accessibilityLabel="Round and seat details"
-            accessibilityRole="button"
-            accessibilityState={{ expanded: showContextDetail }}
+            aria-label="Round and seat details"
             aria-expanded={showContextDetail}
             onPress={() => setShowContextDetail((visible) => !visible)}
             style={styles.disclosure}
@@ -1150,9 +1135,8 @@ export function ManualCalculator({
 
               {riichi === "none" ? null : (
                 <Pressable
-                  accessibilityRole="checkbox"
+                  role="checkbox"
                   aria-checked={ippatsu}
-                  accessibilityState={{ checked: ippatsu }}
                   onPress={() => {
                     setIppatsu((value) => !value);
                     resetResult();
@@ -1237,12 +1221,12 @@ export function ManualCalculator({
           </View>
         ) : null}
         {editMode && editError !== null && editReview === null ? (
-          <Text accessibilityLiveRegion="polite" style={styles.warning}>
+          <Text aria-live="polite" style={styles.warning}>
             {describeEditError(editError)}
           </Text>
         ) : null}
         {editMode && editReview !== null ? (
-          <View accessibilityLiveRegion="polite" style={styles.editConfirm}>
+          <View aria-live="polite" style={styles.editConfirm}>
             <Text style={styles.editConfirmTitle}>{t("Confirm this correction")}</Text>
             <Text style={styles.editConfirmSubhead}>{t("Final score changes")}</Text>
             {editReview.scoreChanges.map((change, index) => (
@@ -1288,16 +1272,16 @@ export function ManualCalculator({
         ) : null}
       </ScrollView>
       {celebration === null ? null : (
-        <View key={celebration.key} pointerEvents="none" style={styles.celebrationLayer}>
+        <View key={celebration.key} style={styles.celebrationLayer}>
           <CelebrationOverlay celebration={celebration.value} onDone={() => setCelebration(null)} />
           <CelebrationBanner celebration={celebration.value} />
         </View>
       )}
-    </SafeAreaView>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   column: { flexBasis: 0, flexGrow: 1, minWidth: 320 },
   columns: { alignItems: "flex-start", flexDirection: "row", gap: space.x3 },
   disclosure: {
@@ -1504,7 +1488,16 @@ const styles = StyleSheet.create({
   },
   removeLink: { color: color.accent, fontFamily: "serif", fontSize: 12, fontWeight: "700" },
   removeText: { color: color.white, fontSize: 15, lineHeight: 17 },
-  celebrationLayer: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0, zIndex: 40 },
+  // Decorative, so it must never intercept a press meant for the score beneath.
+  celebrationLayer: {
+    bottom: 0,
+    left: 0,
+    pointerEvents: "none",
+    position: "absolute",
+    right: 0,
+    top: 0,
+    zIndex: 40,
+  },
   rulesChip: { justifyContent: "center", minHeight: 44, paddingVertical: 8 },
   rulesLabel: {
     color: color.inkMuted,
@@ -1553,6 +1546,8 @@ const styles = StyleSheet.create({
     backgroundColor: color.ink,
     borderRadius: 10,
     marginVertical: space.x3,
+    // The whole captured frame, uncropped — it is a reference for the hand below.
+    objectFit: "contain",
     width: "100%",
   },
   referenceNote: {
@@ -1698,4 +1693,4 @@ const styles = StyleSheet.create({
   },
   topBar: { alignItems: "center", flexDirection: "row", justifyContent: "space-between" },
   warning: { color: color.accent, fontFamily: "serif", fontSize: 14, marginTop: space.x3 },
-});
+} satisfies Styles;

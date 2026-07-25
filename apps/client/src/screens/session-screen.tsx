@@ -14,22 +14,20 @@ import type {
   SessionEditCommand,
   SessionEditError,
 } from "@riichimi/session-core";
-import { ActionButton, color, space } from "@riichimi/ui";
-import { router } from "expo-router";
-import { useState } from "react";
 import {
+  ActionButton,
   ActivityIndicator,
-  Platform,
   Pressable,
   ScrollView,
-  StyleSheet,
   Text,
   TextInput,
   View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-
-import { bodyEdges } from "../components/screen-insets";
+  color,
+  space,
+} from "@riichimi/ui";
+import type { Styles } from "@riichimi/ui";
+import { router } from "expo-router";
+import { useState } from "react";
 
 import { createRoundCommandMetadata, useSession } from "../state/session-context";
 import { RulesProfileControl } from "../features/rules/rules-profile-control";
@@ -73,25 +71,29 @@ export function SessionScreen() {
 
   if (session.loading) {
     return (
-      <SafeAreaView edges={bodyEdges} style={styles.centered}>
+      <View style={styles.centered}>
         <ActivityIndicator color={color.accent} />
         <Text style={styles.muted}>{t("Opening the local table…")}</Text>
-      </SafeAreaView>
+      </View>
     );
   }
 
   if (session.state === null) {
     return (
-      <SafeAreaView edges={bodyEdges} style={styles.safeArea}>
+      <View style={styles.safeArea}>
         <ScrollView contentContainerStyle={styles.content}>
           <Text style={styles.kicker}>{t("LOCAL TABLE SESSION")}</Text>
-          <Text accessibilityRole="header" style={styles.title}>
+          <Text role="heading" style={styles.title}>
             {t("Let the round remember itself.")}
           </Text>
           <Text style={styles.intro}>{t("Start at 25,000. Everything carries over.")}</Text>
-          <RulesProfileControl />
+          {/* The rules card is sized as a row item; a column would turn its
+              320px width floor into a 320px height. */}
+          <View style={styles.rulesRow}>
+            <RulesProfileControl />
+          </View>
           <View style={styles.panel}>
-            <Text accessibilityRole="header" style={styles.panelTitle}>
+            <Text role="heading" style={styles.panelTitle}>
               {t("Four players")}
             </Text>
             <View style={styles.nameGrid}>
@@ -101,7 +103,7 @@ export function SessionScreen() {
                     PLAYER {index + 1} · {seatNames[index]}
                   </Text>
                   <TextInput
-                    accessibilityLabel={`Player ${index + 1} name`}
+                    aria-label={`Player ${index + 1} name`}
                     autoCapitalize="words"
                     maxLength={24}
                     onChangeText={(value) =>
@@ -109,7 +111,7 @@ export function SessionScreen() {
                         current.map((item, itemIndex) => (itemIndex === index ? value : item)),
                       )
                     }
-                    selectTextOnFocus
+                    onFocus={(event) => event.currentTarget.select()}
                     style={styles.input}
                     value={name}
                   />
@@ -129,7 +131,7 @@ export function SessionScreen() {
             <Text style={styles.error}>{session.storageError}</Text>
           )}
         </ScrollView>
-      </SafeAreaView>
+      </View>
     );
   }
 
@@ -284,7 +286,9 @@ export function SessionScreen() {
   }
 
   function copySummary() {
-    if (Platform.OS === "web" && typeof navigator !== "undefined" && navigator.clipboard) {
+    // Absent over plain HTTP and in older browsers, where the summary above is
+    // still selectable by hand.
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
       void navigator.clipboard.writeText(summaryText).then(() => setCopied(true));
     }
   }
@@ -294,16 +298,16 @@ export function SessionScreen() {
   }
 
   return (
-    <SafeAreaView edges={bodyEdges} style={styles.safeArea}>
+    <View style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.topBar}>
           <Text style={styles.rules}>{tableRules.label.toUpperCase()} · PINNED</Text>
         </View>
-        <Text accessibilityRole="header" style={styles.roundTitle}>
+        <Text role="heading" style={styles.roundTitle}>
           {windNames[table.roundWind]} {table.handNumber}
         </Text>
         <Text
-          accessibilityLabel={`${table.honba} honba, ${table.riichiSticks} riichi ${table.riichiSticks === 1 ? "stick" : "sticks"}`}
+          aria-label={`${table.honba} honba, ${table.riichiSticks} riichi ${table.riichiSticks === 1 ? "stick" : "sticks"}`}
           style={styles.roundMeta}
         >
           {table.honba} {t("honba")} · {table.riichiSticks} {t("riichi sticks")}
@@ -337,9 +341,7 @@ export function SessionScreen() {
                   <Text style={styles.riichiDeclared}>{t("Riichi declared")}</Text>
                 ) : (
                   <Pressable
-                    accessibilityLabel={t("Declare riichi")}
-                    accessibilityRole="button"
-                    accessibilityState={{ disabled: player.score < 1000 }}
+                    aria-label={t("Declare riichi")}
                     disabled={player.score < 1000}
                     onPress={() => session.declarePlayerRiichi(index)}
                     style={({ pressed }) => [
@@ -357,9 +359,7 @@ export function SessionScreen() {
         </View>
 
         <Pressable
-          accessibilityLabel={t("Exhaustive draw")}
-          accessibilityRole="button"
-          accessibilityState={{ expanded: showDraw }}
+          aria-label={t("Exhaustive draw")}
           aria-expanded={showDraw}
           onPress={() => setShowDraw((visible) => !visible)}
           style={styles.disclosure}
@@ -375,9 +375,8 @@ export function SessionScreen() {
                 const selected = tenpai.includes(index);
                 return (
                   <Pressable
-                    accessibilityRole="checkbox"
+                    role="checkbox"
                     aria-checked={selected}
-                    accessibilityState={{ checked: selected }}
                     key={player.id}
                     onPress={() => toggleTenpai(index)}
                     style={[styles.tenpaiChip, selected && styles.selectedChip]}
@@ -408,7 +407,7 @@ export function SessionScreen() {
 
         <View style={styles.panel}>
           <View style={styles.historyHeader}>
-            <Text accessibilityRole="header" style={styles.panelTitle}>
+            <Text role="heading" style={styles.panelTitle}>
               {t("Round history")}
             </Text>
             <ActionButton
@@ -422,7 +421,7 @@ export function SessionScreen() {
             />
           </View>
           {editStatus === null ? null : (
-            <Text accessibilityLiveRegion="polite" style={styles.editStatus}>
+            <Text aria-live="polite" style={styles.editStatus}>
               {editStatus}
             </Text>
           )}
@@ -471,7 +470,7 @@ export function SessionScreen() {
                   </View>
                   {editing ? (
                     <View style={styles.editor}>
-                      <Text accessibilityRole="header" style={styles.editorTitle}>
+                      <Text role="heading" style={styles.editorTitle}>
                         Editing {roundLabel(record)}
                       </Text>
                       {record.kind === "draw" ? (
@@ -482,10 +481,9 @@ export function SessionScreen() {
                               const selected = draftTenpai.includes(index);
                               return (
                                 <Pressable
-                                  accessibilityLabel={`${player.name} tenpai`}
-                                  accessibilityRole="checkbox"
+                                  aria-label={`${player.name} tenpai`}
+                                  role="checkbox"
                                   aria-checked={selected}
-                                  accessibilityState={{ checked: selected }}
                                   key={player.id}
                                   onPress={() =>
                                     setDraftTenpai((current) => toggle(current, index))
@@ -507,10 +505,9 @@ export function SessionScreen() {
                               const selected = draftRiichi.includes(index);
                               return (
                                 <Pressable
-                                  accessibilityLabel={`${player.name} riichi`}
-                                  accessibilityRole="checkbox"
+                                  aria-label={`${player.name} riichi`}
+                                  role="checkbox"
                                   aria-checked={selected}
-                                  accessibilityState={{ checked: selected }}
                                   key={player.id}
                                   onPress={() =>
                                     setDraftRiichi((current) => toggle(current, index))
@@ -559,10 +556,9 @@ export function SessionScreen() {
                               const selected = draftWinner === index;
                               return (
                                 <Pressable
-                                  accessibilityLabel={`Winner ${player.name}`}
-                                  accessibilityRole="radio"
+                                  aria-label={`Winner ${player.name}`}
+                                  role="radio"
                                   aria-checked={selected}
-                                  accessibilityState={{ checked: selected }}
                                   key={player.id}
                                   onPress={() => selectWinner(index)}
                                   style={[styles.tenpaiChip, selected && styles.selectedChip]}
@@ -587,10 +583,9 @@ export function SessionScreen() {
                                   const selected = draftDiscarder === index;
                                   return (
                                     <Pressable
-                                      accessibilityLabel={`Discarder ${player.name}`}
-                                      accessibilityRole="radio"
+                                      aria-label={`Discarder ${player.name}`}
+                                      role="radio"
                                       aria-checked={selected}
-                                      accessibilityState={{ checked: selected }}
                                       key={player.id}
                                       onPress={() => setDraftDiscarder(index)}
                                       style={[styles.tenpaiChip, selected && styles.selectedChip]}
@@ -652,12 +647,12 @@ export function SessionScreen() {
                         </>
                       )}
                       {editError !== null && pendingReview === null ? (
-                        <Text accessibilityLiveRegion="polite" style={styles.error}>
+                        <Text aria-live="polite" style={styles.error}>
                           {describeEditError(editError)}
                         </Text>
                       ) : null}
                       {pendingReview !== null ? (
-                        <View accessibilityLiveRegion="polite" style={styles.editConfirm}>
+                        <View aria-live="polite" style={styles.editConfirm}>
                           <Text style={styles.endTitle}>{t("Confirm this correction")}</Text>
                           <Text style={styles.confirmSubhead}>{t("Final score changes")}</Text>
                           {pendingReview.scoreChanges.map((change, index) => (
@@ -709,7 +704,7 @@ export function SessionScreen() {
 
         <View style={styles.panel}>
           <View style={styles.historyHeader}>
-            <Text accessibilityRole="header" style={styles.panelTitle}>
+            <Text role="heading" style={styles.panelTitle}>
               {t("Game summary")}
             </Text>
             <ActionButton
@@ -733,14 +728,10 @@ export function SessionScreen() {
                   <Text style={styles.standingNet}>{signedPoints(entry.net)}</Text>
                 </View>
               ))}
-              <Text
-                accessibilityLabel="Shareable game summary"
-                selectable
-                style={styles.summaryText}
-              >
+              <Text aria-label="Shareable game summary" style={styles.summaryText}>
                 {summaryText}
               </Text>
-              {Platform.OS === "web" ? (
+              {typeof navigator !== "undefined" && navigator.clipboard ? (
                 <View style={styles.primaryAction}>
                   <ActionButton
                     label={copied ? "Copied" : "Copy summary"}
@@ -756,7 +747,7 @@ export function SessionScreen() {
         </View>
 
         {session.storageError === null ? null : (
-          <Text accessibilityLiveRegion="polite" style={styles.error}>
+          <Text aria-live="polite" style={styles.error}>
             {session.storageError}
           </Text>
         )}
@@ -777,20 +768,16 @@ export function SessionScreen() {
             </View>
           </View>
         ) : (
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => setConfirmEnd(true)}
-            style={styles.endLink}
-          >
+          <Pressable onPress={() => setConfirmEnd(true)} style={styles.endLink}>
             <Text style={styles.endLinkText}>{t("End this table")}</Text>
           </Pressable>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   // The per-hand action, first and unmissable.
   recordBar: {
     alignItems: "center",
@@ -1056,6 +1043,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     letterSpacing: 1,
   },
+  rulesRow: { flexDirection: "row", flexWrap: "wrap" },
   safeArea: { backgroundColor: color.canvas, flex: 1 },
   selectedChip: { backgroundColor: color.ink, borderColor: color.ink },
   selectedChipText: { color: color.white },
@@ -1100,6 +1088,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 18,
     padding: space.x3,
+    // Where no clipboard is available, selecting this block by hand is the way
+    // the summary leaves the app.
+    userSelect: "text",
   },
   tenpaiChip: {
     backgroundColor: color.canvas,
@@ -1124,4 +1115,4 @@ const styles = StyleSheet.create({
     maxWidth: 700,
   },
   topBar: { alignItems: "center", flexDirection: "row", justifyContent: "space-between" },
-});
+} satisfies Styles;

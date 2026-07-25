@@ -1,17 +1,22 @@
-import { fireEvent, render, screen } from "@testing-library/react-native";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { router, usePathname } from "expo-router";
+
+import type * as LocaleStorage from "../src/infrastructure/locale-preference-storage";
 
 import { AppNavigationBar } from "../src/components/app-navigation-bar";
 import { LocaleProvider } from "../src/state/locale-context";
 
-jest.mock("expo-router", () => ({
-  router: { navigate: jest.fn() },
-  usePathname: jest.fn().mockReturnValue("/"),
+vi.mock("expo-router", () => ({
+  router: { navigate: vi.fn<typeof router.navigate>() },
+  usePathname: vi.fn<typeof usePathname>().mockReturnValue("/"),
 }));
 
-jest.mock("../src/infrastructure/locale-preference-storage", () => ({
-  loadLocalePreference: jest.fn().mockResolvedValue("en"),
-  saveLocalePreference: jest.fn().mockResolvedValue(undefined),
+vi.mock("../src/infrastructure/locale-preference-storage", () => ({
+  loadLocalePreference: vi.fn<typeof LocaleStorage.loadLocalePreference>().mockResolvedValue("en"),
+  saveLocalePreference: vi
+    .fn<typeof LocaleStorage.saveLocalePreference>()
+    .mockResolvedValue(undefined),
 }));
 
 function bar() {
@@ -23,48 +28,48 @@ function bar() {
 }
 
 beforeEach(() => {
-  jest.mocked(usePathname).mockReturnValue("/");
+  vi.mocked(usePathname).mockReturnValue("/");
 });
 
 describe("AppNavigationBar", () => {
   it("offers every primary destination plus setup", async () => {
-    await bar();
+    bar();
 
     for (const destination of ["Scan", "Manual", "Table", "History", "Setup"]) {
-      expect(screen.getByRole("link", { name: destination })).toBeOnTheScreen();
+      expect(screen.getByRole("link", { name: destination })).toBeInTheDocument();
     }
   });
 
   it("marks the destination matching the current route", async () => {
-    jest.mocked(usePathname).mockReturnValue("/session");
-    await bar();
+    vi.mocked(usePathname).mockReturnValue("/session");
+    bar();
 
-    expect(screen.getByRole("link", { name: "Table", selected: true })).toBeOnTheScreen();
-    expect(screen.getByRole("link", { name: "Scan", selected: false })).toBeOnTheScreen();
+    expect(screen.getByRole("link", { name: "Table", current: "page" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Scan", current: false })).toBeInTheDocument();
   });
 
   it("marks setup as active on its own route without claiming a play destination", async () => {
-    jest.mocked(usePathname).mockReturnValue("/settings");
-    await bar();
+    vi.mocked(usePathname).mockReturnValue("/settings");
+    bar();
 
-    expect(screen.getByRole("link", { name: "Setup", selected: true })).toBeOnTheScreen();
-    expect(screen.getByRole("link", { name: "Manual", selected: false })).toBeOnTheScreen();
+    expect(screen.getByRole("link", { name: "Setup", current: "page" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Manual", current: false })).toBeInTheDocument();
   });
 
   it("navigates to the destination that was pressed", async () => {
-    await bar();
+    bar();
 
-    await fireEvent.press(screen.getByRole("link", { name: "Scan" }));
+    fireEvent.click(screen.getByRole("link", { name: "Scan" }));
     expect(router.navigate).toHaveBeenCalledWith("/scan");
 
-    await fireEvent.press(screen.getByRole("link", { name: "Setup" }));
+    fireEvent.click(screen.getByRole("link", { name: "Setup" }));
     expect(router.navigate).toHaveBeenCalledWith("/settings");
   });
 
   it("returns home from the brand mark", async () => {
-    await bar();
+    bar();
 
-    await fireEvent.press(screen.getByRole("link", { name: "RIICHIMI home" }));
+    fireEvent.click(screen.getByRole("link", { name: "RIICHIMI home" }));
     expect(router.navigate).toHaveBeenCalledWith("/");
   });
 });

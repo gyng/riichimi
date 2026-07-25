@@ -12,7 +12,7 @@ Most tests belong here. Cover domain invariants, scoring decisions, rounding bou
 
 ### Component and use-case integration tests
 
-Use Jest Expo and React Native Testing Library for meaningful interactions through accessible roles and names. Use real use cases with in-memory adapters where practical. Cover correction, permission denial, context entry, retry, and result explanation.
+Use Vitest with jsdom and React Testing Library for meaningful interactions through accessible roles and names. These run through the app's own Vite config, so a screen resolves its shims and tile art in a test exactly as it does in the browser. Use real use cases with in-memory adapters where practical. Cover correction, permission denial, context entry, retry, and result explanation.
 
 ### End-to-end tests
 
@@ -55,9 +55,16 @@ Every defect fix starts with the smallest reproducing test at the lowest suitabl
 ## What the gate enforces
 
 `npm run check` runs formatting, linting, **type checking**, the domain suite with
-coverage floors, and the component suite with its own floors. Type checking was
-added after 37 module-resolution errors survived a green run: oxlint's type-aware
-rules are not a substitute for `tsc`, and the two now both run.
+coverage floors, and the component suite. Type checking was added after 37
+module-resolution errors survived a green run: oxlint's type-aware rules are not a
+substitute for `tsc`, and the two now both run.
+
+The client's own coverage floors live in `apps/client/vite.config.ts` but are not
+part of the gate: `test:ui` runs without `--coverage`, so they only apply when
+asked for explicitly (`npm run test --workspace @riichimi/client -- --coverage`).
+That was true of the Jest configuration they were ported from, and is recorded
+here rather than quietly fixed — turning them on is a deliberate decision about
+which floors are right, not a side effect of a runner change.
 
 ## Coverage floors, and what is deliberately not chased
 
@@ -80,7 +87,7 @@ The client's floors are lower and split by area on purpose:
 
 - **Components, i18n, recognition** are held high. Behaviour lives there.
 - **Platform adapters and the WebMCP bridge** are held to the global ratchet.
-  They wrap ONNX, Expo storage, and the browser's model-context API, so a unit
+  They wrap ONNX, browser storage, and the model-context API, so a unit
   test would mostly assert that a mock was called. The browser dogfood drives all
   three for real — the WebMCP journey executes the actual tools, and the scan
   journey runs the actual model — which is worth more than a mocked line count.

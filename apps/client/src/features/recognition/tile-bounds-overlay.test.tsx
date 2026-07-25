@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react-native";
+import { describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
 
 import { TileBoundsOverlay } from "./tile-bounds-overlay";
 import type { TileBoundsBox } from "./tile-bounds-overlay";
@@ -22,23 +23,29 @@ const boxes: readonly TileBoundsBox[] = [
 
 describe("TileBoundsOverlay", () => {
   it("offers every detection as a box that can be selected from the photo", async () => {
-    const onSelect = jest.fn();
-    await render(<TileBoundsOverlay boxes={boxes} onSelect={onSelect} selectedId="hand-0" />);
+    const onSelect = vi.fn<(id: string) => void>();
+    render(<TileBoundsOverlay boxes={boxes} onSelect={onSelect} selectedId="hand-0" />);
 
     // Each box carries the tile's accessible name and its selection state.
-    expect(screen.getByRole("button", { name: "Hand tile 1", selected: true })).toBeOnTheScreen();
-    const flagged = screen.getByRole("button", { name: "Hand tile 2", selected: false });
+    expect(screen.getByRole("button", { name: "Hand tile 1", pressed: true })).toBeInTheDocument();
+    const flagged = screen.getByRole("button", { name: "Hand tile 2", pressed: false });
 
-    await fireEvent.press(flagged);
+    fireEvent.click(flagged);
     expect(onSelect).toHaveBeenCalledWith("hand-1");
   });
 
   it("marks a flagged box so review is not signalled by colour alone", async () => {
-    await render(<TileBoundsOverlay boxes={boxes} onSelect={jest.fn()} selectedId={null} />);
+    render(
+      <TileBoundsOverlay
+        boxes={boxes}
+        onSelect={vi.fn<(id: string) => void>()}
+        selectedId={null}
+      />,
+    );
 
     // The flagged box marks its badge with a warning shape, not colour alone;
     // the confident one shows a plain number.
-    expect(screen.getByText("▲2")).toBeOnTheScreen();
-    expect(screen.getByText("1")).toBeOnTheScreen();
+    expect(screen.getByText("▲2")).toBeInTheDocument();
+    expect(screen.getByText("1")).toBeInTheDocument();
   });
 });

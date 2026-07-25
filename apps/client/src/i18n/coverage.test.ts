@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
@@ -21,7 +22,10 @@ function sourceFiles(directory: string): string[] {
  * imperfect, so this looks only at the props that always render text and at
  * sentence-like literals, which is where untranslated copy actually hid.
  */
-const textProps = /\b(?:label|title|placeholder)=\{?"([^"]{4,})"/g;
+const textProps = /(?<![-\w])(?:label|title|placeholder)=\{?"([^"]{4,})"/g;
+// `aria-label` is deliberately out of scope, and the lookbehind above is what
+// keeps it out. Accessible names are still authored in English: a real gap, but a
+// separate one — closing it means catalog entries in every locale, not a regex.
 // JSX text sits between a tag close `>` or expression `}` on the left and a tag
 // open `<` or expression `{` on the right. Matching both sides — and allowing
 // curly quotes and ellipsis inside — closes the gaps where raw copy hid next to
@@ -137,6 +141,22 @@ describe("untranslated-copy scanner", () => {
     expect(findAll(">No camera on “this” device today<")).toContain(
       "No camera on “this” device today",
     );
+  });
+
+  it("reads a text prop but not the accessible name beside it", () => {
+    const findProps = (source: string): string[] => {
+      textProps.lastIndex = 0;
+      const found: string[] = [];
+      let match = textProps.exec(source);
+      while (match !== null) {
+        found.push(match[1] ?? "");
+        match = textProps.exec(source);
+      }
+      return found;
+    };
+
+    expect(findProps('label="Copy summary"')).toEqual(["Copy summary"]);
+    expect(findProps('aria-label="Shareable game summary"')).toEqual([]);
   });
 
   it("exempts a brand name only when it stands alone", () => {

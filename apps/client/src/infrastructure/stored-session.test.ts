@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import type { SessionState, TableState } from "@riichimi/session-core";
 import {
   applyDraw,

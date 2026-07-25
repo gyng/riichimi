@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { announcementLead, announcementTail, announcementText } from "./announcement-text";
 
 describe("announcementText", () => {

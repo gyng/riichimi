@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react-native";
+import { describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
 
 import type { RecognitionResult } from "@riichimi/vision";
 
@@ -6,8 +7,8 @@ import { RecognitionReviewPanel } from "./recognition-review-panel";
 
 describe("RecognitionReviewPanel", () => {
   it("turns a low-confidence proposal into an explicit reviewed correction", async () => {
-    const onChange = jest.fn();
-    await render(
+    const onChange = vi.fn<(result: RecognitionResult) => void>();
+    render(
       <RecognitionReviewPanel
         initialReviewCount={1}
         onChange={onChange}
@@ -38,10 +39,8 @@ describe("RecognitionReviewPanel", () => {
       />,
     );
 
-    expect(screen.getByText("1 tile needs confirmation")).toBeOnTheScreen();
-    await fireEvent.press(
-      screen.getByRole("button", { name: "Use 2 characters for selected tile" }),
-    );
+    expect(screen.getByText("1 tile needs confirmation")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Use 2 characters for selected tile" }));
 
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -53,8 +52,8 @@ describe("RecognitionReviewPanel", () => {
   });
 
   it("shows a called meld tile in review and keeps its meld role when corrected", async () => {
-    const onChange = jest.fn();
-    await render(
+    const onChange = vi.fn<(result: RecognitionResult) => void>();
+    render(
       <RecognitionReviewPanel
         initialReviewCount={1}
         onChange={onChange}
@@ -94,8 +93,8 @@ describe("RecognitionReviewPanel", () => {
     );
 
     // The low-confidence called-meld tile is flagged and reviewable.
-    expect(screen.getByText("1 tile needs confirmation")).toBeOnTheScreen();
-    await fireEvent.press(screen.getByRole("button", { name: "Use 3 circles for selected tile" }));
+    expect(screen.getByText("1 tile needs confirmation")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Use 3 circles for selected tile" }));
 
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -107,8 +106,8 @@ describe("RecognitionReviewPanel", () => {
   });
 
   it("folds a mis-read called set back into the concealed hand at review", async () => {
-    const onChange = jest.fn<void, [RecognitionResult]>();
-    await render(
+    const onChange = vi.fn<(result: RecognitionResult) => void>();
+    render(
       <RecognitionReviewPanel
         initialReviewCount={0}
         onChange={onChange}
@@ -145,8 +144,8 @@ describe("RecognitionReviewPanel", () => {
     );
 
     // The structure is surfaced for confirmation, not just each tile's identity.
-    expect(screen.getByText("1 concealed tile · 1 called set")).toBeOnTheScreen();
-    await fireEvent.press(
+    expect(screen.getByText("1 concealed tile · 1 called set")).toBeInTheDocument();
+    fireEvent.click(
       screen.getByRole("button", { name: "Called set 1 isn't a call — move to hand" }),
     );
 
@@ -164,10 +163,10 @@ describe("RecognitionReviewPanel", () => {
   });
 
   it("shows the concealed and called split for an ambiguous single-row capture", async () => {
-    await render(
+    render(
       <RecognitionReviewPanel
         initialReviewCount={0}
-        onChange={jest.fn()}
+        onChange={vi.fn<(result: RecognitionResult) => void>()}
         requireStructureConfirmation
         result={{
           detections: [
@@ -194,14 +193,14 @@ describe("RecognitionReviewPanel", () => {
     );
 
     // Even with no called set, the natural layout must have its split confirmed.
-    expect(screen.getByText("Add any missed called set in the calculator.")).toBeOnTheScreen();
+    expect(screen.getByText("Add any missed called set in the calculator.")).toBeInTheDocument();
     // The split is stated so the confirm action names what it is confirming.
-    expect(screen.getByText("1 concealed tile · 0 called sets")).toBeOnTheScreen();
+    expect(screen.getByText("1 concealed tile · 0 called sets")).toBeInTheDocument();
   });
 
   it("allows the winner to be reassigned without creating two winning tiles", async () => {
-    const onChange = jest.fn();
-    await render(
+    const onChange = vi.fn<(result: RecognitionResult) => void>();
+    render(
       <RecognitionReviewPanel
         initialReviewCount={0}
         onChange={onChange}
@@ -229,12 +228,12 @@ describe("RecognitionReviewPanel", () => {
       />,
     );
 
-    await fireEvent.press(
+    fireEvent.click(
       screen.getByRole("button", {
         name: "Hand tile 2, 2 characters, 99 percent confidence",
       }),
     );
-    await fireEvent.press(screen.getByRole("button", { name: "Mark as winning tile" }));
+    fireEvent.click(screen.getByRole("button", { name: "Mark as winning tile" }));
 
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -247,10 +246,10 @@ describe("RecognitionReviewPanel", () => {
   });
 
   it("keeps a deliberately selected confident tile selected rather than snapping to a flag", async () => {
-    await render(
+    render(
       <RecognitionReviewPanel
         initialReviewCount={1}
-        onChange={jest.fn()}
+        onChange={vi.fn<(result: RecognitionResult) => void>()}
         result={{
           detections: [
             {
@@ -276,16 +275,16 @@ describe("RecognitionReviewPanel", () => {
     );
 
     // The low-confidence winning tile is seeded as the selection.
-    expect(screen.getByText("SELECTED · Winning tile 1")).toBeOnTheScreen();
+    expect(screen.getByText("SELECTED · Winning tile 1")).toBeInTheDocument();
 
     // Choosing the confident tile from the list must stick, even though a flag
     // is still outstanding — inspecting any tile is the point of the overlay.
-    await fireEvent.press(
+    fireEvent.click(
       screen.getByRole("button", {
         name: "Hand tile 2, 2 characters, 99 percent confidence",
       }),
     );
 
-    expect(screen.getByText("SELECTED · Hand tile 2")).toBeOnTheScreen();
+    expect(screen.getByText("SELECTED · Hand tile 2")).toBeInTheDocument();
   });
 });

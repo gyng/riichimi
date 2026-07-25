@@ -183,11 +183,11 @@ Corrections may become active-learning examples only with explicit user consent.
 
 ## Technical architecture
 
-Use a TypeScript monorepo with a universal Expo client and platform-specific inference adapters.
+Use a TypeScript monorepo with a browser client and inference behind a port. (The original plan targeted Android, iOS, and the browser from one Expo codebase; only the browser was shipped, and the native stack was removed — see [ADR 0004](decisions/0004-web-only-dom-primitives.md).)
 
 ```text
 apps/
-  client/              Expo + React Native Web application
+  client/              Browser application on Vite, React, and the DOM
 packages/
   score-core/          Pure scoring and hand-validation engine
   rules/               Versioned ruleset profiles
@@ -201,24 +201,20 @@ ml/
 
 ### Client
 
-- Expo and React Native Web for a shared Android, iOS, and browser experience
-- Expo Camera for preview and capture across supported platforms
-- A development build for native inference integrations
+- React and the DOM, bundled by Vite, routed by `react-router`
+- `getUserMedia` into a `<video>` for preview and capture
 - Local-first state and history
 - Accessible tile picker usable without camera permissions
-
-[Expo Camera](https://docs.expo.dev/versions/latest/sdk/camera/) provides camera support for Android, iOS, and web.
 
 ### Model runtime
 
 - Export models to ONNX
-- Use `onnxruntime-web` with a WebAssembly fallback in browsers
-- Use `onnxruntime-react-native` in native builds
-- Keep preprocessing and postprocessing behavior identical across adapters
+- Use `onnxruntime-web` with a WebAssembly fallback
+- Keep preprocessing and postprocessing behavior in the domain, not the adapter
 - Quantize models after establishing an accuracy baseline
 - Bundle or securely cache versioned model artifacts
 
-ONNX Runtime provides a shared JavaScript API across its web and React Native packages: [ONNX Runtime for JavaScript](https://onnxruntime.ai/docs/get-started/with-javascript/).
+[ONNX Runtime for JavaScript](https://onnxruntime.ai/docs/get-started/with-javascript/) documents the runtime the adapter wraps.
 
 ### Backend
 

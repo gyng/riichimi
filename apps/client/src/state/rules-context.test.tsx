@@ -1,12 +1,15 @@
-import { fireEvent, render, screen } from "@testing-library/react-native";
-import { Text, Pressable } from "react-native";
+import { describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { Pressable, Text } from "@riichimi/ui";
 
 import * as rulesPreferenceStorage from "../infrastructure/rules-preference-storage";
 import { RulesProvider, useRules } from "./rules-context";
 
-jest.mock("../infrastructure/rules-preference-storage", () => ({
-  loadRulesPreference: jest.fn(),
-  saveRulesPreference: jest.fn().mockResolvedValue(undefined),
+vi.mock("../infrastructure/rules-preference-storage", () => ({
+  loadRulesPreference: vi.fn<typeof rulesPreferenceStorage.loadRulesPreference>(),
+  saveRulesPreference: vi
+    .fn<typeof rulesPreferenceStorage.saveRulesPreference>()
+    .mockResolvedValue(undefined),
 }));
 
 function Probe() {
@@ -14,10 +17,7 @@ function Probe() {
   return (
     <>
       <Text>{rules.activeRules.id}</Text>
-      <Pressable
-        accessibilityRole="button"
-        onPress={() => rules.selectProfile("wrc-2025-red-five-table")}
-      >
+      <Pressable onPress={() => rules.selectProfile("wrc-2025-red-five-table")}>
         <Text>Choose red fives</Text>
       </Pressable>
     </>
@@ -27,21 +27,21 @@ function Probe() {
 describe("RulesProvider", () => {
   it("does not overwrite a choice made while stored preferences are loading", async () => {
     let finishLoad: ((profileId: "wrc-2025") => void) | undefined;
-    jest.mocked(rulesPreferenceStorage.loadRulesPreference).mockReturnValueOnce(
+    vi.mocked(rulesPreferenceStorage.loadRulesPreference).mockReturnValueOnce(
       new Promise((resolve) => {
         finishLoad = resolve;
       }),
     );
-    await render(
+    render(
       <RulesProvider>
         <Probe />
       </RulesProvider>,
     );
 
-    await fireEvent.press(screen.getByRole("button", { name: "Choose red fives" }));
+    fireEvent.click(screen.getByRole("button", { name: "Choose red fives" }));
     finishLoad?.("wrc-2025");
 
-    expect(await screen.findByText("wrc-2025-red-five-table")).toBeOnTheScreen();
+    expect(await screen.findByText("wrc-2025-red-five-table")).toBeInTheDocument();
     expect(rulesPreferenceStorage.saveRulesPreference).toHaveBeenCalledWith(
       "wrc-2025-red-five-table",
     );

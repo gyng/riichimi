@@ -1,8 +1,6 @@
-import { color, space } from "@riichimi/ui";
-import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ScrollView, Text, View, color, space, useWindowDimensions } from "@riichimi/ui";
+import type { Styles } from "@riichimi/ui";
 
-import { bodyEdges } from "../components/screen-insets";
 import { AnnounceControl } from "../features/announcer/announce-control";
 import { LanguageControl } from "../features/i18n/language-control";
 import { RulesProfileControl } from "../features/rules/rules-profile-control";
@@ -24,9 +22,9 @@ export function SettingsScreen() {
   const wide = width >= 700;
 
   return (
-    <SafeAreaView edges={bodyEdges} style={styles.safeArea}>
+    <View style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text accessibilityRole="header" style={styles.title}>
+        <Text role="heading" style={styles.title}>
           {t("Setup")}
         </Text>
         <View style={[styles.section, wide && styles.sectionWide]}>
@@ -36,11 +34,11 @@ export function SettingsScreen() {
           <LanguageControl />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   content: {
     alignSelf: "center",
     maxWidth: 900,
@@ -58,4 +56,4 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     letterSpacing: -0.6,
   },
-});
+} satisfies Styles;

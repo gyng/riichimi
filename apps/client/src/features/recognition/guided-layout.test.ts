@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { locateGuidedTiles } from "./guided-layout";
 import type { PixelFrame } from "./guided-layout";
 

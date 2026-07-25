@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { parseRulesPreference } from "./rules-preference";
 
 describe("rules preference", () => {

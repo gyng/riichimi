@@ -1,9 +1,7 @@
-import { CalculatorLanding, color } from "@riichimi/ui";
+import { CalculatorLanding, ScrollView, View, color } from "@riichimi/ui";
+import type { Styles } from "@riichimi/ui";
 import { router } from "expo-router";
-import { ScrollView, StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
-import { bodyEdges } from "../components/screen-insets";
 import { useLocale } from "../state/locale-context";
 import { useSession } from "../state/session-context";
 import { useScoreHistory } from "../state/score-history-context";
@@ -13,7 +11,7 @@ export function HomeScreen() {
   const history = useScoreHistory();
   const { messages } = useLocale();
   return (
-    <SafeAreaView edges={bodyEdges} style={styles.safeArea}>
+    <View style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
         <CalculatorLanding
           copy={messages.home}
@@ -33,11 +31,11 @@ export function HomeScreen() {
           }}
         />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   content: {
     flexGrow: 1,
   },
@@ -45,4 +43,4 @@ const styles = StyleSheet.create({
     backgroundColor: color.canvas,
     flex: 1,
   },
-});
+} satisfies Styles;

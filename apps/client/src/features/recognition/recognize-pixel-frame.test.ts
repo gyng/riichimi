@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from "vitest";
 import { recognitionModelClasses } from "@riichimi/vision";
 
 import { recognizePixelFrame } from "./recognize-pixel-frame";
@@ -103,7 +104,7 @@ describe("recognizePixelFrame", () => {
   it("does not call the classifier when guided geometry is incomplete", async () => {
     const frame = guidedFrame();
     frame.data.fill(0);
-    const classifier = jest.fn<Promise<Float32Array>, []>();
+    const classifier = vi.fn<() => Promise<Float32Array>>();
 
     await expect(recognizePixelFrame(frame, classifier)).rejects.toThrow(/dora indicator below/);
     expect(classifier).not.toHaveBeenCalled();
@@ -112,7 +113,7 @@ describe("recognizePixelFrame", () => {
   it("rejects severe glare before layout or model initialization", async () => {
     const frame = guidedFrame();
     frame.data.fill(255, 0, Math.floor(frame.data.length * 0.2));
-    const classifier = jest.fn<Promise<Float32Array>, []>();
+    const classifier = vi.fn<() => Promise<Float32Array>>();
 
     await expect(recognizePixelFrame(frame, classifier)).rejects.toMatchObject({ code: "glare" });
     expect(classifier).not.toHaveBeenCalled();

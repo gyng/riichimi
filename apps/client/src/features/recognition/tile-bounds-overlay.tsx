@@ -1,6 +1,6 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import type { Styles } from "@riichimi/ui";
 import type { NormalizedBounds } from "@riichimi/vision";
-import { color } from "@riichimi/ui";
+import { Pressable, Text, View, color } from "@riichimi/ui";
 
 export interface TileBoundsBox {
   readonly id: string;
@@ -25,18 +25,13 @@ export interface TileBoundsOverlayProps {
 // the same correction.
 export function TileBoundsOverlay({ boxes, selectedId, onSelect }: TileBoundsOverlayProps) {
   return (
-    <View
-      accessibilityLabel="Recognized tiles on the photo"
-      pointerEvents="box-none"
-      style={styles.layer}
-    >
+    <View aria-label="Recognized tiles on the photo" style={styles.layer}>
       {boxes.map((box) => {
         const selected = box.id === selectedId;
         return (
           <Pressable
-            accessibilityLabel={box.label}
-            accessibilityRole="button"
-            accessibilityState={{ selected }}
+            aria-label={box.label}
+            aria-pressed={selected}
             key={box.id}
             onPress={() => onSelect(box.id)}
             style={[
@@ -67,7 +62,7 @@ export function TileBoundsOverlay({ boxes, selectedId, onSelect }: TileBoundsOve
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   badge: {
     backgroundColor: "rgba(23,25,22,0.72)",
     borderTopLeftRadius: 5,
@@ -83,6 +78,8 @@ const styles = StyleSheet.create({
   badgeSelected: { backgroundColor: color.ink },
   box: {
     alignItems: "flex-start",
+    // The layer itself is transparent to presses; each box takes its own back.
+    pointerEvents: "auto",
     borderColor: "rgba(255,253,247,0.85)",
     borderRadius: 5,
     borderWidth: 1.5,
@@ -91,5 +88,6 @@ const styles = StyleSheet.create({
   },
   boxReview: { borderColor: color.accent, borderWidth: 2 },
   boxSelected: { borderColor: color.white, borderWidth: 3 },
-  layer: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 },
-});
+  // Covers the photo without stealing the pinch and drag gestures over it.
+  layer: { bottom: 0, left: 0, pointerEvents: "none", position: "absolute", right: 0, top: 0 },
+} satisfies Styles;

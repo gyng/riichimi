@@ -1,60 +1,77 @@
-import { act, fireEvent, render, screen } from "@testing-library/react-native";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
-import { Image } from "react-native";
 
 import { ScanScreen } from "../src/screens/scan-screen";
 import { tileRecognition } from "../src/infrastructure/tile-recognition";
 
-jest.mock("expo-router", () => ({
-  router: { back: jest.fn(), push: jest.fn(), replace: jest.fn() },
+vi.mock("expo-router", () => ({
+  router: {
+    back: vi.fn<typeof router.back>(),
+    push: vi.fn<typeof router.push>(),
+    replace: vi.fn<typeof router.replace>(),
+  },
 }));
 
-jest.mock("expo-camera", () => ({
+vi.mock("expo-camera", () => ({
   CameraView: "CameraView",
-  useCameraPermissions: () => [{ canAskAgain: false, granted: false, status: "denied" }, jest.fn()],
+  useCameraPermissions: () => [
+    { canAskAgain: false, granted: false, status: "denied" },
+    vi.fn<() => Promise<void>>(),
+  ],
 }));
 
-jest.mock("expo-image-picker", () => ({
-  getPendingResultAsync: jest.fn().mockResolvedValue(null),
-  launchImageLibraryAsync: jest.fn().mockResolvedValue({ assets: null, canceled: true }),
+vi.mock("expo-image-picker", () => ({
+  getPendingResultAsync: vi.fn<typeof ImagePicker.getPendingResultAsync>().mockResolvedValue(null),
+  launchImageLibraryAsync: vi
+    .fn<typeof ImagePicker.launchImageLibraryAsync>()
+    .mockResolvedValue({ assets: null, canceled: true }),
 }));
 
-jest.mock("../src/infrastructure/tile-recognition", () => ({
-  tileRecognition: { recognize: jest.fn() },
+vi.mock("../src/infrastructure/tile-recognition", () => ({
+  tileRecognition: { recognize: vi.fn<typeof tileRecognition.recognize>() },
 }));
 
-// jest-expo's ImageLoader mock is incompatible with this React Native's promise
-// -style Image.getSize; give the screen a working size so the photo aspect (and
-// the box overlay it drives) can be measured in tests.
+// jsdom never decodes an image, so the off-screen probe the screen uses to learn
+// a photo's shape would never fire. Report a size to it so the photo aspect —
+// and the detection-box overlay it positions — can be measured in tests.
 beforeEach(() => {
-  jest.spyOn(Image, "getSize").mockImplementation((_uri, success) => {
-    success(300, 150);
+  Object.defineProperty(window.Image.prototype, "naturalWidth", { configurable: true, value: 300 });
+  Object.defineProperty(window.Image.prototype, "naturalHeight", {
+    configurable: true,
+    value: 150,
+  });
+  Object.defineProperty(window.Image.prototype, "src", {
+    configurable: true,
+    set() {
+      this.dispatchEvent(new Event("load"));
+    },
   });
 });
 
 describe("ScanScreen", () => {
   it("keeps the calculator usable when camera access is unavailable", async () => {
-    await render(<ScanScreen />);
+    render(<ScanScreen />);
 
-    expect(screen.getByText("Camera access is blocked")).toBeDisabled();
-    await fireEvent.press(screen.getByRole("button", { name: "Enter tiles manually" }));
+    expect(screen.getByRole("button", { name: "Camera access is blocked" })).toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: "Enter tiles manually" }));
 
     expect(router.replace).toHaveBeenCalledWith("/manual");
   });
 
   it("loads a bundled sample hand so the flow works without a camera", async () => {
-    await render(<ScanScreen />);
+    render(<ScanScreen />);
 
     await act(async () => {
-      await fireEvent.press(screen.getByRole("button", { name: "Try a sample hand" }));
+      fireEvent.click(screen.getByRole("button", { name: "Try a sample hand" }));
     });
 
-    expect(await screen.findByText("Photo ready for review")).toBeOnTheScreen();
+    expect(await screen.findByText("Photo ready for review")).toBeInTheDocument();
   });
 
   it("opens an existing photo and carries it into manual correction", async () => {
-    jest.mocked(ImagePicker.launchImageLibraryAsync).mockResolvedValueOnce({
+    vi.mocked(ImagePicker.launchImageLibraryAsync).mockResolvedValueOnce({
       assets: [
         {
           assetId: null,
@@ -72,14 +89,14 @@ describe("ScanScreen", () => {
       ],
       canceled: false,
     });
-    await render(<ScanScreen />);
+    render(<ScanScreen />);
 
     await act(async () => {
-      await fireEvent.press(screen.getByRole("button", { name: "Choose an existing photo" }));
+      fireEvent.click(screen.getByRole("button", { name: "Choose an existing photo" }));
     });
     expect(ImagePicker.launchImageLibraryAsync).toHaveBeenCalledTimes(1);
-    expect(await screen.findByText("Photo ready for review")).toBeOnTheScreen();
-    await fireEvent.press(screen.getByRole("button", { name: "Enter tiles from this photo" }));
+    expect(await screen.findByText("Photo ready for review")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Enter tiles from this photo" }));
 
     expect(router.push).toHaveBeenCalledWith({
       params: { referencePhoto: "file:///hand.jpg" },
@@ -88,7 +105,7 @@ describe("ScanScreen", () => {
   });
 
   it("recognizes a guided photo and opens a reviewable calculator draft", async () => {
-    jest.mocked(ImagePicker.launchImageLibraryAsync).mockResolvedValueOnce({
+    vi.mocked(ImagePicker.launchImageLibraryAsync).mockResolvedValueOnce({
       assets: [
         {
           assetId: null,
@@ -122,7 +139,7 @@ describe("ScanScreen", () => {
       "east",
       "east",
     ] as const;
-    jest.mocked(tileRecognition).recognize.mockResolvedValueOnce({
+    vi.mocked(tileRecognition).recognize.mockResolvedValueOnce({
       detections: [
         ...handTiles.map((tile, index) => ({
           alternatives: [{ confidence: 0.8, tile }],
@@ -143,21 +160,19 @@ describe("ScanScreen", () => {
       ],
       modelVersion: "guided-crop-v0-test",
     });
-    await render(<ScanScreen />);
+    render(<ScanScreen />);
 
     await act(async () => {
-      await fireEvent.press(screen.getByRole("button", { name: "Choose an existing photo" }));
+      fireEvent.click(screen.getByRole("button", { name: "Choose an existing photo" }));
     });
     // Reading starts on its own once a photo exists; no extra tap to begin.
-    expect(await screen.findByText("15 tiles read · 1 need review")).toBeOnTheScreen();
+    expect(await screen.findByText("15 tiles read · 1 need review")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Resolve 1 tile to continue" })).toBeDisabled();
-    await fireEvent.press(
-      screen.getByRole("button", { name: "Use 2 characters for selected tile" }),
-    );
-    expect(await screen.findByText("Recognition review complete")).toBeOnTheScreen();
+    fireEvent.click(screen.getByRole("button", { name: "Use 2 characters for selected tile" }));
+    expect(await screen.findByText("Recognition review complete")).toBeInTheDocument();
     // The natural (default) layout still confirms the concealed/called split, but
     // the confirmation is the continue action itself rather than an extra tap.
-    await fireEvent.press(screen.getByRole("button", { name: "Confirm split & continue" }));
+    fireEvent.click(screen.getByRole("button", { name: "Confirm split & continue" }));
 
     expect(router.push).toHaveBeenCalledWith({
       params: {

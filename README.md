@@ -29,9 +29,9 @@ npm install
 npm run web
 ```
 
-`npm start` opens the Expo menu; `npm run android` / `npm run ios` target a simulator.
-
-Native recognition uses ONNX Runtime React Native, so it needs an Expo development build rather than Expo Go. On web the model loads only when you ask for a read.
+That serves the app on a Vite dev server. Riichimi is a browser app: there is no
+native build, and recognition runs in the browser through ONNX Runtime Web. The
+model is fetched only when you ask for a read.
 
 ## Checks
 
@@ -45,12 +45,12 @@ npm run screenshots  # regenerate the images above by driving the app
 ## Layout
 
 ```text
-apps/client            Expo + React 19 application
+apps/client            React 19 browser app on Vite
 packages/score-core    Mahjong scoring. No React, no clock, no storage.
 packages/session-core  Table progression as an event log with pure replay
 packages/rules         Ruleset profiles, each citing a primary source
 packages/vision        Recognition contracts and post-processing
-packages/ui            Shared components
+packages/ui            DOM primitives, tokens, and shared components
 docs                   Plan, architecture, decisions, testing strategy
 ```
 

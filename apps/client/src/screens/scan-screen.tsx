@@ -1,5 +1,16 @@
 import type { TileId } from "@riichimi/score-core";
-import { ActionButton, SegmentedControl, color, space } from "@riichimi/ui";
+import {
+  ActionButton,
+  ActivityIndicator,
+  Image,
+  ScrollView,
+  SegmentedControl,
+  Text,
+  View,
+  color,
+  space,
+} from "@riichimi/ui";
+import type { Styles } from "@riichimi/ui";
 import { reviewRecognition } from "@riichimi/vision";
 import type { CaptureLayout, DetectedTile, RecognitionResult } from "@riichimi/vision";
 import { Asset } from "expo-asset";
@@ -7,10 +18,6 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-
-import { bodyEdges } from "../components/screen-insets";
 
 import sampleHandImage from "../../assets/samples/guided-sample-hand.png";
 import { tileRecognition } from "../infrastructure/tile-recognition";
@@ -126,23 +133,17 @@ export function ScanScreen() {
     setSelectedTileId(null);
     let active = true;
     if (photoUri !== null) {
-      try {
-        Image.getSize(
-          photoUri,
-          (width, height) => {
-            if (active && height > 0) {
-              setPhotoAspect(width / height);
-            }
-          },
-          () => {
-            // A photo whose size can't be read still reviews fine; the boxes
-            // just fall back to the banner ratio rather than the photo's own.
-          },
-        );
-      } catch {
-        // Some platforms cannot size a given URI synchronously; the fallback
-        // ratio keeps the review usable.
-      }
+      // Decoded off-screen purely to learn the photo's true shape, so the
+      // detection boxes can be laid over it without a letterbox to offset.
+      const probe = new window.Image();
+      probe.addEventListener("load", () => {
+        if (active && probe.naturalHeight > 0) {
+          setPhotoAspect(probe.naturalWidth / probe.naturalHeight);
+        }
+      });
+      // A photo whose size cannot be read still reviews fine; the boxes fall
+      // back to the banner ratio rather than the photo's own.
+      probe.src = photoUri;
     }
     return () => {
       active = false;
@@ -311,18 +312,18 @@ export function ScanScreen() {
 
   if (permission === null) {
     return (
-      <SafeAreaView edges={bodyEdges} style={styles.centered}>
+      <View style={styles.centered}>
         <ActivityIndicator color={color.accent} />
         <Text style={styles.status}>{t("Checking camera availability…")}</Text>
-      </SafeAreaView>
+      </View>
     );
   }
 
   if (!permission.granted && photoUri === null) {
     return (
-      <SafeAreaView edges={bodyEdges} style={styles.permissionScreen}>
+      <View style={styles.permissionScreen}>
         <Text style={styles.kicker}>{t("CAMERA / PRIVATE BY DEFAULT")}</Text>
-        <Text accessibilityRole="header" style={styles.permissionTitle}>
+        <Text role="heading" style={styles.permissionTitle}>
           {t("Show us the tiles.")}
           {"\n"}
           {t("Keep the photo here.")}
@@ -363,22 +364,22 @@ export function ScanScreen() {
           )}
         </Text>
         {importError === null ? null : (
-          <Text accessibilityLiveRegion="polite" style={styles.error}>
+          <Text aria-live="polite" style={styles.error}>
             {importError}
           </Text>
         )}
-      </SafeAreaView>
+      </View>
     );
   }
 
   if (photoUri !== null) {
     return (
-      <SafeAreaView edges={bodyEdges} style={styles.captureScreen}>
+      <View style={styles.captureScreen}>
         <ScrollView contentContainerStyle={styles.photoReviewContent}>
           <View style={styles.previewFrame}>
             <Image
-              accessibilityLabel="Captured mahjong hand"
-              source={{ uri: photoUri }}
+              alt="Captured mahjong hand"
+              src={photoUri}
               style={
                 photoAspect === null
                   ? styles.preview
@@ -429,18 +430,18 @@ export function ScanScreen() {
               </View>
             )}
             {recognition.kind === "running" ? (
-              <View accessibilityLiveRegion="polite" style={styles.recognitionStatus}>
+              <View aria-live="polite" style={styles.recognitionStatus}>
                 <ActivityIndicator color={color.accent} />
                 <Text style={styles.status}>{t("Reading 15 tile faces offline…")}</Text>
               </View>
             ) : null}
             {recognition.kind === "failure" ? (
-              <Text accessibilityLiveRegion="polite" style={styles.recognitionError}>
+              <Text aria-live="polite" style={styles.recognitionError}>
                 {recognition.message} {t("Retry with another photo, or use manual entry.")}
               </Text>
             ) : null}
             {recognition.kind === "complete" ? (
-              <View accessibilityLiveRegion="polite" style={styles.recognitionResult}>
+              <View aria-live="polite" style={styles.recognitionResult}>
                 <Text style={styles.recognitionKicker}>{t("OFFLINE BETA \u00b7 DRAFT ONLY")}</Text>
                 <Text style={styles.recognitionTitle}>
                   {`${recognition.result.detections.length} ${t("tiles read")} · ${outstandingReview} ${t("need review")}`}
@@ -505,14 +506,14 @@ export function ScanScreen() {
             </View>
           </View>
         </ScrollView>
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
     <View style={styles.captureScreen}>
       <CameraView ref={camera} facing="back" style={styles.camera}>
-        <SafeAreaView edges={bodyEdges} style={styles.cameraChrome}>
+        <View style={styles.cameraChrome}>
           <View style={styles.cameraHeader}>
             <SegmentedControl
               accessibilityLabel="Capture layout"
@@ -521,7 +522,7 @@ export function ScanScreen() {
               value={captureLayout}
             />
           </View>
-          <View accessibilityLabel="Tile alignment guide" style={styles.guide}>
+          <View aria-label="Tile alignment guide" style={styles.guide}>
             {captureLayout === "natural" ? (
               <View style={[styles.guideBand, styles.guideBandWide]}>
                 <Text style={styles.guideBandLabel}>{t("HAND \u00b7 MELDS \u00b7 DORA LAST")}</Text>
@@ -572,18 +573,18 @@ export function ScanScreen() {
               />
             </View>
             {importError === null ? null : (
-              <Text accessibilityLiveRegion="polite" style={styles.cameraError}>
+              <Text aria-live="polite" style={styles.cameraError}>
                 {importError}
               </Text>
             )}
           </View>
-        </SafeAreaView>
+        </View>
       </CameraView>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   camera: {
     flex: 1,
   },
@@ -602,9 +603,8 @@ const styles = StyleSheet.create({
     color: color.white,
     fontFamily: "serif",
     fontSize: 16,
-    textShadowColor: color.ink,
-    textShadowOffset: { height: 1, width: 0 },
-    textShadowRadius: 4,
+    // Legible over a live preview of unknown brightness.
+    textShadow: `0 1px 4px ${color.ink}`,
   },
   captureScreen: {
     backgroundColor: color.ink,
@@ -711,17 +711,19 @@ const styles = StyleSheet.create({
     marginTop: space.x3,
   },
   photoReviewContent: { backgroundColor: color.ink, flexGrow: 1 },
+  // Before the photo's true size is known it is shown in a fixed rectangle, so
+  // it must be fitted whole rather than cropped to fill.
   preview: {
     aspectRatio: 2.1,
     maxHeight: 560,
     minHeight: 190,
-    resizeMode: "contain",
+    objectFit: "contain",
     width: "100%",
   },
   // Once the photo's true size is known it is drawn to its own rectangle so the
   // normalized detection boxes overlay exactly, with no letterbox to offset them.
   previewFrame: { position: "relative", width: "100%" },
-  previewMeasured: { resizeMode: "cover", width: "100%" },
+  previewMeasured: { objectFit: "cover", width: "100%" },
   reviewActions: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -796,4 +798,4 @@ const styles = StyleSheet.create({
     fontFamily: "serif",
     fontSize: 15,
   },
-});
+} satisfies Styles;

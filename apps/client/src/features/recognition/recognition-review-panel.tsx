@@ -1,10 +1,19 @@
 import { canonicalTileIds, canonicalizeTile, redFiveIds } from "@riichimi/score-core";
 import type { TileId } from "@riichimi/score-core";
-import { ActionButton, MahjongTile, color, space, tileAccessibleName } from "@riichimi/ui";
+import {
+  ActionButton,
+  MahjongTile,
+  Pressable,
+  Text,
+  View,
+  color,
+  space,
+  tileAccessibleName,
+} from "@riichimi/ui";
 import { chooseWinningDetection, correctDetection, reviewRecognition } from "@riichimi/vision";
 import type { DetectedTile, RecognitionResult } from "@riichimi/vision";
 import { useEffect, useMemo, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import type { Styles } from "@riichimi/ui";
 import { useLocale } from "../../state/locale-context";
 
 export const recognitionReviewThreshold = 0.75;
@@ -198,13 +207,13 @@ export function RecognitionReviewPanel({
       <View style={styles.headingRow}>
         <View style={styles.headingCopy}>
           <Text style={styles.kicker}>{t("TILE-BY-TILE REVIEW")}</Text>
-          <Text accessibilityRole="header" style={styles.title}>
+          <Text role="heading" style={styles.title}>
             {review.reviewDetectionIds.length === 0
               ? t("Recognition review complete")
               : `${review.reviewDetectionIds.length} ${t(review.reviewDetectionIds.length === 1 ? "tile needs confirmation" : "tiles need confirmation")}`}
           </Text>
         </View>
-        <Text accessibilityLiveRegion="polite" style={styles.progress}>
+        <Text aria-live="polite" style={styles.progress}>
           {totalReviewCount - review.reviewDetectionIds.length} / {totalReviewCount} {t("reviewed")}
         </Text>
       </View>
@@ -216,9 +225,9 @@ export function RecognitionReviewPanel({
       </Text>
 
       {showStructure ? (
-        <View accessibilityLabel="Hand structure" style={styles.structure}>
+        <View aria-label="Hand structure" style={styles.structure}>
           <Text style={styles.structureKicker}>{t("HAND STRUCTURE")}</Text>
-          <Text accessibilityRole="header" style={styles.structureTitle}>
+          <Text role="heading" style={styles.structureTitle}>
             {`${concealedCount} ${t(concealedCount === 1 ? "concealed tile" : "concealed tiles")} · ${meldGroups.length} ${t(meldGroups.length === 1 ? "called set" : "called sets")}`}
           </Text>
           <Text style={styles.structureCopy}>
@@ -247,16 +256,15 @@ export function RecognitionReviewPanel({
         </View>
       ) : null}
 
-      <View accessibilityLabel="Recognized tiles" style={styles.detections}>
+      <View aria-label="Recognized tiles" style={styles.detections}>
         {detections.map((detection, index) => {
           const tile = proposedTile(detection);
           const label = detectionLabel(detection, index, t);
           const needsReview = issueIds.has(detection.id);
           return (
             <Pressable
-              accessibilityLabel={`${label}, ${tile === null ? "unknown" : tileAccessibleName(tile)}, ${Math.round(detection.confidence * 100)} percent confidence${needsReview ? ", needs review" : ""}`}
-              accessibilityRole="button"
-              accessibilityState={{ selected: detection.id === selectedId }}
+              aria-label={`${label}, ${tile === null ? "unknown" : tileAccessibleName(tile)}, ${Math.round(detection.confidence * 100)} percent confidence${needsReview ? ", needs review" : ""}`}
+              aria-pressed={detection.id === selectedId}
               key={detection.id}
               onPress={() => {
                 setSelectedId(detection.id);
@@ -300,8 +308,7 @@ export function RecognitionReviewPanel({
           <View style={styles.suggestions}>
             {uniqueChoices(selected).map((tile) => (
               <Pressable
-                accessibilityLabel={`Use ${tileAccessibleName(tile)} for selected tile`}
-                accessibilityRole="button"
+                aria-label={`Use ${tileAccessibleName(tile)} for selected tile`}
                 key={tile}
                 onPress={() => chooseTile(tile)}
                 style={styles.suggestion}
@@ -333,7 +340,7 @@ export function RecognitionReviewPanel({
             )}
           </View>
           {showAllTiles ? (
-            <View accessibilityLabel="Complete tile picker" style={styles.allTiles}>
+            <View aria-label="Complete tile picker" style={styles.allTiles}>
               {allTileChoices.map((tile) => {
                 const disabled = (countsWithoutSelected.get(canonicalizeTile(tile)) ?? 0) >= 4;
                 return (
@@ -354,7 +361,7 @@ export function RecognitionReviewPanel({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   allTiles: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: space.x4 },
   checkbox: {
     alignItems: "center",
@@ -510,4 +517,4 @@ const styles = StyleSheet.create({
     minHeight: 52,
     minWidth: 38,
   },
-});
+} satisfies Styles;

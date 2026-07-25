@@ -68,6 +68,30 @@ Recorded on 2026-07-23 after the four-category capture preflight:
 
 The diagnostics sample sharpness at a two-pixel stride and complete before model inference. Their bundle and browser-test changes are below every optimization trigger; no special optimization is warranted.
 
+### react-native-web removal
+
+Recorded on 2026-07-25 after replacing react-native-web with local DOM primitives
+([ADR 0004](decisions/0004-web-only-dom-primitives.md)):
+
+- Shared entry: 973,730 bytes, **down 300,305 bytes (`23.6%`)** from the
+  1,274,035-byte pre-removal checkpoint. Nothing about what the app does changed;
+  the saving is the translation layer itself.
+- Full build: 3,548,842 bytes. The ONNX model (1,866,535) and the lazy inference
+  chunk (462,468) are untouched and still dominate what is fetched.
+- Vite build: about 0.8 seconds warm.
+- Framework-free suite with coverage: about 1.1 seconds for 314 tests.
+- Component suite: about 12 seconds for 144 tests on Vitest with jsdom, against
+  about 2 seconds for 41 tests on Jest Expo. Per test the two are comparable
+  (83ms vs 49ms) on 3.5x the tests, and this suite now boots a real jsdom
+  document and the app's own Vite pipeline rather than a React Native mock — it
+  tests the renderer that ships. It sits inside the 15-second budget below;
+  environment setup (39s across workers, run in parallel) is the dominant cost
+  and is where any future optimization should look.
+- Lint: about 0.9 seconds.
+
+This is a bundle win large enough to record but not one that needed pursuing: it
+fell out of removing an indirection, which is the cheapest kind.
+
 ## Feedback-loop budgets
 
 - Formatting should remain below 2 seconds locally.

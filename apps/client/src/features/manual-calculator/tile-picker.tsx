@@ -1,9 +1,9 @@
 import { canonicalTileIds, redFiveIds } from "@riichimi/score-core";
 import type { TileId } from "@riichimi/score-core";
-import { MahjongTile, color, space } from "@riichimi/ui";
+import { MahjongTile, Text, View, color, space } from "@riichimi/ui";
 
 import { useLocale } from "../../state/locale-context";
-import { StyleSheet, Text, View } from "react-native";
+import type { Styles } from "@riichimi/ui";
 
 const rows = [
   { label: "Characters", tiles: canonicalTileIds.slice(0, 9) },
@@ -61,7 +61,7 @@ export function TilePicker({ isDisabled, onSelect, showRedFives = false }: TileP
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   label: {
     color: color.inkMuted,
     fontFamily: "monospace",
@@ -79,4 +79,4 @@ const styles = StyleSheet.create({
   slot: { flexBasis: 0, flexGrow: 1, flexShrink: 1, maxWidth: 42, minWidth: 0 },
   // One suit, one row: each tile takes an equal share of the width.
   tiles: { flexDirection: "row", gap: 4 },
-});
+} satisfies Styles;

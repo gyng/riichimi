@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { inferMeld, parseRecognitionDraft } from "./recognition-draft";
 
 describe("inferMeld", () => {

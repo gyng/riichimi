@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import type { ScoreHandInput, ScoreSuccess } from "@riichimi/score-core";
 import { wrc2025Rules } from "@riichimi/rules";
 

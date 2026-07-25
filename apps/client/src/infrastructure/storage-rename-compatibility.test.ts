@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { createSession } from "@riichimi/session-core";
 
 import { loadRulesPreference, saveRulesPreference } from "./rules-preference-storage";

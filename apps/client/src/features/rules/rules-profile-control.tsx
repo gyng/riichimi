@@ -1,6 +1,6 @@
 import { scoringRulesProfile, scoringRulesProfiles } from "@riichimi/rules";
-import { SegmentedControl, color, space } from "@riichimi/ui";
-import { StyleSheet, Text, View } from "react-native";
+import { SegmentedControl, Text, View, color, space } from "@riichimi/ui";
+import type { Styles } from "@riichimi/ui";
 
 import { useRules } from "../../state/rules-context";
 
@@ -51,7 +51,7 @@ export function RulesProfileControl({
         <Text style={styles.kicker}>
           {locked ? t("SCORING RULES · PINNED TO TABLE") : t("SCORING RULES · SAVED LOCALLY")}
         </Text>
-        <Text accessibilityRole="header" style={styles.title}>
+        <Text role="heading" style={styles.title}>
           {selected.label}
         </Text>
         <Text style={styles.note}>
@@ -76,7 +76,7 @@ export function RulesProfileControl({
         </View>
       ) : null}
       {rules.storageError === null ? null : (
-        <Text accessibilityLiveRegion="polite" style={styles.error}>
+        <Text aria-live="polite" style={styles.error}>
           {rules.storageError}
         </Text>
       )}
@@ -84,7 +84,7 @@ export function RulesProfileControl({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   // Must be able to shrink to the row, or the profile options size to their own
   // content and overflow the screen instead of wrapping.
   control: { flexGrow: 1, flexShrink: 1, minWidth: 240 },
@@ -99,6 +99,9 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   note: { color: color.inkMuted, fontFamily: "serif", fontSize: 13, lineHeight: 19, marginTop: 3 },
+  // Sized as an item of a wrapping row: 320px of width to start, growing into
+  // whatever is left. `flexBasis` is main-axis, so every caller has to place this
+  // card in a row — in a column it would read as a 320px height instead.
   root: {
     flexBasis: 320,
     flexGrow: 1,
@@ -114,4 +117,4 @@ const styles = StyleSheet.create({
     padding: space.x4,
   },
   title: { color: color.ink, fontFamily: "serif", fontSize: 18, fontWeight: "700", marginTop: 2 },
-});
+} satisfies Styles;

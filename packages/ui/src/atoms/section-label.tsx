@@ -1,4 +1,5 @@
-import { StyleSheet, Text } from "react-native";
+import { Text } from "../primitives";
+import type { Styles } from "../primitives";
 
 import { color } from "../tokens/theme";
 
@@ -10,7 +11,7 @@ export function SectionLabel({ children }: SectionLabelProps) {
   return <Text style={styles.label}>{children.toUpperCase()}</Text>;
 }
 
-const styles = StyleSheet.create({
+const styles = {
   label: {
     color: color.accent,
     fontFamily: "monospace",
@@ -18,4 +19,4 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     letterSpacing: 1.8,
   },
-});
+} satisfies Styles;

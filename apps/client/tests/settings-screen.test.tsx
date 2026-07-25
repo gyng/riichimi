@@ -1,4 +1,9 @@
-import { fireEvent, render, screen } from "@testing-library/react-native";
+import { describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
+import type { router } from "expo-router";
+
+import type * as HouseStorage from "../src/infrastructure/house-rules-storage";
+import type * as LocaleStorage from "../src/infrastructure/locale-preference-storage";
 
 import { SettingsScreen } from "../src/screens/settings-screen";
 import * as rulesPreferenceStorage from "../src/infrastructure/rules-preference-storage";
@@ -6,38 +11,50 @@ import { LocaleProvider } from "../src/state/locale-context";
 import { RulesProvider } from "../src/state/rules-context";
 import { SessionProvider } from "../src/state/session-context";
 
-jest.mock("expo-router", () => ({
-  router: { back: jest.fn(), navigate: jest.fn(), push: jest.fn(), replace: jest.fn() },
+vi.mock("expo-router", () => ({
+  router: {
+    back: vi.fn<typeof router.back>(),
+    navigate: vi.fn<typeof router.navigate>(),
+    push: vi.fn<typeof router.push>(),
+    replace: vi.fn<typeof router.replace>(),
+  },
   usePathname: () => "/settings",
 }));
 
-jest.mock("../src/infrastructure/rules-preference-storage", () => ({
-  loadRulesPreference: jest.fn().mockResolvedValue("wrc-2025"),
-  saveRulesPreference: jest.fn().mockResolvedValue(undefined),
+vi.mock("../src/infrastructure/rules-preference-storage", () => ({
+  loadRulesPreference: vi
+    .fn<typeof rulesPreferenceStorage.loadRulesPreference>()
+    .mockResolvedValue("wrc-2025"),
+  saveRulesPreference: vi
+    .fn<typeof rulesPreferenceStorage.saveRulesPreference>()
+    .mockResolvedValue(undefined),
 }));
 
-jest.mock("../src/infrastructure/locale-preference-storage", () => ({
-  loadLocalePreference: jest.fn().mockResolvedValue("en"),
-  saveLocalePreference: jest.fn().mockResolvedValue(undefined),
+vi.mock("../src/infrastructure/locale-preference-storage", () => ({
+  loadLocalePreference: vi.fn<typeof LocaleStorage.loadLocalePreference>().mockResolvedValue("en"),
+  saveLocalePreference: vi
+    .fn<typeof LocaleStorage.saveLocalePreference>()
+    .mockResolvedValue(undefined),
 }));
 
-jest.mock("../src/infrastructure/house-rules-storage", () => ({
-  loadHouseRules: jest.fn().mockResolvedValue({
+vi.mock("../src/infrastructure/house-rules-storage", () => ({
+  loadHouseRules: vi.fn<typeof HouseStorage.loadHouseRules>().mockResolvedValue({
     allowOpenTanyao: true,
     countedLimit: "yonbaiman",
     doubleWindPairFu: 2,
+    doubleYakuman: false,
     kiriageMangan: false,
     label: "House rules",
     redFives: true,
     uraDora: true,
     yakumanStacking: "additive",
   }),
-  saveHouseRules: jest.fn().mockResolvedValue(undefined),
+  saveHouseRules: vi.fn<typeof HouseStorage.saveHouseRules>().mockResolvedValue(undefined),
 }));
 
-jest.mock("../src/infrastructure/session-storage", () => ({
-  loadStoredSession: jest.fn().mockResolvedValue(null),
-  saveStoredSession: jest.fn().mockResolvedValue(undefined),
+vi.mock("../src/infrastructure/session-storage", () => ({
+  loadStoredSession: vi.fn<typeof sessionStorage.loadStoredSession>().mockResolvedValue(null),
+  saveStoredSession: vi.fn<typeof sessionStorage.saveStoredSession>().mockResolvedValue(undefined),
 }));
 
 function SettingsUnderTest() {
@@ -54,9 +71,9 @@ function SettingsUnderTest() {
 
 describe("SettingsScreen", () => {
   it("keeps setup off the play surfaces and persists a rules choice", async () => {
-    await render(<SettingsUnderTest />);
+    render(<SettingsUnderTest />);
 
-    await fireEvent.press(screen.getByRole("radio", { name: "WRC 2025 · red-five table" }));
+    fireEvent.click(screen.getByRole("radio", { name: "WRC 2025 · red-five table" }));
 
     expect(rulesPreferenceStorage.saveRulesPreference).toHaveBeenCalledWith(
       "wrc-2025-red-five-table",
@@ -64,8 +81,8 @@ describe("SettingsScreen", () => {
   });
 
   it("offers the interface language here rather than mid-hand", async () => {
-    await render(<SettingsUnderTest />);
+    render(<SettingsUnderTest />);
 
-    expect(screen.getByRole("radio", { name: "日本語" })).toBeOnTheScreen();
+    expect(screen.getByRole("radio", { name: "日本語" })).toBeInTheDocument();
   });
 });

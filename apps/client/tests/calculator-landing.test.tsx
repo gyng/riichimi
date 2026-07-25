@@ -1,62 +1,63 @@
+import { describe, expect, it, vi } from "vitest";
 import { CalculatorLanding } from "@riichimi/ui";
 
 import { messages } from "../src/i18n/messages";
-import { fireEvent, render, screen } from "@testing-library/react-native";
+import { fireEvent, render, screen } from "@testing-library/react";
 
 describe("CalculatorLanding", () => {
   it("makes scanning the primary user action", async () => {
-    const onScan = jest.fn();
+    const onScan = vi.fn<() => void>();
 
-    await render(
+    render(
       <CalculatorLanding
         copy={messages.en.home}
         hasActiveSession={false}
         historyCount={0}
-        onHistory={jest.fn()}
-        onManual={jest.fn()}
+        onHistory={vi.fn<() => void>()}
+        onManual={vi.fn<() => void>()}
         onScan={onScan}
-        onSession={jest.fn()}
+        onSession={vi.fn<() => void>()}
       />,
     );
-    await fireEvent.press(screen.getByRole("button", { name: "Scan a hand" }));
+    fireEvent.click(screen.getByRole("button", { name: "Scan a hand" }));
 
     expect(onScan).toHaveBeenCalledTimes(1);
   });
 
   it("keeps manual entry available without camera access", async () => {
-    const onManual = jest.fn();
+    const onManual = vi.fn<() => void>();
 
-    await render(
+    render(
       <CalculatorLanding
         copy={messages.en.home}
         hasActiveSession={false}
         historyCount={0}
-        onHistory={jest.fn()}
+        onHistory={vi.fn<() => void>()}
         onManual={onManual}
-        onScan={jest.fn()}
-        onSession={jest.fn()}
+        onScan={vi.fn<() => void>()}
+        onSession={vi.fn<() => void>()}
       />,
     );
-    await fireEvent.press(screen.getByRole("button", { name: "Enter by hand" }));
+    fireEvent.click(screen.getByRole("button", { name: "Enter by hand" }));
 
     expect(onManual).toHaveBeenCalledTimes(1);
   });
 
   it("opens the local score folio", async () => {
-    const onHistory = jest.fn();
+    const onHistory = vi.fn<() => void>();
 
-    await render(
+    render(
       <CalculatorLanding
         copy={messages.en.home}
         hasActiveSession={false}
         historyCount={3}
         onHistory={onHistory}
-        onManual={jest.fn()}
-        onScan={jest.fn()}
-        onSession={jest.fn()}
+        onManual={vi.fn<() => void>()}
+        onScan={vi.fn<() => void>()}
+        onSession={vi.fn<() => void>()}
       />,
     );
-    await fireEvent.press(screen.getByRole("button", { name: "Saved scores" }));
+    fireEvent.click(screen.getByRole("button", { name: "Saved scores" }));
 
     expect(onHistory).toHaveBeenCalledTimes(1);
   });

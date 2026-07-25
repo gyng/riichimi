@@ -1,5 +1,5 @@
-import { color, space } from "@riichimi/ui";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, Text, View, color, space } from "@riichimi/ui";
+import type { Styles } from "@riichimi/ui";
 
 import { speech } from "../../infrastructure/speech";
 import { useAnnouncer } from "../../state/announcer-context";
@@ -15,8 +15,7 @@ export function AnnounceControl() {
       <Text style={styles.kicker}>{t("WINS · THIS DEVICE")}</Text>
 
       <Pressable
-        accessibilityRole="checkbox"
-        accessibilityState={{ checked: celebrateWins }}
+        role="checkbox"
         aria-checked={celebrateWins}
         onPress={() => setCelebrateWins(!celebrateWins)}
         style={styles.row}
@@ -33,8 +32,7 @@ export function AnnounceControl() {
       {speech.available ? (
         <>
           <Pressable
-            accessibilityRole="checkbox"
-            accessibilityState={{ checked: announceWins }}
+            role="checkbox"
             aria-checked={announceWins}
             onPress={() => {
               const next = !announceWins;
@@ -57,7 +55,7 @@ export function AnnounceControl() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   checkbox: {
     alignItems: "center",
     backgroundColor: color.paper,
@@ -90,4 +88,4 @@ const styles = StyleSheet.create({
     padding: space.x4,
   },
   row: { alignItems: "center", flexDirection: "row", gap: space.x3, minHeight: 48 },
-});
+} satisfies Styles;

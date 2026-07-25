@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, Text } from "../primitives";
+import type { Styles } from "../primitives";
 
 import { color, radius, space } from "../tokens/theme";
 
@@ -17,8 +18,6 @@ export function ActionButton({
 }: ActionButtonProps) {
   return (
     <Pressable
-      accessibilityRole="button"
-      accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
       style={({ pressed }) => [
@@ -33,7 +32,7 @@ export function ActionButton({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   base: {
     alignItems: "center",
     borderRadius: radius.control,
@@ -70,4 +69,4 @@ const styles = StyleSheet.create({
   vermilion: {
     backgroundColor: color.accent,
   },
-});
+} satisfies Styles;
