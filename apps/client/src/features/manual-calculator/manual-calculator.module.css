@@ -12,17 +12,31 @@
   composes: scroll from "../../screens/screen.module.css";
 }
 
-.column {
-  flex-basis: 0px;
-  flex-grow: 1;
-  min-width: 320px;
-}
-
+/* Hand and tiles sit side by side wherever there is width for both, so the picker
+   and the hand it fills can be seen at once. Below that they stack: two 320px
+   columns on a phone would push the page sideways. */
 .columns {
   display: flex;
-  align-items: flex-start;
-  flex-direction: row;
-  gap: var(--space-x3);
+  flex-direction: column;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+@media (width >= 700px) {
+  .columns {
+    align-items: flex-start;
+    flex-direction: row;
+    gap: var(--space-x3);
+  }
+
+  .column {
+    flex: 1 1 0;
+    min-width: 320px;
+  }
 }
 
 .disclosure {
