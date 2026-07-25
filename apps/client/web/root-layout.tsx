@@ -1,5 +1,3 @@
-import { View, color } from "@riichimi/ui";
-import type { Styles } from "@riichimi/ui";
 import { Outlet } from "react-router-dom";
 
 import { AppNavigationBar } from "../src/components/app-navigation-bar";
@@ -10,6 +8,7 @@ import { RulesProvider } from "../src/state/rules-context";
 import { ScoreHistoryProvider } from "../src/state/score-history-context";
 import { SessionProvider } from "../src/state/session-context";
 import { TileLabelProvider } from "../src/state/tile-display-context";
+import styles from "./root-layout.module.css";
 
 // Web root shell: the provider stack, the persistent navigation bar, and the
 // routed screen. It replaces the Expo Router `_layout` (fonts and the status bar
@@ -23,14 +22,14 @@ export function RootLayout() {
             <ScoreHistoryProvider>
               <SessionProvider>
                 <WebMcpBridge />
-                <View style={styles.root}>
-                  <View style={styles.bar}>
+                <div className={styles["root"]}>
+                  <header className={styles["bar"]}>
                     <AppNavigationBar />
-                  </View>
-                  <View style={styles.body}>
+                  </header>
+                  <main className={styles["body"]}>
                     <Outlet />
-                  </View>
-                </View>
+                  </main>
+                </div>
               </SessionProvider>
             </ScoreHistoryProvider>
           </RulesProvider>
@@ -39,9 +38,3 @@ export function RootLayout() {
     </LocaleProvider>
   );
 }
-
-const styles = {
-  bar: { backgroundColor: color.paper },
-  body: { flex: 1 },
-  root: { flex: 1 },
-} satisfies Styles;

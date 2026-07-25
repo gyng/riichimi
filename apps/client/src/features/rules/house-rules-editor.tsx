@@ -1,9 +1,9 @@
-import { Pressable, SegmentedControl, Text, TextInput, View, color, space } from "@riichimi/ui";
-import type { Styles } from "@riichimi/ui";
+import { SegmentedControl, classNames } from "@riichimi/ui";
 
 import { useRules } from "../../state/rules-context";
 import type { HouseRules } from "./house-rules";
 import { useLocale } from "../../state/locale-context";
+import styles from "./house-rules-editor.module.css";
 
 type Translate = (source: string) => string;
 
@@ -50,44 +50,44 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
   }
 
   return (
-    <View style={styles.root}>
-      <Text style={styles.kicker}>HOUSE RULES · THIS DEVICE</Text>
-      <Text role="heading" style={styles.title}>
-        {t("Rules your table plays by")}
-      </Text>
-      <Text style={styles.note}>
+    <div className={styles["card"]}>
+      <p className={styles["kicker"]}>HOUSE RULES · THIS DEVICE</p>
+      <h3 className={styles["title"]}>{t("Rules your table plays by")}</h3>
+      <p className={styles["note"]}>
         {locked
           ? t("In use by a table. End it to edit.")
           : t("Local profile. Everything else follows WRC 2025.")}
-      </Text>
+      </p>
 
-      <Text style={styles.fieldLabel}>{t("NAME")}</Text>
-      <TextInput
+      <p className={styles["fieldLabel"]}>{t("NAME")}</p>
+      <input
         aria-label="House rules name"
-        onChangeText={(label) => update({ label })}
+        className={classNames(styles["input"], locked && styles["locked"])}
+        onChange={(event) => update({ label: event.target.value })}
         placeholder="House rules"
         readOnly={locked}
-        style={[styles.input, locked && styles.disabled]}
         value={house.label}
       />
 
       {toggles.map((toggle) => (
-        <Pressable
-          role="checkbox"
+        <button
           aria-checked={house[toggle.key]}
+          className={classNames(styles["row"], locked && styles["locked"])}
           disabled={locked}
           key={toggle.key}
-          onPress={() => update({ [toggle.key]: !house[toggle.key] })}
-          style={[styles.toggleRow, locked && styles.disabled]}
+          onClick={() => update({ [toggle.key]: !house[toggle.key] })}
+          role="checkbox"
+          type="button"
         >
-          <View style={[styles.checkbox, house[toggle.key] && styles.checked]}>
-            <Text style={styles.checkmark}>{house[toggle.key] ? "✓" : ""}</Text>
-          </View>
-          <Text style={styles.toggleLabel}>{toggle.label}</Text>
-        </Pressable>
+          <span
+            aria-hidden
+            className={classNames(styles["check"], house[toggle.key] && styles["checkOn"])}
+          />
+          <span className={styles["label"]}>{toggle.label}</span>
+        </button>
       ))}
 
-      <Text style={styles.fieldLabel}>{t("13+ HAN WITHOUT A YAKUMAN")}</Text>
+      <p className={styles["fieldLabel"]}>{t("13+ HAN WITHOUT A YAKUMAN")}</p>
       <SegmentedControl
         accessibilityLabel="Counted limit"
         onChange={(countedLimit) => {
@@ -99,7 +99,7 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
         value={house.countedLimit}
       />
 
-      <Text style={styles.fieldLabel}>{t("COMBINED YAKUMAN")}</Text>
+      <p className={styles["fieldLabel"]}>{t("COMBINED YAKUMAN")}</p>
       <SegmentedControl
         accessibilityLabel="Combined yakuman"
         onChange={(yakumanStacking) => {
@@ -111,7 +111,7 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
         value={house.yakumanStacking}
       />
 
-      <Text style={styles.fieldLabel}>{t("PAIR THAT IS BOTH WINDS")}</Text>
+      <p className={styles["fieldLabel"]}>{t("PAIR THAT IS BOTH WINDS")}</p>
       <SegmentedControl
         accessibilityLabel="Double wind pair fu"
         onChange={(value) => {
@@ -122,66 +122,6 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
         options={windFuOptions}
         value={house.doubleWindPairFu === 4 ? "4" : "2"}
       />
-    </View>
+    </div>
   );
 }
-
-const styles = {
-  checkbox: {
-    alignItems: "center",
-    backgroundColor: color.paper,
-    borderColor: color.ink,
-    borderRadius: 4,
-    borderWidth: 1,
-    height: 22,
-    justifyContent: "center",
-    width: 22,
-  },
-  checked: { backgroundColor: color.ink },
-  checkmark: { color: color.white, fontSize: 13, fontWeight: "800" },
-  disabled: { opacity: 0.45 },
-  fieldLabel: {
-    color: color.inkMuted,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "700",
-    letterSpacing: 1.2,
-    marginBottom: space.x2,
-    marginTop: space.x4,
-  },
-  input: {
-    backgroundColor: color.white,
-    borderColor: color.line,
-    borderRadius: 8,
-    borderWidth: 1,
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 16,
-    minHeight: 48,
-    paddingHorizontal: space.x3,
-  },
-  kicker: {
-    color: color.accent,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "800",
-    letterSpacing: 1,
-  },
-  note: { color: color.inkMuted, fontFamily: "serif", fontSize: 13, lineHeight: 19, marginTop: 3 },
-  root: {
-    backgroundColor: color.paper,
-    borderColor: color.line,
-    borderRadius: 12,
-    borderWidth: 1,
-    marginBottom: space.x5,
-    padding: space.x4,
-  },
-  title: { color: color.ink, fontFamily: "serif", fontSize: 18, fontWeight: "700", marginTop: 2 },
-  toggleLabel: { color: color.ink, flex: 1, fontFamily: "serif", fontSize: 15 },
-  toggleRow: {
-    alignItems: "center",
-    flexDirection: "row",
-    gap: space.x3,
-    minHeight: 48,
-  },
-} satisfies Styles;

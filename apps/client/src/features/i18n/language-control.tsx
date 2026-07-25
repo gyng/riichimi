@@ -1,8 +1,8 @@
-import { SegmentedControl, Text, View, color, space } from "@riichimi/ui";
-import type { Styles } from "@riichimi/ui";
+import { SegmentedControl } from "@riichimi/ui";
 
 import { supportedLocales, messages as translations } from "../../i18n/messages";
 import { useLocale } from "../../state/locale-context";
+import styles from "./language-control.module.css";
 
 const options = supportedLocales.map((locale) => ({
   label: translations[locale].localeName,
@@ -13,43 +13,15 @@ export function LanguageControl() {
   const { locale, messages, selectLocale } = useLocale();
 
   return (
-    <View style={styles.root}>
-      <Text style={styles.kicker}>{messages.language.kicker}</Text>
+    <div className={styles["card"]}>
+      <p className={styles["kicker"]}>{messages.language.kicker}</p>
       <SegmentedControl
         accessibilityLabel={messages.language.label}
         onChange={selectLocale}
         options={options}
         value={locale}
       />
-      <Text style={styles.note}>{messages.language.note}</Text>
-    </View>
+      <p className={styles["note"]}>{messages.language.note}</p>
+    </div>
   );
 }
-
-const styles = {
-  kicker: {
-    color: color.jade,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "800",
-    letterSpacing: 1,
-    marginBottom: space.x2,
-  },
-  note: {
-    color: color.inkMuted,
-    fontFamily: "serif",
-    fontSize: 13,
-    lineHeight: 19,
-    marginTop: space.x2,
-  },
-  root: {
-    flexBasis: 320,
-    flexGrow: 1,
-    backgroundColor: color.paper,
-    borderColor: color.line,
-    borderRadius: 12,
-    borderWidth: 1,
-    marginBottom: space.x5,
-    padding: space.x4,
-  },
-} satisfies Styles;

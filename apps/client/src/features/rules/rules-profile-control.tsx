@@ -1,6 +1,5 @@
 import { scoringRulesProfile, scoringRulesProfiles } from "@riichimi/rules";
-import { SegmentedControl, Text, View, color, space } from "@riichimi/ui";
-import type { Styles } from "@riichimi/ui";
+import { SegmentedControl } from "@riichimi/ui";
 
 import { useRules } from "../../state/rules-context";
 
@@ -10,6 +9,7 @@ import { HouseRulesEditor } from "./house-rules-editor";
 import { houseRulesProfileId, houseScoringRules } from "./house-rules";
 import { parseRulesPreference } from "./rules-preference";
 import { useLocale } from "../../state/locale-context";
+import styles from "./rules-profile-control.module.css";
 
 const options = [
   ...scoringRulesProfiles.map((profile) => ({ label: profile.label, value: profile.id })),
@@ -46,20 +46,18 @@ export function RulesProfileControl({
   const locked = lockedProfileId !== undefined;
 
   return (
-    <View style={styles.root}>
-      <View style={styles.copy}>
-        <Text style={styles.kicker}>
+    <div className={styles["card"]}>
+      <div className={styles["copy"]}>
+        <p className={styles["kicker"]}>
           {locked ? t("SCORING RULES · PINNED TO TABLE") : t("SCORING RULES · SAVED LOCALLY")}
-        </Text>
-        <Text role="heading" style={styles.title}>
-          {selected.label}
-        </Text>
-        <Text style={styles.note}>
+        </p>
+        <h2 className={styles["title"]}>{selected.label}</h2>
+        <p className={styles["note"]}>
           {locked ? t("Pinned at East 1.") : describeProfile(selected, t)}
-        </Text>
-      </View>
+        </p>
+      </div>
       {locked ? null : (
-        <View style={styles.control}>
+        <div className={styles["control"]}>
           <SegmentedControl
             accessibilityLabel="Scoring rules profile"
             onChange={(value) => {
@@ -68,53 +66,18 @@ export function RulesProfileControl({
             options={options}
             value={selected.id}
           />
-        </View>
+        </div>
       )}
       {isHouse ? (
-        <View style={styles.editor}>
+        <div className={styles["editor"]}>
           <HouseRulesEditor locked={locked} />
-        </View>
+        </div>
       ) : null}
       {rules.storageError === null ? null : (
-        <Text aria-live="polite" style={styles.error}>
+        <p aria-live="polite" className={styles["error"]}>
           {rules.storageError}
-        </Text>
+        </p>
       )}
-    </View>
+    </div>
   );
 }
-
-const styles = {
-  // Must be able to shrink to the row, or the profile options size to their own
-  // content and overflow the screen instead of wrapping.
-  control: { flexGrow: 1, flexShrink: 1, minWidth: 240 },
-  copy: { flex: 1, minWidth: 250 },
-  editor: { width: "100%" },
-  error: { color: color.accent, fontFamily: "serif", fontSize: 13, width: "100%" },
-  kicker: {
-    color: color.jade,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "800",
-    letterSpacing: 1,
-  },
-  note: { color: color.inkMuted, fontFamily: "serif", fontSize: 13, lineHeight: 19, marginTop: 3 },
-  // Sized as an item of a wrapping row: 320px of width to start, growing into
-  // whatever is left. `flexBasis` is main-axis, so every caller has to place this
-  // card in a row — in a column it would read as a 320px height instead.
-  root: {
-    flexBasis: 320,
-    flexGrow: 1,
-    alignItems: "center",
-    backgroundColor: color.paper,
-    borderColor: color.line,
-    borderRadius: 12,
-    borderWidth: 1,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: space.x4,
-    marginBottom: space.x5,
-    padding: space.x4,
-  },
-  title: { color: color.ink, fontFamily: "serif", fontSize: 18, fontWeight: "700", marginTop: 2 },
-} satisfies Styles;

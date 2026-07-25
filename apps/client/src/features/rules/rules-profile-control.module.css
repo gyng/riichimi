@@ -1,0 +1,55 @@
+/* Which ruleset the scorer follows. Wider than the other setup cards because it
+   lays its copy and its options side by side, and folds the house-rules editor in
+   underneath when that profile is chosen. */
+.card {
+  composes: card from "../setup-card.module.css";
+
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-x4);
+}
+
+.copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 250px;
+}
+
+.kicker {
+  composes: kicker from "../setup-card.module.css";
+}
+
+.title {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.note {
+  composes: note from "../setup-card.module.css";
+
+  margin-top: 3px;
+}
+
+/* Must be able to shrink to the row, or the profile options size to their own
+   content and overflow the screen instead of wrapping. */
+.control {
+  flex: 1 1 auto;
+  min-width: 240px;
+}
+
+/* Its own full-width band under the row above. */
+.editor {
+  width: 100%;
+}
+
+.error {
+  color: var(--color-accent);
+  font-family: var(--font-serif);
+  font-size: 13px;
+  width: 100%;
+}

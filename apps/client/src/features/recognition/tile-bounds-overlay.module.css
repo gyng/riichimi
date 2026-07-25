@@ -1,0 +1,55 @@
+/* Covers the photo without stealing the pinch and drag gestures over it: the
+   layer is transparent to presses and each box takes its own back. */
+.layer {
+  display: flex;
+  flex-direction: column;
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+/* Positioned by percentage from the recognizer's normalized bounds, which is
+   correct as long as the photo is shown at its true aspect ratio. */
+.box {
+  align-items: flex-start;
+  border: 1.5px solid rgb(255 253 247 / 85%);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  pointer-events: auto;
+  position: absolute;
+}
+
+/* A tile the recognizer is unsure about, flagged on the photo as well as in the
+   list — the correction is anchored to where the tile actually is. */
+.boxReview {
+  border-color: var(--color-accent);
+  border-width: 2px;
+}
+
+.boxSelected {
+  border-color: var(--color-white);
+  border-width: 3px;
+}
+
+/* The marker that maps a box to its row in the list below. Corners cut on the
+   outer diagonal so it reads as a tab on the box rather than a floating chip. */
+.badge {
+  background-color: rgb(23 25 22 / 72%);
+  border-bottom-right-radius: 5px;
+  border-top-left-radius: 5px;
+  color: var(--color-white);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 3px;
+}
+
+.badgeReview {
+  background-color: var(--color-accent);
+}
+
+.badgeSelected {
+  background-color: var(--color-ink);
+}

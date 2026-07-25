@@ -1,0 +1,36 @@
+/*
+ * The shape every screen shares: a canvas that fills the shell, and one scrolling
+ * region inside it. Screens compose these and then style their own content, so
+ * the scroll behaviour is stated once.
+ */
+
+.screen {
+  background-color: var(--color-canvas);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Scrolls vertically only: a wide row inside must not be able to push the page
+   sideways. `min-height: 0` is what lets it shrink enough to scroll at all. */
+.scroll {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* A screen that shows one message rather than a page of content. */
+.centered {
+  align-items: center;
+  background-color: var(--color-canvas);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-x3);
+  justify-content: center;
+  padding: var(--space-x5);
+}

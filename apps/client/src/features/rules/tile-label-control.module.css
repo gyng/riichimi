@@ -1,0 +1,27 @@
+.card {
+  composes: card from "../setup-card.module.css";
+}
+
+.kicker {
+  composes: kicker from "../setup-card.module.css";
+}
+
+.note {
+  composes: note from "../setup-card.module.css";
+}
+
+.row {
+  composes: checkRow from "../setup-card.module.css";
+}
+
+.check {
+  composes: check from "../setup-card.module.css";
+}
+
+.checkOn {
+  composes: checkOn from "../setup-card.module.css";
+}
+
+.label {
+  composes: checkLabel from "../setup-card.module.css";
+}

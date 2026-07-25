@@ -1,0 +1,15 @@
+.card {
+  composes: card from "../setup-card.module.css";
+}
+
+.kicker {
+  composes: kicker from "../setup-card.module.css";
+
+  margin-bottom: var(--space-x2);
+}
+
+.note {
+  composes: note from "../setup-card.module.css";
+
+  margin-top: var(--space-x2);
+}

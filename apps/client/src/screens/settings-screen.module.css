@@ -1,0 +1,43 @@
+.screen {
+  composes: screen from "./screen.module.css";
+}
+
+.scroll {
+  composes: scroll from "./screen.module.css";
+}
+
+.content {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  max-width: 900px;
+  padding: var(--space-x4);
+  padding-bottom: var(--space-x7);
+  width: 100%;
+}
+
+.title {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--space-x4);
+}
+
+/* Width to spare (a landscape phone, or any desktop) means the setup cards read
+   better beside each other than stacked. Each card already asks for 320px and
+   grows, so the row does the arranging. */
+@media (width >= 700px) {
+  .cards {
+    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-x4);
+  }
+}

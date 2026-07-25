@@ -1,0 +1,74 @@
+/* A table stating its own rules. Nested inside the profile card, so it repeats the
+   card shape without the row layout — it is a stack of fields. */
+.card {
+  composes: card from "../setup-card.module.css";
+
+  flex: none;
+}
+
+/* Vermilion rather than the setup cards' jade: this is a rules statement, and
+   rules are the app's own subject. */
+.kicker {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.title {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.note {
+  composes: note from "../setup-card.module.css";
+
+  margin-top: 3px;
+}
+
+.fieldLabel {
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  margin-bottom: var(--space-x2);
+  margin-top: var(--space-x4);
+}
+
+.input {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 16px;
+  min-height: 48px;
+  padding: 0 var(--space-x3);
+}
+
+.row {
+  composes: checkRow from "../setup-card.module.css";
+}
+
+.check {
+  composes: check from "../setup-card.module.css";
+}
+
+.checkOn {
+  composes: checkOn from "../setup-card.module.css";
+}
+
+.label {
+  composes: checkLabel from "../setup-card.module.css";
+}
+
+/* While a table is pinned to this profile its rules must not change underneath
+   it, so every field reads as unavailable rather than merely refusing. */
+.locked {
+  opacity: 0.45;
+}

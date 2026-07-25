@@ -1,0 +1,14 @@
+.screen {
+  composes: screen from "./screen.module.css";
+}
+
+.scroll {
+  composes: scroll from "./screen.module.css";
+}
+
+/* The landing sizes and centres itself, so the screen only has to let it grow. */
+.content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}

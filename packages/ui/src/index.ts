@@ -16,6 +16,7 @@ export type {
   Styles,
   ViewProps,
 } from "./primitives";
+export { classNames } from "./class-names";
 export { ActionButton } from "./atoms/action-button";
 export { MahjongTile, tileAccessibleName } from "./atoms/mahjong-tile";
 export { TileDisplayProvider, useTileDisplay } from "./atoms/tile-display-context";

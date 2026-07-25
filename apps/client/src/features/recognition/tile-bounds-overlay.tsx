@@ -1,6 +1,7 @@
-import type { Styles } from "@riichimi/ui";
+import { classNames } from "@riichimi/ui";
 import type { NormalizedBounds } from "@riichimi/vision";
-import { Pressable, Text, View, color } from "@riichimi/ui";
+
+import styles from "./tile-bounds-overlay.module.css";
 
 export interface TileBoundsBox {
   readonly id: string;
@@ -25,69 +26,42 @@ export interface TileBoundsOverlayProps {
 // the same correction.
 export function TileBoundsOverlay({ boxes, selectedId, onSelect }: TileBoundsOverlayProps) {
   return (
-    <View aria-label="Recognized tiles on the photo" style={styles.layer}>
+    <div aria-label="Recognized tiles on the photo" className={styles["layer"]}>
       {boxes.map((box) => {
         const selected = box.id === selectedId;
         return (
-          <Pressable
+          <button
             aria-label={box.label}
             aria-pressed={selected}
+            className={classNames(
+              styles["box"],
+              box.needsReview && styles["boxReview"],
+              selected && styles["boxSelected"],
+            )}
             key={box.id}
-            onPress={() => onSelect(box.id)}
-            style={[
-              styles.box,
-              {
-                height: `${box.bounds.height * 100}%`,
-                left: `${box.bounds.x * 100}%`,
-                top: `${box.bounds.y * 100}%`,
-                width: `${box.bounds.width * 100}%`,
-              },
-              box.needsReview && styles.boxReview,
-              selected && styles.boxSelected,
-            ]}
+            onClick={() => onSelect(box.id)}
+            // Placed from the recognizer's normalized bounds, so these are the
+            // one thing here that cannot live in the stylesheet.
+            style={{
+              height: `${box.bounds.height * 100}%`,
+              left: `${box.bounds.x * 100}%`,
+              top: `${box.bounds.y * 100}%`,
+              width: `${box.bounds.width * 100}%`,
+            }}
+            type="button"
           >
-            <Text
-              style={[
-                styles.badge,
-                box.needsReview && styles.badgeReview,
-                selected && styles.badgeSelected,
-              ]}
+            <span
+              className={classNames(
+                styles["badge"],
+                box.needsReview && styles["badgeReview"],
+                selected && styles["badgeSelected"],
+              )}
             >
               {box.needsReview ? `▲${box.badge}` : box.badge}
-            </Text>
-          </Pressable>
+            </span>
+          </button>
         );
       })}
-    </View>
+    </div>
   );
 }
-
-const styles = {
-  badge: {
-    backgroundColor: "rgba(23,25,22,0.72)",
-    borderTopLeftRadius: 5,
-    borderBottomRightRadius: 5,
-    color: color.white,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "800",
-    paddingHorizontal: 3,
-    paddingVertical: 1,
-  },
-  badgeReview: { backgroundColor: color.accent },
-  badgeSelected: { backgroundColor: color.ink },
-  box: {
-    alignItems: "flex-start",
-    // The layer itself is transparent to presses; each box takes its own back.
-    pointerEvents: "auto",
-    borderColor: "rgba(255,253,247,0.85)",
-    borderRadius: 5,
-    borderWidth: 1.5,
-    justifyContent: "flex-start",
-    position: "absolute",
-  },
-  boxReview: { borderColor: color.accent, borderWidth: 2 },
-  boxSelected: { borderColor: color.white, borderWidth: 3 },
-  // Covers the photo without stealing the pinch and drag gestures over it.
-  layer: { bottom: 0, left: 0, pointerEvents: "none", position: "absolute", right: 0, top: 0 },
-} satisfies Styles;

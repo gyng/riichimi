@@ -1,12 +1,10 @@
-import { ScrollView, Text, View, color, space, useWindowDimensions } from "@riichimi/ui";
-import type { Styles } from "@riichimi/ui";
-
 import { AnnounceControl } from "../features/announcer/announce-control";
 import { LanguageControl } from "../features/i18n/language-control";
 import { RulesProfileControl } from "../features/rules/rules-profile-control";
 import { TileLabelControl } from "../features/rules/tile-label-control";
 import { useSession } from "../state/session-context";
 import { useLocale } from "../state/locale-context";
+import styles from "./settings-screen.module.css";
 
 /**
  * Setup lives here rather than on the play surfaces. Rules and language are
@@ -16,44 +14,20 @@ import { useLocale } from "../state/locale-context";
 export function SettingsScreen() {
   const { t } = useLocale();
   const session = useSession();
-  // Width to spare and little height (a landscape phone, or any desktop) means
-  // the setup cards read better beside each other than stacked.
-  const { width } = useWindowDimensions();
-  const wide = width >= 700;
 
   return (
-    <View style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text role="heading" style={styles.title}>
-          {t("Setup")}
-        </Text>
-        <View style={[styles.section, wide && styles.sectionWide]}>
-          <RulesProfileControl lockedProfileId={session.state?.table.rulesProfileId} />
-          <TileLabelControl />
-          <AnnounceControl />
-          <LanguageControl />
-        </View>
-      </ScrollView>
-    </View>
+    <div className={styles["screen"]}>
+      <div className={styles["scroll"]}>
+        <div className={styles["content"]}>
+          <h1 className={styles["title"]}>{t("Setup")}</h1>
+          <div className={styles["cards"]}>
+            <RulesProfileControl lockedProfileId={session.state?.table.rulesProfileId} />
+            <TileLabelControl />
+            <AnnounceControl />
+            <LanguageControl />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
-
-const styles = {
-  content: {
-    alignSelf: "center",
-    maxWidth: 900,
-    padding: space.x4,
-    paddingBottom: space.x7,
-    width: "100%",
-  },
-  safeArea: { backgroundColor: color.canvas, flex: 1 },
-  section: { marginTop: space.x4 },
-  sectionWide: { alignItems: "flex-start", flexDirection: "row", flexWrap: "wrap", gap: space.x4 },
-  title: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 26,
-    fontWeight: "800",
-    letterSpacing: -0.6,
-  },
-} satisfies Styles;

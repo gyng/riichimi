@@ -1,0 +1,31 @@
+/* The app shell: a persistent bar, then the routed screen filling the rest. */
+.root {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  /* Without this the bar and screen refuse to shrink and the page scrolls as a
+     whole, which would take the bar off-screen. */
+  min-height: 0;
+}
+
+/*
+ * The device's unsafe insets are handled once, here, rather than by each screen.
+ * The bar owns the top — under a notch or status bar it grows instead of sliding
+ * beneath — and the body owns the sides and the bottom, which is where a home
+ * indicator sits. `env()` is zero on any display without them.
+ */
+.bar {
+  background-color: var(--color-paper);
+  flex-shrink: 0;
+  padding-top: env(safe-area-inset-top);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
