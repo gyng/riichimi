@@ -51,22 +51,6 @@
   padding: 0 var(--space-x3);
 }
 
-.row {
-  composes: checkRow from "../setup-card.module.css";
-}
-
-.check {
-  composes: check from "../setup-card.module.css";
-}
-
-.checkOn {
-  composes: checkOn from "../setup-card.module.css";
-}
-
-.label {
-  composes: checkLabel from "../setup-card.module.css";
-}
-
 /* While a table is pinned to this profile its rules must not change underneath
    it, so every field reads as unavailable rather than merely refusing. */
 .locked {

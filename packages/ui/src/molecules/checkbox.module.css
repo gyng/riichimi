@@ -1,0 +1,53 @@
+/* The whole row is the control, so the label is part of the target and the target
+   clears the 48px minimum without the label having to be tapped precisely. */
+.row {
+  align-items: center;
+  color: var(--color-ink);
+  display: flex;
+  flex-direction: row;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  gap: var(--space-x3);
+  min-height: 48px;
+  text-align: left;
+}
+
+.row:active:not(:disabled) {
+  opacity: 0.72;
+}
+
+/* A rule that cannot be changed reads as unavailable rather than merely refusing.
+   0.45 is the same fade the action buttons use. */
+.row:disabled {
+  opacity: 0.45;
+}
+
+/* The mark is a pseudo-element rather than a nested node: an empty box and a
+   ticked one are the same element in two states. */
+.box {
+  align-items: center;
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-ink);
+  border-radius: 4px;
+  display: flex;
+  flex-shrink: 0;
+  height: 22px;
+  justify-content: center;
+  width: 22px;
+}
+
+.boxChecked {
+  background-color: var(--color-ink);
+}
+
+.boxChecked::after {
+  color: var(--color-white);
+  content: "✓";
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* Takes the rest of the row, so a column of checkboxes keeps its marks aligned. */
+.label {
+  flex: 1;
+}

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   ActionButton,
+  Checkbox,
   CounterControl,
   MahjongTile,
   MethodCard,
@@ -56,6 +57,32 @@ describe("SegmentedControl", () => {
 
     fireEvent.click(screen.getByRole("radio", { name: "Ron" }));
     expect(onChange).toHaveBeenCalledWith("ron");
+  });
+});
+
+describe("Checkbox", () => {
+  it("reports the value it is moving to, both ways", () => {
+    const onChange = vi.fn<(checked: boolean) => void>();
+    const { rerender } = render(<Checkbox checked={false} label="Ura-dora" onChange={onChange} />);
+
+    const box = screen.getByRole("checkbox", { name: "Ura-dora", checked: false });
+    fireEvent.click(box);
+    expect(onChange).toHaveBeenCalledWith(true);
+
+    rerender(<Checkbox checked label="Ura-dora" onChange={onChange} />);
+    fireEvent.click(screen.getByRole("checkbox", { name: "Ura-dora", checked: true }));
+    expect(onChange).toHaveBeenLastCalledWith(false);
+  });
+
+  it("stays silent and reports itself disabled when the rule is pinned", () => {
+    const onChange = vi.fn<(checked: boolean) => void>();
+    render(<Checkbox checked disabled label="Red fives count as dora" onChange={onChange} />);
+
+    const box = screen.getByRole("checkbox", { name: "Red fives count as dora" });
+    expect(box).toBeDisabled();
+    fireEvent.click(box);
+
+    expect(onChange).not.toHaveBeenCalled();
   });
 });
 

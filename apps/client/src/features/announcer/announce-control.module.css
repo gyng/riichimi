@@ -9,19 +9,3 @@
 .note {
   composes: note from "../setup-card.module.css";
 }
-
-.row {
-  composes: checkRow from "../setup-card.module.css";
-}
-
-.check {
-  composes: check from "../setup-card.module.css";
-}
-
-.checkOn {
-  composes: checkOn from "../setup-card.module.css";
-}
-
-.label {
-  composes: checkLabel from "../setup-card.module.css";
-}

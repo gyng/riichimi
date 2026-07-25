@@ -1,8 +1,10 @@
-import { SegmentedControl, classNames } from "@riichimi/ui";
+import { Checkbox, SegmentedControl, classNames } from "@riichimi/ui";
 
 import { useRules } from "../../state/rules-context";
 import type { HouseRules } from "./house-rules";
 import { useLocale } from "../../state/locale-context";
+import { useId } from "react";
+
 import styles from "./house-rules-editor.module.css";
 
 type Translate = (source: string) => string;
@@ -44,6 +46,14 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
   const toggles = togglesFor(t);
   const rules = useRules();
   const house = rules.houseRules;
+  // One id per visible field label, so each control can point at the words
+  // already on screen instead of repeating them.
+  const group = useId();
+  const labelIds = {
+    countedLimit: `${group}-countedLimit`,
+    yakumanStacking: `${group}-yakumanStacking`,
+    windFu: `${group}-windFu`,
+  };
 
   function update(patch: Partial<HouseRules>) {
     rules.saveHouseRules({ ...house, ...patch });
@@ -70,26 +80,20 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
       />
 
       {toggles.map((toggle) => (
-        <button
-          aria-checked={house[toggle.key]}
-          className={classNames(styles["row"], locked && styles["locked"])}
+        <Checkbox
+          checked={house[toggle.key]}
           disabled={locked}
           key={toggle.key}
-          onClick={() => update({ [toggle.key]: !house[toggle.key] })}
-          role="checkbox"
-          type="button"
-        >
-          <span
-            aria-hidden
-            className={classNames(styles["check"], house[toggle.key] && styles["checkOn"])}
-          />
-          <span className={styles["label"]}>{toggle.label}</span>
-        </button>
+          label={toggle.label}
+          onChange={(checked) => update({ [toggle.key]: checked })}
+        />
       ))}
 
-      <p className={styles["fieldLabel"]}>{t("13+ HAN WITHOUT A YAKUMAN")}</p>
+      <p id={labelIds.countedLimit} className={styles["fieldLabel"]}>
+        {t("13+ HAN WITHOUT A YAKUMAN")}
+      </p>
       <SegmentedControl
-        accessibilityLabel={t("Counted limit")}
+        labelledBy={labelIds.countedLimit}
         onChange={(countedLimit) => {
           if (!locked) {
             update({ countedLimit });
@@ -99,9 +103,11 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
         value={house.countedLimit}
       />
 
-      <p className={styles["fieldLabel"]}>{t("COMBINED YAKUMAN")}</p>
+      <p id={labelIds.yakumanStacking} className={styles["fieldLabel"]}>
+        {t("COMBINED YAKUMAN")}
+      </p>
       <SegmentedControl
-        accessibilityLabel={t("Combined yakuman")}
+        labelledBy={labelIds.yakumanStacking}
         onChange={(yakumanStacking) => {
           if (!locked) {
             update({ yakumanStacking });
@@ -111,9 +117,11 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
         value={house.yakumanStacking}
       />
 
-      <p className={styles["fieldLabel"]}>{t("PAIR THAT IS BOTH WINDS")}</p>
+      <p id={labelIds.windFu} className={styles["fieldLabel"]}>
+        {t("PAIR THAT IS BOTH WINDS")}
+      </p>
       <SegmentedControl
-        accessibilityLabel={t("Double wind pair fu")}
+        labelledBy={labelIds.windFu}
         onChange={(value) => {
           if (!locked) {
             update({ doubleWindPairFu: value === "4" ? 4 : 2 });

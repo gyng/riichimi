@@ -2,7 +2,8 @@
  * The shared shape of a Setup card. Four features render one — language, tile
  * labels, win feedback, scoring rules — and they had four identical copies of
  * these rules between them. `composes` keeps the card one definition while each
- * feature still owns its own stylesheet.
+ * feature still owns its own stylesheet. The checkbox that used to live here is
+ * a component now, with its own stylesheet.
  */
 
 /* Sized as an item of Setup's wrapping row: 320px of width to start, then an
@@ -33,47 +34,4 @@
   font-family: var(--font-serif);
   font-size: 13px;
   line-height: 19px;
-}
-
-/* The whole row is the control, so the label is part of the target. */
-.checkRow {
-  align-items: center;
-  color: var(--color-ink);
-  display: flex;
-  flex-direction: row;
-  font-family: var(--font-serif);
-  font-size: 15px;
-  gap: var(--space-x3);
-  min-height: 48px;
-  text-align: left;
-}
-
-/* The mark is a pseudo-element rather than a nested node: an empty box and a
-   ticked one are the same element in two states. */
-.check {
-  align-items: center;
-  background-color: var(--color-paper);
-  border: 1px solid var(--color-ink);
-  border-radius: 4px;
-  display: flex;
-  flex-shrink: 0;
-  height: 22px;
-  justify-content: center;
-  width: 22px;
-}
-
-.checkOn {
-  background-color: var(--color-ink);
-}
-
-.checkOn::after {
-  color: var(--color-white);
-  content: "✓";
-  font-size: 13px;
-  font-weight: 800;
-}
-
-/* Takes the rest of the row so the mark stays left-aligned with the others. */
-.checkLabel {
-  flex: 1;
 }

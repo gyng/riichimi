@@ -30,6 +30,7 @@ import type {
 } from "@riichimi/session-core";
 import {
   ActionButton,
+  Checkbox,
   CounterControl,
   MahjongTile,
   SegmentedControl,
@@ -37,7 +38,7 @@ import {
   tileAccessibleName,
 } from "@riichimi/ui";
 import { router, useLocalSearchParams } from "../../navigation/router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useId } from "react";
 import type { ReactNode } from "react";
 
 import { speech } from "../../infrastructure/speech";
@@ -232,6 +233,19 @@ export function ManualCalculator({
   readonly referencePhoto?: string | undefined;
 }) {
   const { t } = useLocale();
+  // One id per visible field label, so each control can point at the words
+  // already on screen instead of repeating them.
+  const group = useId();
+  const labelIds = {
+    winner: `${group}-winner`,
+    discarder: `${group}-discarder`,
+    method: `${group}-method`,
+    seatWind: `${group}-seatWind`,
+    roundWind: `${group}-roundWind`,
+    riichi: `${group}-riichi`,
+    special: `${group}-special`,
+  };
+
   // A landscape phone or a desktop has width to spare and little height, so the
   // hand and the picker sit side by side instead of stacking.
   const methodOptions = methodOptionsFor(t);
@@ -851,9 +865,11 @@ export function ManualCalculator({
                 </p>
               </div>
               <div className={styles["sessionChoice"]}>
-                <p className={styles["fieldLabel"]}>{t("WINNER")}</p>
+                <p id={labelIds.winner} className={styles["fieldLabel"]}>
+                  {t("WINNER")}
+                </p>
                 <SegmentedControl
-                  accessibilityLabel={t("Winning player")}
+                  labelledBy={labelIds.winner}
                   onChange={(value) => {
                     const index = Number(value);
                     setSessionWinnerIndex(index);
@@ -876,9 +892,11 @@ export function ManualCalculator({
               </div>
               {method === "ron" ? (
                 <div className={styles["sessionChoice"]}>
-                  <p className={styles["fieldLabel"]}>{t("DISCARDER")}</p>
+                  <p id={labelIds.discarder} className={styles["fieldLabel"]}>
+                    {t("DISCARDER")}
+                  </p>
                   <SegmentedControl
-                    accessibilityLabel={t("Discarding player")}
+                    labelledBy={labelIds.discarder}
                     onChange={(value) => {
                       setDiscarderIndex(Number(value));
                       resetResult();
@@ -1049,9 +1067,11 @@ export function ManualCalculator({
           <Section title={t("Context")}>
             <div className={styles["contextGrid"]}>
               <div className={styles["field"]}>
-                <p className={styles["fieldLabel"]}>{t("WIN METHOD")}</p>
+                <p id={labelIds.method} className={styles["fieldLabel"]}>
+                  {t("WIN METHOD")}
+                </p>
                 <SegmentedControl
-                  accessibilityLabel={t("Win method")}
+                  labelledBy={labelIds.method}
                   onChange={setWinMethod}
                   options={methodOptions}
                   value={method}
@@ -1075,10 +1095,12 @@ export function ManualCalculator({
               <>
                 <div className={styles["contextGrid"]}>
                   <div className={styles["field"]}>
-                    <p className={styles["fieldLabel"]}>{t("SEAT WIND")}</p>
+                    <p id={labelIds.seatWind} className={styles["fieldLabel"]}>
+                      {t("SEAT WIND")}
+                    </p>
                     {contextEditable ? (
                       <SegmentedControl
-                        accessibilityLabel={t("Seat wind")}
+                        labelledBy={labelIds.seatWind}
                         onChange={setPlayerWind}
                         options={windOptions}
                         value={seatWind}
@@ -1088,10 +1110,12 @@ export function ManualCalculator({
                     )}
                   </div>
                   <div className={styles["field"]}>
-                    <p className={styles["fieldLabel"]}>{t("ROUND WIND")}</p>
+                    <p id={labelIds.roundWind} className={styles["fieldLabel"]}>
+                      {t("ROUND WIND")}
+                    </p>
                     {contextEditable ? (
                       <SegmentedControl
-                        accessibilityLabel={t("Round wind")}
+                        labelledBy={labelIds.roundWind}
                         onChange={(value) => {
                           setRoundWind(value);
                           resetResult();
@@ -1106,18 +1130,22 @@ export function ManualCalculator({
                     )}
                   </div>
                   <div className={styles["field"]}>
-                    <p className={styles["fieldLabel"]}>{t("RIICHI")}</p>
+                    <p id={labelIds.riichi} className={styles["fieldLabel"]}>
+                      {t("RIICHI")}
+                    </p>
                     <SegmentedControl
-                      accessibilityLabel={t("Riichi declaration")}
+                      labelledBy={labelIds.riichi}
                       onChange={chooseRiichi}
                       options={riichiOptions}
                       value={riichi}
                     />
                   </div>
                   <div className={styles["field"]}>
-                    <p className={styles["fieldLabel"]}>{t("SPECIAL WIN")}</p>
+                    <p id={labelIds.special} className={styles["fieldLabel"]}>
+                      {t("SPECIAL WIN")}
+                    </p>
                     <SegmentedControl
-                      accessibilityLabel={t("Special win")}
+                      labelledBy={labelIds.special}
                       onChange={(value) => {
                         setSpecialEvent(value);
                         resetResult();
@@ -1129,22 +1157,15 @@ export function ManualCalculator({
                 </div>
 
                 {riichi === "none" ? null : (
-                  <button
-                    role="checkbox"
-                    aria-checked={ippatsu}
-                    onClick={() => {
-                      setIppatsu((value) => !value);
+                  <Checkbox
+                    checked={ippatsu}
+                    className={styles["ippatsu"]}
+                    label={t("Ippatsu")}
+                    onChange={(checked) => {
+                      setIppatsu(checked);
                       resetResult();
                     }}
-                    className={styles["checkboxRow"]}
-                  >
-                    <div
-                      className={classNames(styles["checkbox"], ippatsu && styles["checkedBox"])}
-                    >
-                      <p className={styles["checkmark"]}>{ippatsu ? "✓" : ""}</p>
-                    </div>
-                    <p className={styles["checkboxLabel"]}>{t("Ippatsu")}</p>
-                  </button>
+                  />
                 )}
 
                 {contextEditable ? (

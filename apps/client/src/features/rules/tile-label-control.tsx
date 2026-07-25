@@ -1,4 +1,4 @@
-import { classNames } from "@riichimi/ui";
+import { Checkbox } from "@riichimi/ui";
 
 import { useLocale } from "../../state/locale-context";
 import { useTileLabels } from "../../state/tile-display-context";
@@ -11,19 +11,11 @@ export function TileLabelControl() {
   return (
     <div className={styles["card"]}>
       <p className={styles["kicker"]}>{t("TILES · THIS DEVICE")}</p>
-      <button
-        aria-checked={showRankLabels}
-        className={styles["row"]}
-        onClick={() => setShowRankLabels(!showRankLabels)}
-        role="checkbox"
-        type="button"
-      >
-        <span
-          aria-hidden
-          className={classNames(styles["check"], showRankLabels && styles["checkOn"])}
-        />
-        <span className={styles["label"]}>{t("Show the rank in the tile corner")}</span>
-      </button>
+      <Checkbox
+        checked={showRankLabels}
+        label={t("Show the rank in the tile corner")}
+        onChange={setShowRankLabels}
+      />
       <p className={styles["note"]}>{t("Adds 5p / 3s to each face.")}</p>
     </div>
   );

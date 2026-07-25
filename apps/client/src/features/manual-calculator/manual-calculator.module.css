@@ -95,43 +95,10 @@
   margin-bottom: var(--space-x5);
 }
 
-.checkbox {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--color-ink);
-  align-items: center;
-  background-color: var(--color-paper);
-  border-radius: 4px;
-  height: 24px;
-  justify-content: center;
-  width: 24px;
-}
-
-.checkboxLabel {
-  color: var(--color-ink);
-  font-family: var(--font-serif);
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.checkboxRow {
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  gap: var(--space-x2);
+/* Ippatsu only applies to a riichi hand, so it appears under the riichi choice
+   rather than beside it. */
+.ippatsu {
   margin-top: var(--space-x4);
-}
-
-.checkedBox {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--color-ink);
-}
-
-.checkmark {
-  color: var(--color-white);
-  font-size: 14px;
-  font-weight: 800;
 }
 
 .chip {

@@ -211,7 +211,7 @@ describe("ManualCalculator", () => {
       // Context fields are editable defaults in edit mode, not locked to the table.
       // They sit behind the round-context disclosure so a hand needs less scrolling.
       fireEvent.click(screen.getByRole("button", { name: "Round and seat details" }));
-      expect(screen.getByLabelText("Seat wind")).toBeInTheDocument();
+      expect(screen.getByLabelText("SEAT WIND")).toBeInTheDocument();
       expect(screen.getByLabelText("Increase Honba")).toBeInTheDocument();
     });
 

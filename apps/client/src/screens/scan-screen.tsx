@@ -6,7 +6,7 @@ import { CameraView, useCameraPermissions } from "../infrastructure/camera";
 import type { CameraViewHandle } from "../infrastructure/camera";
 import * as ImagePicker from "../infrastructure/photo-library";
 import { router } from "../navigation/router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useId } from "react";
 
 import sampleHandImage from "../../assets/samples/guided-sample-hand.png";
 import { tileRecognition } from "../infrastructure/tile-recognition";
@@ -97,6 +97,10 @@ export function ScanScreen() {
   // Reading a photo was never a judgement call, so it starts on its own; the
   // review gate is where the user's judgement actually belongs.
   const readPhotoUri = useRef<string | null>(null);
+  // One id per visible field label, so each control can point at the words
+  // already on screen instead of repeating them.
+  const labelId = useId();
+  const labelIds = { layout: `${labelId}-layout` };
 
   useEffect(() => {
     let active = true;
@@ -395,9 +399,11 @@ export function ScanScreen() {
               </p>
               {recognition.kind === "complete" ? null : (
                 <div className={styles["layoutChoice"]}>
-                  <p className={styles["layoutLabel"]}>{t("CAPTURE LAYOUT")}</p>
+                  <p id={labelIds.layout} className={styles["layoutLabel"]}>
+                    {t("CAPTURE LAYOUT")}
+                  </p>
                   <SegmentedControl
-                    accessibilityLabel={t("Capture layout")}
+                    labelledBy={labelIds.layout}
                     onChange={(value) => {
                       // A different layout is a different parse, so the photo is
                       // read again rather than leaving a stale result on screen.
@@ -509,7 +515,7 @@ export function ScanScreen() {
         <div className={styles["cameraChrome"]}>
           <div className={styles["cameraHeader"]}>
             <SegmentedControl
-              accessibilityLabel={t("Capture layout")}
+              labelledBy={labelIds.layout}
               onChange={setCaptureLayout}
               options={layoutOptions}
               value={captureLayout}
