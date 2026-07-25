@@ -105,7 +105,7 @@ describe("SessionScreen", () => {
     fireEvent.click(screen.getByRole("button", { name: "Edit East 1 draw" }));
 
     // Drop Player 2 from the tenpai set, leaving only the dealer tenpai.
-    fireEvent.click(screen.getByRole("checkbox", { name: "Player 2 tenpai" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Player 2 is tenpai" }));
     fireEvent.click(screen.getByRole("button", { name: "Apply" }));
 
     // Signed per-player final-score changes are shown before committing.

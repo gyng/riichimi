@@ -71,15 +71,35 @@ deferred items closed with it:
 - **The client's coverage floors are a gate**, not dormant config: `test:ui` runs
   with `--coverage`.
 
-## Still left
+## Nothing left
 
-- **Composed accessible names.** A name built from a tile, a player, or a count
-  ("Remove 5 circles from hand") is still English. Translating those needs an
-  interpolating translator and a locale-aware `tileAccessibleName` — a feature
-  with its own design, not a catalog entry. The scanner reads literals only, and
-  a test pins that boundary.
-- **A `Checkbox` component.** Four features compose the same checkbox from shared
-  CSS. The markup is still repeated, and reuse now justifies promoting it.
-- **`aria-labelledby` over `aria-label`.** Several controls sit under a visible
-  label and name themselves again with `aria-label`, so the same string is
-  translated twice. Pointing at the visible label would leave one.
+The last three items closed together, because each one was really about the same
+thing: a name a person hears.
+
+- **A `Checkbox` component.** `packages/ui` owns it now, and the five hand-built
+  copies are gone. An empty and a ticked box are one element in two states
+  (`.boxChecked::after { content: "✓" }`) rather than two branches of markup.
+- **`aria-labelledby` over `aria-label`.** Controls that sit under a visible label
+  now point at it, so eleven strings are translated once instead of twice.
+  `SegmentedControl` takes `labelledBy` or `accessibilityLabel` as a union, never
+  both. `CounterControl` is a `role="group"` named by its label, and its readout
+  is a live region — pressing a stepper says what the number became.
+- **Composed accessible names.** `translate` fills `{placeholder}` slots, so a
+  composed name is one source string a translator sees whole. The slot goes where
+  the language needs it: 「{tile}を手牌から外す」 puts the tile first and the verb
+  last, which no concatenation could have produced. Tile vocabulary moved into
+  `TileWords` — supplied per locale, joined by a locale-owned rule, because 五筒
+  takes no space and "5 circles" does. A screen reader reading the interface in
+  Japanese no longer says "5 circles".
+
+The scanner grew with them: it reads `aria-label` and `accessibilityLabel`, and it
+fails on `aria-label={`…`}` — a template literal is a name that cannot be
+translated, so the boundary it once documented is now enforced.
+
+## Known, and not from this work
+
+Rendering the same tile twice inlines the same SVG twice, so its internal ids
+repeat (`t5pf-defs4`). The duplicate references resolve to identical content, so
+nothing renders wrong and no accessible name points at them, but the ids are
+invalid all the same. It predates the CSS work; fixing it belongs with the tile
+art, not here.

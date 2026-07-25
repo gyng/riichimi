@@ -147,7 +147,7 @@ export function ScoreHistoryScreen() {
                     <div className={styles["entryFooter"]}>
                       <p className={styles["rulesLabel"]}>{entry.rules.label}</p>
                       <button
-                        aria-label={`Remove score ${index + 1}`}
+                        aria-label={t("Remove score {position}", { position: index + 1 })}
                         className={styles["remove"]}
                         onClick={() => history.remove(entry.id)}
                         type="button"

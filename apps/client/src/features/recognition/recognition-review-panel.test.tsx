@@ -40,7 +40,7 @@ describe("RecognitionReviewPanel", () => {
     );
 
     expect(screen.getByText("1 tile needs confirmation")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Use 2 characters for selected tile" }));
+    fireEvent.click(screen.getByRole("button", { name: "Use 2 characters for the selected tile" }));
 
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -94,7 +94,7 @@ describe("RecognitionReviewPanel", () => {
 
     // The low-confidence called-meld tile is flagged and reviewable.
     expect(screen.getByText("1 tile needs confirmation")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Use 3 circles for selected tile" }));
+    fireEvent.click(screen.getByRole("button", { name: "Use 3 circles for the selected tile" }));
 
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({

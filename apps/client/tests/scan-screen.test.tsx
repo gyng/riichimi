@@ -142,7 +142,7 @@ describe("ScanScreen", () => {
     // Reading starts on its own once a photo exists; no extra tap to begin.
     expect(await screen.findByText("15 tiles read · 1 need review")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Resolve 1 tile to continue" })).toBeDisabled();
-    fireEvent.click(screen.getByRole("button", { name: "Use 2 characters for selected tile" }));
+    fireEvent.click(screen.getByRole("button", { name: "Use 2 characters for the selected tile" }));
     expect(await screen.findByText("Recognition review complete")).toBeInTheDocument();
     // The natural (default) layout still confirms the concealed/called split, but
     // the confirmation is the continue action itself rather than an extra tap.

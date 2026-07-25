@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 import { translate } from "../i18n/catalog";
+import type { TranslationValues } from "../i18n/catalog";
 import { messages } from "../i18n/messages";
 import type { Locale, Messages } from "../i18n/messages";
 import {
@@ -13,15 +14,21 @@ interface LocaleContextValue {
   readonly locale: Locale;
   readonly messages: Messages;
   readonly selectLocale: (locale: Locale) => void;
-  /** Translate an English source string for the active locale. */
-  readonly t: (source: string) => string;
+  /**
+   * Translate an English source string for the active locale. A source with
+   * `{placeholder}` slots takes the values to fill them, so a name composed at
+   * runtime can still be a single translatable sentence.
+   */
+  readonly t: (source: string, values?: TranslationValues) => string;
 }
 
 const LocaleContext = createContext<LocaleContextValue>({
   locale: "en",
   messages: messages.en,
   selectLocale: () => {},
-  t: (source) => source,
+  // Outside a provider the source string *is* the English, but it still has to be
+  // filled in — an unrendered `{tile}` would reach the interface.
+  t: (source, values) => translate("en", source, values),
 });
 
 export function LocaleProvider({ children }: { readonly children: ReactNode }) {
@@ -58,7 +65,7 @@ export function LocaleProvider({ children }: { readonly children: ReactNode }) {
         locale,
         messages: messages[locale],
         selectLocale,
-        t: (source) => translate(locale, source),
+        t: (source, values) => translate(locale, source, values),
       }}
     >
       {children}

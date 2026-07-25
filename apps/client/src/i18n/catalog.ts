@@ -10,6 +10,29 @@ import type { Locale } from "./messages";
  */
 const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
   ja: {
+    "Decrease {label}": "{label}を減らす",
+    "Increase {label}": "{label}を増やす",
+    "Player {position} name": "プレイヤー{position}の名前",
+    "Remove dora indicator {tile}": "ドラ表示牌{tile}を外す",
+    "Remove score {position}": "{position}件目の記録を削除",
+    "Remove this {meld}": "この{meld}を外す",
+    "Remove ura-dora indicator {tile}": "裏ドラ表示牌{tile}を外す",
+    "Remove {tile} from hand": "{tile}を手牌から外す",
+    "Use {tile} for the selected tile": "選択中の牌に{tile}を使う",
+    quad: "槓子",
+    sequence: "順子",
+    triplet: "刻子",
+    unreadable: "判読不能",
+    "{honba} honba, {sticks} riichi stick": "{honba}本場、供託{sticks}本",
+    "{honba} honba, {sticks} riichi sticks": "{honba}本場、供託{sticks}本",
+    "{player} declared riichi": "{player}が立直",
+    "{player} discarded the winning tile": "{player}が放銃",
+    "{player} is tenpai": "{player}がテンパイ",
+    "{player} won": "{player}が和了",
+    "{position}, {tile}, {percent} percent confidence":
+      "{position}、{tile}、確度{percent}パーセント",
+    "{position}, {tile}, {percent} percent confidence, needs review":
+      "{position}、{tile}、確度{percent}パーセント、要確認",
     "Complete tile picker": "すべての牌",
     "Concealed hand": "門前の手牌",
     "Hand structure": "手牌の構成",
@@ -311,6 +334,28 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "yakuman never combine": "役満は複合しない",
   },
   "zh-Hans": {
+    "Decrease {label}": "减少{label}",
+    "Increase {label}": "增加{label}",
+    "Player {position} name": "玩家{position}的名字",
+    "Remove dora indicator {tile}": "移除宝牌指示牌{tile}",
+    "Remove score {position}": "删除第{position}条记录",
+    "Remove this {meld}": "移除这个{meld}",
+    "Remove ura-dora indicator {tile}": "移除里宝牌指示牌{tile}",
+    "Remove {tile} from hand": "从手牌移除{tile}",
+    "Use {tile} for the selected tile": "将所选牌改为{tile}",
+    quad: "杠子",
+    sequence: "顺子",
+    triplet: "刻子",
+    unreadable: "无法识别",
+    "{honba} honba, {sticks} riichi stick": "{honba}本场，立直棒{sticks}根",
+    "{honba} honba, {sticks} riichi sticks": "{honba}本场，立直棒{sticks}根",
+    "{player} declared riichi": "{player}已立直",
+    "{player} discarded the winning tile": "{player}放铳",
+    "{player} is tenpai": "{player}听牌",
+    "{player} won": "{player}和牌",
+    "{position}, {tile}, {percent} percent confidence": "{position}，{tile}，置信度{percent}%",
+    "{position}, {tile}, {percent} percent confidence, needs review":
+      "{position}，{tile}，置信度{percent}%，需确认",
     "Complete tile picker": "全部牌",
     "Concealed hand": "门清手牌",
     "Hand structure": "手牌结构",
@@ -607,6 +652,28 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "yakuman never combine": "役满不复合",
   },
   "zh-Hant": {
+    "Decrease {label}": "減少{label}",
+    "Increase {label}": "增加{label}",
+    "Player {position} name": "玩家{position}的名字",
+    "Remove dora indicator {tile}": "移除寶牌指示牌{tile}",
+    "Remove score {position}": "刪除第{position}筆記錄",
+    "Remove this {meld}": "移除這個{meld}",
+    "Remove ura-dora indicator {tile}": "移除裏寶牌指示牌{tile}",
+    "Remove {tile} from hand": "從手牌移除{tile}",
+    "Use {tile} for the selected tile": "將所選牌改為{tile}",
+    quad: "槓子",
+    sequence: "順子",
+    triplet: "刻子",
+    unreadable: "無法識別",
+    "{honba} honba, {sticks} riichi stick": "{honba}本場，立直棒{sticks}根",
+    "{honba} honba, {sticks} riichi sticks": "{honba}本場，立直棒{sticks}根",
+    "{player} declared riichi": "{player}已立直",
+    "{player} discarded the winning tile": "{player}放銃",
+    "{player} is tenpai": "{player}聽牌",
+    "{player} won": "{player}和牌",
+    "{position}, {tile}, {percent} percent confidence": "{position}，{tile}，信賴度{percent}%",
+    "{position}, {tile}, {percent} percent confidence, needs review":
+      "{position}，{tile}，信賴度{percent}%，需確認",
     "Complete tile picker": "全部牌",
     "Concealed hand": "門清手牌",
     "Hand structure": "手牌結構",
@@ -904,6 +971,18 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
   },
 };
 
-export function translate(locale: Locale, source: string): string {
-  return catalog[locale]?.[source] ?? source;
+/** Values for a source string's `{placeholder}` slots. */
+export type TranslationValues = Readonly<Record<string, string | number>>;
+
+export function translate(locale: Locale, source: string, values?: TranslationValues): string {
+  const template = catalog[locale]?.[source] ?? source;
+  if (values === undefined) {
+    return template;
+  }
+  // A placeholder with nothing to fill it is left standing rather than blanked:
+  // "Remove {tile}" is a visible mistake, "Remove " reads like a finished string.
+  return template.replaceAll(/\{(\w+)\}/g, (placeholder, name: string) => {
+    const value = values[name];
+    return value === undefined ? placeholder : String(value);
+  });
 }

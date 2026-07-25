@@ -1,6 +1,6 @@
 import { canonicalTileIds, canonicalizeTile, redFiveIds } from "@riichimi/score-core";
 import type { TileId } from "@riichimi/score-core";
-import { ActionButton, MahjongTile, classNames, tileAccessibleName } from "@riichimi/ui";
+import { ActionButton, MahjongTile, classNames, useTileDisplay } from "@riichimi/ui";
 import { chooseWinningDetection, correctDetection, reviewRecognition } from "@riichimi/vision";
 import type { DetectedTile, RecognitionResult } from "@riichimi/vision";
 import { useEffect, useMemo, useState } from "react";
@@ -108,6 +108,7 @@ export function RecognitionReviewPanel({
   onSelectId,
 }: RecognitionReviewPanelProps) {
   const { t } = useLocale();
+  const { tileName } = useTileDisplay();
   const review = reviewRecognition(result, recognitionReviewThreshold);
   const detections = orderedDetections(result);
   const meldGroups = meldGroupsOf(result);
@@ -255,7 +256,19 @@ export function RecognitionReviewPanel({
           const needsReview = issueIds.has(detection.id);
           return (
             <button
-              aria-label={`${label}, ${tile === null ? "unknown" : tileAccessibleName(tile)}, ${Math.round(detection.confidence * 100)} percent confidence${needsReview ? ", needs review" : ""}`}
+              aria-label={
+                needsReview
+                  ? t("{position}, {tile}, {percent} percent confidence, needs review", {
+                      percent: Math.round(detection.confidence * 100),
+                      position: label,
+                      tile: tile === null ? t("unreadable") : tileName(tile),
+                    })
+                  : t("{position}, {tile}, {percent} percent confidence", {
+                      percent: Math.round(detection.confidence * 100),
+                      position: label,
+                      tile: tile === null ? t("unreadable") : tileName(tile),
+                    })
+              }
               aria-pressed={detection.id === selectedId}
               className={classNames(
                 styles["detection"],
@@ -303,7 +316,7 @@ export function RecognitionReviewPanel({
           <div className={styles["suggestions"]}>
             {uniqueChoices(selected).map((tile) => (
               <button
-                aria-label={`Use ${tileAccessibleName(tile)} for selected tile`}
+                aria-label={t("Use {tile} for the selected tile", { tile: tileName(tile) })}
                 className={styles["suggestion"]}
                 key={tile}
                 onClick={() => chooseTile(tile)}

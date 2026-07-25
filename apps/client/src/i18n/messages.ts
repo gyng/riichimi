@@ -1,3 +1,5 @@
+import type { TileWords } from "@riichimi/ui";
+
 export const supportedLocales = ["en", "ja", "zh-Hans", "zh-Hant"] as const;
 
 export type Locale = (typeof supportedLocales)[number];
@@ -18,6 +20,9 @@ export interface Messages {
     readonly note: string;
   };
   readonly localeName: string;
+  /** What a tile is called out loud. Structured rather than one string per tile:
+      a numbered tile is its rank and its suit, and only the joining differs. */
+  readonly tiles: TileWords;
   readonly nav: {
     readonly history: string;
     readonly home: string;
@@ -50,6 +55,21 @@ export const messages: Record<Locale, Messages> = {
       note: "Scoring terms (han, fu, yakuman) keep their usual form in every language.",
     },
     localeName: "English",
+    tiles: {
+      bamboo: "bamboo",
+      characters: "characters",
+      circles: "circles",
+      east: "East wind",
+      green: "Green dragon",
+      north: "North wind",
+      ranks: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+      red: "Red dragon",
+      redFive: "red five",
+      south: "South wind",
+      suited: "{rank} {suit}",
+      west: "West wind",
+      white: "White dragon",
+    },
     nav: {
       history: "History",
       home: "home",
@@ -76,6 +96,21 @@ export const messages: Record<Locale, Messages> = {
       note: "翻・符・役満などの用語は、どの言語でも通常の表記のままにしています。",
     },
     localeName: "日本語",
+    tiles: {
+      bamboo: "索",
+      characters: "萬",
+      circles: "筒",
+      east: "東",
+      green: "發",
+      north: "北",
+      ranks: ["一", "二", "三", "四", "五", "六", "七", "八", "九"],
+      red: "中",
+      redFive: "赤五",
+      south: "南",
+      suited: "{rank}{suit}",
+      west: "西",
+      white: "白",
+    },
     nav: {
       history: "履歴",
       home: "ホーム",
@@ -102,6 +137,21 @@ export const messages: Record<Locale, Messages> = {
       note: "番、符、役满等术语在各语言下均保持惯用写法。",
     },
     localeName: "简体中文",
+    tiles: {
+      bamboo: "索",
+      characters: "万",
+      circles: "筒",
+      east: "东",
+      green: "发",
+      north: "北",
+      ranks: ["一", "二", "三", "四", "五", "六", "七", "八", "九"],
+      red: "中",
+      redFive: "红五",
+      south: "南",
+      suited: "{rank}{suit}",
+      west: "西",
+      white: "白",
+    },
     nav: {
       history: "记录",
       home: "首页",
@@ -129,6 +179,21 @@ export const messages: Record<Locale, Messages> = {
       note: "番、符、役滿等術語在各語言下均保持慣用寫法。",
     },
     localeName: "繁體中文",
+    tiles: {
+      bamboo: "索",
+      characters: "萬",
+      circles: "筒",
+      east: "東",
+      green: "發",
+      north: "北",
+      ranks: ["一", "二", "三", "四", "五", "六", "七", "八", "九"],
+      red: "中",
+      redFive: "紅五",
+      south: "南",
+      suited: "{rank}{suit}",
+      west: "西",
+      white: "白",
+    },
     nav: {
       history: "紀錄",
       home: "首頁",

@@ -6,6 +6,7 @@ import {
   loadTileLabelPreference,
   saveTileLabelPreference,
 } from "../infrastructure/tile-display-storage";
+import { useLocale } from "./locale-context";
 
 interface TileLabelPreference {
   readonly setShowRankLabels: (enabled: boolean) => void;
@@ -18,6 +19,7 @@ const TileLabelContext = createContext<TileLabelPreference>({
 });
 
 export function TileLabelProvider({ children }: { readonly children: ReactNode }) {
+  const { messages } = useLocale();
   const changedDuringLoad = useRef(false);
   const [showRankLabels, setShow] = useState(false);
 
@@ -47,7 +49,9 @@ export function TileLabelProvider({ children }: { readonly children: ReactNode }
 
   return (
     <TileLabelContext.Provider value={{ setShowRankLabels, showRankLabels }}>
-      <TileDisplayProvider showRankLabels={showRankLabels}>{children}</TileDisplayProvider>
+      <TileDisplayProvider showRankLabels={showRankLabels} tileWords={messages.tiles}>
+        {children}
+      </TileDisplayProvider>
     </TileLabelContext.Provider>
   );
 }

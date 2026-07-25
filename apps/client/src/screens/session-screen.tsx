@@ -91,7 +91,7 @@ export function SessionScreen() {
                       PLAYER {index + 1} · {seatNames[index]}
                     </p>
                     <input
-                      aria-label={`Player ${index + 1} name`}
+                      aria-label={t("Player {position} name", { position: index + 1 })}
                       autoCapitalize="words"
                       className={styles["input"]}
                       maxLength={24}
@@ -299,7 +299,17 @@ export function SessionScreen() {
             {windNames[table.roundWind]} {table.handNumber}
           </h1>
           <p
-            aria-label={`${table.honba} honba, ${table.riichiSticks} riichi ${table.riichiSticks === 1 ? "stick" : "sticks"}`}
+            aria-label={
+              table.riichiSticks === 1
+                ? t("{honba} honba, {sticks} riichi stick", {
+                    honba: table.honba,
+                    sticks: table.riichiSticks,
+                  })
+                : t("{honba} honba, {sticks} riichi sticks", {
+                    honba: table.honba,
+                    sticks: table.riichiSticks,
+                  })
+            }
             className={styles["roundMeta"]}
           >
             {table.honba} {t("honba")} · {table.riichiSticks} {t("riichi sticks")}
@@ -479,7 +489,7 @@ export function SessionScreen() {
                                 const selected = draftTenpai.includes(index);
                                 return (
                                   <button
-                                    aria-label={`${player.name} tenpai`}
+                                    aria-label={t("{player} is tenpai", { player: player.name })}
                                     role="checkbox"
                                     aria-checked={selected}
                                     key={player.id}
@@ -509,7 +519,9 @@ export function SessionScreen() {
                                 const selected = draftRiichi.includes(index);
                                 return (
                                   <button
-                                    aria-label={`${player.name} riichi`}
+                                    aria-label={t("{player} declared riichi", {
+                                      player: player.name,
+                                    })}
                                     role="checkbox"
                                     aria-checked={selected}
                                     key={player.id}
@@ -566,7 +578,7 @@ export function SessionScreen() {
                                 const selected = draftWinner === index;
                                 return (
                                   <button
-                                    aria-label={`Winner ${player.name}`}
+                                    aria-label={t("{player} won", { player: player.name })}
                                     role="radio"
                                     aria-checked={selected}
                                     key={player.id}
@@ -599,7 +611,9 @@ export function SessionScreen() {
                                     const selected = draftDiscarder === index;
                                     return (
                                       <button
-                                        aria-label={`Discarder ${player.name}`}
+                                        aria-label={t("{player} discarded the winning tile", {
+                                          player: player.name,
+                                        })}
                                         role="radio"
                                         aria-checked={selected}
                                         key={player.id}

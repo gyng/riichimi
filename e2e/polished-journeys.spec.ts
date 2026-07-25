@@ -273,7 +273,7 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   ] as const;
   for (const [position, tile] of reviewedTiles) {
     await page.getByRole("button", { name: new RegExp(`^${position},`) }).click();
-    await page.getByRole("button", { name: `Use ${tile} for selected tile` }).click();
+    await page.getByRole("button", { name: `Use ${tile} for the selected tile` }).click();
   }
   const completedReview = page.getByRole("heading", { name: "Recognition review complete" });
   await expect(completedReview).toBeVisible();

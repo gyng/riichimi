@@ -24,10 +24,13 @@ function sourceFiles(directory: string): string[] {
  */
 const textProps =
   /(?<![-\w])(?:label|title|placeholder|aria-label|accessibilityLabel)=\{?"([^"]{4,})"/g;
-// Accessible names count as copy: a screen reader is reading them out. Only
-// literal ones are caught — a name composed from a tile, a player, or a count is
-// built at runtime, and translating those needs an interpolating translator and a
-// locale-aware `tileAccessibleName`, which is a feature rather than a regex.
+// Accessible names count as copy: a screen reader is reading them out.
+//
+// A name built at runtime is caught by the rule below instead: it must be
+// assembled by `t` with `{placeholder}` slots, never by a template literal.
+// Composing one in JSX puts the word order of English into every locale, which is
+// exactly the mistake that left "Remove 5 circles from hand" untranslatable.
+const composedName = /aria-label=\{`/g;
 // JSX text sits between a tag close `>` or expression `}` on the left and a tag
 // open `<` or expression `{` on the right. Matching both sides — and allowing
 // curly quotes and ellipsis inside — closes the gaps where raw copy hid next to
@@ -61,6 +64,19 @@ describe("interface copy is translatable", () => {
           }
           match = pattern.exec(contents);
         }
+      }
+    }
+
+    expect(offenders).toEqual([]);
+  });
+
+  it("composes a runtime accessible name with the translator, not a template", () => {
+    const offenders: string[] = [];
+    for (const file of sourceFiles(sourceRoot)) {
+      const contents = readFileSync(file, "utf8");
+      composedName.lastIndex = 0;
+      if (composedName.test(contents)) {
+        offenders.push(file.replace(sourceRoot, ""));
       }
     }
 
@@ -170,5 +186,25 @@ describe("untranslated-copy scanner", () => {
     expect(exempt.test("Riichimi asks for camera access only when you choose to scan.")).toBe(
       false,
     );
+  });
+});
+
+describe("placeholder interpolation", () => {
+  it("fills a slot from the values it is given", () => {
+    expect(translate("ja", "Remove {tile} from hand", { tile: "五筒" })).toBe("五筒を手牌から外す");
+  });
+
+  it("fills a slot in the English source when nothing is translated", () => {
+    expect(translate("en", "Remove {tile} from hand", { tile: "5 circles" })).toBe(
+      "Remove 5 circles from hand",
+    );
+  });
+
+  it("leaves a slot standing when nothing fills it, so the gap is visible", () => {
+    expect(translate("en", "Remove {tile} from hand", {})).toBe("Remove {tile} from hand");
+  });
+
+  it("takes a number without the caller converting it", () => {
+    expect(translate("en", "{count} honba", { count: 2 })).toBe("2 honba");
   });
 });

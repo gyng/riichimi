@@ -35,7 +35,7 @@ import {
   MahjongTile,
   SegmentedControl,
   classNames,
-  tileAccessibleName,
+  useTileDisplay,
 } from "@riichimi/ui";
 import { router, useLocalSearchParams } from "../../navigation/router";
 import { useEffect, useMemo, useRef, useState, useId } from "react";
@@ -233,6 +233,7 @@ export function ManualCalculator({
   readonly referencePhoto?: string | undefined;
 }) {
   const { t } = useLocale();
+  const { tileName } = useTileDisplay();
   // One id per visible field label, so each control can point at the words
   // already on screen instead of repeating them.
   const group = useId();
@@ -937,7 +938,7 @@ export function ManualCalculator({
                         tile={tile}
                       />
                       <button
-                        aria-label={`Remove ${tileAccessibleName(tile)} from hand`}
+                        aria-label={t("Remove {tile} from hand", { tile: tileName(tile) })}
                         onClick={() => removeConcealed(index)}
                         className={styles["removeButton"]}
                       >
@@ -957,7 +958,7 @@ export function ManualCalculator({
                           {meld.open ? "OPEN" : "CLOSED"} {meld.kind.toUpperCase()}
                         </p>
                         <button
-                          aria-label={`Remove ${meld.kind}`}
+                          aria-label={t("Remove this {meld}", { meld: t(meld.kind) })}
                           onClick={() => removeMeld(index)}
                         >
                           <p className={styles["removeLink"]}>{t("Remove")}</p>
@@ -979,7 +980,7 @@ export function ManualCalculator({
                 ) : null}
                 {doraIndicators.map((tile, index) => (
                   <button
-                    aria-label={`Remove dora indicator ${tileAccessibleName(tile)}`}
+                    aria-label={t("Remove dora indicator {tile}", { tile: tileName(tile) })}
                     key={`${tile}-${index}`}
                     onClick={() => {
                       setDoraIndicators((tiles) =>
@@ -1001,7 +1002,7 @@ export function ManualCalculator({
                     ) : null}
                     {uraDoraIndicators.map((tile, index) => (
                       <button
-                        aria-label={`Remove ura-dora indicator ${tileAccessibleName(tile)}`}
+                        aria-label={t("Remove ura-dora indicator {tile}", { tile: tileName(tile) })}
                         key={`${tile}-${index}`}
                         onClick={() => {
                           setUraDoraIndicators((tiles) =>
@@ -1171,6 +1172,8 @@ export function ManualCalculator({
                 {contextEditable ? (
                   <div className={styles["counterRow"]}>
                     <CounterControl
+                      decreaseLabel={t("Decrease {label}", { label: t("Honba") })}
+                      increaseLabel={t("Increase {label}", { label: t("Honba") })}
                       label={t("Honba")}
                       maximum={20}
                       onChange={(value) => {
@@ -1180,6 +1183,8 @@ export function ManualCalculator({
                       value={honba}
                     />
                     <CounterControl
+                      decreaseLabel={t("Decrease {label}", { label: t("Riichi sticks") })}
+                      increaseLabel={t("Increase {label}", { label: t("Riichi sticks") })}
                       label={t("Riichi sticks")}
                       maximum={20}
                       onChange={(value) => {

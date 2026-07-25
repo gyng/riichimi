@@ -3,51 +3,8 @@ import type { TileId } from "@riichimi/score-core";
 import { classNames } from "../class-names";
 import { tileArt } from "./tile-art";
 import { useTileDisplay } from "./tile-display-context";
+import { isHonourTile } from "./tile-name";
 import styles from "./mahjong-tile.module.css";
-
-const honourGlyphs = {
-  east: "東",
-  green: "發",
-  north: "北",
-  red: "中",
-  south: "南",
-  west: "西",
-  white: "白",
-} as const;
-
-const honourNames = {
-  east: "East wind",
-  green: "Green dragon",
-  north: "North wind",
-  red: "Red dragon",
-  south: "South wind",
-  west: "West wind",
-  white: "White dragon",
-} as const;
-
-type HonourTile = keyof typeof honourGlyphs;
-
-function isHonourTile(tile: TileId): tile is HonourTile {
-  return (
-    tile === "east" ||
-    tile === "south" ||
-    tile === "west" ||
-    tile === "north" ||
-    tile === "white" ||
-    tile === "green" ||
-    tile === "red"
-  );
-}
-
-export function tileAccessibleName(tile: TileId): string {
-  if (isHonourTile(tile)) {
-    return honourNames[tile];
-  }
-
-  const rank = tile[0] === "0" ? "red five" : tile[0];
-  const suit = tile.endsWith("m") ? "characters" : tile.endsWith("p") ? "circles" : "bamboo";
-  return `${rank} ${suit}`;
-}
 
 export interface MahjongTileProps {
   readonly disabled?: boolean;
@@ -75,7 +32,7 @@ export function MahjongTile({
   selected = false,
   tile,
 }: MahjongTileProps) {
-  const { showRankLabels } = useTileDisplay();
+  const { showRankLabels, tileName } = useTileDisplay();
   const Art = tileArt[tile];
   const corner = showRankLabels ? cornerLabel(tile) : null;
   const className = classNames(
@@ -97,7 +54,7 @@ export function MahjongTile({
   // A tile nobody can press is a picture of a tile, not a control.
   if (onPress === undefined) {
     return (
-      <div aria-label={tileAccessibleName(tile)} className={className} role="img">
+      <div aria-label={tileName(tile)} className={className} role="img">
         {content}
       </div>
     );
@@ -105,7 +62,7 @@ export function MahjongTile({
 
   return (
     <button
-      aria-label={tileAccessibleName(tile)}
+      aria-label={tileName(tile)}
       aria-pressed={selected}
       className={className}
       disabled={disabled}
