@@ -1,8 +1,6 @@
-import { Text, View } from "../primitives";
-import type { Styles } from "../primitives";
-
 import { ActionButton } from "../atoms/action-button";
-import { color, radius, space } from "../tokens/theme";
+import { classNames } from "../class-names";
+import styles from "./method-card.module.css";
 
 export interface MethodCardProps {
   readonly actionLabel: string;
@@ -22,81 +20,21 @@ export function MethodCard({
   title,
 }: MethodCardProps) {
   return (
-    <View style={[styles.card, primary && styles.primaryCard]}>
-      <View style={styles.headingRow}>
-        <Text aria-hidden style={[styles.index, primary && styles.primaryIndex]}>
+    <div className={classNames(styles["card"], primary && styles["primary"])}>
+      <div className={styles["headingRow"]}>
+        {/* Decorative: the title below already names the method. */}
+        <p aria-hidden className={styles["index"]}>
           {index}
-        </Text>
-        <View style={styles.rule} />
-      </View>
-      <Text role="heading" style={[styles.title, primary && styles.primaryTitle]}>
-        {title}
-      </Text>
-      <Text style={[styles.body, primary && styles.primaryBody]}>{body}</Text>
+        </p>
+        <div className={styles["rule"]} />
+      </div>
+      <h2 className={styles["title"]}>{title}</h2>
+      <p className={styles["body"]}>{body}</p>
       <ActionButton
         label={actionLabel}
         onPress={onPress}
         variant={primary ? "vermilion" : "paper"}
       />
-    </View>
+    </div>
   );
 }
-
-const styles = {
-  body: {
-    color: color.inkMuted,
-    flexGrow: 1,
-    fontFamily: "serif",
-    fontSize: 16,
-    lineHeight: 24,
-    marginBottom: space.x5,
-  },
-  card: {
-    backgroundColor: color.paper,
-    borderColor: color.line,
-    borderRadius: radius.panel,
-    borderWidth: 1,
-    flex: 1,
-    minHeight: 300,
-    padding: space.x5,
-  },
-  headingRow: {
-    alignItems: "center",
-    flexDirection: "row",
-    gap: space.x3,
-    marginBottom: space.x6,
-  },
-  index: {
-    color: color.accent,
-    fontFamily: "monospace",
-    fontSize: 12,
-    fontWeight: "700",
-  },
-  primaryBody: {
-    color: "#D8D8CF",
-  },
-  primaryCard: {
-    backgroundColor: color.ink,
-    borderColor: color.ink,
-  },
-  primaryIndex: {
-    color: "#F06B4F",
-  },
-  primaryTitle: {
-    color: color.white,
-  },
-  rule: {
-    backgroundColor: color.line,
-    flex: 1,
-    height: 1,
-  },
-  title: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 29,
-    fontWeight: "700",
-    letterSpacing: -0.7,
-    lineHeight: 34,
-    marginBottom: space.x3,
-  },
-} satisfies Styles;

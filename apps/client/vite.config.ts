@@ -28,6 +28,7 @@ export default defineConfig(({ command }) => {
     // Component tests run against this same config, so a screen resolves its
     // adapters and tile art in a test exactly as it does in the browser.
     test: {
+      css: { modules: { classNameStrategy: "non-scoped" } },
       environment: "jsdom",
       // A ratchet, not a target: these floors sit just under what the suite
       // reaches, so coverage cannot quietly slide. Platform adapters and the

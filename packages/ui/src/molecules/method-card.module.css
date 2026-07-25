@@ -1,0 +1,72 @@
+/* One of the two ways into a score, offered side by side. The numbered rubric and
+   the rule that runs off it are the ledger motif: a numbered entry on a page. */
+.card {
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-panel);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 300px;
+  padding: var(--space-x5);
+}
+
+.headingRow {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-x3);
+  margin-bottom: var(--space-x6);
+}
+
+.index {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* The hairline that carries the eye from the number across the card. */
+.rule {
+  background-color: var(--color-line);
+  flex: 1;
+  height: 1px;
+}
+
+.title {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 29px;
+  font-weight: 700;
+  letter-spacing: -0.7px;
+  line-height: 34px;
+  margin-bottom: var(--space-x3);
+}
+
+/* Grows so both cards' actions sit on the same line however long the copy is. */
+.body {
+  color: var(--color-ink-muted);
+  flex-grow: 1;
+  font-family: var(--font-serif);
+  font-size: 16px;
+  line-height: 24px;
+  margin-bottom: var(--space-x5);
+}
+
+/* The recommended way in, inverted so it reads first. */
+.primary {
+  background-color: var(--color-ink);
+  border-color: var(--color-ink);
+}
+
+.primary .index {
+  color: #f06b4f;
+}
+
+.primary .title {
+  color: var(--color-white);
+}
+
+.primary .body {
+  color: #d8d8cf;
+}

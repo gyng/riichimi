@@ -1,0 +1,59 @@
+/* Honba, riichi sticks, dora: a small number a player nudges up and down rather
+   than types. The readout sits between the two steppers so the eye stays on it. */
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-x2);
+}
+
+.label {
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.controls {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-x2);
+}
+
+/* Square, and at the 48px touch minimum on every side. */
+.step {
+  align-items: center;
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-control);
+  color: var(--color-ink);
+  display: flex;
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 800;
+  height: 48px;
+  justify-content: center;
+  width: 48px;
+}
+
+.step:active:not(:disabled) {
+  opacity: 0.65;
+}
+
+/* At its floor or ceiling the stepper stays in place rather than disappearing and
+   shifting the row, so it has to look unavailable. It previously looked identical
+   to a working one: `disabled` reached neither the DOM nor the styles. 0.45 is the
+   same fade the action buttons use. */
+.step:disabled {
+  opacity: 0.45;
+}
+
+.value {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 800;
+  min-width: 32px;
+  text-align: center;
+}

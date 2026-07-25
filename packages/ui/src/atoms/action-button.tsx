@@ -1,7 +1,5 @@
-import { Pressable, Text } from "../primitives";
-import type { Styles } from "../primitives";
-
-import { color, radius, space } from "../tokens/theme";
+import { classNames } from "../class-names";
+import styles from "./action-button.module.css";
 
 export interface ActionButtonProps {
   readonly disabled?: boolean;
@@ -17,56 +15,13 @@ export function ActionButton({
   variant = "ink",
 }: ActionButtonProps) {
   return (
-    <Pressable
+    <button
+      className={classNames(styles["button"], styles[variant])}
       disabled={disabled}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.base,
-        styles[variant],
-        pressed && styles.pressed,
-        disabled && styles.disabled,
-      ]}
+      onClick={onPress}
+      type="button"
     >
-      <Text style={[styles.label, variant === "paper" && styles.paperLabel]}>{label}</Text>
-    </Pressable>
+      {label}
+    </button>
   );
 }
-
-const styles = {
-  base: {
-    alignItems: "center",
-    borderRadius: radius.control,
-    justifyContent: "center",
-    minHeight: 48,
-    paddingHorizontal: space.x5,
-    paddingVertical: space.x3,
-  },
-  disabled: {
-    opacity: 0.45,
-  },
-  ink: {
-    backgroundColor: color.ink,
-  },
-  label: {
-    color: color.white,
-    fontFamily: "serif",
-    fontSize: 15,
-    fontWeight: "700",
-    letterSpacing: 0.4,
-  },
-  paper: {
-    backgroundColor: color.paper,
-    borderColor: color.ink,
-    borderWidth: 1,
-  },
-  paperLabel: {
-    color: color.ink,
-  },
-  pressed: {
-    opacity: 0.78,
-    transform: [{ translateY: 1 }],
-  },
-  vermilion: {
-    backgroundColor: color.accent,
-  },
-} satisfies Styles;

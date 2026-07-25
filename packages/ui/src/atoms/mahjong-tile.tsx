@@ -1,10 +1,9 @@
 import type { TileId } from "@riichimi/score-core";
-import { Pressable, Text, View } from "../primitives";
-import type { Styles } from "../primitives";
 
-import { color, radius } from "../tokens/theme";
+import { classNames } from "../class-names";
 import { tileArt } from "./tile-art";
 import { useTileDisplay } from "./tile-display-context";
+import styles from "./mahjong-tile.module.css";
 
 const honourGlyphs = {
   east: "東",
@@ -79,87 +78,41 @@ export function MahjongTile({
   const { showRankLabels } = useTileDisplay();
   const Art = tileArt[tile];
   const corner = showRankLabels ? cornerLabel(tile) : null;
+  const className = classNames(
+    styles["tile"],
+    fill && styles["fill"],
+    selected && styles["selected"],
+  );
   const content = (
     <>
       <Art height="100%" preserveAspectRatio="xMidYMid meet" width="100%" />
       {corner === null ? null : (
-        <View aria-hidden style={styles.corner}>
-          <Text style={styles.cornerLabel}>{corner}</Text>
-        </View>
+        <span aria-hidden className={styles["corner"]}>
+          {corner}
+        </span>
       )}
     </>
   );
 
+  // A tile nobody can press is a picture of a tile, not a control.
   if (onPress === undefined) {
     return (
-      <View
-        aria-label={tileAccessibleName(tile)}
-        style={[styles.tile, fill && styles.fill, selected && styles.selected]}
-      >
+      <div aria-label={tileAccessibleName(tile)} className={className} role="img">
         {content}
-      </View>
+      </div>
     );
   }
 
   return (
-    <Pressable
+    <button
       aria-label={tileAccessibleName(tile)}
       aria-pressed={selected}
+      className={className}
       disabled={disabled}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.tile,
-        fill && styles.fill,
-        selected && styles.selected,
-        pressed && styles.pressed,
-        disabled && styles.disabled,
-      ]}
+      onClick={onPress}
+      type="button"
     >
       {content}
-    </Pressable>
+    </button>
   );
 }
-
-const styles = {
-  corner: {
-    backgroundColor: "rgba(255,253,247,0.9)",
-    borderRadius: 3,
-    paddingHorizontal: 2,
-    position: "absolute",
-    right: 2,
-    top: 2,
-  },
-  cornerLabel: { color: color.ink, fontFamily: "monospace", fontSize: 8, fontWeight: "800" },
-  disabled: {
-    opacity: 0.28,
-  },
-  pressed: {
-    transform: [{ translateY: 2 }],
-  },
-  selected: {
-    borderColor: color.accent,
-    borderWidth: 3,
-  },
-  fill: { minHeight: 0, minWidth: 0, width: "100%" },
-  // A tile is the one deliberate exception to the 48x48 target minimum: a suit
-  // row shows all nine ranks, which cannot each be 48 wide on a narrow phone
-  // without wrapping mid-suit and breaking the row people scan. Height stays
-  // comfortably above the minimum and tiles keep a real gap between them.
-  tile: {
-    alignItems: "center",
-    aspectRatio: 0.75,
-    backgroundColor: "transparent",
-    borderColor: "transparent",
-    borderRadius: radius.tile,
-    borderWidth: 2,
-    overflow: "hidden",
-    justifyContent: "center",
-    // A definite width, not a floor: the art has an intrinsic 300x400 size, so a
-    // min-only rule let it expand to full size wherever nothing else constrained
-    // it. Height follows from the aspect ratio.
-    width: 38,
-    // A hard, offset edge rather than a blur — a tile sitting on the table, not
-    // floating over it. `color.ink` at 16%.
-    boxShadow: "0 2px 0 rgba(23, 25, 22, 0.16)",
-  },
-} satisfies Styles;

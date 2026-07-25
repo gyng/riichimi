@@ -1,0 +1,63 @@
+/*
+ * A tile face. The art is a vector at its intrinsic 300x400, so the box sets the
+ * width and lets the aspect ratio give the height.
+ *
+ * A tile is the one deliberate exception to the 48x48 target minimum: a suit row
+ * shows all nine ranks, which cannot each be 48 wide on a narrow phone without
+ * wrapping mid-suit and breaking the row people scan. Height stays comfortably
+ * above the minimum and tiles keep a real gap between them.
+ */
+.tile {
+  align-items: center;
+  aspect-ratio: 0.75;
+  background-color: transparent;
+  /* Transparent, not absent: the selected ring replaces the colour without
+     changing the box, so selecting a tile never nudges the row. */
+  border: 2px solid transparent;
+  border-radius: var(--radius-tile);
+  /* A hard, offset edge rather than a blur — a tile sitting on the table, not
+     floating over it. Ink at 16%. */
+  box-shadow: 0 2px 0 rgb(23 25 22 / 16%);
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  width: 38px;
+}
+
+/* Pressing a tile pushes it into the table by the height of its own shadow. */
+.tile:active:not(:disabled) {
+  transform: translateY(2px);
+}
+
+.tile:disabled {
+  opacity: 0.28;
+}
+
+/* Filling the parent's width instead of sitting at the fixed size, so a picker
+   can fit a whole suit on one row at any screen width. */
+.fill {
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.selected {
+  border-color: var(--color-accent);
+  border-width: 3px;
+}
+
+/* The rank shorthand, shown in the corner only when a player asks for it. It
+   sits on a scrim so it stays legible over any part of the face. */
+.corner {
+  background-color: rgb(255 253 247 / 90%);
+  border-radius: 3px;
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 800;
+  padding: 0 2px;
+  position: absolute;
+  right: 2px;
+  top: 2px;
+}

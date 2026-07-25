@@ -1,0 +1,9 @@
+/* The small vermilion rubric that titles a section. Set in mono and letterspaced
+   so it reads as a label on a ledger rather than as copy. */
+.label {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+}

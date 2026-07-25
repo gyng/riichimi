@@ -1,0 +1,104 @@
+/* The home surface. A working tool opens on its work: the two ways to score a
+   hand come first, then the table and the folio as quieter rows beneath. */
+.root {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  max-width: 720px;
+  padding: var(--space-x4) var(--space-x4) var(--space-x5);
+  width: 100%;
+}
+
+.headline {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+}
+
+/* Wraps to a column on a narrow phone rather than shrinking both below a
+   comfortable tap. */
+.actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-x3);
+  margin-top: var(--space-x4);
+}
+
+.action {
+  align-items: center;
+  border-radius: 12px;
+  display: flex;
+  /* 160 of width to start, then an equal share of the rest. */
+  flex: 1 1 160px;
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 800;
+  justify-content: center;
+  min-height: 64px;
+  padding: 0 var(--space-x4);
+}
+
+.scan {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+.manual {
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-line);
+  color: var(--color-ink);
+}
+
+/* A destination rather than an action: full width, label left, state right. */
+.row {
+  align-items: center;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  color: var(--color-ink);
+  display: flex;
+  flex-direction: row;
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 700;
+  gap: var(--space-x3);
+  justify-content: space-between;
+  margin-top: var(--space-x3);
+  min-height: 56px;
+  padding: 0 var(--space-x4);
+}
+
+/* A table in progress is the one thing on this screen worth interrupting for. */
+.rowActive {
+  border-color: var(--color-accent);
+  border-width: 2px;
+}
+
+.rowLabel {
+  flex: 1;
+}
+
+.rowArrow {
+  color: var(--color-accent);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.rowCount {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.row:active:not(:disabled),
+.action:active {
+  opacity: 0.72;
+}
+
+/* An empty folio still says so, so the row stays put rather than vanishing. */
+.row:disabled {
+  opacity: 0.55;
+}

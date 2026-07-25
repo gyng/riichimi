@@ -1,0 +1,107 @@
+/*
+ * The app-wide reset. Components style themselves through their own CSS module;
+ * this only flattens the browser defaults they are written against, so a rule
+ * here should be something every element wants.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--color-canvas);
+  /* Screens set their own type; this is the fallback for anything that does not. */
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+}
+
+/* The page is one flex column: the app bar, then the routed screen filling
+   whatever is left. */
+#root {
+  display: flex;
+}
+
+/* Text carries its own spacing through its container's `gap`, so the headings
+   and paragraphs start from nothing. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure {
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+ * Controls inherit the typography around them instead of the platform's. Focus
+ * is deliberately untouched: the browser's ring is the one keyboard users
+ * expect, and every control here is a real button, link, or field.
+ */
+button {
+  appearance: none;
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  text-align: inherit;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+input,
+textarea {
+  color: inherit;
+  font: inherit;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+/* A capture or a celebration is decoration over the score; motion that competes
+   with reading it is switched off rather than merely shortened. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,40 @@
+/* A short, closed set of choices shown all at once — win method, seat wind, a
+   ruleset. Radios rather than a select: the options are the information, and
+   comparing them matters more than saving the space. */
+.root {
+  align-self: flex-start;
+  background-color: var(--color-canvas-deep);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-control);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  /* The inset that shows the selected option sitting in a track. */
+  padding: 3px;
+}
+
+.option {
+  align-items: center;
+  /* Two inside the track's radius, so the corners nest rather than clash. */
+  border-radius: calc(var(--radius-control) - 2px);
+  color: var(--color-ink-muted);
+  display: flex;
+  flex-grow: 1;
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 700;
+  justify-content: center;
+  min-height: 48px;
+  min-width: 64px;
+  padding: var(--space-x2) var(--space-x3);
+}
+
+.option:active {
+  opacity: 0.72;
+}
+
+/* Ink fill, not a border: the choice reads at a glance across the whole row. */
+.selected {
+  background-color: var(--color-ink);
+  color: var(--color-white);
+}

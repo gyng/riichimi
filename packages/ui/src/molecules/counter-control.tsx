@@ -1,7 +1,4 @@
-import { Pressable, Text, View } from "../primitives";
-import type { Styles } from "../primitives";
-
-import { color, radius, space } from "../tokens/theme";
+import styles from "./counter-control.module.css";
 
 export interface CounterControlProps {
   readonly label: string;
@@ -19,74 +16,31 @@ export function CounterControl({
   value,
 }: CounterControlProps) {
   return (
-    <View style={styles.root}>
-      <Text style={styles.label}>{label}</Text>
-      <View style={styles.controls}>
-        <Pressable
+    <div className={styles["root"]}>
+      <p className={styles["label"]}>{label}</p>
+      <div className={styles["controls"]}>
+        <button
           aria-label={`Decrease ${label}`}
+          className={styles["step"]}
           disabled={value <= minimum}
-          onPress={() => onChange(value - 1)}
-          style={({ pressed }) => [styles.button, pressed && styles.pressed]}
+          onClick={() => onChange(value - 1)}
+          type="button"
         >
-          <Text style={styles.buttonLabel}>−</Text>
-        </Pressable>
-        <Text aria-label={`${label}: ${value}`} style={styles.value}>
+          −
+        </button>
+        <p aria-label={`${label}: ${value}`} className={styles["value"]}>
           {value}
-        </Text>
-        <Pressable
+        </p>
+        <button
           aria-label={`Increase ${label}`}
+          className={styles["step"]}
           disabled={value >= maximum}
-          onPress={() => onChange(value + 1)}
-          style={({ pressed }) => [styles.button, pressed && styles.pressed]}
+          onClick={() => onChange(value + 1)}
+          type="button"
         >
-          <Text style={styles.buttonLabel}>+</Text>
-        </Pressable>
-      </View>
-    </View>
+          +
+        </button>
+      </div>
+    </div>
   );
 }
-
-const styles = {
-  button: {
-    alignItems: "center",
-    backgroundColor: color.paper,
-    borderColor: color.line,
-    borderRadius: radius.control,
-    borderWidth: 1,
-    height: 48,
-    justifyContent: "center",
-    width: 48,
-  },
-  buttonLabel: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 22,
-    fontWeight: "800",
-  },
-  controls: {
-    alignItems: "center",
-    flexDirection: "row",
-    gap: space.x2,
-  },
-  label: {
-    color: color.inkMuted,
-    fontFamily: "monospace",
-    fontSize: 10,
-    fontWeight: "700",
-    letterSpacing: 1,
-  },
-  pressed: {
-    opacity: 0.65,
-  },
-  root: {
-    gap: space.x2,
-  },
-  value: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 20,
-    fontWeight: "800",
-    minWidth: 32,
-    textAlign: "center",
-  },
-} satisfies Styles;

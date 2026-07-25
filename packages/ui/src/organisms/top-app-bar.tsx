@@ -1,8 +1,7 @@
-import { Pressable, Text, View, useWindowDimensions } from "../primitives";
-import type { Styles } from "../primitives";
 import type { ReactNode } from "react";
 
-import { color, space } from "../tokens/theme";
+import { classNames } from "../class-names";
+import styles from "./top-app-bar.module.css";
 
 export interface TopAppBarItem {
   readonly active: boolean;
@@ -23,6 +22,9 @@ export interface TopAppBarProps {
  * Persistent tool navigation. The app's primary destinations live here so every
  * surface is one tap away — this is a working tool, not a landing page routed
  * through a hero. Presentational only: it renders items and reports presses.
+ *
+ * The phone layout is a media query rather than a measured width, so the bar
+ * reflows during a resize instead of after one.
  */
 export function TopAppBar({
   brandGlyph,
@@ -31,53 +33,38 @@ export function TopAppBar({
   onBrandPress,
   trailing,
 }: TopAppBarProps) {
-  const { width } = useWindowDimensions();
-  // On a phone the wordmark would push the destinations onto a second row and
-  // cost a chunk of the screen before any content. The mark alone still carries
-  // the brand, and the link keeps its accessible name either way.
-  const compact = width < 600;
-
   return (
-    <View style={[styles.bar, compact && styles.barCompact]}>
-      <Pressable
+    <div className={styles["bar"]}>
+      <button
         aria-label={`${brandLabel} home`}
+        className={styles["brand"]}
+        onClick={onBrandPress}
         role="link"
-        onPress={onBrandPress}
-        style={({ pressed }) => [
-          styles.brand,
-          compact && styles.brandCompact,
-          pressed && styles.pressed,
-        ]}
+        type="button"
       >
-        <View aria-hidden style={styles.brandMark}>
-          <Text style={styles.brandGlyph}>{brandGlyph}</Text>
-        </View>
-        {compact ? null : <Text style={styles.brandLabel}>{brandLabel}</Text>}
-      </Pressable>
+        <span aria-hidden className={styles["brandMark"]}>
+          {brandGlyph}
+        </span>
+        <span className={styles["brandLabel"]}>{brandLabel}</span>
+      </button>
 
-      <View aria-label="Primary" style={[styles.nav, compact && styles.navCompact]}>
+      <nav aria-label="Primary" className={styles["nav"]}>
         {items.map((item) => (
-          <Pressable
+          <button
             aria-current={item.active ? "page" : undefined}
-            aria-label={item.label}
+            className={classNames(styles["item"], item.active && styles["itemActive"])}
             key={item.key}
+            onClick={item.onPress}
             role="link"
-            onPress={item.onPress}
-            style={({ pressed }) => [
-              styles.item,
-              item.active && styles.itemActive,
-              pressed && styles.pressed,
-            ]}
+            type="button"
           >
-            <Text style={[styles.itemLabel, item.active && styles.itemLabelActive]}>
-              {item.label}
-            </Text>
-          </Pressable>
+            {item.label}
+          </button>
         ))}
-      </View>
+      </nav>
 
-      {trailing === undefined ? null : <View style={styles.trailing}>{trailing}</View>}
-    </View>
+      {trailing === undefined ? null : <div className={styles["trailing"]}>{trailing}</div>}
+    </div>
   );
 }
 
@@ -92,104 +79,14 @@ export function TopAppBarAction({
   readonly onPress: () => void;
 }) {
   return (
-    <Pressable
+    <button
       aria-current={active ? "page" : undefined}
-      aria-label={label}
-      onPress={onPress}
+      className={classNames(styles["item"], active && styles["itemActive"])}
+      onClick={onPress}
       role="link"
-      style={({ pressed }) => [styles.item, active && styles.itemActive, pressed && styles.pressed]}
+      type="button"
     >
-      <Text style={[styles.itemLabel, active && styles.itemLabelActive]}>{label}</Text>
-    </Pressable>
+      {label}
+    </button>
   );
 }
-
-const styles = {
-  bar: {
-    alignItems: "center",
-    backgroundColor: color.paper,
-    borderBottomColor: color.line,
-    borderBottomWidth: 1,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: space.x3,
-    paddingHorizontal: space.x5,
-    paddingVertical: space.x3,
-  },
-  barCompact: {
-    flexWrap: "nowrap",
-    gap: 0,
-    paddingHorizontal: space.x2,
-  },
-  brand: {
-    alignItems: "center",
-    flexDirection: "row",
-    gap: space.x2,
-    marginRight: space.x4,
-    minHeight: 48,
-  },
-  brandCompact: {
-    justifyContent: "center",
-    marginRight: space.x1,
-    minWidth: 48,
-  },
-  brandGlyph: {
-    color: color.white,
-    fontFamily: "serif",
-    fontSize: 17,
-    fontWeight: "700",
-  },
-  brandLabel: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 15,
-    fontWeight: "900",
-    letterSpacing: 2,
-  },
-  brandMark: {
-    alignItems: "center",
-    backgroundColor: color.accent,
-    borderRadius: 3,
-    height: 30,
-    justifyContent: "center",
-    width: 25,
-  },
-  item: {
-    alignItems: "center",
-    borderBottomColor: "transparent",
-    borderBottomWidth: 2,
-    justifyContent: "center",
-    minHeight: 48,
-    minWidth: 44,
-    paddingHorizontal: space.x1,
-  },
-  itemActive: {
-    borderBottomColor: color.accent,
-  },
-  itemLabel: {
-    color: color.inkMuted,
-    fontFamily: "monospace",
-    fontSize: 11,
-    fontWeight: "700",
-    letterSpacing: 1.1,
-    textTransform: "uppercase",
-  },
-  itemLabelActive: {
-    color: color.ink,
-  },
-  nav: {
-    alignItems: "center",
-    flexDirection: "row",
-    flexGrow: 1,
-    flexWrap: "wrap",
-    gap: space.x1,
-  },
-  navCompact: { flexGrow: 1, flexShrink: 1, gap: 0 },
-  pressed: {
-    opacity: 0.7,
-  },
-  trailing: {
-    alignItems: "center",
-    flexDirection: "row",
-  },
-} satisfies Styles;

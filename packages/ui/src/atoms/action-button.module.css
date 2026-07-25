@@ -1,0 +1,42 @@
+/* The app's primary control. One button, three weights of emphasis. */
+.button {
+  align-items: center;
+  border-radius: var(--radius-control);
+  display: flex;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 700;
+  justify-content: center;
+  letter-spacing: 0.4px;
+  /* The 48px minimum touch target, which every variant keeps. */
+  min-height: 48px;
+  padding: var(--space-x3) var(--space-x5);
+}
+
+/* Pressing reads as the button taking the press, not as a colour change. */
+.button:active:not(:disabled) {
+  opacity: 0.78;
+  transform: translateY(1px);
+}
+
+.button:disabled {
+  opacity: 0.45;
+}
+
+.ink {
+  background-color: var(--color-ink);
+  color: var(--color-white);
+}
+
+.vermilion {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+/* Paper is the quiet option: outlined rather than filled, so a screen can offer
+   several actions without two of them competing. */
+.paper {
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-ink);
+  color: var(--color-ink);
+}

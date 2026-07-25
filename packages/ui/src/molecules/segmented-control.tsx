@@ -1,7 +1,5 @@
-import { Pressable, Text, View } from "../primitives";
-import type { Styles } from "../primitives";
-
-import { color, radius, space } from "../tokens/theme";
+import { classNames } from "../class-names";
+import styles from "./segmented-control.module.css";
 
 export interface SegmentOption<Value extends string> {
   readonly label: string;
@@ -22,64 +20,22 @@ export function SegmentedControl<Value extends string>({
   value,
 }: SegmentedControlProps<Value>) {
   return (
-    <View aria-label={accessibilityLabel} role="radiogroup" style={styles.root}>
+    <div aria-label={accessibilityLabel} className={styles["root"]} role="radiogroup">
       {options.map((option) => {
         const selected = option.value === value;
         return (
-          <Pressable
+          <button
             aria-checked={selected}
-            aria-label={option.label}
-            role="radio"
+            className={classNames(styles["option"], selected && styles["selected"])}
             key={option.value}
-            onPress={() => onChange(option.value)}
-            style={({ pressed }) => [
-              styles.option,
-              selected && styles.selectedOption,
-              pressed && styles.pressed,
-            ]}
+            onClick={() => onChange(option.value)}
+            role="radio"
+            type="button"
           >
-            <Text style={[styles.label, selected && styles.selectedLabel]}>{option.label}</Text>
-          </Pressable>
+            {option.label}
+          </button>
         );
       })}
-    </View>
+    </div>
   );
 }
-
-const styles = {
-  label: {
-    color: color.inkMuted,
-    fontFamily: "serif",
-    fontSize: 14,
-    fontWeight: "700",
-  },
-  option: {
-    alignItems: "center",
-    borderRadius: radius.control - 2,
-    flexGrow: 1,
-    justifyContent: "center",
-    minHeight: 48,
-    minWidth: 64,
-    paddingHorizontal: space.x3,
-    paddingVertical: space.x2,
-  },
-  pressed: {
-    opacity: 0.72,
-  },
-  root: {
-    alignSelf: "flex-start",
-    backgroundColor: color.canvasDeep,
-    borderColor: color.line,
-    borderRadius: radius.control,
-    borderWidth: 1,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    padding: 3,
-  },
-  selectedLabel: {
-    color: color.white,
-  },
-  selectedOption: {
-    backgroundColor: color.ink,
-  },
-} satisfies Styles;

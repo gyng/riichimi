@@ -1,0 +1,116 @@
+/* Persistent tool navigation. Every destination is one tap away, because this is
+   a working tool rather than a landing page routed through a hero. */
+.bar {
+  align-items: center;
+  background-color: var(--color-paper);
+  border-bottom: 1px solid var(--color-line);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-x3);
+  padding: var(--space-x3) var(--space-x5);
+}
+
+.brand {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-x2);
+  margin-right: var(--space-x4);
+  min-height: 48px;
+}
+
+/* The 立 mark. Tile-shaped on purpose: taller than it is wide. */
+.brandMark {
+  align-items: center;
+  background-color: var(--color-accent);
+  border-radius: 3px;
+  color: var(--color-white);
+  display: flex;
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 700;
+  height: 30px;
+  justify-content: center;
+  width: 25px;
+}
+
+.brandLabel {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.nav {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  flex-wrap: wrap;
+  gap: var(--space-x1);
+}
+
+/* The underline is always there, transparent until the destination is current,
+   so becoming current never shifts the row. */
+.item {
+  align-items: center;
+  border-bottom: 2px solid transparent;
+  color: var(--color-ink-muted);
+  display: flex;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  justify-content: center;
+  letter-spacing: 1.1px;
+  min-height: 48px;
+  min-width: 44px;
+  padding: 0 var(--space-x1);
+  text-transform: uppercase;
+}
+
+.itemActive {
+  border-bottom-color: var(--color-accent);
+  color: var(--color-ink);
+}
+
+.trailing {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+
+.brand:active,
+.item:active {
+  opacity: 0.7;
+}
+
+/*
+ * On a phone the wordmark would push the destinations onto a second row and cost
+ * a chunk of the screen before any content. The mark alone still carries the
+ * brand, and the link keeps its accessible name either way.
+ */
+@media (width < 600px) {
+  .bar {
+    flex-wrap: nowrap;
+    gap: 0;
+    padding-left: var(--space-x2);
+    padding-right: var(--space-x2);
+  }
+
+  .brand {
+    justify-content: center;
+    margin-right: var(--space-x1);
+    min-width: 48px;
+  }
+
+  .brandLabel {
+    display: none;
+  }
+
+  .nav {
+    flex-shrink: 1;
+    gap: 0;
+  }
+}

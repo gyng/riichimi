@@ -1,0 +1,43 @@
+/*
+ * The design tokens, and the only place their values are written. Components
+ * reference them as custom properties, so a token change lands everywhere at
+ * once and no stylesheet hard-codes a hex.
+ *
+ * The visual direction is a Japanese scoring ledger: warm paper, sumi ink,
+ * restrained vermilion, and a precise grid rhythm.
+ */
+:root {
+  /* Ink and paper. `canvas` is the page, `paper` the panels laid on it. */
+  --color-accent: #b63824;
+  --color-accent-pressed: #8f291b;
+  --color-canvas: #f0e8d6;
+  --color-canvas-deep: #ded1b7;
+  --color-ink: #171916;
+  --color-ink-muted: #5d5a50;
+  --color-jade: #27594a;
+  --color-line: #c9bda5;
+  --color-paper: #faf6ea;
+  --color-white: #fffdf7;
+
+  /* A 4px rhythm. Spacing only ever comes from this scale. */
+  --space-x1: 4px;
+  --space-x2: 8px;
+  --space-x3: 12px;
+  --space-x4: 16px;
+  --space-x5: 24px;
+  --space-x6: 32px;
+  --space-x7: 48px;
+  --space-x8: 64px;
+
+  --radius-control: 8px;
+  --radius-panel: 16px;
+  --radius-tile: 6px;
+
+  /* Score figures and copy are set in a serif; labels, counts, and anything read
+     as data are set in the monospace face. Both are the reader's own faces
+     rather than a named stack — the ledger should look native to the device.
+     `monospace` is written twice on purpose: a lone keyword makes browsers fall
+     back to their default fixed-pitch size and ignore the authored one. */
+  --font-serif: serif;
+  --font-mono: monospace, monospace;
+}
