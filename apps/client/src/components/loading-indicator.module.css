@@ -1,0 +1,30 @@
+/* An indeterminate ring: a faint full circle with a brighter arc turning over it.
+   Reported with no value, because the work it covers — opening a table, reading
+   tile faces — has no measurable progress. */
+.ring {
+  animation: spin 0.75s linear infinite;
+  block-size: 20px;
+  inline-size: 20px;
+}
+
+/*
+ * Deliberately exempt from the app's reduced-motion reset. That reset stops
+ * animation for decoration; this is the only signal that work is in progress, and
+ * a frozen ring reads as a broken one. The class outranks the reset's `*`.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .ring {
+    animation-duration: 0.75s !important;
+    animation-iteration-count: infinite !important;
+  }
+}
+
+.track {
+  opacity: 0.2;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

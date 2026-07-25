@@ -1,0 +1,257 @@
+/*
+ * The review gate. Nothing the recognizer read reaches the calculator until a
+ * person has confirmed it, so this panel exists to make each read — and its
+ * confidence — cheap to check and cheap to correct.
+ */
+.root {
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-line);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--space-x4);
+  padding: var(--space-x4);
+}
+
+.headingRow {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-x3);
+  justify-content: space-between;
+}
+
+.headingCopy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 230px;
+}
+
+.kicker {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.title {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 21px;
+  font-weight: 700;
+}
+
+/* The count of what is left to check, in jade because it counts down to done. */
+.progress {
+  color: var(--color-jade);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.instructions {
+  color: var(--color-ink-muted);
+  font-family: var(--font-serif);
+  font-size: 14px;
+  line-height: 20px;
+  margin-top: var(--space-x2);
+}
+
+/* What the recognizer made of the hand's shape, which is a separate question from
+   what each tile is: a called set read wrongly changes the score even when every
+   tile in it is right. */
+.structure {
+  background-color: var(--color-canvas-deep);
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-x2);
+  margin-top: var(--space-x4);
+  padding: var(--space-x4);
+}
+
+.structureKicker {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.structureTitle {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.structureCopy {
+  color: var(--color-ink-muted);
+  font-family: var(--font-serif);
+  font-size: 13px;
+  line-height: 19px;
+}
+
+.structureGroup {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-x3);
+  margin-top: var(--space-x2);
+}
+
+.structureGroupTiles {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+}
+
+/* Every tile the recognizer read, in the order it read them, so the row can be
+   compared against the photo left to right. */
+.detections {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--space-x4);
+}
+
+.detection {
+  align-items: center;
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+}
+
+/* A read the model is unsure about. Outlined and tinted, and the tile below also
+   carries the word CHECK — the flag never rests on colour alone. */
+.detectionIssue {
+  background-color: #fff4e8;
+  border-color: var(--color-accent);
+  border-width: 2px;
+}
+
+.detectionSelected {
+  border-color: var(--color-ink);
+  border-width: 3px;
+}
+
+.position {
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.positionIssue {
+  color: var(--color-accent);
+}
+
+.reviewFlag {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+}
+
+.confidenceOk {
+  color: var(--color-jade);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* A tile the model could not read at all. Dashed, because the gap is the point:
+   there is nothing here to accept. */
+.unknownTile {
+  align-items: center;
+  aspect-ratio: 0.72;
+  background-color: var(--color-white);
+  border: 2px dashed var(--color-accent);
+  border-radius: 5px;
+  color: var(--color-accent);
+  display: flex;
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 800;
+  justify-content: center;
+  width: 38px;
+}
+
+/* Correcting the selected tile. Sunk into the deeper canvas tone so it reads as a
+   drawer opened under the row rather than another panel. */
+.editor {
+  background-color: var(--color-canvas-deep);
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--space-x4);
+  padding: var(--space-x4);
+}
+
+.editorKicker {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.editorTitle {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 700;
+}
+
+/* The model's own alternatives first: correcting is usually picking its second
+   guess, not hunting through 34 faces. */
+.suggestions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-x3);
+  margin-top: var(--space-x3);
+}
+
+.suggestion {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.suggestionLabel {
+  color: var(--color-jade);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+
+.editorActions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-x3);
+  margin-top: var(--space-x4);
+}
+
+.allTiles {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--space-x4);
+}

@@ -1,0 +1,362 @@
+/*
+ * The score folio: the last twenty hands as a numbered ledger. Each entry keeps
+ * its rail, number, and hairline so the page reads as a bound record rather than
+ * a feed of cards.
+ */
+.screen {
+  composes: screen from "./screen.module.css";
+}
+
+.scroll {
+  composes: scroll from "./screen.module.css";
+}
+
+.centered {
+  composes: centered from "./screen.module.css";
+}
+
+.content {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  max-width: 980px;
+  padding: var(--space-x5) var(--space-x5) var(--space-x8);
+  width: 100%;
+}
+
+.topBar {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.rules {
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--space-x6);
+  margin-top: var(--space-x7);
+}
+
+.kicker {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.7px;
+}
+
+.title {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 50px;
+  font-weight: 800;
+  letter-spacing: -1.8px;
+  line-height: 54px;
+  margin-bottom: var(--space-x4);
+  margin-top: var(--space-x3);
+}
+
+.intro {
+  color: var(--color-ink-muted);
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: 28px;
+  max-width: 650px;
+}
+
+.muted {
+  color: var(--color-ink-muted);
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 22px;
+}
+
+/* An empty folio is still a page: 零 set large in the paper's own tone, so the
+   emptiness is composed rather than merely blank. */
+.emptyPanel {
+  align-items: center;
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-line);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-x6);
+  padding: var(--space-x6);
+}
+
+.emptyNumber {
+  color: var(--color-canvas-deep);
+  font-family: var(--font-serif);
+  font-size: 96px;
+  font-weight: 900;
+}
+
+.emptyCopy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  max-width: 520px;
+}
+
+.emptyTitle {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: var(--space-x2);
+}
+
+.emptyAction {
+  align-self: flex-start;
+  margin-top: var(--space-x4);
+}
+
+.ledger {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--space-x2);
+}
+
+.entry {
+  display: flex;
+  flex-direction: row;
+}
+
+/* The numbered rail down the left, with a hairline running from the number to the
+   bottom of the entry. */
+.entryRail {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding-right: var(--space-x3);
+  padding-top: var(--space-x3);
+  width: 34px;
+}
+
+.entryIndex {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.railLine {
+  background-color: var(--color-line);
+  flex: 1;
+  margin-top: var(--space-x2);
+  width: 1px;
+}
+
+.entryBody {
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin-bottom: var(--space-x5);
+  padding: var(--space-x5);
+}
+
+.entryHeader {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-x3);
+  justify-content: space-between;
+}
+
+.entryMeta {
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.7px;
+}
+
+.score {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 30px;
+  font-weight: 800;
+  margin-top: 3px;
+}
+
+/* Tsumo or ron, stamped in jade like a seal on the entry. */
+.methodStamp {
+  border: 1px solid var(--color-jade);
+  border-radius: 999px;
+  color: var(--color-jade);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 800;
+  padding: var(--space-x2) var(--space-x3);
+}
+
+.tiles {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: var(--space-x4);
+}
+
+.factRow {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-x4);
+  margin-top: var(--space-x3);
+}
+
+.fact {
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.6px;
+}
+
+/* Payment and total set apart on the canvas tone, because they are the figures a
+   player checks against the table. */
+.resultStrip {
+  align-items: flex-end;
+  background-color: var(--color-canvas);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-x4);
+  justify-content: space-between;
+  margin-top: var(--space-x4);
+  padding: var(--space-x4);
+}
+
+.resultKicker {
+  color: var(--color-jade);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+
+.payment {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.totalBlock {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+}
+
+.total {
+  color: var(--color-accent);
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 800;
+  margin-top: 1px;
+}
+
+.yakuRow {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-x2);
+  margin-top: var(--space-x3);
+}
+
+.yakuChip {
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 12px;
+  font-weight: 700;
+  padding: var(--space-x2) var(--space-x3);
+}
+
+.entryFooter {
+  align-items: center;
+  border-top: 1px solid var(--color-line);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-x3);
+  justify-content: space-between;
+  margin-top: var(--space-x4);
+  padding-top: var(--space-x3);
+}
+
+.rulesLabel {
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 9px;
+}
+
+/* Destructive, so it is a word rather than a button: deliberate to reach, and it
+   still meets the touch minimum. */
+.remove {
+  align-items: center;
+  color: var(--color-accent);
+  display: flex;
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 700;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 var(--space-x2);
+}
+
+.error {
+  color: var(--color-accent);
+  font-family: var(--font-serif);
+  margin-top: var(--space-x4);
+}
+
+/* Erasing the whole folio asks first, and the confirmation is a panel rather than
+   a dialog so the page it refers to stays visible behind the question. */
+.clearConfirm {
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-accent);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-x4);
+  margin-top: var(--space-x5);
+  padding: var(--space-x5);
+}
+
+.clearTitle {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.clearActions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-x3);
+}
+
+.clearLink {
+  align-self: center;
+  color: var(--color-accent);
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: var(--space-x6);
+  padding: var(--space-x3);
+}

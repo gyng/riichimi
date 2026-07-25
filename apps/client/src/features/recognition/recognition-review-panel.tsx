@@ -1,19 +1,11 @@
 import { canonicalTileIds, canonicalizeTile, redFiveIds } from "@riichimi/score-core";
 import type { TileId } from "@riichimi/score-core";
-import {
-  ActionButton,
-  MahjongTile,
-  Pressable,
-  Text,
-  View,
-  color,
-  space,
-  tileAccessibleName,
-} from "@riichimi/ui";
+import { ActionButton, MahjongTile, classNames, tileAccessibleName } from "@riichimi/ui";
 import { chooseWinningDetection, correctDetection, reviewRecognition } from "@riichimi/vision";
 import type { DetectedTile, RecognitionResult } from "@riichimi/vision";
 import { useEffect, useMemo, useState } from "react";
-import type { Styles } from "@riichimi/ui";
+
+import styles from "./recognition-review-panel.module.css";
 import { useLocale } from "../../state/locale-context";
 
 export const recognitionReviewThreshold = 0.75;
@@ -203,84 +195,87 @@ export function RecognitionReviewPanel({
   }
 
   return (
-    <View style={styles.root}>
-      <View style={styles.headingRow}>
-        <View style={styles.headingCopy}>
-          <Text style={styles.kicker}>{t("TILE-BY-TILE REVIEW")}</Text>
-          <Text role="heading" style={styles.title}>
+    <section className={styles["root"]}>
+      <div className={styles["headingRow"]}>
+        <div className={styles["headingCopy"]}>
+          <p className={styles["kicker"]}>{t("TILE-BY-TILE REVIEW")}</p>
+          <h2 className={styles["title"]}>
             {review.reviewDetectionIds.length === 0
               ? t("Recognition review complete")
               : `${review.reviewDetectionIds.length} ${t(review.reviewDetectionIds.length === 1 ? "tile needs confirmation" : "tiles need confirmation")}`}
-          </Text>
-        </View>
-        <Text aria-live="polite" style={styles.progress}>
+          </h2>
+        </div>
+        <p aria-live="polite" className={styles["progress"]}>
           {totalReviewCount - review.reviewDetectionIds.length} / {totalReviewCount} {t("reviewed")}
-        </Text>
-      </View>
+        </p>
+      </div>
 
-      <Text style={styles.instructions}>
+      <p className={styles["instructions"]}>
         {review.readyToConfirm
           ? t("Check the row against the photo.")
           : t("Outlined tiles need a look.")}
-      </Text>
+      </p>
 
       {showStructure ? (
-        <View aria-label="Hand structure" style={styles.structure}>
-          <Text style={styles.structureKicker}>{t("HAND STRUCTURE")}</Text>
-          <Text role="heading" style={styles.structureTitle}>
+        <div aria-label="Hand structure" className={styles["structure"]}>
+          <p className={styles["structureKicker"]}>{t("HAND STRUCTURE")}</p>
+          <h3 className={styles["structureTitle"]}>
             {`${concealedCount} ${t(concealedCount === 1 ? "concealed tile" : "concealed tiles")} · ${meldGroups.length} ${t(meldGroups.length === 1 ? "called set" : "called sets")}`}
-          </Text>
-          <Text style={styles.structureCopy}>
+          </h3>
+          <p className={styles["structureCopy"]}>
             {t("Called sets are read as open. Adjust in the calculator.")}
-          </Text>
+          </p>
           {meldGroups.map((group) => (
-            <View key={group.index} style={styles.structureGroup}>
-              <View style={styles.structureGroupTiles}>
+            <div className={styles["structureGroup"]} key={group.index}>
+              <div className={styles["structureGroupTiles"]}>
                 {group.tiles.map((detection) => {
                   const tile = proposedTile(detection);
                   return tile === null ? null : <MahjongTile key={detection.id} tile={tile} />;
                 })}
-              </View>
+              </div>
               <ActionButton
                 label={`${t("Called set")} ${group.index + 1} ${t("isn't a call — move to hand")}`}
                 onPress={() => foldMeldIntoHand(group)}
                 variant="paper"
               />
-            </View>
+            </div>
           ))}
           {requireStructureConfirmation && meldGroups.length === 0 ? (
-            <Text style={styles.structureCopy}>
+            <p className={styles["structureCopy"]}>
               {t("Add any missed called set in the calculator.")}
-            </Text>
+            </p>
           ) : null}
-        </View>
+        </div>
       ) : null}
 
-      <View aria-label="Recognized tiles" style={styles.detections}>
+      <div aria-label="Recognized tiles" className={styles["detections"]}>
         {detections.map((detection, index) => {
           const tile = proposedTile(detection);
           const label = detectionLabel(detection, index, t);
           const needsReview = issueIds.has(detection.id);
           return (
-            <Pressable
+            <button
               aria-label={`${label}, ${tile === null ? "unknown" : tileAccessibleName(tile)}, ${Math.round(detection.confidence * 100)} percent confidence${needsReview ? ", needs review" : ""}`}
               aria-pressed={detection.id === selectedId}
+              className={classNames(
+                styles["detection"],
+                needsReview && styles["detectionIssue"],
+                detection.id === selectedId && styles["detectionSelected"],
+              )}
               key={detection.id}
-              onPress={() => {
+              onClick={() => {
                 setSelectedId(detection.id);
                 setShowAllTiles(false);
               }}
-              style={[
-                styles.detection,
-                needsReview && styles.detectionIssue,
-                detection.id === selectedId && styles.detectionSelected,
-              ]}
+              type="button"
             >
-              <Text style={[styles.position, needsReview && styles.positionIssue]}>{label}</Text>
+              <span
+                className={classNames(styles["position"], needsReview && styles["positionIssue"])}
+              >
+                {label}
+              </span>
               {tile === null ? (
-                <View style={styles.unknownTile}>
-                  <Text style={styles.unknownMark}>?</Text>
-                </View>
+                <span className={styles["unknownTile"]}>?</span>
               ) : (
                 <MahjongTile tile={tile} />
               )}
@@ -288,39 +283,40 @@ export function RecognitionReviewPanel({
                   flagged tiles — paired with a word so the flag never rests on
                   colour alone. Confident tiles stay uncluttered. */}
               {needsReview ? (
-                <Text style={styles.reviewFlag}>
+                <span className={styles["reviewFlag"]}>
                   {t("CHECK")} · {Math.round(detection.confidence * 100)}%
-                </Text>
+                </span>
               ) : (
-                <Text style={styles.confidenceOk}>✓</Text>
+                <span className={styles["confidenceOk"]}>✓</span>
               )}
-            </Pressable>
+            </button>
           );
         })}
-      </View>
+      </div>
 
       {selected === null ? null : (
-        <View style={styles.editor}>
-          <Text style={styles.editorKicker}>
+        <div className={styles["editor"]}>
+          <p className={styles["editorKicker"]}>
             {t("SELECTED")} · {detectionLabel(selected, detections.indexOf(selected), t)}
-          </Text>
-          <Text style={styles.editorTitle}>{t("Confirm or replace this tile")}</Text>
-          <View style={styles.suggestions}>
+          </p>
+          <h3 className={styles["editorTitle"]}>{t("Confirm or replace this tile")}</h3>
+          <div className={styles["suggestions"]}>
             {uniqueChoices(selected).map((tile) => (
-              <Pressable
+              <button
                 aria-label={`Use ${tileAccessibleName(tile)} for selected tile`}
+                className={styles["suggestion"]}
                 key={tile}
-                onPress={() => chooseTile(tile)}
-                style={styles.suggestion}
+                onClick={() => chooseTile(tile)}
+                type="button"
               >
                 <MahjongTile selected={selected.tile === tile} tile={tile} />
-                <Text style={styles.suggestionLabel}>
+                <span className={styles["suggestionLabel"]}>
                   {selected.tile === tile ? t("CONFIRM") : t("USE")}
-                </Text>
-              </Pressable>
+                </span>
+              </button>
             ))}
-          </View>
-          <View style={styles.editorActions}>
+          </div>
+          <div className={styles["editorActions"]}>
             <ActionButton
               label={showAllTiles ? t("Hide complete tile picker") : t("Choose from all tiles")}
               onPress={() => setShowAllTiles((visible) => !visible)}
@@ -338,9 +334,9 @@ export function RecognitionReviewPanel({
                 variant="paper"
               />
             )}
-          </View>
+          </div>
           {showAllTiles ? (
-            <View aria-label="Complete tile picker" style={styles.allTiles}>
+            <div aria-label="Complete tile picker" className={styles["allTiles"]}>
               {allTileChoices.map((tile) => {
                 const disabled = (countsWithoutSelected.get(canonicalizeTile(tile)) ?? 0) >= 4;
                 return (
@@ -353,168 +349,10 @@ export function RecognitionReviewPanel({
                   />
                 );
               })}
-            </View>
+            </div>
           ) : null}
-        </View>
+        </div>
       )}
-    </View>
+    </section>
   );
 }
-
-const styles = {
-  allTiles: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: space.x4 },
-  checkbox: {
-    alignItems: "center",
-    backgroundColor: color.paper,
-    borderColor: color.ink,
-    borderRadius: 4,
-    borderWidth: 1,
-    height: 22,
-    justifyContent: "center",
-    width: 22,
-  },
-  checkboxChecked: { backgroundColor: color.ink },
-  checkmark: { color: color.white, fontSize: 13, fontWeight: "800" },
-  confidenceOk: {
-    color: color.jade,
-    fontFamily: "monospace",
-    fontSize: 10,
-    fontWeight: "700",
-  },
-  reviewFlag: {
-    color: color.accent,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "800",
-    letterSpacing: 0.4,
-  },
-  detection: {
-    alignItems: "center",
-    backgroundColor: color.paper,
-    borderColor: color.line,
-    borderRadius: 10,
-    borderWidth: 1,
-    gap: 4,
-    padding: 6,
-  },
-  detectionIssue: { backgroundColor: "#FFF4E8", borderColor: color.accent, borderWidth: 2 },
-  detectionSelected: { borderColor: color.ink, borderWidth: 3 },
-  detections: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: space.x4 },
-  editor: {
-    backgroundColor: color.canvasDeep,
-    borderColor: color.line,
-    borderRadius: 12,
-    borderWidth: 1,
-    marginTop: space.x4,
-    padding: space.x4,
-  },
-  editorActions: { flexDirection: "row", flexWrap: "wrap", gap: space.x3, marginTop: space.x4 },
-  editorKicker: {
-    color: color.accent,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "800",
-    letterSpacing: 1,
-  },
-  editorTitle: { color: color.ink, fontFamily: "serif", fontSize: 19, fontWeight: "700" },
-  headingCopy: { flex: 1, minWidth: 230 },
-  headingRow: {
-    alignItems: "flex-start",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: space.x3,
-    justifyContent: "space-between",
-  },
-  instructions: {
-    color: color.inkMuted,
-    fontFamily: "serif",
-    fontSize: 14,
-    lineHeight: 20,
-    marginTop: space.x2,
-  },
-  kicker: {
-    color: color.accent,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "800",
-    letterSpacing: 1,
-  },
-  position: { color: color.inkMuted, fontFamily: "monospace", fontSize: 8, fontWeight: "700" },
-  positionIssue: { color: color.accent },
-  progress: { color: color.jade, fontFamily: "monospace", fontSize: 11, fontWeight: "800" },
-  root: {
-    backgroundColor: color.paper,
-    borderColor: color.line,
-    borderRadius: 14,
-    borderWidth: 1,
-    marginBottom: space.x4,
-    padding: space.x4,
-  },
-  structure: {
-    backgroundColor: color.canvasDeep,
-    borderColor: color.line,
-    borderRadius: 12,
-    borderWidth: 1,
-    gap: space.x2,
-    marginTop: space.x4,
-    padding: space.x4,
-  },
-  structureConfirm: {
-    alignItems: "center",
-    flexDirection: "row",
-    gap: space.x2,
-    marginTop: space.x3,
-  },
-  structureConfirmLabel: {
-    color: color.ink,
-    flex: 1,
-    fontFamily: "serif",
-    fontSize: 14,
-    fontWeight: "700",
-  },
-  structureCopy: {
-    color: color.inkMuted,
-    fontFamily: "serif",
-    fontSize: 13,
-    lineHeight: 19,
-  },
-  structureGroup: {
-    alignItems: "center",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: space.x3,
-    marginTop: space.x2,
-  },
-  structureGroupTiles: { flexDirection: "row", gap: 4 },
-  structureKicker: {
-    color: color.accent,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "800",
-    letterSpacing: 1,
-  },
-  structureTitle: { color: color.ink, fontFamily: "serif", fontSize: 17, fontWeight: "700" },
-  suggestion: { alignItems: "center", gap: 3 },
-  suggestionLabel: {
-    color: color.jade,
-    fontFamily: "monospace",
-    fontSize: 8,
-    fontWeight: "800",
-    letterSpacing: 0.8,
-  },
-  suggestions: { flexDirection: "row", flexWrap: "wrap", gap: space.x3, marginTop: space.x3 },
-  title: { color: color.ink, fontFamily: "serif", fontSize: 21, fontWeight: "700" },
-  unknownMark: { color: color.accent, fontFamily: "serif", fontSize: 28, fontWeight: "800" },
-  unknownTile: {
-    alignItems: "center",
-    aspectRatio: 0.72,
-    backgroundColor: color.white,
-    borderColor: color.accent,
-    borderRadius: 5,
-    borderStyle: "dashed",
-    borderWidth: 2,
-    justifyContent: "center",
-    minHeight: 52,
-    minWidth: 38,
-  },
-} satisfies Styles;

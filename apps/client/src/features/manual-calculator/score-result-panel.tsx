@@ -1,7 +1,8 @@
 import type { ScoreHandResult } from "@riichimi/score-core";
-import { Text, View, color, space } from "@riichimi/ui";
-import type { Styles } from "@riichimi/ui";
+import { classNames } from "@riichimi/ui";
+
 import { useLocale } from "../../state/locale-context";
+import styles from "./score-result-panel.module.css";
 
 export interface ScoreResultPanelProps {
   readonly result: ScoreHandResult;
@@ -15,27 +16,25 @@ export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
   const { t } = useLocale();
   if (result.kind === "invalid") {
     return (
-      <View aria-live="polite" style={[styles.panel, styles.errorPanel]}>
-        <Text role="heading" style={styles.errorTitle}>
-          {t("Check the hand")}
-        </Text>
+      <section aria-live="polite" className={classNames(styles["panel"], styles["error"])}>
+        <h2 className={styles["errorTitle"]}>{t("Check the hand")}</h2>
         {result.issues.map((issue) => (
-          <Text key={`${issue.code}-${issue.message}`} style={styles.errorItem}>
+          <p className={styles["errorItem"]} key={`${issue.code}-${issue.message}`}>
             • {issue.message}
-          </Text>
+          </p>
         ))}
-      </View>
+      </section>
     );
   }
 
   if (result.kind === "not-winning" || result.kind === "no-yaku") {
     return (
-      <View aria-live="polite" style={[styles.panel, styles.errorPanel]}>
-        <Text role="heading" style={styles.errorTitle}>
+      <section aria-live="polite" className={classNames(styles["panel"], styles["error"])}>
+        <h2 className={styles["errorTitle"]}>
           {result.kind === "not-winning" ? t("Not a complete hand") : t("A yaku is still needed")}
-        </Text>
-        <Text style={styles.errorItem}>{result.message}</Text>
-      </View>
+        </h2>
+        <p className={styles["errorItem"]}>{result.message}</p>
+      </section>
     );
   }
 
@@ -51,214 +50,68 @@ export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
         : `${points(result.payments.fromDealer)} / ${points(result.payments.fromEachNonDealer)}`;
 
   return (
-    <View aria-live="polite" style={[styles.panel, styles.successPanel]}>
-      <Text style={styles.kicker}>{t("MAXIMUM-VALUE INTERPRETATION")}</Text>
-      <Text role="heading" style={styles.scoreTitle}>
-        {title}
-      </Text>
-      <Text style={styles.payment}>{payment}</Text>
-      <Text style={styles.total}>
+    <section aria-live="polite" className={classNames(styles["panel"], styles["success"])}>
+      <p className={styles["kicker"]}>{t("MAXIMUM-VALUE INTERPRETATION")}</p>
+      <h2 className={styles["score"]}>{title}</h2>
+      <p className={styles["payment"]}>{payment}</p>
+      <p className={styles["total"]}>
         {t("Winner receives")} {points(result.totalGain)} {t("points total")}
-      </Text>
+      </p>
 
-      <View style={styles.divider} />
+      <div className={styles["divider"]} />
 
-      <Text style={styles.sectionTitle}>
+      <p className={styles["sectionTitle"]}>
         {result.yakuman.length > 0 ? t("Yakuman") : t("Yaku")}
-      </Text>
+      </p>
       {(result.yakuman.length > 0 ? result.yakuman : result.yaku).map((item) => (
-        <View key={item.id} style={styles.lineItem}>
-          <View style={styles.lineCopy}>
-            <Text style={styles.japanese}>{item.japanese}</Text>
-            <Text style={styles.reading}>{item.romanized}</Text>
-            <Text style={styles.english}>{item.name}</Text>
-          </View>
-          <Text style={styles.value}>
+        <div className={styles["lineItem"]} key={item.id}>
+          <div className={styles["lineCopy"]}>
+            <p className={styles["japanese"]}>{item.japanese}</p>
+            <p className={styles["reading"]}>{item.romanized}</p>
+            <p className={styles["english"]}>{item.name}</p>
+          </div>
+          <p className={styles["value"]}>
             {"han" in item ? `${item.han} ${t("han")}` : `${item.value}×`}
-          </Text>
-        </View>
+          </p>
+        </div>
       ))}
 
       {result.dora.total > 0 ? (
-        <View style={styles.lineItem}>
-          <View style={styles.lineCopy}>
-            <Text style={styles.lineTitle}>{t("Dora")}</Text>
-            <Text style={styles.lineNote}>
+        <div className={styles["lineItem"]}>
+          <div className={styles["lineCopy"]}>
+            <p className={styles["lineTitle"]}>{t("Dora")}</p>
+            <p className={styles["lineNote"]}>
               {t("Visible")} {result.dora.dora} · {t("Ura")} {result.dora.uraDora} · {t("Red")}{" "}
               {result.dora.redDora}
-            </Text>
-          </View>
-          <Text style={styles.value}>
+            </p>
+          </div>
+          <p className={styles["value"]}>
             {result.dora.total} {t("han")}
-          </Text>
-        </View>
+          </p>
+        </div>
       ) : null}
 
       {result.fu !== null ? (
         <>
-          <View style={styles.divider} />
-          <Text style={styles.sectionTitle}>{t("Fu audit")}</Text>
+          <div className={styles["divider"]} />
+          <p className={styles["sectionTitle"]}>{t("Fu audit")}</p>
           {result.fu.items.map((item, index) => (
-            <View key={`${item.reason}-${index}`} style={styles.fuRow}>
-              <Text style={styles.lineNote}>{item.reason}</Text>
-              <Text style={styles.fuValue}>+{item.fu}</Text>
-            </View>
+            <div className={styles["fuRow"]} key={`${item.reason}-${index}`}>
+              <p className={styles["lineNote"]}>{item.reason}</p>
+              <p className={styles["fuValue"]}>+{item.fu}</p>
+            </div>
           ))}
-          <Text style={styles.rounding}>
+          <p className={styles["rounding"]}>
             {result.fu.unrounded} {t("fu")} → {result.fu.rounded} {t("fu")}
-          </Text>
+          </p>
         </>
       ) : null}
 
       {result.riichiBonus > 0 ? (
-        <Text style={styles.bonus}>
+        <p className={styles["bonus"]}>
           {t("Includes")} {points(result.riichiBonus)} {t("points in riichi deposits.")}
-        </Text>
+        </p>
       ) : null}
-    </View>
+    </section>
   );
 }
-
-const styles = {
-  bonus: {
-    color: color.jade,
-    fontFamily: "serif",
-    fontSize: 14,
-    fontWeight: "700",
-    marginTop: space.x4,
-  },
-  divider: {
-    backgroundColor: color.line,
-    height: 1,
-    marginVertical: space.x5,
-  },
-  errorItem: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 16,
-    lineHeight: 24,
-    marginTop: space.x2,
-  },
-  errorPanel: {
-    backgroundColor: "#F6DCD4",
-    borderColor: color.accent,
-  },
-  errorTitle: {
-    color: color.accent,
-    fontFamily: "serif",
-    fontSize: 25,
-    fontWeight: "800",
-  },
-  fuRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 5,
-  },
-  fuValue: {
-    color: color.ink,
-    fontFamily: "monospace",
-    fontSize: 12,
-    fontWeight: "700",
-  },
-  kicker: {
-    color: "#8FC3AE",
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "700",
-    letterSpacing: 1.3,
-  },
-  lineCopy: {
-    flex: 1,
-  },
-  lineItem: {
-    alignItems: "center",
-    borderBottomColor: "#43695C",
-    borderBottomWidth: 1,
-    flexDirection: "row",
-    gap: space.x4,
-    paddingVertical: space.x3,
-  },
-  lineNote: {
-    color: "#C7D6CF",
-    fontFamily: "serif",
-    fontSize: 13,
-  },
-  // The yaku, Japanese first in the brush, with the reading and the English
-  // name stepping down beneath it.
-  japanese: {
-    color: color.white,
-    fontFamily: "YujiSyuku",
-    fontSize: 24,
-    lineHeight: 30,
-  },
-  reading: {
-    color: "#C7D6CF",
-    fontFamily: "serif",
-    fontSize: 13,
-    marginTop: 2,
-  },
-  english: {
-    color: "#8FA69D",
-    fontFamily: "serif",
-    fontSize: 11,
-    marginTop: 1,
-  },
-  lineTitle: {
-    color: color.white,
-    fontFamily: "serif",
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  panel: {
-    borderRadius: 16,
-    borderWidth: 1,
-    padding: space.x5,
-  },
-  payment: {
-    color: color.white,
-    fontFamily: "serif",
-    fontSize: 24,
-    fontWeight: "700",
-    marginTop: space.x2,
-  },
-  rounding: {
-    color: color.white,
-    fontFamily: "monospace",
-    fontSize: 12,
-    fontWeight: "700",
-    marginTop: space.x3,
-    textAlign: "right",
-  },
-  scoreTitle: {
-    color: color.white,
-    fontFamily: "serif",
-    fontSize: 39,
-    fontWeight: "800",
-    letterSpacing: -1.2,
-    marginTop: space.x2,
-  },
-  sectionTitle: {
-    color: "#8FC3AE",
-    fontFamily: "monospace",
-    fontSize: 10,
-    fontWeight: "700",
-    letterSpacing: 1.2,
-    marginBottom: space.x2,
-  },
-  successPanel: {
-    backgroundColor: color.jade,
-    borderColor: color.jade,
-  },
-  total: {
-    color: "#C7D6CF",
-    fontFamily: "serif",
-    fontSize: 14,
-    marginTop: space.x2,
-  },
-  value: {
-    color: "#FFD6CB",
-    fontFamily: "monospace",
-    fontSize: 12,
-    fontWeight: "800",
-  },
-} satisfies Styles;
