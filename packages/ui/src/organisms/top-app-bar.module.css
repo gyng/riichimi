@@ -75,10 +75,53 @@
   color: var(--color-ink);
 }
 
+/* A value the bar carries, not a destination, so it is not uppercased with the
+   links — and a language name is a proper noun in its own language. */
+.selectShell {
+  align-items: center;
+  display: inline-flex;
+  position: relative;
+}
+
+/*
+ * Something has to say this one opens. The platform's own arrow says it in about
+ * 24px, which is more than a phone's bar can spare beside four destinations, so
+ * the caret is drawn here at the size the bar can afford — and it lets clicks
+ * through to the control underneath.
+ */
+.selectShell::after {
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid var(--color-ink-muted);
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: calc(50% - 2px);
+}
+
+.select {
+  appearance: none;
+  background-color: transparent;
+  border-style: none;
+  color: var(--color-ink);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  min-height: 48px;
+  padding: 0 var(--space-x3) 0 0;
+  /* The control is as wide as its longest language, so the current one is set
+     against the caret rather than stranded from it. */
+  text-align: right;
+}
+
 .trailing {
   align-items: center;
   display: flex;
   flex-direction: row;
+  gap: var(--space-x1);
 }
 
 .brand:active,
@@ -95,13 +138,13 @@
   .bar {
     flex-wrap: nowrap;
     gap: 0;
-    padding-left: var(--space-x2);
-    padding-right: var(--space-x2);
+    padding-left: var(--space-x1);
+    padding-right: var(--space-x1);
   }
 
   .brand {
     justify-content: center;
-    margin-right: var(--space-x1);
+    margin-right: 0;
     min-width: 48px;
   }
 
@@ -109,8 +152,30 @@
     display: none;
   }
 
+  /*
+   * Below this the destinations stop fitting, and wrapping them costs a second
+   * bar's worth of height before any content — the same cost the wordmark was
+   * hidden to avoid. They scroll instead, so the row stays one row and no
+   * destination is dropped. The focus ring is drawn inside the item because the
+   * scroll container would otherwise clip it (WCAG 2.2 focus not obscured).
+   */
   .nav {
     flex-shrink: 1;
+    flex-wrap: nowrap;
     gap: 0;
+    /* The trailing edge fades so a destination that does not fit reads as more of
+       a row to swipe rather than as a word cut in half. `currentColor` is here for
+       its alpha only — a mask cares about nothing else. */
+    mask-image: linear-gradient(to right, currentColor calc(100% - 14px), transparent);
+    /* A flex item will not shrink past its content without this, so the row would
+       widen the page instead of scrolling. */
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .item {
+    flex-shrink: 0;
+    outline-offset: -2px;
   }
 }

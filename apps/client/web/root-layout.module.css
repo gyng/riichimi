@@ -4,8 +4,10 @@
   flex: 1;
   flex-direction: column;
   /* Without this the bar and screen refuse to shrink and the page scrolls as a
-     whole, which would take the bar off-screen. */
+     whole, which would take the bar off-screen. The same holds across: the shell
+     is a flex item too, so it would otherwise widen to its widest row. */
   min-height: 0;
+  min-width: 0;
 }
 
 /*
@@ -17,6 +19,10 @@
 .bar {
   background-color: var(--color-paper);
   flex-shrink: 0;
+  /* The counterpart of the shell's `min-height: 0`, for the other axis: without
+     it the bar keeps its widest content and pushes the whole page sideways
+     instead of letting its own row scroll. */
+  min-width: 0;
   padding-top: env(safe-area-inset-top);
 }
 

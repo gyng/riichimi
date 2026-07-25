@@ -75,6 +75,49 @@ export function TopAppBar({
   );
 }
 
+export interface TopAppBarChoice {
+  readonly label: string;
+  readonly value: string;
+}
+
+/**
+ * A short list the bar carries permanently — a language, not a destination.
+ *
+ * A native select rather than a custom menu: it arrives with a keyboard path, a
+ * screen-reader contract, and the platform's own picker on a phone, none of which
+ * a hand-built popover gets for free. The closed control shows the current choice,
+ * so the state is visible without being asked for.
+ */
+export function TopAppBarSelect({
+  label,
+  onChange,
+  options,
+  value,
+}: {
+  /** The accessible name. The control shows a value, never its own label. */
+  readonly label: string;
+  readonly onChange: (value: string) => void;
+  readonly options: readonly TopAppBarChoice[];
+  readonly value: string;
+}) {
+  return (
+    <span className={styles["selectShell"]}>
+      <select
+        aria-label={label}
+        className={styles["select"]}
+        onChange={(event) => onChange(event.target.value)}
+        value={value}
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </span>
+  );
+}
+
 /** A secondary bar destination, set apart from the primary ones. */
 export function TopAppBarAction({
   active,

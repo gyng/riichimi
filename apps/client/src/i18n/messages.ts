@@ -14,6 +14,8 @@ export interface Messages {
     readonly sessionResume: string;
     readonly sessionStart: string;
   };
+  /** The app's name, which is not the same word in every language. */
+  readonly brandName: string;
   readonly language: {
     readonly kicker: string;
     readonly label: string;
@@ -25,7 +27,6 @@ export interface Messages {
   readonly tiles: TileWords;
   readonly nav: {
     readonly history: string;
-    readonly home: string;
     readonly manual: string;
     /** Names the navigation landmark itself, not a destination inside it. */
     readonly primary: string;
@@ -40,6 +41,7 @@ export interface Messages {
 // at the table, and translating them would make an audit harder to check.
 export const messages: Record<Locale, Messages> = {
   en: {
+    brandName: "RIICHIMI",
     home: {
       headline: "Score a winning hand",
       historyEmpty: "No saved scores yet",
@@ -72,7 +74,6 @@ export const messages: Record<Locale, Messages> = {
     },
     nav: {
       history: "History",
-      home: "home",
       manual: "Manual",
       primary: "Primary",
       scan: "Scan",
@@ -81,6 +82,7 @@ export const messages: Record<Locale, Messages> = {
     },
   },
   ja: {
+    brandName: "立直み",
     home: {
       headline: "和了点を計算する",
       historyEmpty: "保存された点数はまだありません",
@@ -113,7 +115,6 @@ export const messages: Record<Locale, Messages> = {
     },
     nav: {
       history: "履歴",
-      home: "ホーム",
       manual: "手入力",
       primary: "メインナビゲーション",
       scan: "撮影",
@@ -122,6 +123,7 @@ export const messages: Record<Locale, Messages> = {
     },
   },
   "zh-Hans": {
+    brandName: "RIICHIMI",
     home: {
       headline: "计算和牌点数",
       historyEmpty: "尚无保存的点数",
@@ -154,7 +156,6 @@ export const messages: Record<Locale, Messages> = {
     },
     nav: {
       history: "记录",
-      home: "首页",
       manual: "手动",
       primary: "主导航",
       scan: "扫描",
@@ -164,6 +165,7 @@ export const messages: Record<Locale, Messages> = {
   },
 
   "zh-Hant": {
+    brandName: "RIICHIMI",
     home: {
       headline: "計算和牌點數",
       historyEmpty: "尚無儲存的點數",
@@ -196,7 +198,6 @@ export const messages: Record<Locale, Messages> = {
     },
     nav: {
       history: "紀錄",
-      home: "首頁",
       manual: "手動",
       primary: "主導覽",
       scan: "掃描",

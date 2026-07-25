@@ -69,8 +69,11 @@ primary control in the first screen:
 
 Three rules keep it there:
 
-- **Setup is not play.** Rules, house rules, and language live on Setup. They are
-  chosen once, so keeping them beside the tile picker only costs scrolling.
+- **Setup is not play.** Rules and house rules live on Setup. They are chosen
+  once, so keeping them beside the tile picker only costs scrolling. Language is
+  the exception and sits in the bar as well: every other setting can wait behind a
+  link, but a reader who cannot read the interface cannot read the link either. The
+  bar switches it; Setup still explains it.
 - **Rare context folds away.** Seat, round, riichi, honba, and sticks sit behind
   one disclosure; win method stays out because it changes every hand.
 - **A suit is one row.** The tile picker sizes tiles to the available width so
@@ -79,5 +82,11 @@ Three rules keep it there:
 - **Width earns columns.** Past 700 logical pixels the play surfaces go
   two-column instead of running a single column down a short screen.
 
-No route may scroll horizontally at that width. Both are cheap to re-measure in
-the browser, and a regression shows up as a screen count rather than an opinion.
+No route may scroll horizontally at that width. The bar's destinations are the one
+row allowed to scroll on their own: with a language and Setup beside them, English
+labels stop fitting somewhere below 390px, and a row that swipes costs a swipe
+while a row that wraps costs a second bar's height before any content. Its
+trailing edge fades so the clip reads as more row rather than a broken word.
+
+Both are cheap to re-measure in the browser, and a regression shows up as a screen
+count rather than an opinion.

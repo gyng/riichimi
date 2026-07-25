@@ -10,6 +10,7 @@ import type { Locale } from "./messages";
  */
 const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
   ja: {
+    "{brand} home": "{brand}ホーム",
     "Decrease {label}": "{label}を減らす",
     "Increase {label}": "{label}を増やす",
     "Player {position} name": "プレイヤー{position}の名前",
@@ -334,6 +335,7 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "yakuman never combine": "役満は複合しない",
   },
   "zh-Hans": {
+    "{brand} home": "{brand}首页",
     "Decrease {label}": "减少{label}",
     "Increase {label}": "增加{label}",
     "Player {position} name": "玩家{position}的名字",
@@ -652,6 +654,7 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "yakuman never combine": "役满不复合",
   },
   "zh-Hant": {
+    "{brand} home": "{brand}首頁",
     "Decrease {label}": "減少{label}",
     "Increase {label}": "增加{label}",
     "Player {position} name": "玩家{position}的名字",
