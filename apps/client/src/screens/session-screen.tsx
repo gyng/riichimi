@@ -14,24 +14,15 @@ import type {
   SessionEditCommand,
   SessionEditError,
 } from "@riichimi/session-core";
-import {
-  ActionButton,
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  Text,
-  TextInput,
-  View,
-  color,
-  space,
-} from "@riichimi/ui";
-import type { Styles } from "@riichimi/ui";
+import { ActionButton, classNames } from "@riichimi/ui";
 import { router } from "../navigation/router";
 import { useState } from "react";
 
 import { createRoundCommandMetadata, useSession } from "../state/session-context";
 import { RulesProfileControl } from "../features/rules/rules-profile-control";
+import { LoadingIndicator } from "../components/loading-indicator";
 import { useLocale } from "../state/locale-context";
+import styles from "./session-screen.module.css";
 
 const windNames: Record<Wind, string> = {
   east: "East",
@@ -71,67 +62,67 @@ export function SessionScreen() {
 
   if (session.loading) {
     return (
-      <View style={styles.centered}>
-        <ActivityIndicator color={color.accent} />
-        <Text style={styles.muted}>{t("Opening the local table…")}</Text>
-      </View>
+      <div className={styles["centered"]}>
+        <LoadingIndicator />
+        <p className={styles["muted"]}>{t("Opening the local table…")}</p>
+      </div>
     );
   }
 
   if (session.state === null) {
     return (
-      <View style={styles.safeArea}>
-        <ScrollView contentContainerStyle={styles.content}>
-          <Text style={styles.kicker}>{t("LOCAL TABLE SESSION")}</Text>
-          <Text role="heading" style={styles.title}>
-            {t("Let the round remember itself.")}
-          </Text>
-          <Text style={styles.intro}>{t("Start at 25,000. Everything carries over.")}</Text>
-          {/* The rules card is sized as a row item; a column would turn its
+      <div className={styles["screen"]}>
+        <div className={styles["scroll"]}>
+          <div className={styles["content"]}>
+            <p className={styles["kicker"]}>{t("LOCAL TABLE SESSION")}</p>
+            <h1 className={styles["title"]}>{t("Let the round remember itself.")}</h1>
+            <p className={styles["intro"]}>{t("Start at 25,000. Everything carries over.")}</p>
+            {/* The rules card is sized as a row item; a column would turn its
               320px width floor into a 320px height. */}
-          <View style={styles.rulesRow}>
-            <RulesProfileControl />
-          </View>
-          <View style={styles.panel}>
-            <Text role="heading" style={styles.panelTitle}>
-              {t("Four players")}
-            </Text>
-            <View style={styles.nameGrid}>
-              {names.map((name, index) => (
-                <View key={index} style={styles.nameField}>
-                  <Text style={styles.label}>
-                    PLAYER {index + 1} · {seatNames[index]}
-                  </Text>
-                  <TextInput
-                    aria-label={`Player ${index + 1} name`}
-                    autoCapitalize="words"
-                    maxLength={24}
-                    onChangeText={(value) =>
-                      setNames((current) =>
-                        current.map((item, itemIndex) => (itemIndex === index ? value : item)),
-                      )
-                    }
-                    onFocus={(event) => event.currentTarget.select()}
-                    style={styles.input}
-                    value={name}
-                  />
-                </View>
-              ))}
-            </View>
-            <View style={styles.primaryAction}>
-              <ActionButton
-                disabled={names.some((name) => name.trim().length === 0)}
-                label={t("Start East 1")}
-                onPress={() => session.createTable(names)}
-                variant="vermilion"
-              />
-            </View>
-          </View>
-          {session.storageError === null ? null : (
-            <Text style={styles.error}>{session.storageError}</Text>
-          )}
-        </ScrollView>
-      </View>
+            <div className={styles["rulesRow"]}>
+              <RulesProfileControl />
+            </div>
+            <div className={styles["panel"]}>
+              <h2 className={styles["panelTitle"]}>{t("Four players")}</h2>
+              <div className={styles["nameGrid"]}>
+                {names.map((name, index) => (
+                  <div key={index} className={styles["nameField"]}>
+                    <p className={styles["label"]}>
+                      PLAYER {index + 1} · {seatNames[index]}
+                    </p>
+                    <input
+                      aria-label={`Player ${index + 1} name`}
+                      autoCapitalize="words"
+                      className={styles["input"]}
+                      maxLength={24}
+                      onChange={(event) =>
+                        setNames((current) =>
+                          current.map((item, itemIndex) =>
+                            itemIndex === index ? event.target.value : item,
+                          ),
+                        )
+                      }
+                      onFocus={(event) => event.currentTarget.select()}
+                      value={name}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className={styles["primaryAction"]}>
+                <ActionButton
+                  disabled={names.some((name) => name.trim().length === 0)}
+                  label={t("Start East 1")}
+                  onPress={() => session.createTable(names)}
+                  variant="vermilion"
+                />
+              </div>
+            </div>
+            {session.storageError === null ? null : (
+              <p className={styles["error"]}>{session.storageError}</p>
+            )}
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -298,821 +289,510 @@ export function SessionScreen() {
   }
 
   return (
-    <View style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.topBar}>
-          <Text style={styles.rules}>{tableRules.label.toUpperCase()} · PINNED</Text>
-        </View>
-        <Text role="heading" style={styles.roundTitle}>
-          {windNames[table.roundWind]} {table.handNumber}
-        </Text>
-        <Text
-          aria-label={`${table.honba} honba, ${table.riichiSticks} riichi ${table.riichiSticks === 1 ? "stick" : "sticks"}`}
-          style={styles.roundMeta}
-        >
-          {table.honba} {t("honba")} · {table.riichiSticks} {t("riichi sticks")}
-        </Text>
+    <div className={styles["screen"]}>
+      <div className={styles["scroll"]}>
+        <div className={styles["content"]}>
+          <div className={styles["topBar"]}>
+            <p className={styles["rules"]}>{tableRules.label.toUpperCase()} · PINNED</p>
+          </div>
+          <h1 className={styles["roundTitle"]}>
+            {windNames[table.roundWind]} {table.handNumber}
+          </h1>
+          <p
+            aria-label={`${table.honba} honba, ${table.riichiSticks} riichi ${table.riichiSticks === 1 ? "stick" : "sticks"}`}
+            className={styles["roundMeta"]}
+          >
+            {table.honba} {t("honba")} · {table.riichiSticks} {t("riichi sticks")}
+          </p>
 
-        <View style={styles.recordBar}>
-          <ActionButton
-            label={t("Score a hand")}
-            onPress={() => router.push("/manual")}
-            variant="vermilion"
-          />
-          <Text style={styles.recordHint}>{t("Context carries over.")}</Text>
-        </View>
+          <div className={styles["recordBar"]}>
+            <ActionButton
+              label={t("Score a hand")}
+              onPress={() => router.push("/manual")}
+              variant="vermilion"
+            />
+            <p className={styles["recordHint"]}>{t("Context carries over.")}</p>
+          </div>
 
-        <View style={styles.playerGrid}>
-          {table.players.map((player, index) => {
-            const seat = seatNames[(index - table.dealerIndex + 4) % 4];
-            const hasDeclared = table.declaredRiichiPlayerIndices.includes(index);
-            return (
-              <View
-                key={player.id}
-                style={[styles.playerCard, index === table.dealerIndex && styles.dealerCard]}
-              >
-                <Text style={styles.label}>
-                  {seat}
-                  {index === table.dealerIndex ? ` · ${t("DEALER")}` : ""}
-                </Text>
-                <Text style={styles.playerName}>{player.name}</Text>
-                <Text style={styles.playerScore}>{points(player.score)}</Text>
-                {hasDeclared ? (
-                  <Text style={styles.riichiDeclared}>{t("Riichi declared")}</Text>
-                ) : (
-                  <Pressable
-                    aria-label={t("Declare riichi")}
-                    disabled={player.score < 1000}
-                    onPress={() => session.declarePlayerRiichi(index)}
-                    style={({ pressed }) => [
-                      styles.riichiPill,
-                      player.score < 1000 && styles.riichiPillDisabled,
-                      pressed && styles.pressed,
-                    ]}
-                  >
-                    <Text style={styles.riichiPillLabel}>{t("Riichi")}</Text>
-                  </Pressable>
-                )}
-              </View>
-            );
-          })}
-        </View>
+          <div className={styles["playerGrid"]}>
+            {table.players.map((player, index) => {
+              const seat = seatNames[(index - table.dealerIndex + 4) % 4];
+              const hasDeclared = table.declaredRiichiPlayerIndices.includes(index);
+              return (
+                <div
+                  key={player.id}
+                  className={classNames(
+                    styles["playerCard"],
+                    index === table.dealerIndex && styles["dealerCard"],
+                  )}
+                >
+                  <p className={styles["label"]}>
+                    {seat}
+                    {index === table.dealerIndex ? ` · ${t("DEALER")}` : ""}
+                  </p>
+                  <p className={styles["playerName"]}>{player.name}</p>
+                  <p className={styles["playerScore"]}>{points(player.score)}</p>
+                  {hasDeclared ? (
+                    <p className={styles["riichiDeclared"]}>{t("Riichi declared")}</p>
+                  ) : (
+                    <button
+                      aria-label={t("Declare riichi")}
+                      disabled={player.score < 1000}
+                      onClick={() => session.declarePlayerRiichi(index)}
+                      className={classNames(
+                        styles["riichiPill"],
+                        player.score < 1000 && styles["riichiPillDisabled"],
+                      )}
+                    >
+                      <p className={styles["riichiPillLabel"]}>{t("Riichi")}</p>
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
 
-        <Pressable
-          aria-label={t("Exhaustive draw")}
-          aria-expanded={showDraw}
-          onPress={() => setShowDraw((visible) => !visible)}
-          style={styles.disclosure}
-        >
-          <Text style={styles.disclosureLabel}>{t("Exhaustive draw")}</Text>
-          <Text style={styles.disclosureChevron}>{showDraw ? "−" : "+"}</Text>
-        </Pressable>
-        {showDraw ? (
-          <View style={styles.panel}>
-            <Text style={styles.muted}>{t("Tenpai players. Payments are automatic.")}</Text>
-            <View style={styles.tenpaiRow}>
-              {table.players.map((player, index) => {
-                const selected = tenpai.includes(index);
-                return (
-                  <Pressable
-                    role="checkbox"
-                    aria-checked={selected}
-                    key={player.id}
-                    onPress={() => toggleTenpai(index)}
-                    style={[styles.tenpaiChip, selected && styles.selectedChip]}
-                  >
-                    <Text style={[styles.tenpaiText, selected && styles.selectedChipText]}>
-                      {player.name}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-            <View style={styles.primaryAction}>
+          <button
+            aria-label={t("Exhaustive draw")}
+            aria-expanded={showDraw}
+            onClick={() => setShowDraw((visible) => !visible)}
+            className={styles["disclosure"]}
+          >
+            <p className={styles["disclosureLabel"]}>{t("Exhaustive draw")}</p>
+            <p className={styles["disclosureChevron"]}>{showDraw ? "−" : "+"}</p>
+          </button>
+          {showDraw ? (
+            <div className={styles["panel"]}>
+              <p className={styles["muted"]}>{t("Tenpai players. Payments are automatic.")}</p>
+              <div className={styles["tenpaiRow"]}>
+                {table.players.map((player, index) => {
+                  const selected = tenpai.includes(index);
+                  return (
+                    <button
+                      role="checkbox"
+                      aria-checked={selected}
+                      key={player.id}
+                      onClick={() => toggleTenpai(index)}
+                      className={classNames(
+                        styles["tenpaiChip"],
+                        selected && styles["selectedChip"],
+                      )}
+                    >
+                      <p
+                        className={classNames(
+                          styles["tenpaiText"],
+                          selected && styles["selectedChipText"],
+                        )}
+                      >
+                        {player.name}
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
+              <div className={styles["primaryAction"]}>
+                <ActionButton
+                  label={t("Record draw & advance")}
+                  onPress={() => {
+                    session.recordDraw({
+                      ...createRoundCommandMetadata(),
+                      tenpaiPlayerIndices: tenpai,
+                    });
+                    setTenpai([]);
+                    setShowDraw(false);
+                  }}
+                  variant="paper"
+                />
+              </div>
+            </div>
+          ) : null}
+
+          <div className={styles["panel"]}>
+            <div className={styles["historyHeader"]}>
+              <h2 className={styles["panelTitle"]}>{t("Round history")}</h2>
               <ActionButton
-                label={t("Record draw & advance")}
+                disabled={session.state.undoStack.length === 0}
+                label={t("Undo last change")}
                 onPress={() => {
-                  session.recordDraw({
-                    ...createRoundCommandMetadata(),
-                    tenpaiPlayerIndices: tenpai,
-                  });
-                  setTenpai([]);
-                  setShowDraw(false);
+                  session.undo();
+                  setEditStatus(null);
                 }}
                 variant="paper"
               />
-            </View>
-          </View>
-        ) : null}
-
-        <View style={styles.panel}>
-          <View style={styles.historyHeader}>
-            <Text role="heading" style={styles.panelTitle}>
-              {t("Round history")}
-            </Text>
-            <ActionButton
-              disabled={session.state.undoStack.length === 0}
-              label={t("Undo last change")}
-              onPress={() => {
-                session.undo();
-                setEditStatus(null);
-              }}
-              variant="paper"
-            />
-          </View>
-          {editStatus === null ? null : (
-            <Text aria-live="polite" style={styles.editStatus}>
-              {editStatus}
-            </Text>
-          )}
-          {table.history.length === 0 ? (
-            <Text style={styles.muted}>{t("No completed rounds yet.")}</Text>
-          ) : (
-            table.history.toReversed().map((record) => {
-              const editable = editableIds.has(record.id);
-              const editing = editingRoundId === record.id;
-              const editName =
-                record.kind === "win"
-                  ? `Edit ${roundLabel(record)}, ${playerName(record.winnerIndex)} won`
-                  : `Edit ${roundLabel(record)} draw`;
-              const laterChanges =
-                pendingReview === null
-                  ? []
-                  : pendingReview.changedRounds.filter((change) => change.roundId !== record.id);
-              return (
-                <View key={record.id} style={styles.historyGroup}>
-                  <View style={styles.historyRow}>
-                    <View style={styles.historyCopy}>
-                      <Text style={styles.historyTitle}>
-                        {roundLabel(record)} ·{" "}
-                        {record.kind === "win"
-                          ? `${playerName(record.winnerIndex)} won`
-                          : t("Exhaustive draw")}
-                      </Text>
-                      <Text style={styles.historyMeta}>
-                        {record.honba} honba · {new Date(record.occurredAt).toLocaleString()}
-                      </Text>
-                    </View>
-                    <Text style={styles.delta}>
-                      {record.deltas
-                        .map((delta) =>
-                          delta === 0 ? "±0" : `${delta > 0 ? "+" : ""}${points(delta)}`,
-                        )
-                        .join("  ")}
-                    </Text>
-                    {editable ? (
-                      <ActionButton
-                        label={editing ? "Close editor" : editName}
-                        onPress={() => (editing ? closeEditor() : openEditor(record))}
-                        variant="paper"
-                      />
-                    ) : null}
-                  </View>
-                  {editing ? (
-                    <View style={styles.editor}>
-                      <Text role="heading" style={styles.editorTitle}>
-                        Editing {roundLabel(record)}
-                      </Text>
-                      {record.kind === "draw" ? (
-                        <>
-                          <Text style={styles.label}>{t("TENPAI PLAYERS")}</Text>
-                          <View style={styles.tenpaiRow}>
-                            {table.players.map((player, index) => {
-                              const selected = draftTenpai.includes(index);
-                              return (
-                                <Pressable
-                                  aria-label={`${player.name} tenpai`}
-                                  role="checkbox"
-                                  aria-checked={selected}
-                                  key={player.id}
-                                  onPress={() =>
-                                    setDraftTenpai((current) => toggle(current, index))
-                                  }
-                                  style={[styles.tenpaiChip, selected && styles.selectedChip]}
-                                >
-                                  <Text
-                                    style={[styles.tenpaiText, selected && styles.selectedChipText]}
+            </div>
+            {editStatus === null ? null : (
+              <p aria-live="polite" className={styles["editStatus"]}>
+                {editStatus}
+              </p>
+            )}
+            {table.history.length === 0 ? (
+              <p className={styles["muted"]}>{t("No completed rounds yet.")}</p>
+            ) : (
+              table.history.toReversed().map((record) => {
+                const editable = editableIds.has(record.id);
+                const editing = editingRoundId === record.id;
+                const editName =
+                  record.kind === "win"
+                    ? `Edit ${roundLabel(record)}, ${playerName(record.winnerIndex)} won`
+                    : `Edit ${roundLabel(record)} draw`;
+                const laterChanges =
+                  pendingReview === null
+                    ? []
+                    : pendingReview.changedRounds.filter((change) => change.roundId !== record.id);
+                return (
+                  <div key={record.id} className={styles["historyGroup"]}>
+                    <div className={styles["historyRow"]}>
+                      <div className={styles["historyCopy"]}>
+                        <p className={styles["historyTitle"]}>
+                          {roundLabel(record)} ·{" "}
+                          {record.kind === "win"
+                            ? `${playerName(record.winnerIndex)} won`
+                            : t("Exhaustive draw")}
+                        </p>
+                        <p className={styles["historyMeta"]}>
+                          {record.honba} honba · {new Date(record.occurredAt).toLocaleString()}
+                        </p>
+                      </div>
+                      <p className={styles["delta"]}>
+                        {record.deltas
+                          .map((delta) =>
+                            delta === 0 ? "±0" : `${delta > 0 ? "+" : ""}${points(delta)}`,
+                          )
+                          .join("  ")}
+                      </p>
+                      {editable ? (
+                        <ActionButton
+                          label={editing ? "Close editor" : editName}
+                          onPress={() => (editing ? closeEditor() : openEditor(record))}
+                          variant="paper"
+                        />
+                      ) : null}
+                    </div>
+                    {editing ? (
+                      <div className={styles["editor"]}>
+                        <h2 className={styles["editorTitle"]}>Editing {roundLabel(record)}</h2>
+                        {record.kind === "draw" ? (
+                          <>
+                            <p className={styles["label"]}>{t("TENPAI PLAYERS")}</p>
+                            <div className={styles["tenpaiRow"]}>
+                              {table.players.map((player, index) => {
+                                const selected = draftTenpai.includes(index);
+                                return (
+                                  <button
+                                    aria-label={`${player.name} tenpai`}
+                                    role="checkbox"
+                                    aria-checked={selected}
+                                    key={player.id}
+                                    onClick={() =>
+                                      setDraftTenpai((current) => toggle(current, index))
+                                    }
+                                    className={classNames(
+                                      styles["tenpaiChip"],
+                                      selected && styles["selectedChip"],
+                                    )}
                                   >
-                                    {player.name}
-                                  </Text>
-                                </Pressable>
-                              );
-                            })}
-                          </View>
-                          <Text style={styles.label}>{t("RIICHI DECLARED THIS HAND")}</Text>
-                          <View style={styles.tenpaiRow}>
-                            {table.players.map((player, index) => {
-                              const selected = draftRiichi.includes(index);
-                              return (
-                                <Pressable
-                                  aria-label={`${player.name} riichi`}
-                                  role="checkbox"
-                                  aria-checked={selected}
-                                  key={player.id}
-                                  onPress={() =>
-                                    setDraftRiichi((current) => toggle(current, index))
-                                  }
-                                  style={[styles.tenpaiChip, selected && styles.selectedChip]}
-                                >
-                                  <Text
-                                    style={[styles.tenpaiText, selected && styles.selectedChipText]}
-                                  >
-                                    {player.name}
-                                  </Text>
-                                </Pressable>
-                              );
-                            })}
-                          </View>
-                          <View style={styles.editorActions}>
-                            <ActionButton
-                              label={t("Apply")}
-                              onPress={() => previewOutcome(record)}
-                              variant="vermilion"
-                            />
-                            <ActionButton
-                              label={t("Apply riichi change")}
-                              onPress={() => previewRiichi(record)}
-                              variant="paper"
-                            />
-                            <ActionButton
-                              label={t("Delete this round")}
-                              onPress={() =>
-                                runPreview({ kind: "delete-round", roundId: record.id })
-                              }
-                              variant="paper"
-                            />
-                            <ActionButton
-                              label={t("Cancel")}
-                              onPress={closeEditor}
-                              variant="paper"
-                            />
-                          </View>
-                        </>
-                      ) : (
-                        <>
-                          <Text style={styles.label}>{t("WINNER")}</Text>
-                          <View style={styles.tenpaiRow}>
-                            {table.players.map((player, index) => {
-                              const selected = draftWinner === index;
-                              return (
-                                <Pressable
-                                  aria-label={`Winner ${player.name}`}
-                                  role="radio"
-                                  aria-checked={selected}
-                                  key={player.id}
-                                  onPress={() => selectWinner(index)}
-                                  style={[styles.tenpaiChip, selected && styles.selectedChip]}
-                                >
-                                  <Text
-                                    style={[styles.tenpaiText, selected && styles.selectedChipText]}
-                                  >
-                                    {player.name}
-                                  </Text>
-                                </Pressable>
-                              );
-                            })}
-                          </View>
-                          {record.payments.kind === "ron" ? (
-                            <>
-                              <Text style={styles.label}>{t("DISCARDER")}</Text>
-                              <View style={styles.tenpaiRow}>
-                                {table.players.map((player, index) => {
-                                  if (index === draftWinner) {
-                                    return null;
-                                  }
-                                  const selected = draftDiscarder === index;
-                                  return (
-                                    <Pressable
-                                      aria-label={`Discarder ${player.name}`}
-                                      role="radio"
-                                      aria-checked={selected}
-                                      key={player.id}
-                                      onPress={() => setDraftDiscarder(index)}
-                                      style={[styles.tenpaiChip, selected && styles.selectedChip]}
+                                    <p
+                                      className={classNames(
+                                        styles["tenpaiText"],
+                                        selected && styles["selectedChipText"],
+                                      )}
                                     >
-                                      <Text
-                                        style={[
-                                          styles.tenpaiText,
-                                          selected && styles.selectedChipText,
-                                        ]}
+                                      {player.name}
+                                    </p>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            <p className={styles["label"]}>{t("RIICHI DECLARED THIS HAND")}</p>
+                            <div className={styles["tenpaiRow"]}>
+                              {table.players.map((player, index) => {
+                                const selected = draftRiichi.includes(index);
+                                return (
+                                  <button
+                                    aria-label={`${player.name} riichi`}
+                                    role="checkbox"
+                                    aria-checked={selected}
+                                    key={player.id}
+                                    onClick={() =>
+                                      setDraftRiichi((current) => toggle(current, index))
+                                    }
+                                    className={classNames(
+                                      styles["tenpaiChip"],
+                                      selected && styles["selectedChip"],
+                                    )}
+                                  >
+                                    <p
+                                      className={classNames(
+                                        styles["tenpaiText"],
+                                        selected && styles["selectedChipText"],
+                                      )}
+                                    >
+                                      {player.name}
+                                    </p>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            <div className={styles["editorActions"]}>
+                              <ActionButton
+                                label={t("Apply")}
+                                onPress={() => previewOutcome(record)}
+                                variant="vermilion"
+                              />
+                              <ActionButton
+                                label={t("Apply riichi change")}
+                                onPress={() => previewRiichi(record)}
+                                variant="paper"
+                              />
+                              <ActionButton
+                                label={t("Delete this round")}
+                                onPress={() =>
+                                  runPreview({ kind: "delete-round", roundId: record.id })
+                                }
+                                variant="paper"
+                              />
+                              <ActionButton
+                                label={t("Cancel")}
+                                onPress={closeEditor}
+                                variant="paper"
+                              />
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <p className={styles["label"]}>{t("WINNER")}</p>
+                            <div className={styles["tenpaiRow"]}>
+                              {table.players.map((player, index) => {
+                                const selected = draftWinner === index;
+                                return (
+                                  <button
+                                    aria-label={`Winner ${player.name}`}
+                                    role="radio"
+                                    aria-checked={selected}
+                                    key={player.id}
+                                    onClick={() => selectWinner(index)}
+                                    className={classNames(
+                                      styles["tenpaiChip"],
+                                      selected && styles["selectedChip"],
+                                    )}
+                                  >
+                                    <p
+                                      className={classNames(
+                                        styles["tenpaiText"],
+                                        selected && styles["selectedChipText"],
+                                      )}
+                                    >
+                                      {player.name}
+                                    </p>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            {record.payments.kind === "ron" ? (
+                              <>
+                                <p className={styles["label"]}>{t("DISCARDER")}</p>
+                                <div className={styles["tenpaiRow"]}>
+                                  {table.players.map((player, index) => {
+                                    if (index === draftWinner) {
+                                      return null;
+                                    }
+                                    const selected = draftDiscarder === index;
+                                    return (
+                                      <button
+                                        aria-label={`Discarder ${player.name}`}
+                                        role="radio"
+                                        aria-checked={selected}
+                                        key={player.id}
+                                        onClick={() => setDraftDiscarder(index)}
+                                        className={classNames(
+                                          styles["tenpaiChip"],
+                                          selected && styles["selectedChip"],
+                                        )}
                                       >
-                                        {player.name}
-                                      </Text>
-                                    </Pressable>
-                                  );
-                                })}
-                              </View>
-                            </>
-                          ) : (
-                            <Text style={styles.muted}>{t("Tsumo \u2014 no discarder.")}</Text>
-                          )}
-                          <Text style={styles.muted}>
-                            {t("Reassigning keeps the payment as recorded.")} ({" "}
-                            {record.deltas
-                              .map((delta) =>
-                                delta === 0 ? "±0" : `${delta > 0 ? "+" : ""}${points(delta)}`,
-                              )
-                              .join("  ")}
-                            ) {t("To recompute han, fu, and transfers, re-score the hand.")}
-                          </Text>
-                          <View style={styles.editorActions}>
-                            <ActionButton
-                              label={t("Apply")}
-                              onPress={() => previewOutcome(record)}
-                              variant="vermilion"
-                            />
-                            <ActionButton
-                              label={t("Re-score this hand")}
-                              onPress={() =>
-                                router.push({
-                                  params: { editRound: record.id },
-                                  pathname: "/manual",
-                                })
-                              }
-                              variant="paper"
-                            />
-                            <ActionButton
-                              label={t("Delete this round")}
-                              onPress={() =>
-                                runPreview({ kind: "delete-round", roundId: record.id })
-                              }
-                              variant="paper"
-                            />
-                            <ActionButton
-                              label={t("Cancel")}
-                              onPress={closeEditor}
-                              variant="paper"
-                            />
-                          </View>
-                        </>
-                      )}
-                      {editError !== null && pendingReview === null ? (
-                        <Text aria-live="polite" style={styles.error}>
-                          {describeEditError(editError)}
-                        </Text>
-                      ) : null}
-                      {pendingReview !== null ? (
-                        <View aria-live="polite" style={styles.editConfirm}>
-                          <Text style={styles.endTitle}>{t("Confirm this correction")}</Text>
-                          <Text style={styles.confirmSubhead}>{t("Final score changes")}</Text>
-                          {pendingReview.scoreChanges.map((change, index) => (
-                            <Text key={index} style={styles.confirmScoreLine}>
-                              {playerName(index)}: {signedPoints(change)}
-                            </Text>
-                          ))}
-                          {laterChanges.length > 0 ? (
-                            <>
-                              <Text style={styles.confirmSubhead}>
-                                {t("Later rounds that shift")}
-                              </Text>
-                              {laterChanges.map((change) => (
-                                <Text key={change.roundId} style={styles.muted}>
-                                  {describeChangedRound(change)}
-                                </Text>
-                              ))}
-                            </>
-                          ) : null}
-                          {pendingReview.warnings.map((warning, index) => (
-                            <Text key={index} style={styles.confirmWarning}>
-                              {describeWarning(warning)}
-                            </Text>
-                          ))}
-                          <View style={styles.endActions}>
-                            <ActionButton
-                              label={t("Apply correction")}
-                              onPress={applyCorrection}
-                              variant="vermilion"
-                            />
-                            <ActionButton
-                              label={t("Keep as recorded")}
-                              onPress={keepAsRecorded}
-                              variant="paper"
-                            />
-                          </View>
-                        </View>
-                      ) : null}
-                    </View>
-                  ) : null}
-                </View>
-              );
-            })
-          )}
-          {legacyHistory ? (
-            <Text style={styles.muted}>{t("Older rounds can't be edited.")}</Text>
-          ) : null}
-        </View>
+                                        <p
+                                          className={classNames(
+                                            styles["tenpaiText"],
+                                            selected && styles["selectedChipText"],
+                                          )}
+                                        >
+                                          {player.name}
+                                        </p>
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              </>
+                            ) : (
+                              <p className={styles["muted"]}>{t("Tsumo \u2014 no discarder.")}</p>
+                            )}
+                            <p className={styles["muted"]}>
+                              {t("Reassigning keeps the payment as recorded.")} ({" "}
+                              {record.deltas
+                                .map((delta) =>
+                                  delta === 0 ? "±0" : `${delta > 0 ? "+" : ""}${points(delta)}`,
+                                )
+                                .join("  ")}
+                              ) {t("To recompute han, fu, and transfers, re-score the hand.")}
+                            </p>
+                            <div className={styles["editorActions"]}>
+                              <ActionButton
+                                label={t("Apply")}
+                                onPress={() => previewOutcome(record)}
+                                variant="vermilion"
+                              />
+                              <ActionButton
+                                label={t("Re-score this hand")}
+                                onPress={() =>
+                                  router.push({
+                                    params: { editRound: record.id },
+                                    pathname: "/manual",
+                                  })
+                                }
+                                variant="paper"
+                              />
+                              <ActionButton
+                                label={t("Delete this round")}
+                                onPress={() =>
+                                  runPreview({ kind: "delete-round", roundId: record.id })
+                                }
+                                variant="paper"
+                              />
+                              <ActionButton
+                                label={t("Cancel")}
+                                onPress={closeEditor}
+                                variant="paper"
+                              />
+                            </div>
+                          </>
+                        )}
+                        {editError !== null && pendingReview === null ? (
+                          <p aria-live="polite" className={styles["error"]}>
+                            {describeEditError(editError)}
+                          </p>
+                        ) : null}
+                        {pendingReview !== null ? (
+                          <div aria-live="polite" className={styles["editConfirm"]}>
+                            <p className={styles["endTitle"]}>{t("Confirm this correction")}</p>
+                            <p className={styles["confirmSubhead"]}>{t("Final score changes")}</p>
+                            {pendingReview.scoreChanges.map((change, index) => (
+                              <p key={index} className={styles["confirmScoreLine"]}>
+                                {playerName(index)}: {signedPoints(change)}
+                              </p>
+                            ))}
+                            {laterChanges.length > 0 ? (
+                              <>
+                                <p className={styles["confirmSubhead"]}>
+                                  {t("Later rounds that shift")}
+                                </p>
+                                {laterChanges.map((change) => (
+                                  <p key={change.roundId} className={styles["muted"]}>
+                                    {describeChangedRound(change)}
+                                  </p>
+                                ))}
+                              </>
+                            ) : null}
+                            {pendingReview.warnings.map((warning, index) => (
+                              <p key={index} className={styles["confirmWarning"]}>
+                                {describeWarning(warning)}
+                              </p>
+                            ))}
+                            <div className={styles["endActions"]}>
+                              <ActionButton
+                                label={t("Apply correction")}
+                                onPress={applyCorrection}
+                                variant="vermilion"
+                              />
+                              <ActionButton
+                                label={t("Keep as recorded")}
+                                onPress={keepAsRecorded}
+                                variant="paper"
+                              />
+                            </div>
+                          </div>
+                        ) : null}
+                      </div>
+                    ) : null}
+                  </div>
+                );
+              })
+            )}
+            {legacyHistory ? (
+              <p className={styles["muted"]}>{t("Older rounds can't be edited.")}</p>
+            ) : null}
+          </div>
 
-        <View style={styles.panel}>
-          <View style={styles.historyHeader}>
-            <Text role="heading" style={styles.panelTitle}>
-              {t("Game summary")}
-            </Text>
-            <ActionButton
-              label={showSummary ? t("Hide summary") : t("Show summary")}
-              onPress={() => {
-                setShowSummary((current) => !current);
-                setCopied(false);
-              }}
-              variant="paper"
-            />
-          </View>
-          {summary === null ? (
-            <Text style={styles.muted}>{t("Standings, tallies, and a copyable log.")}</Text>
-          ) : (
-            <>
-              {summary.standings.map((entry) => (
-                <View key={entry.playerId} style={styles.standingRow}>
-                  <Text style={styles.standingRank}>{entry.placement}</Text>
-                  <Text style={styles.standingName}>{entry.name}</Text>
-                  <Text style={styles.standingScore}>{points(entry.score)}</Text>
-                  <Text style={styles.standingNet}>{signedPoints(entry.net)}</Text>
-                </View>
-              ))}
-              <Text aria-label="Shareable game summary" style={styles.summaryText}>
-                {summaryText}
-              </Text>
-              {typeof navigator !== "undefined" && navigator.clipboard ? (
-                <View style={styles.primaryAction}>
-                  <ActionButton
-                    label={copied ? "Copied" : "Copy summary"}
-                    onPress={copySummary}
-                    variant="paper"
-                  />
-                </View>
-              ) : (
-                <Text style={styles.muted}>{t("Select the text above to copy it.")}</Text>
-              )}
-            </>
-          )}
-        </View>
-
-        {session.storageError === null ? null : (
-          <Text aria-live="polite" style={styles.error}>
-            {session.storageError}
-          </Text>
-        )}
-        {confirmEnd ? (
-          <View style={styles.endConfirm}>
-            <Text style={styles.endTitle}>{t("End this table and erase its local history?")}</Text>
-            <View style={styles.endActions}>
+          <div className={styles["panel"]}>
+            <div className={styles["historyHeader"]}>
+              <h2 className={styles["panelTitle"]}>{t("Game summary")}</h2>
               <ActionButton
-                label={t("Keep table")}
-                onPress={() => setConfirmEnd(false)}
+                label={showSummary ? t("Hide summary") : t("Show summary")}
+                onPress={() => {
+                  setShowSummary((current) => !current);
+                  setCopied(false);
+                }}
                 variant="paper"
               />
-              <ActionButton
-                label={t("End & erase")}
-                onPress={session.clearSession}
-                variant="vermilion"
-              />
-            </View>
-          </View>
-        ) : (
-          <Pressable onPress={() => setConfirmEnd(true)} style={styles.endLink}>
-            <Text style={styles.endLinkText}>{t("End this table")}</Text>
-          </Pressable>
-        )}
-      </ScrollView>
-    </View>
+            </div>
+            {summary === null ? (
+              <p className={styles["muted"]}>{t("Standings, tallies, and a copyable log.")}</p>
+            ) : (
+              <>
+                {summary.standings.map((entry) => (
+                  <div key={entry.playerId} className={styles["standingRow"]}>
+                    <p className={styles["standingRank"]}>{entry.placement}</p>
+                    <p className={styles["standingName"]}>{entry.name}</p>
+                    <p className={styles["standingScore"]}>{points(entry.score)}</p>
+                    <p className={styles["standingNet"]}>{signedPoints(entry.net)}</p>
+                  </div>
+                ))}
+                <p aria-label="Shareable game summary" className={styles["summaryText"]}>
+                  {summaryText}
+                </p>
+                {typeof navigator !== "undefined" && navigator.clipboard ? (
+                  <div className={styles["primaryAction"]}>
+                    <ActionButton
+                      label={copied ? "Copied" : "Copy summary"}
+                      onPress={copySummary}
+                      variant="paper"
+                    />
+                  </div>
+                ) : (
+                  <p className={styles["muted"]}>{t("Select the text above to copy it.")}</p>
+                )}
+              </>
+            )}
+          </div>
+
+          {session.storageError === null ? null : (
+            <p aria-live="polite" className={styles["error"]}>
+              {session.storageError}
+            </p>
+          )}
+          {confirmEnd ? (
+            <div className={styles["endConfirm"]}>
+              <p className={styles["endTitle"]}>
+                {t("End this table and erase its local history?")}
+              </p>
+              <div className={styles["endActions"]}>
+                <ActionButton
+                  label={t("Keep table")}
+                  onPress={() => setConfirmEnd(false)}
+                  variant="paper"
+                />
+                <ActionButton
+                  label={t("End & erase")}
+                  onPress={session.clearSession}
+                  variant="vermilion"
+                />
+              </div>
+            </div>
+          ) : (
+            <button onClick={() => setConfirmEnd(true)} className={styles["endLink"]}>
+              <p className={styles["endLinkText"]}>{t("End this table")}</p>
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
-
-const styles = {
-  // The per-hand action, first and unmissable.
-  recordBar: {
-    alignItems: "center",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: space.x3,
-    marginBottom: space.x4,
-  },
-  recordHint: { color: color.inkMuted, flexShrink: 1, fontFamily: "serif", fontSize: 13 },
-  // Riichi is a per-seat action, but secondary to the score — a compact outline
-  // rather than a full-width button that out-weighed the seat's points.
-  riichiPill: {
-    alignItems: "center",
-    alignSelf: "flex-start",
-    borderColor: color.jade,
-    borderRadius: 999,
-    borderWidth: 1,
-    justifyContent: "center",
-    minHeight: 44,
-    minWidth: 72,
-    paddingHorizontal: space.x3,
-  },
-  riichiPillDisabled: { borderColor: color.line, opacity: 0.5 },
-  riichiPillLabel: {
-    color: color.jade,
-    fontFamily: "monospace",
-    fontSize: 11,
-    fontWeight: "800",
-    letterSpacing: 0.8,
-  },
-  riichiDeclared: {
-    alignSelf: "flex-start",
-    color: color.accent,
-    fontFamily: "monospace",
-    fontSize: 11,
-    fontWeight: "800",
-    letterSpacing: 0.6,
-    minHeight: 40,
-    paddingTop: 12,
-  },
-  disclosure: {
-    alignItems: "center",
-    borderColor: color.line,
-    borderRadius: 10,
-    borderWidth: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: space.x3,
-    minHeight: 48,
-    paddingHorizontal: space.x4,
-  },
-  disclosureChevron: {
-    color: color.accent,
-    fontFamily: "monospace",
-    fontSize: 18,
-    fontWeight: "800",
-  },
-  disclosureLabel: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 15,
-    fontWeight: "700",
-  },
-  pressed: { opacity: 0.7 },
-  centered: {
-    alignItems: "center",
-    backgroundColor: color.canvas,
-    flex: 1,
-    gap: space.x3,
-    justifyContent: "center",
-  },
-  confirmScoreLine: {
-    color: color.ink,
-    fontFamily: "monospace",
-    fontSize: 13,
-    fontWeight: "700",
-  },
-  confirmSubhead: {
-    color: color.inkMuted,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "700",
-    letterSpacing: 1,
-    marginTop: space.x2,
-  },
-  confirmWarning: {
-    color: color.accent,
-    fontFamily: "serif",
-    fontSize: 13,
-    lineHeight: 19,
-  },
-  content: {
-    alignSelf: "center",
-    maxWidth: 1000,
-    padding: space.x3,
-    paddingBottom: space.x7,
-    width: "100%",
-  },
-  dealerCard: { borderColor: color.accent, borderWidth: 2 },
-  delta: { color: color.jade, fontFamily: "monospace", fontSize: 11, fontWeight: "700" },
-  editConfirm: {
-    backgroundColor: "#F6DCD4",
-    borderColor: color.accent,
-    borderRadius: 12,
-    borderWidth: 1,
-    gap: space.x2,
-    marginTop: space.x3,
-    padding: space.x4,
-  },
-  editStatus: {
-    color: color.jade,
-    fontFamily: "serif",
-    fontSize: 14,
-    fontWeight: "700",
-  },
-  editor: {
-    backgroundColor: color.canvas,
-    borderColor: color.line,
-    borderRadius: 12,
-    borderWidth: 1,
-    gap: space.x3,
-    marginBottom: space.x2,
-    marginTop: space.x2,
-    padding: space.x4,
-  },
-  editorActions: { flexDirection: "row", flexWrap: "wrap", gap: space.x3, marginTop: space.x2 },
-  editorTitle: { color: color.ink, fontFamily: "serif", fontSize: 17, fontWeight: "800" },
-  endActions: { flexDirection: "row", flexWrap: "wrap", gap: space.x3 },
-  endConfirm: {
-    backgroundColor: "#F6DCD4",
-    borderColor: color.accent,
-    borderRadius: 12,
-    borderWidth: 1,
-    gap: space.x3,
-    marginTop: space.x4,
-    padding: space.x4,
-  },
-  endLink: {
-    alignSelf: "flex-start",
-    justifyContent: "center",
-    marginTop: space.x4,
-    minHeight: 44,
-    paddingVertical: space.x3,
-  },
-  endLinkText: {
-    color: color.accent,
-    fontFamily: "serif",
-    fontSize: 14,
-    textDecorationLine: "underline",
-  },
-  endTitle: { color: color.ink, fontFamily: "serif", fontSize: 17, fontWeight: "700" },
-  error: { color: color.accent, fontFamily: "serif", fontSize: 14, marginTop: space.x3 },
-  historyCopy: { flex: 1, minWidth: 200 },
-  historyGroup: { borderTopColor: color.line, borderTopWidth: 1 },
-  historyHeader: {
-    alignItems: "center",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: space.x4,
-    justifyContent: "space-between",
-  },
-  historyMeta: { color: color.inkMuted, fontFamily: "serif", fontSize: 12, marginTop: 2 },
-  historyRow: {
-    alignItems: "center",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: space.x4,
-    justifyContent: "space-between",
-    paddingVertical: space.x3,
-  },
-  historyTitle: { color: color.ink, fontFamily: "serif", fontSize: 15, fontWeight: "700" },
-  input: {
-    backgroundColor: color.white,
-    borderColor: color.line,
-    borderRadius: 8,
-    borderWidth: 1,
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 17,
-    minHeight: 48,
-    paddingHorizontal: space.x3,
-  },
-  intro: {
-    color: color.inkMuted,
-    fontFamily: "serif",
-    fontSize: 18,
-    lineHeight: 28,
-    marginBottom: space.x4,
-    maxWidth: 720,
-  },
-  kicker: {
-    color: color.accent,
-    fontFamily: "monospace",
-    fontSize: 10,
-    fontWeight: "800",
-    letterSpacing: 1.5,
-    marginTop: space.x7,
-  },
-  label: {
-    color: color.inkMuted,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "700",
-    letterSpacing: 1,
-  },
-  muted: { color: color.inkMuted, fontFamily: "serif", fontSize: 14, lineHeight: 21 },
-  nameField: { flex: 1, gap: space.x2, minWidth: 220 },
-  nameGrid: { flexDirection: "row", flexWrap: "wrap", gap: space.x4 },
-  panel: {
-    backgroundColor: color.paper,
-    borderColor: color.line,
-    borderRadius: 16,
-    borderWidth: 1,
-    gap: space.x4,
-    marginBottom: space.x3,
-    padding: space.x3,
-  },
-  panelTitle: { color: color.ink, fontFamily: "serif", fontSize: 17, fontWeight: "800" },
-  playerCard: {
-    backgroundColor: color.paper,
-    borderColor: color.line,
-    borderRadius: 12,
-    borderWidth: 1,
-    flexBasis: 150,
-    flexGrow: 1,
-    gap: space.x1,
-    // Two seats per row on a phone: at 210 a single card filled the width and
-    // the four seats cost most of the screen.
-    minWidth: 150,
-    padding: space.x3,
-  },
-  playerGrid: { flexDirection: "row", flexWrap: "wrap", gap: space.x2, marginBottom: space.x3 },
-  playerName: { color: color.ink, fontFamily: "serif", fontSize: 16, fontWeight: "700" },
-  playerScore: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 22,
-    fontWeight: "800",
-    letterSpacing: -0.8,
-    marginBottom: space.x2,
-  },
-  primaryAction: { alignSelf: "flex-start", marginTop: space.x2 },
-  roundMeta: {
-    color: color.inkMuted,
-    fontFamily: "monospace",
-    fontSize: 11,
-    letterSpacing: 1,
-    marginBottom: space.x5,
-  },
-  roundTitle: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 30,
-    fontWeight: "800",
-    letterSpacing: -1.5,
-    lineHeight: 52,
-    marginTop: space.x2,
-  },
-  rules: {
-    color: color.inkMuted,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "700",
-    letterSpacing: 1,
-  },
-  rulesRow: { flexDirection: "row", flexWrap: "wrap" },
-  safeArea: { backgroundColor: color.canvas, flex: 1 },
-  selectedChip: { backgroundColor: color.ink, borderColor: color.ink },
-  selectedChipText: { color: color.white },
-  standingName: { color: color.ink, flex: 1, fontFamily: "serif", fontSize: 16, fontWeight: "700" },
-  standingNet: {
-    color: color.inkMuted,
-    fontFamily: "monospace",
-    fontSize: 12,
-    minWidth: 72,
-    textAlign: "right",
-  },
-  standingRank: {
-    color: color.accent,
-    fontFamily: "serif",
-    fontSize: 18,
-    fontWeight: "800",
-    minWidth: 20,
-  },
-  standingRow: {
-    alignItems: "center",
-    borderTopColor: color.line,
-    borderTopWidth: 1,
-    flexDirection: "row",
-    gap: space.x3,
-    paddingVertical: space.x3,
-  },
-  standingScore: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 18,
-    fontWeight: "800",
-    minWidth: 84,
-    textAlign: "right",
-  },
-  summaryText: {
-    backgroundColor: color.canvas,
-    borderColor: color.line,
-    borderRadius: 8,
-    borderWidth: 1,
-    color: color.ink,
-    fontFamily: "monospace",
-    fontSize: 12,
-    lineHeight: 18,
-    padding: space.x3,
-    // Where no clipboard is available, selecting this block by hand is the way
-    // the summary leaves the app.
-    userSelect: "text",
-  },
-  tenpaiChip: {
-    backgroundColor: color.canvas,
-    borderColor: color.line,
-    borderRadius: 999,
-    borderWidth: 1,
-    minHeight: 48,
-    paddingHorizontal: space.x4,
-    paddingVertical: space.x3,
-  },
-  tenpaiRow: { flexDirection: "row", flexWrap: "wrap", gap: space.x2 },
-  tenpaiText: { color: color.ink, fontFamily: "serif", fontSize: 14, fontWeight: "700" },
-  title: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 47,
-    fontWeight: "800",
-    letterSpacing: -1.7,
-    lineHeight: 51,
-    marginBottom: space.x4,
-    marginTop: space.x2,
-    maxWidth: 700,
-  },
-  topBar: { alignItems: "center", flexDirection: "row", justifyContent: "space-between" },
-} satisfies Styles;

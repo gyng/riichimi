@@ -4,7 +4,7 @@
 
 Riichimi is a local-first riichi mahjong score calculator for the web. Its defining experience is a trustworthy path from a guided camera capture to an auditable score with minimal correction. Correctness, explicit uncertainty, accessibility, and user control outrank novelty.
 
-The client is a web-only Vite app: plain DOM and CSS, routing is `react-router`. The React Native and Expo toolchains are gone — no `react-native`, `react-native-web`, or `expo*` package is installed, and nothing is aliased away. The RN-shaped names (`View`, `Text`, `Pressable`, `ScrollView`, `TextInput`, `Image`, `ActivityIndicator`) are thin local DOM primitives in `packages/ui/src/primitives/`. The camera, photo library, and router are ordinary adapters under `apps/client/src/`.
+The client is a web-only Vite app: plain DOM elements and CSS Modules, routing is `react-router`. The React Native and Expo toolchains are gone — no `react-native`, `react-native-web`, or `expo*` package is installed, and nothing is aliased away. Components render `div`, `span`, `button`, `input`, and real headings, and style themselves through a co-located `*.module.css`. The camera, photo library, and router are ordinary adapters under `apps/client/src/`.
 
 Read these before substantial work:
 
@@ -72,8 +72,7 @@ React 19, the DOM, and `react-router` are the presentation stack, bundled by Vit
 
 Shared UI follows atomic design as a dependency rule, not as a demand for excessive folders:
 
-- **Primitives** — `packages/ui/src/primitives/`: the DOM elements everything is built from, plus the style resolver that turns a style object into CSS. Nothing above this layer touches `document` directly.
-- **Tokens** — color, spacing, typography, motion, radius, and elevation decisions
+- **Tokens** — `packages/ui/src/tokens/tokens.css`: the custom properties for colour, spacing, typography, and radius. The only place those values are written; no stylesheet hard-codes a hex or a spacing step.
 - **Atoms** — indivisible controls and text treatments
 - **Molecules** — small combinations that serve one interaction
 - **Organisms** — meaningful product sections with local composition
@@ -92,6 +91,10 @@ React conventions:
 - Avoid broad context providers and global stores until state must genuinely cross route or feature boundaries.
 - Route files stay thin and delegate to screens or use-case composition roots.
 - Memoization is a measured optimization, not a default style.
+- Style through a co-located `*.module.css` and reference classes as `styles["name"]`. Reach for an inline `style` only for a value the stylesheet cannot know — a measured aspect ratio, a normalized bound, a computed size.
+- Express state in CSS where CSS already has it: `:active`, `:disabled`, `:focus-visible`, `::after`. A pressed state does not need React state.
+- Express a responsive layout as a media query, not a measured viewport width. A width read in JavaScript reflows a render late and costs a re-render on every resize.
+- Never write a colour, spacing step, or font stack as a literal; take it from a token in `tokens.css`.
 
 ## UI, UX, information architecture, and cognitive science
 

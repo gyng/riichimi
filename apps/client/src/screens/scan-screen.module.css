@@ -1,0 +1,321 @@
+/*
+ * Guided capture. The camera fills the screen and the guide bands show where the
+ * rows belong, because preventing a bad photo costs less than correcting the read
+ * from one. Nothing scores until the review gate has been through it.
+ */
+.screen {
+  composes: screen from "./screen.module.css";
+}
+
+.scroll {
+  composes: scroll from "./screen.module.css";
+}
+
+.camera {
+  flex: 1;
+}
+
+.cameraError {
+  color: var(--color-white);
+  font-family: var(--font-serif);
+  font-size: 14px;
+}
+
+.cameraChrome {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+  padding: var(--space-x4);
+}
+
+.cameraHeader {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+/* Legible over a live preview of unknown brightness. */
+.cameraHint {
+  color: var(--color-white);
+  font-family: var(--font-serif);
+  font-size: 16px;
+  text-shadow: 0 1px 4px var(--color-ink);
+}
+
+.captureScreen {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-ink);
+  flex: 1;
+}
+
+.captureActions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-x3);
+}
+
+.centered {
+  composes: centered from "./screen.module.css";
+}
+
+.error {
+  color: var(--color-accent);
+  font-family: var(--font-serif);
+  font-size: 14px;
+  margin-top: var(--space-x4);
+}
+
+.guide {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  gap: 10px;
+  justify-content: center;
+  max-height: 330px;
+  width: 92%;
+}
+
+/* Where a row of tiles should sit. Dashed, because it is a suggestion drawn over
+   the world rather than a frame the camera enforces. */
+.guideBand {
+  align-items: flex-start;
+  border: 2px dashed rgb(255 253 247 / 85%);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 6px 3px;
+}
+
+.guideBandLabel {
+  color: rgb(255 253 247 / 92%);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.guideBandNarrow {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-end;
+  height: 58px;
+  width: 24%;
+}
+
+.guideBandWide {
+  display: flex;
+  flex-direction: column;
+  height: 74px;
+  width: 100%;
+}
+
+.guideLabel {
+  color: var(--color-white);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.kicker {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.layoutChoice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-x2);
+  margin-bottom: var(--space-x4);
+}
+
+.layoutHint {
+  color: var(--color-ink-muted);
+  font-family: var(--font-serif);
+  font-size: 13px;
+  line-height: 19px;
+  margin-top: var(--space-x2);
+}
+
+.layoutLabel {
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
+.permissionActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-x3);
+}
+
+.permissionBody {
+  color: var(--color-ink-muted);
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: 28px;
+  margin-bottom: var(--space-x6);
+  max-width: 660px;
+}
+
+.permissionSampleNote {
+  color: var(--color-ink-muted);
+  font-family: var(--font-serif);
+  font-size: 13px;
+  line-height: 19px;
+  margin-top: var(--space-x4);
+  max-width: 520px;
+}
+
+.permissionScreen {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-canvas);
+  flex: 1;
+  justify-content: center;
+  padding: var(--space-x5);
+}
+
+.permissionTitle {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 46px;
+  font-weight: 700;
+  letter-spacing: -1.7px;
+  line-height: 50px;
+  margin-bottom: var(--space-x4);
+  margin-top: var(--space-x3);
+}
+
+.photoReviewContent {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-ink);
+  flex-grow: 1;
+}
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 2.1;
+  max-height: 560px;
+  min-height: 190px;
+  object-fit: contain;
+  width: 100%;
+}
+
+.previewFrame {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+}
+
+.previewMeasured {
+  object-fit: cover;
+  width: 100%;
+}
+
+.reviewActions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-x3);
+}
+
+.reviewBody {
+  color: var(--color-ink-muted);
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 22px;
+  margin-bottom: var(--space-x4);
+}
+
+.reviewPanel {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-canvas);
+  padding: var(--space-x5);
+}
+
+.recognitionCopy {
+  color: var(--color-ink-muted);
+  font-family: var(--font-serif);
+  font-size: 13px;
+  line-height: 19px;
+  margin-top: var(--space-x1);
+}
+
+.recognitionError {
+  color: var(--color-accent);
+  font-family: var(--font-serif);
+  font-size: 14px;
+  line-height: 21px;
+  margin-bottom: var(--space-x4);
+}
+
+.recognitionKicker {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.recognitionResult {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-line);
+  background-color: #f2e7d3;
+  border-radius: 10px;
+  margin-bottom: var(--space-x4);
+  padding: var(--space-x3);
+}
+
+.recognitionStatus {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: var(--space-x2);
+  margin-bottom: var(--space-x4);
+}
+
+.recognitionTitle {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: var(--space-x1);
+}
+
+.reviewTitle {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 23px;
+  font-weight: 700;
+  margin-bottom: var(--space-x2);
+}
+
+.shutterArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-x3);
+}
+
+.status {
+  color: var(--color-ink-muted);
+  font-family: var(--font-serif);
+  font-size: 15px;
+}

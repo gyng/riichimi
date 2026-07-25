@@ -1,9 +1,9 @@
-import { Text, View } from "@riichimi/ui";
-import type { Styles } from "@riichimi/ui";
+import { classNames } from "@riichimi/ui";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { chime } from "./chime";
 import type { Celebration } from "./celebration";
+import styles from "./celebration-banner.module.css";
 
 export interface CelebrationBannerProps {
   readonly celebration: Celebration;
@@ -170,32 +170,40 @@ function Stamp({
   }, [burstMax, burstPeak, popFrom, start, timing]);
 
   return (
-    <View style={[styles.cell, { height: cell, width: cell }]}>
+    <div className={styles["cell"]} style={{ height: cell, width: cell }}>
       {/* Twin shockwave rings — the outer one wider and softer. */}
-      <View
+      <div
+        className={styles["ring"]}
         ref={outerRing}
-        style={[styles.ring, { borderColor: halo, height: cell, width: cell }]}
+        style={{ borderColor: halo, height: cell, width: cell }}
       />
-      <View
+      <div
+        className={styles["ring"]}
         ref={innerRing}
-        style={[styles.ring, { borderColor: ink, height: cell, width: cell }]}
+        style={{ borderColor: ink, height: cell, width: cell }}
       />
       {/* An ink outline sits under the coloured fill so the stroke reads as
           brushed and dimensional rather than a flat silhouette. */}
-      <View ref={glyphs} style={[styles.stack, { transform: `scale(${popFrom})` }]}>
-        <Text style={[styles.layer, styles.outline, { fontSize, lineHeight: cell }]}>
-          {character}
-        </Text>
-        <Text
-          style={[
-            styles.layer,
-            { color: ink, fontSize, lineHeight: cell, textShadow: `0 0 ${glow}px ${halo}` },
-          ]}
+      <div className={styles["stack"]} ref={glyphs} style={{ transform: `scale(${popFrom})` }}>
+        <span
+          className={classNames(styles["layer"], styles["outline"])}
+          style={{ fontSize, lineHeight: `${cell}px` }}
         >
           {character}
-        </Text>
-      </View>
-    </View>
+        </span>
+        <span
+          className={styles["layer"]}
+          style={{
+            color: ink,
+            fontSize,
+            lineHeight: `${cell}px`,
+            textShadow: `0 0 ${glow}px ${halo}`,
+          }}
+        >
+          {character}
+        </span>
+      </div>
+    </div>
   );
 }
 
@@ -284,8 +292,8 @@ export function CelebrationBanner({ celebration }: CelebrationBannerProps) {
   const glow = 14 + celebration.tier * 4;
 
   return (
-    <View aria-hidden ref={root} style={styles.root}>
-      <View style={styles.row}>
+    <div aria-hidden className={styles["root"]} ref={root}>
+      <div className={styles["row"]}>
         {chars.map((character, index) => (
           <Stamp
             burstMax={burstMax}
@@ -302,37 +310,7 @@ export function CelebrationBanner({ celebration }: CelebrationBannerProps) {
             timing={timing}
           />
         ))}
-      </View>
-    </View>
+      </div>
+    </div>
   );
 }
-
-const styles = {
-  cell: { alignItems: "center", justifyContent: "center" },
-  layer: {
-    bottom: 0,
-    fontFamily: "YujiBoku",
-    left: 0,
-    position: "absolute",
-    right: 0,
-    textAlign: "center",
-    top: 0,
-  },
-  outline: { color: "#160F0B", transform: "scale(1.08)" },
-  // Starts invisible so the first painted frame is not a flash of the full-size
-  // ring before its animation takes hold.
-  ring: { borderRadius: 999, borderWidth: 4, opacity: 0, position: "absolute" },
-  root: {
-    alignItems: "center",
-    bottom: 0,
-    justifyContent: "center",
-    left: 0,
-    // Decorative: never intercept a press meant for the score underneath.
-    pointerEvents: "none",
-    position: "absolute",
-    right: 0,
-    top: 0,
-  },
-  row: { alignItems: "center", flexDirection: "row", justifyContent: "center" },
-  stack: { bottom: 0, left: 0, opacity: 0, position: "absolute", right: 0, top: 0 },
-} satisfies Styles;

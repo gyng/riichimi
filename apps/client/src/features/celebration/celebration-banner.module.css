@@ -1,0 +1,64 @@
+/*
+ * A brush-calligraphy stamp of the limit, painted over the fire and revealed one
+ * stroke-heavy character at a time. Everything that moves is driven from
+ * JavaScript off one shared eased timeline, so this stylesheet only sets what the
+ * animation starts from and never changes.
+ */
+
+/* Decorative and time-limited: it must never intercept a press meant for the
+   score it is celebrating. */
+.root {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  inset: 0;
+  justify-content: center;
+  pointer-events: none;
+  position: absolute;
+}
+
+.row {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+/* One character's square. Sized in the component, from the count of characters. */
+.cell {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+/* A shockwave ring, expanded and faded as its character lands. Starts invisible
+   so the first painted frame is not a flash of the full-size ring. */
+.ring {
+  border: 4px solid;
+  border-radius: 999px;
+  opacity: 0;
+  position: absolute;
+}
+
+/* The two brush layers of one character, scaled and revealed together. */
+.stack {
+  inset: 0;
+  opacity: 0;
+  position: absolute;
+}
+
+/* The glyph. An ink outline sits under the coloured fill so the stroke reads as
+   brushed and dimensional rather than as a flat silhouette. */
+.layer {
+  font-family: YujiBoku, var(--font-serif);
+  inset: 0;
+  position: absolute;
+  text-align: center;
+}
+
+.outline {
+  color: #160f0b;
+  transform: scale(1.08);
+}

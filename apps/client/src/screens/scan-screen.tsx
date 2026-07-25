@@ -1,16 +1,5 @@
 import type { TileId } from "@riichimi/score-core";
-import {
-  ActionButton,
-  ActivityIndicator,
-  Image,
-  ScrollView,
-  SegmentedControl,
-  Text,
-  View,
-  color,
-  space,
-} from "@riichimi/ui";
-import type { Styles } from "@riichimi/ui";
+import { ActionButton, SegmentedControl, classNames } from "@riichimi/ui";
 import { reviewRecognition } from "@riichimi/vision";
 import type { CaptureLayout, DetectedTile, RecognitionResult } from "@riichimi/vision";
 import { CameraView, useCameraPermissions } from "../infrastructure/camera";
@@ -21,7 +10,9 @@ import { useEffect, useRef, useState } from "react";
 
 import sampleHandImage from "../../assets/samples/guided-sample-hand.png";
 import { tileRecognition } from "../infrastructure/tile-recognition";
+import { LoadingIndicator } from "../components/loading-indicator";
 import { useLocale } from "../state/locale-context";
+import styles from "./scan-screen.module.css";
 import {
   RecognitionReviewPanel,
   detectionLabel,
@@ -311,28 +302,28 @@ export function ScanScreen() {
 
   if (permission === null) {
     return (
-      <View style={styles.centered}>
-        <ActivityIndicator color={color.accent} />
-        <Text style={styles.status}>{t("Checking camera availability…")}</Text>
-      </View>
+      <div className={styles["centered"]}>
+        <LoadingIndicator />
+        <p className={styles["status"]}>{t("Checking camera availability…")}</p>
+      </div>
     );
   }
 
   if (!permission.granted && photoUri === null) {
     return (
-      <View style={styles.permissionScreen}>
-        <Text style={styles.kicker}>{t("CAMERA / PRIVATE BY DEFAULT")}</Text>
-        <Text role="heading" style={styles.permissionTitle}>
+      <div className={styles["permissionScreen"]}>
+        <p className={styles["kicker"]}>{t("CAMERA / PRIVATE BY DEFAULT")}</p>
+        <h1 className={styles["permissionTitle"]}>
           {t("Show us the tiles.")}
           {"\n"}
           {t("Keep the photo here.")}
-        </Text>
-        <Text style={styles.permissionBody}>
+        </h1>
+        <p className={styles["permissionBody"]}>
           {t(
             "Riichimi asks for camera access only when you choose to scan. Captures stay on this device unless you explicitly choose to contribute an example later.",
           )}
-        </Text>
-        <View style={styles.permissionActions}>
+        </p>
+        <div className={styles["permissionActions"]}>
           <ActionButton
             label={
               permission.canAskAgain ? t("Allow camera access") : t("Camera access is blocked")
@@ -356,192 +347,197 @@ export function ScanScreen() {
             variant="paper"
           />
           <ActionButton label={t("Try a sample hand")} onPress={loadSampleHand} variant="paper" />
-        </View>
-        <Text style={styles.permissionSampleNote}>
+        </div>
+        <p className={styles["permissionSampleNote"]}>
           {t(
             "No camera on this device? “Try a sample hand” runs the offline recognizer on a bundled example.",
           )}
-        </Text>
+        </p>
         {importError === null ? null : (
-          <Text aria-live="polite" style={styles.error}>
+          <p aria-live="polite" className={styles["error"]}>
             {importError}
-          </Text>
+          </p>
         )}
-      </View>
+      </div>
     );
   }
 
   if (photoUri !== null) {
     return (
-      <View style={styles.captureScreen}>
-        <ScrollView contentContainerStyle={styles.photoReviewContent}>
-          <View style={styles.previewFrame}>
-            <Image
-              alt="Captured mahjong hand"
-              src={photoUri}
-              style={
-                photoAspect === null
-                  ? styles.preview
-                  : [styles.previewMeasured, { aspectRatio: photoAspect }]
-              }
-            />
-            {recognition.kind === "complete" ? (
-              <TileBoundsOverlay
-                boxes={overlayBoxes}
-                onSelect={setSelectedTileId}
-                selectedId={selectedTileId}
-              />
-            ) : null}
-          </View>
-          <View style={styles.reviewPanel}>
-            <Text style={styles.reviewTitle}>
-              {photoSource === "camera"
-                ? t("Capture ready for review")
-                : t("Photo ready for review")}
-            </Text>
-            <Text style={styles.reviewBody}>
-              {t("Runs on this device. Dark plain surface, tiles upright.")}
-            </Text>
-            {recognition.kind === "complete" ? null : (
-              <View style={styles.layoutChoice}>
-                <Text style={styles.layoutLabel}>{t("CAPTURE LAYOUT")}</Text>
-                <SegmentedControl
-                  accessibilityLabel="Capture layout"
-                  onChange={(value) => {
-                    // A different layout is a different parse, so the photo is
-                    // read again rather than leaving a stale result on screen.
-                    setCaptureLayout(value);
-                    readPhotoUri.current = null;
-                    setRecognition({ kind: "idle" });
-                  }}
-                  options={layoutOptions}
-                  value={captureLayout}
-                />
-                <Text style={styles.layoutHint}>
-                  {captureLayout === "natural"
-                    ? t(
-                        "Natural — one row: the hand with the winning tile after a larger gap, any called melds or kans set apart to the right, then one dora indicator last. The concealed/called split is confirmed at review.",
-                      )
-                    : t(
-                        "Guided — the concealed hand on top with the winning tile after a larger gap, any called melds or kans on a second row, and one dora indicator on the bottom row.",
-                      )}
-                </Text>
-              </View>
-            )}
-            {recognition.kind === "running" ? (
-              <View aria-live="polite" style={styles.recognitionStatus}>
-                <ActivityIndicator color={color.accent} />
-                <Text style={styles.status}>{t("Reading 15 tile faces offline…")}</Text>
-              </View>
-            ) : null}
-            {recognition.kind === "failure" ? (
-              <Text aria-live="polite" style={styles.recognitionError}>
-                {recognition.message} {t("Retry with another photo, or use manual entry.")}
-              </Text>
-            ) : null}
-            {recognition.kind === "complete" ? (
-              <View aria-live="polite" style={styles.recognitionResult}>
-                <Text style={styles.recognitionKicker}>{t("OFFLINE BETA \u00b7 DRAFT ONLY")}</Text>
-                <Text style={styles.recognitionTitle}>
-                  {`${recognition.result.detections.length} ${t("tiles read")} · ${outstandingReview} ${t("need review")}`}
-                </Text>
-              </View>
-            ) : null}
-            {recognition.kind === "complete" ? (
-              <RecognitionReviewPanel
-                initialReviewCount={recognition.initialReviewCount}
-                onChange={(result) =>
-                  setRecognition({
-                    initialReviewCount: recognition.initialReviewCount,
-                    kind: "complete",
-                    result,
-                  })
-                }
-                onSelectId={setSelectedTileId}
-                requireStructureConfirmation={requireStructureConfirmation}
-                result={recognition.result}
-                selectedId={selectedTileId}
-              />
-            ) : null}
-            <View style={styles.reviewActions}>
-              <ActionButton
-                label={photoSource === "camera" ? t("Retake") : t("Choose another photo")}
-                onPress={() => {
-                  if (photoSource === "camera") {
-                    setPhotoUri(null);
-                    setRecognition({ kind: "idle" });
-                  } else {
-                    void choosePhoto();
-                  }
-                }}
-                variant="paper"
+      <div className={styles["captureScreen"]}>
+        <div className={styles["scroll"]}>
+          <div className={styles["photoReviewContent"]}>
+            <div className={styles["previewFrame"]}>
+              <img
+                alt="Captured mahjong hand"
+                className={photoAspect === null ? styles["preview"] : styles["previewMeasured"]}
+                src={photoUri}
+                // Drawn at the photo's own shape once it is known, so the detection
+                // boxes overlay it with no letterbox to offset them.
+                style={photoAspect === null ? undefined : { aspectRatio: photoAspect }}
               />
               {recognition.kind === "complete" ? (
+                <TileBoundsOverlay
+                  boxes={overlayBoxes}
+                  onSelect={setSelectedTileId}
+                  selectedId={selectedTileId}
+                />
+              ) : null}
+            </div>
+            <div className={styles["reviewPanel"]}>
+              <p className={styles["reviewTitle"]}>
+                {photoSource === "camera"
+                  ? t("Capture ready for review")
+                  : t("Photo ready for review")}
+              </p>
+              <p className={styles["reviewBody"]}>
+                {t("Runs on this device. Dark plain surface, tiles upright.")}
+              </p>
+              {recognition.kind === "complete" ? null : (
+                <div className={styles["layoutChoice"]}>
+                  <p className={styles["layoutLabel"]}>{t("CAPTURE LAYOUT")}</p>
+                  <SegmentedControl
+                    accessibilityLabel="Capture layout"
+                    onChange={(value) => {
+                      // A different layout is a different parse, so the photo is
+                      // read again rather than leaving a stale result on screen.
+                      setCaptureLayout(value);
+                      readPhotoUri.current = null;
+                      setRecognition({ kind: "idle" });
+                    }}
+                    options={layoutOptions}
+                    value={captureLayout}
+                  />
+                  <p className={styles["layoutHint"]}>
+                    {captureLayout === "natural"
+                      ? t(
+                          "Natural — one row: the hand with the winning tile after a larger gap, any called melds or kans set apart to the right, then one dora indicator last. The concealed/called split is confirmed at review.",
+                        )
+                      : t(
+                          "Guided — the concealed hand on top with the winning tile after a larger gap, any called melds or kans on a second row, and one dora indicator on the bottom row.",
+                        )}
+                  </p>
+                </div>
+              )}
+              {recognition.kind === "running" ? (
+                <div aria-live="polite" className={styles["recognitionStatus"]}>
+                  <LoadingIndicator />
+                  <p className={styles["status"]}>{t("Reading 15 tile faces offline…")}</p>
+                </div>
+              ) : null}
+              {recognition.kind === "failure" ? (
+                <p aria-live="polite" className={styles["recognitionError"]}>
+                  {recognition.message} {t("Retry with another photo, or use manual entry.")}
+                </p>
+              ) : null}
+              {recognition.kind === "complete" ? (
+                <div aria-live="polite" className={styles["recognitionResult"]}>
+                  <p className={styles["recognitionKicker"]}>
+                    {t("OFFLINE BETA \u00b7 DRAFT ONLY")}
+                  </p>
+                  <p className={styles["recognitionTitle"]}>
+                    {`${recognition.result.detections.length} ${t("tiles read")} · ${outstandingReview} ${t("need review")}`}
+                  </p>
+                </div>
+              ) : null}
+              {recognition.kind === "complete" ? (
+                <RecognitionReviewPanel
+                  initialReviewCount={recognition.initialReviewCount}
+                  onChange={(result) =>
+                    setRecognition({
+                      initialReviewCount: recognition.initialReviewCount,
+                      kind: "complete",
+                      result,
+                    })
+                  }
+                  onSelectId={setSelectedTileId}
+                  requireStructureConfirmation={requireStructureConfirmation}
+                  result={recognition.result}
+                  selectedId={selectedTileId}
+                />
+              ) : null}
+              <div className={styles["reviewActions"]}>
                 <ActionButton
-                  disabled={!tilesReady}
-                  label={continueLabel}
+                  label={photoSource === "camera" ? t("Retake") : t("Choose another photo")}
+                  onPress={() => {
+                    if (photoSource === "camera") {
+                      setPhotoUri(null);
+                      setRecognition({ kind: "idle" });
+                    } else {
+                      void choosePhoto();
+                    }
+                  }}
+                  variant="paper"
+                />
+                {recognition.kind === "complete" ? (
+                  <ActionButton
+                    disabled={!tilesReady}
+                    label={continueLabel}
+                    onPress={() =>
+                      reviewRecognizedTiles(recognition.result, recognition.initialReviewCount)
+                    }
+                    variant="vermilion"
+                  />
+                ) : (
+                  <ActionButton
+                    disabled={recognition.kind === "running"}
+                    label={t("Read 14 tiles offline")}
+                    onPress={() => {
+                      void recognizePhoto();
+                    }}
+                    variant="vermilion"
+                  />
+                )}
+                <ActionButton
+                  label={t("Enter tiles from this photo")}
                   onPress={() =>
-                    reviewRecognizedTiles(recognition.result, recognition.initialReviewCount)
+                    router.push({ pathname: "/manual", params: { referencePhoto: photoUri } })
                   }
                   variant="vermilion"
                 />
-              ) : (
-                <ActionButton
-                  disabled={recognition.kind === "running"}
-                  label={t("Read 14 tiles offline")}
-                  onPress={() => {
-                    void recognizePhoto();
-                  }}
-                  variant="vermilion"
-                />
-              )}
-              <ActionButton
-                label={t("Enter tiles from this photo")}
-                onPress={() =>
-                  router.push({ pathname: "/manual", params: { referencePhoto: photoUri } })
-                }
-                variant="vermilion"
-              />
-            </View>
-          </View>
-        </ScrollView>
-      </View>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 
   return (
-    <View style={styles.captureScreen}>
-      <CameraView ref={camera} facing="back" style={styles.camera}>
-        <View style={styles.cameraChrome}>
-          <View style={styles.cameraHeader}>
+    <div className={styles["captureScreen"]}>
+      <CameraView ref={camera} facing="back" className={styles["camera"]}>
+        <div className={styles["cameraChrome"]}>
+          <div className={styles["cameraHeader"]}>
             <SegmentedControl
               accessibilityLabel="Capture layout"
               onChange={setCaptureLayout}
               options={layoutOptions}
               value={captureLayout}
             />
-          </View>
-          <View aria-label="Tile alignment guide" style={styles.guide}>
+          </div>
+          <div aria-label="Tile alignment guide" className={styles["guide"]}>
             {captureLayout === "natural" ? (
-              <View style={[styles.guideBand, styles.guideBandWide]}>
-                <Text style={styles.guideBandLabel}>{t("HAND \u00b7 MELDS \u00b7 DORA LAST")}</Text>
-              </View>
+              <div className={classNames(styles["guideBand"], styles["guideBandWide"])}>
+                <p className={styles["guideBandLabel"]}>
+                  {t("HAND \u00b7 MELDS \u00b7 DORA LAST")}
+                </p>
+              </div>
             ) : (
               <>
-                <View style={[styles.guideBand, styles.guideBandWide]}>
-                  <Text style={styles.guideBandLabel}>{t("HAND")}</Text>
-                </View>
-                <View style={[styles.guideBand, styles.guideBandWide]}>
-                  <Text style={styles.guideBandLabel}>{t("MELDS \u00b7 IF ANY")}</Text>
-                </View>
-                <View style={[styles.guideBand, styles.guideBandNarrow]}>
-                  <Text style={styles.guideBandLabel}>{t("DORA")}</Text>
-                </View>
+                <div className={classNames(styles["guideBand"], styles["guideBandWide"])}>
+                  <p className={styles["guideBandLabel"]}>{t("HAND")}</p>
+                </div>
+                <div className={classNames(styles["guideBand"], styles["guideBandWide"])}>
+                  <p className={styles["guideBandLabel"]}>{t("MELDS \u00b7 IF ANY")}</p>
+                </div>
+                <div className={classNames(styles["guideBand"], styles["guideBandNarrow"])}>
+                  <p className={styles["guideBandLabel"]}>{t("DORA")}</p>
+                </div>
               </>
             )}
-          </View>
-          <View style={styles.shutterArea}>
-            <Text style={styles.cameraHint}>
+          </div>
+          <div className={styles["shutterArea"]}>
+            <p className={styles["cameraHint"]}>
               {captureLayout === "natural"
                 ? t(
                     "One row: hand, a larger gap before the winner, then any called sets, then one dora.",
@@ -549,8 +545,8 @@ export function ScanScreen() {
                 : t(
                     "Hand on the top line, any called sets on the middle line, one dora on the bottom.",
                   )}
-            </Text>
-            <View style={styles.captureActions}>
+            </p>
+            <div className={styles["captureActions"]}>
               <ActionButton
                 label={t("Capture hand")}
                 onPress={() => {
@@ -570,231 +566,15 @@ export function ScanScreen() {
                 onPress={loadSampleHand}
                 variant="paper"
               />
-            </View>
+            </div>
             {importError === null ? null : (
-              <Text aria-live="polite" style={styles.cameraError}>
+              <p aria-live="polite" className={styles["cameraError"]}>
                 {importError}
-              </Text>
+              </p>
             )}
-          </View>
-        </View>
+          </div>
+        </div>
       </CameraView>
-    </View>
+    </div>
   );
 }
-
-const styles = {
-  camera: {
-    flex: 1,
-  },
-  cameraError: { color: color.white, fontFamily: "serif", fontSize: 14 },
-  cameraChrome: {
-    flex: 1,
-    justifyContent: "space-between",
-    padding: space.x4,
-  },
-  cameraHeader: {
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  cameraHint: {
-    color: color.white,
-    fontFamily: "serif",
-    fontSize: 16,
-    // Legible over a live preview of unknown brightness.
-    textShadow: `0 1px 4px ${color.ink}`,
-  },
-  captureScreen: {
-    backgroundColor: color.ink,
-    flex: 1,
-  },
-  captureActions: { flexDirection: "row", flexWrap: "wrap", gap: space.x3 },
-  centered: {
-    alignItems: "center",
-    backgroundColor: color.canvas,
-    flex: 1,
-    gap: space.x3,
-    justifyContent: "center",
-  },
-  error: { color: color.accent, fontFamily: "serif", fontSize: 14, marginTop: space.x4 },
-  guide: {
-    alignSelf: "center",
-    gap: 10,
-    justifyContent: "center",
-    maxHeight: 330,
-    width: "92%",
-  },
-  guideBand: {
-    alignItems: "flex-start",
-    borderColor: "rgba(255,253,247,0.85)",
-    borderRadius: 6,
-    borderStyle: "dashed",
-    borderWidth: 2,
-    justifyContent: "flex-end",
-    paddingBottom: 3,
-    paddingHorizontal: 6,
-  },
-  guideBandLabel: {
-    color: "rgba(255,253,247,0.92)",
-    fontFamily: "monospace",
-    fontSize: 8,
-    fontWeight: "800",
-    letterSpacing: 1,
-  },
-  guideBandNarrow: { alignSelf: "flex-end", height: 58, width: "24%" },
-  guideBandWide: { height: 74, width: "100%" },
-  guideLabel: {
-    color: color.white,
-    fontFamily: "monospace",
-    fontSize: 10,
-    fontWeight: "700",
-    letterSpacing: 1,
-  },
-  kicker: {
-    color: color.accent,
-    fontFamily: "monospace",
-    fontSize: 11,
-    fontWeight: "700",
-    letterSpacing: 1.5,
-  },
-  layoutChoice: { gap: space.x2, marginBottom: space.x4 },
-  layoutHint: {
-    color: color.inkMuted,
-    fontFamily: "serif",
-    fontSize: 13,
-    lineHeight: 19,
-    marginTop: space.x2,
-  },
-  layoutLabel: {
-    color: color.inkMuted,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "700",
-    letterSpacing: 1.2,
-  },
-  permissionActions: {
-    alignItems: "flex-start",
-    gap: space.x3,
-  },
-  permissionBody: {
-    color: color.inkMuted,
-    fontFamily: "serif",
-    fontSize: 18,
-    lineHeight: 28,
-    marginBottom: space.x6,
-    maxWidth: 660,
-  },
-  permissionSampleNote: {
-    color: color.inkMuted,
-    fontFamily: "serif",
-    fontSize: 13,
-    lineHeight: 19,
-    marginTop: space.x4,
-    maxWidth: 520,
-  },
-  permissionScreen: {
-    backgroundColor: color.canvas,
-    flex: 1,
-    justifyContent: "center",
-    padding: space.x5,
-  },
-  permissionTitle: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 46,
-    fontWeight: "700",
-    letterSpacing: -1.7,
-    lineHeight: 50,
-    marginBottom: space.x4,
-    marginTop: space.x3,
-  },
-  photoReviewContent: { backgroundColor: color.ink, flexGrow: 1 },
-  // Before the photo's true size is known it is shown in a fixed rectangle, so
-  // it must be fitted whole rather than cropped to fill.
-  preview: {
-    aspectRatio: 2.1,
-    maxHeight: 560,
-    minHeight: 190,
-    objectFit: "contain",
-    width: "100%",
-  },
-  // Once the photo's true size is known it is drawn to its own rectangle so the
-  // normalized detection boxes overlay exactly, with no letterbox to offset them.
-  previewFrame: { position: "relative", width: "100%" },
-  previewMeasured: { objectFit: "cover", width: "100%" },
-  reviewActions: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: space.x3,
-  },
-  reviewBody: {
-    color: color.inkMuted,
-    fontFamily: "serif",
-    fontSize: 15,
-    lineHeight: 22,
-    marginBottom: space.x4,
-  },
-  reviewPanel: {
-    backgroundColor: color.canvas,
-    padding: space.x5,
-  },
-  recognitionCopy: {
-    color: color.inkMuted,
-    fontFamily: "serif",
-    fontSize: 13,
-    lineHeight: 19,
-    marginTop: space.x1,
-  },
-  recognitionError: {
-    color: color.accent,
-    fontFamily: "serif",
-    fontSize: 14,
-    lineHeight: 21,
-    marginBottom: space.x4,
-  },
-  recognitionKicker: {
-    color: color.accent,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "800",
-    letterSpacing: 1,
-  },
-  recognitionResult: {
-    backgroundColor: "#F2E7D3",
-    borderColor: color.line,
-    borderRadius: 10,
-    borderWidth: 1,
-    marginBottom: space.x4,
-    padding: space.x3,
-  },
-  recognitionStatus: {
-    alignItems: "center",
-    flexDirection: "row",
-    gap: space.x2,
-    marginBottom: space.x4,
-  },
-  recognitionTitle: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 18,
-    fontWeight: "700",
-    marginTop: space.x1,
-  },
-  reviewTitle: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 23,
-    fontWeight: "700",
-    marginBottom: space.x2,
-  },
-  shutterArea: {
-    alignItems: "center",
-    gap: space.x3,
-  },
-  status: {
-    color: color.inkMuted,
-    fontFamily: "serif",
-    fontSize: 15,
-  },
-} satisfies Styles;

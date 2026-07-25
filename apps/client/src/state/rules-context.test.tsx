@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { Pressable, Text } from "@riichimi/ui";
 
 import * as rulesPreferenceStorage from "../infrastructure/rules-preference-storage";
 import { RulesProvider, useRules } from "./rules-context";
@@ -16,10 +15,10 @@ function Probe() {
   const rules = useRules();
   return (
     <>
-      <Text>{rules.activeRules.id}</Text>
-      <Pressable onPress={() => rules.selectProfile("wrc-2025-red-five-table")}>
-        <Text>Choose red fives</Text>
-      </Pressable>
+      <p>{rules.activeRules.id}</p>
+      <button onClick={() => rules.selectProfile("wrc-2025-red-five-table")} type="button">
+        Choose red fives
+      </button>
     </>
   );
 }

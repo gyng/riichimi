@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { View } from "@riichimi/ui";
-import type { StyleProp } from "@riichimi/ui";
+
+import styles from "./camera.module.css";
 
 // The device camera. A live preview comes from getUserMedia into a <video>, and
 // a capture grabs the current frame through a canvas as an object URL. When no
@@ -91,13 +91,13 @@ export interface CameraViewHandle {
 }
 
 export interface CameraViewProps {
-  readonly facing?: "back" | "front";
-  readonly style?: StyleProp;
   readonly children?: ReactNode;
+  readonly className?: string | undefined;
+  readonly facing?: "back" | "front";
 }
 
 export const CameraView = forwardRef<CameraViewHandle, CameraViewProps>(function CameraView(
-  { children, facing = "back", style },
+  { children, className, facing = "back" },
   ref,
 ) {
   const video = useRef<HTMLVideoElement | null>(null);
@@ -168,21 +168,11 @@ export const CameraView = forwardRef<CameraViewHandle, CameraViewProps>(function
   );
 
   return (
-    <View style={style}>
-      <video
-        ref={video}
-        autoPlay
-        muted
-        playsInline
-        style={{
-          height: "100%",
-          inset: 0,
-          objectFit: "cover",
-          position: "absolute",
-          width: "100%",
-        }}
-      />
+    <div className={className}>
+      {/* Fills its frame and is cropped rather than letterboxed: the guide bands
+          drawn over it have to line up with what the sensor will capture. */}
+      <video autoPlay className={styles["preview"]} muted playsInline ref={video} />
       {children}
-    </View>
+    </div>
   );
 });

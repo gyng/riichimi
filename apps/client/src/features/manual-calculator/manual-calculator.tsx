@@ -31,19 +31,11 @@ import type {
 import {
   ActionButton,
   CounterControl,
-  Image,
   MahjongTile,
-  Pressable,
-  ScrollView,
   SegmentedControl,
-  Text,
-  View,
-  color,
-  space,
+  classNames,
   tileAccessibleName,
-  useWindowDimensions,
 } from "@riichimi/ui";
-import type { StyleProp, Styles } from "@riichimi/ui";
 import { router, useLocalSearchParams } from "../../navigation/router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
@@ -67,6 +59,7 @@ import { celebrationFor } from "../celebration/celebration";
 import type { Celebration } from "../celebration/celebration";
 import { CelebrationOverlay } from "../celebration/celebration-overlay";
 import { CelebrationBanner } from "../celebration/celebration-banner";
+import styles from "./manual-calculator.module.css";
 
 type PickerTarget = "hand" | "chi" | "pon" | "open-kan" | "closed-kan" | "dora" | "ura";
 type SpecialEvent = "normal" | "rinshan" | "haitei" | "houtei" | "chankan" | FirstTurnWin;
@@ -211,25 +204,23 @@ function contextFromState(input: {
 
 function Section({
   children,
+  className,
   description,
-  style,
   title,
 }: {
   readonly children: ReactNode;
+  readonly className?: string | undefined;
   readonly description?: string | undefined;
-  readonly style?: StyleProp;
   readonly title: string;
 }) {
   return (
-    <View style={[styles.section, style]}>
-      <Text role="heading" style={styles.sectionTitle}>
-        {title}
-      </Text>
+    <section className={classNames(styles["section"], className)}>
+      <h2 className={styles["sectionTitle"]}>{title}</h2>
       {description === undefined ? null : (
-        <Text style={styles.sectionDescription}>{description}</Text>
+        <p className={styles["sectionDescription"]}>{description}</p>
       )}
       {children}
-    </View>
+    </section>
   );
 }
 
@@ -243,8 +234,6 @@ export function ManualCalculator({
   const { t } = useLocale();
   // A landscape phone or a desktop has width to spare and little height, so the
   // hand and the picker sit side by side instead of stacking.
-  const { width: viewportWidth } = useWindowDimensions();
-  const wideLayout = viewportWidth >= 700;
   const methodOptions = methodOptionsFor(t);
   const windOptions = windOptionsFor(t);
   const riichiOptions = riichiOptionsFor(t);
@@ -808,889 +797,489 @@ export function ManualCalculator({
   ]);
 
   return (
-    <View style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.topBar}>
-          <Text role="heading" style={styles.compactTitle}>
-            {t("Score a hand")}
-          </Text>
-          <Pressable
-            aria-label="Scoring rules setup"
-            role="link"
-            onPress={() => router.push("/settings")}
-            style={styles.rulesChip}
-          >
-            <Text style={styles.rulesLabel}>{activeRules.label.toUpperCase()}</Text>
-          </Pressable>
-        </View>
+    <div className={styles["screen"]}>
+      <div className={styles["scroll"]}>
+        <div className={styles["content"]}>
+          <div className={styles["topBar"]}>
+            <h1 className={styles["compactTitle"]}>{t("Score a hand")}</h1>
+            <button
+              aria-label="Scoring rules setup"
+              role="link"
+              onClick={() => router.push("/settings")}
+              className={styles["rulesChip"]}
+            >
+              <p className={styles["rulesLabel"]}>{activeRules.label.toUpperCase()}</p>
+            </button>
+          </div>
 
-        {recognitionDraft === undefined ? null : (
-          <View style={styles.recognitionBanner}>
-            <Text style={styles.recognitionBannerKicker}>
-              {t("OFFLINE RECOGNITION \u00b7 REVIEW REQUIRED")}
-            </Text>
-            <Text style={styles.recognitionBannerTitle}>
-              {recognitionDraft.reviewedCount === 0
-                ? t("Confirm the winning tile and dora.")
-                : `${recognitionDraft.reviewedCount} ${t("corrected \u00b7 check against the photo.")}`}
-            </Text>
-            <Text style={styles.recognitionModel}>MODEL {recognitionDraft.modelVersion}</Text>
-          </View>
-        )}
+          {recognitionDraft === undefined ? null : (
+            <div className={styles["recognitionBanner"]}>
+              <p className={styles["recognitionBannerKicker"]}>
+                {t("OFFLINE RECOGNITION \u00b7 REVIEW REQUIRED")}
+              </p>
+              <p className={styles["recognitionBannerTitle"]}>
+                {recognitionDraft.reviewedCount === 0
+                  ? t("Confirm the winning tile and dora.")
+                  : `${recognitionDraft.reviewedCount} ${t("corrected \u00b7 check against the photo.")}`}
+              </p>
+              <p className={styles["recognitionModel"]}>MODEL {recognitionDraft.modelVersion}</p>
+            </div>
+          )}
 
-        {referencePhoto === undefined ? null : (
-          <View style={styles.referencePanel}>
-            <Text style={styles.sessionBannerKicker}>
-              {t("CAPTURE REFERENCE \u00b7 KEPT ON THIS DEVICE")}
-            </Text>
-            <Image
-              alt="Captured hand reference"
-              src={referencePhoto}
-              style={styles.referenceImage}
-            />
-            <Text style={styles.referenceNote}>{t("Not uploaded.")}</Text>
-          </View>
-        )}
-
-        {activeTable === null ? null : (
-          <View style={styles.sessionBanner}>
-            <View style={styles.sessionBannerCopy}>
-              <Text style={styles.sessionBannerKicker}>
-                {editMode ? t("EDITING RECORDED ROUND") : t("ACTIVE TABLE \u00b7 CONTEXT LINKED")}
-              </Text>
-              <Text style={styles.sessionBannerTitle}>
-                {editMode ? t("Re-score this hand.") : t("Pick the winner.")}
-              </Text>
-            </View>
-            <View style={styles.sessionChoice}>
-              <Text style={styles.fieldLabel}>{t("WINNER")}</Text>
-              <SegmentedControl
-                accessibilityLabel="Winning player"
-                onChange={(value) => {
-                  const index = Number(value);
-                  setSessionWinnerIndex(index);
-                  if (discarderIndex === index) {
-                    setDiscarderIndex((index + 1) % 4);
-                  }
-                  if (editContext !== null) {
-                    setSeatWind(playerSeatWind(index, editContext.before.dealerIndex));
-                    setRiichi(
-                      editContext.before.declaredRiichiPlayerIndices.includes(index)
-                        ? "riichi"
-                        : "none",
-                    );
-                  }
-                  resetResult();
-                }}
-                options={playerOptions}
-                value={String(sessionWinnerIndex)}
+          {referencePhoto === undefined ? null : (
+            <div className={styles["referencePanel"]}>
+              <p className={styles["sessionBannerKicker"]}>
+                {t("CAPTURE REFERENCE \u00b7 KEPT ON THIS DEVICE")}
+              </p>
+              <img
+                alt="Captured hand reference"
+                className={styles["referenceImage"]}
+                src={referencePhoto}
               />
-            </View>
-            {method === "ron" ? (
-              <View style={styles.sessionChoice}>
-                <Text style={styles.fieldLabel}>{t("DISCARDER")}</Text>
+              <p className={styles["referenceNote"]}>{t("Not uploaded.")}</p>
+            </div>
+          )}
+
+          {activeTable === null ? null : (
+            <div className={styles["sessionBanner"]}>
+              <div className={styles["sessionBannerCopy"]}>
+                <p className={styles["sessionBannerKicker"]}>
+                  {editMode ? t("EDITING RECORDED ROUND") : t("ACTIVE TABLE \u00b7 CONTEXT LINKED")}
+                </p>
+                <p className={styles["sessionBannerTitle"]}>
+                  {editMode ? t("Re-score this hand.") : t("Pick the winner.")}
+                </p>
+              </div>
+              <div className={styles["sessionChoice"]}>
+                <p className={styles["fieldLabel"]}>{t("WINNER")}</p>
                 <SegmentedControl
-                  accessibilityLabel="Discarding player"
+                  accessibilityLabel="Winning player"
                   onChange={(value) => {
-                    setDiscarderIndex(Number(value));
+                    const index = Number(value);
+                    setSessionWinnerIndex(index);
+                    if (discarderIndex === index) {
+                      setDiscarderIndex((index + 1) % 4);
+                    }
+                    if (editContext !== null) {
+                      setSeatWind(playerSeatWind(index, editContext.before.dealerIndex));
+                      setRiichi(
+                        editContext.before.declaredRiichiPlayerIndices.includes(index)
+                          ? "riichi"
+                          : "none",
+                      );
+                    }
                     resetResult();
                   }}
-                  options={discarderOptions}
-                  value={String(discarderIndex)}
+                  options={playerOptions}
+                  value={String(sessionWinnerIndex)}
                 />
-              </View>
-            ) : null}
-          </View>
-        )}
-
-        <View style={wideLayout ? styles.columns : undefined}>
-          <Section
-            style={wideLayout ? styles.column : undefined}
-            description={`${concealedTiles.length}/${concealedCapacity} · ${t("tap to mark the winner")}`}
-            title={t("Hand")}
-          >
-            <View aria-label="Concealed hand" style={styles.handRow}>
-              {concealedTiles.length === 0 ? (
-                <View style={styles.emptyHand}>
-                  <Text style={styles.empty}>{t("Add tiles below.")}</Text>
-                  <ActionButton
-                    label={t("Try a scored example")}
-                    onPress={loadExample}
-                    variant="paper"
+              </div>
+              {method === "ron" ? (
+                <div className={styles["sessionChoice"]}>
+                  <p className={styles["fieldLabel"]}>{t("DISCARDER")}</p>
+                  <SegmentedControl
+                    accessibilityLabel="Discarding player"
+                    onChange={(value) => {
+                      setDiscarderIndex(Number(value));
+                      resetResult();
+                    }}
+                    options={discarderOptions}
+                    value={String(discarderIndex)}
                   />
-                </View>
-              ) : (
-                concealedTiles.map((tile, index) => (
-                  <View key={`${tile}-${index}`} style={styles.tileWithRemove}>
-                    <MahjongTile
-                      onPress={() => {
-                        setWinningIndex(index);
-                        resetResult();
-                      }}
-                      selected={winningIndex === index}
-                      tile={tile}
-                    />
-                    <Pressable
-                      aria-label={`Remove ${tileAccessibleName(tile)} from hand`}
-                      onPress={() => removeConcealed(index)}
-                      style={styles.removeButton}
-                    >
-                      <Text style={styles.removeText}>×</Text>
-                    </Pressable>
-                  </View>
-                ))
-              )}
-            </View>
-
-            {melds.length === 0 ? null : (
-              <View style={styles.meldList}>
-                {melds.map((meld, index) => (
-                  <View key={`${meld.kind}-${index}`} style={styles.meldCard}>
-                    <View style={styles.meldHeader}>
-                      <Text style={styles.meldLabel}>
-                        {meld.open ? "OPEN" : "CLOSED"} {meld.kind.toUpperCase()}
-                      </Text>
-                      <Pressable
-                        aria-label={`Remove ${meld.kind}`}
-                        onPress={() => removeMeld(index)}
-                      >
-                        <Text style={styles.removeLink}>{t("Remove")}</Text>
-                      </Pressable>
-                    </View>
-                    <View style={styles.meldTiles}>
-                      {meldTiles(meld).map((tile, tileIndex) => (
-                        <MahjongTile key={`${tile}-${tileIndex}`} tile={tile} />
-                      ))}
-                    </View>
-                  </View>
-                ))}
-              </View>
-            )}
-            <Text style={styles.fieldLabel}>{t("DORA INDICATORS")}</Text>
-            <View style={styles.indicatorRow}>
-              {doraIndicators.length === 0 ? (
-                <Text style={styles.empty}>{t("Add at least one dora indicator.")}</Text>
+                </div>
               ) : null}
-              {doraIndicators.map((tile, index) => (
-                <Pressable
-                  aria-label={`Remove dora indicator ${tileAccessibleName(tile)}`}
-                  key={`${tile}-${index}`}
-                  onPress={() => {
-                    setDoraIndicators((tiles) =>
-                      tiles.filter((_, tileIndex) => tileIndex !== index),
-                    );
-                    resetResult();
-                  }}
-                >
-                  <MahjongTile tile={tile} />
-                </Pressable>
-              ))}
-            </View>
-            {riichi === "none" ? null : (
+            </div>
+          )}
+
+          <div className={styles["columns"]}>
+            <Section
+              className={styles["column"]}
+              description={`${concealedTiles.length}/${concealedCapacity} · ${t("tap to mark the winner")}`}
+              title={t("Hand")}
+            >
+              <div aria-label="Concealed hand" className={styles["handRow"]}>
+                {concealedTiles.length === 0 ? (
+                  <div className={styles["emptyHand"]}>
+                    <p className={styles["empty"]}>{t("Add tiles below.")}</p>
+                    <ActionButton
+                      label={t("Try a scored example")}
+                      onPress={loadExample}
+                      variant="paper"
+                    />
+                  </div>
+                ) : (
+                  concealedTiles.map((tile, index) => (
+                    <div key={`${tile}-${index}`} className={styles["tileWithRemove"]}>
+                      <MahjongTile
+                        onPress={() => {
+                          setWinningIndex(index);
+                          resetResult();
+                        }}
+                        selected={winningIndex === index}
+                        tile={tile}
+                      />
+                      <button
+                        aria-label={`Remove ${tileAccessibleName(tile)} from hand`}
+                        onClick={() => removeConcealed(index)}
+                        className={styles["removeButton"]}
+                      >
+                        <p className={styles["removeText"]}>×</p>
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {melds.length === 0 ? null : (
+                <div className={styles["meldList"]}>
+                  {melds.map((meld, index) => (
+                    <div key={`${meld.kind}-${index}`} className={styles["meldCard"]}>
+                      <div className={styles["meldHeader"]}>
+                        <p className={styles["meldLabel"]}>
+                          {meld.open ? "OPEN" : "CLOSED"} {meld.kind.toUpperCase()}
+                        </p>
+                        <button
+                          aria-label={`Remove ${meld.kind}`}
+                          onClick={() => removeMeld(index)}
+                        >
+                          <p className={styles["removeLink"]}>{t("Remove")}</p>
+                        </button>
+                      </div>
+                      <div className={styles["meldTiles"]}>
+                        {meldTiles(meld).map((tile, tileIndex) => (
+                          <MahjongTile key={`${tile}-${tileIndex}`} tile={tile} />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <p className={styles["fieldLabel"]}>{t("DORA INDICATORS")}</p>
+              <div className={styles["indicatorRow"]}>
+                {doraIndicators.length === 0 ? (
+                  <p className={styles["empty"]}>{t("Add at least one dora indicator.")}</p>
+                ) : null}
+                {doraIndicators.map((tile, index) => (
+                  <button
+                    aria-label={`Remove dora indicator ${tileAccessibleName(tile)}`}
+                    key={`${tile}-${index}`}
+                    onClick={() => {
+                      setDoraIndicators((tiles) =>
+                        tiles.filter((_, tileIndex) => tileIndex !== index),
+                      );
+                      resetResult();
+                    }}
+                  >
+                    <MahjongTile tile={tile} />
+                  </button>
+                ))}
+              </div>
+              {riichi === "none" ? null : (
+                <>
+                  <p className={styles["fieldLabel"]}>{t("URA-DORA INDICATORS")}</p>
+                  <div className={styles["indicatorRow"]}>
+                    {uraDoraIndicators.length === 0 ? (
+                      <p className={styles["empty"]}>{t("Optional")}</p>
+                    ) : null}
+                    {uraDoraIndicators.map((tile, index) => (
+                      <button
+                        aria-label={`Remove ura-dora indicator ${tileAccessibleName(tile)}`}
+                        key={`${tile}-${index}`}
+                        onClick={() => {
+                          setUraDoraIndicators((tiles) =>
+                            tiles.filter((_, tileIndex) => tileIndex !== index),
+                          );
+                          resetResult();
+                        }}
+                      >
+                        <MahjongTile tile={tile} />
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </Section>
+
+            <Section
+              description={pickerTarget === "chi" ? t("Chi: pick the lowest tile.") : undefined}
+              className={styles["column"]}
+              title={t("Tiles")}
+            >
+              <div aria-label="Tile destination" className={styles["chipRow"]}>
+                {pickerOptions.map((option) => {
+                  const selected = pickerTarget === option.value;
+                  const closedOnlyDisabled = option.value === "ura" && riichi === "none";
+                  return (
+                    <button
+                      role="radio"
+                      disabled={closedOnlyDisabled}
+                      key={option.value}
+                      onClick={() => setPickerTarget(option.value)}
+                      className={classNames(
+                        styles["chip"],
+                        selected && styles["selectedChip"],
+                        closedOnlyDisabled && styles["disabledChip"],
+                      )}
+                    >
+                      <p
+                        className={classNames(
+                          styles["chipText"],
+                          selected && styles["selectedChipText"],
+                        )}
+                      >
+                        {option.label}
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
+              <TilePicker
+                isDisabled={isPickerTileDisabled}
+                onSelect={addTile}
+                showRedFives={activeRules.redFives}
+              />
+              {inventory.issues.length === 0 ? null : (
+                <p aria-live="polite" className={styles["warning"]}>
+                  {t("A tile cannot appear more than four times.")}
+                </p>
+              )}
+            </Section>
+          </div>
+
+          <Section title={t("Context")}>
+            <div className={styles["contextGrid"]}>
+              <div className={styles["field"]}>
+                <p className={styles["fieldLabel"]}>{t("WIN METHOD")}</p>
+                <SegmentedControl
+                  accessibilityLabel="Win method"
+                  onChange={setWinMethod}
+                  options={methodOptions}
+                  value={method}
+                />
+              </div>
+            </div>
+
+            <button
+              aria-label="Round and seat details"
+              aria-expanded={showContextDetail}
+              onClick={() => setShowContextDetail((visible) => !visible)}
+              className={styles["disclosure"]}
+            >
+              <p className={styles["disclosureLabel"]}>
+                {`${t(windNames[seatWind])} ${t("seat")} · ${t(windNames[roundWind])} ${t("round")} · ${riichi === "none" ? t("no riichi") : t("Riichi")} · ${honba} ${t("honba")}`}
+              </p>
+              <p className={styles["disclosureChevron"]}>{showContextDetail ? "−" : "+"}</p>
+            </button>
+
+            {!showContextDetail ? null : (
               <>
-                <Text style={styles.fieldLabel}>{t("URA-DORA INDICATORS")}</Text>
-                <View style={styles.indicatorRow}>
-                  {uraDoraIndicators.length === 0 ? (
-                    <Text style={styles.empty}>{t("Optional")}</Text>
-                  ) : null}
-                  {uraDoraIndicators.map((tile, index) => (
-                    <Pressable
-                      aria-label={`Remove ura-dora indicator ${tileAccessibleName(tile)}`}
-                      key={`${tile}-${index}`}
-                      onPress={() => {
-                        setUraDoraIndicators((tiles) =>
-                          tiles.filter((_, tileIndex) => tileIndex !== index),
-                        );
+                <div className={styles["contextGrid"]}>
+                  <div className={styles["field"]}>
+                    <p className={styles["fieldLabel"]}>{t("SEAT WIND")}</p>
+                    {contextEditable ? (
+                      <SegmentedControl
+                        accessibilityLabel="Seat wind"
+                        onChange={setPlayerWind}
+                        options={windOptions}
+                        value={seatWind}
+                      />
+                    ) : (
+                      <p className={styles["linkedValue"]}>{seatWind.toUpperCase()} · FROM TABLE</p>
+                    )}
+                  </div>
+                  <div className={styles["field"]}>
+                    <p className={styles["fieldLabel"]}>{t("ROUND WIND")}</p>
+                    {contextEditable ? (
+                      <SegmentedControl
+                        accessibilityLabel="Round wind"
+                        onChange={(value) => {
+                          setRoundWind(value);
+                          resetResult();
+                        }}
+                        options={windOptions}
+                        value={roundWind}
+                      />
+                    ) : (
+                      <p className={styles["linkedValue"]}>
+                        {roundWind.toUpperCase()} · FROM TABLE
+                      </p>
+                    )}
+                  </div>
+                  <div className={styles["field"]}>
+                    <p className={styles["fieldLabel"]}>{t("RIICHI")}</p>
+                    <SegmentedControl
+                      accessibilityLabel="Riichi declaration"
+                      onChange={chooseRiichi}
+                      options={riichiOptions}
+                      value={riichi}
+                    />
+                  </div>
+                  <div className={styles["field"]}>
+                    <p className={styles["fieldLabel"]}>{t("SPECIAL WIN")}</p>
+                    <SegmentedControl
+                      accessibilityLabel="Special win"
+                      onChange={(value) => {
+                        setSpecialEvent(value);
                         resetResult();
                       }}
+                      options={currentSpecialOptions}
+                      value={specialEvent}
+                    />
+                  </div>
+                </div>
+
+                {riichi === "none" ? null : (
+                  <button
+                    role="checkbox"
+                    aria-checked={ippatsu}
+                    onClick={() => {
+                      setIppatsu((value) => !value);
+                      resetResult();
+                    }}
+                    className={styles["checkboxRow"]}
+                  >
+                    <div
+                      className={classNames(styles["checkbox"], ippatsu && styles["checkedBox"])}
                     >
-                      <MahjongTile tile={tile} />
-                    </Pressable>
-                  ))}
-                </View>
+                      <p className={styles["checkmark"]}>{ippatsu ? "✓" : ""}</p>
+                    </div>
+                    <p className={styles["checkboxLabel"]}>{t("Ippatsu")}</p>
+                  </button>
+                )}
+
+                {contextEditable ? (
+                  <div className={styles["counterRow"]}>
+                    <CounterControl
+                      label={t("Honba")}
+                      maximum={20}
+                      onChange={(value) => {
+                        setHonba(value);
+                        resetResult();
+                      }}
+                      value={honba}
+                    />
+                    <CounterControl
+                      label={t("Riichi sticks")}
+                      maximum={20}
+                      onChange={(value) => {
+                        setRiichiSticks(value);
+                        resetResult();
+                      }}
+                      value={riichiSticks}
+                    />
+                  </div>
+                ) : (
+                  <p className={styles["linkedSummary"]}>
+                    {honba} honba · {riichiSticks} riichi sticks inherited from the active table
+                  </p>
+                )}
+                {!isClosed ? (
+                  <p className={styles["note"]}>{t("Open hand: no riichi, ippatsu, ura-dora.")}</p>
+                ) : null}
               </>
             )}
           </Section>
 
-          <Section
-            description={pickerTarget === "chi" ? t("Chi: pick the lowest tile.") : undefined}
-            style={wideLayout ? styles.column : undefined}
-            title={t("Tiles")}
-          >
-            <View aria-label="Tile destination" style={styles.chipRow}>
-              {pickerOptions.map((option) => {
-                const selected = pickerTarget === option.value;
-                const closedOnlyDisabled = option.value === "ura" && riichi === "none";
-                return (
-                  <Pressable
-                    role="radio"
-                    disabled={closedOnlyDisabled}
-                    key={option.value}
-                    onPress={() => setPickerTarget(option.value)}
-                    style={[
-                      styles.chip,
-                      selected && styles.selectedChip,
-                      closedOnlyDisabled && styles.disabledChip,
-                    ]}
-                  >
-                    <Text style={[styles.chipText, selected && styles.selectedChipText]}>
-                      {option.label}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-            <TilePicker
-              isDisabled={isPickerTileDisabled}
-              onSelect={addTile}
-              showRedFives={activeRules.redFives}
-            />
-            {inventory.issues.length === 0 ? null : (
-              <Text aria-live="polite" style={styles.warning}>
-                {t("A tile cannot appear more than four times.")}
-              </Text>
-            )}
-          </Section>
-        </View>
-
-        <Section title={t("Context")}>
-          <View style={styles.contextGrid}>
-            <View style={styles.field}>
-              <Text style={styles.fieldLabel}>{t("WIN METHOD")}</Text>
-              <SegmentedControl
-                accessibilityLabel="Win method"
-                onChange={setWinMethod}
-                options={methodOptions}
-                value={method}
-              />
-            </View>
-          </View>
-
-          <Pressable
-            aria-label="Round and seat details"
-            aria-expanded={showContextDetail}
-            onPress={() => setShowContextDetail((visible) => !visible)}
-            style={styles.disclosure}
-          >
-            <Text style={styles.disclosureLabel}>
-              {`${t(windNames[seatWind])} ${t("seat")} · ${t(windNames[roundWind])} ${t("round")} · ${riichi === "none" ? t("no riichi") : t("Riichi")} · ${honba} ${t("honba")}`}
-            </Text>
-            <Text style={styles.disclosureChevron}>{showContextDetail ? "−" : "+"}</Text>
-          </Pressable>
-
-          {!showContextDetail ? null : (
-            <>
-              <View style={styles.contextGrid}>
-                <View style={styles.field}>
-                  <Text style={styles.fieldLabel}>{t("SEAT WIND")}</Text>
-                  {contextEditable ? (
-                    <SegmentedControl
-                      accessibilityLabel="Seat wind"
-                      onChange={setPlayerWind}
-                      options={windOptions}
-                      value={seatWind}
-                    />
-                  ) : (
-                    <Text style={styles.linkedValue}>{seatWind.toUpperCase()} · FROM TABLE</Text>
-                  )}
-                </View>
-                <View style={styles.field}>
-                  <Text style={styles.fieldLabel}>{t("ROUND WIND")}</Text>
-                  {contextEditable ? (
-                    <SegmentedControl
-                      accessibilityLabel="Round wind"
-                      onChange={(value) => {
-                        setRoundWind(value);
-                        resetResult();
-                      }}
-                      options={windOptions}
-                      value={roundWind}
-                    />
-                  ) : (
-                    <Text style={styles.linkedValue}>{roundWind.toUpperCase()} · FROM TABLE</Text>
-                  )}
-                </View>
-                <View style={styles.field}>
-                  <Text style={styles.fieldLabel}>{t("RIICHI")}</Text>
-                  <SegmentedControl
-                    accessibilityLabel="Riichi declaration"
-                    onChange={chooseRiichi}
-                    options={riichiOptions}
-                    value={riichi}
-                  />
-                </View>
-                <View style={styles.field}>
-                  <Text style={styles.fieldLabel}>{t("SPECIAL WIN")}</Text>
-                  <SegmentedControl
-                    accessibilityLabel="Special win"
-                    onChange={(value) => {
-                      setSpecialEvent(value);
-                      resetResult();
-                    }}
-                    options={currentSpecialOptions}
-                    value={specialEvent}
-                  />
-                </View>
-              </View>
-
-              {riichi === "none" ? null : (
-                <Pressable
-                  role="checkbox"
-                  aria-checked={ippatsu}
-                  onPress={() => {
-                    setIppatsu((value) => !value);
-                    resetResult();
-                  }}
-                  style={styles.checkboxRow}
-                >
-                  <View style={[styles.checkbox, ippatsu && styles.checkedBox]}>
-                    <Text style={styles.checkmark}>{ippatsu ? "✓" : ""}</Text>
-                  </View>
-                  <Text style={styles.checkboxLabel}>{t("Ippatsu")}</Text>
-                </Pressable>
-              )}
-
-              {contextEditable ? (
-                <View style={styles.counterRow}>
-                  <CounterControl
-                    label={t("Honba")}
-                    maximum={20}
-                    onChange={(value) => {
-                      setHonba(value);
-                      resetResult();
-                    }}
-                    value={honba}
-                  />
-                  <CounterControl
-                    label={t("Riichi sticks")}
-                    maximum={20}
-                    onChange={(value) => {
-                      setRiichiSticks(value);
-                      resetResult();
-                    }}
-                    value={riichiSticks}
-                  />
-                </View>
-              ) : (
-                <Text style={styles.linkedSummary}>
-                  {honba} honba · {riichiSticks} riichi sticks inherited from the active table
-                </Text>
-              )}
-              {!isClosed ? (
-                <Text style={styles.note}>{t("Open hand: no riichi, ippatsu, ura-dora.")}</Text>
-              ) : null}
-            </>
-          )}
-        </Section>
-
-        <View style={styles.calculateRow}>
-          <ActionButton label={t("Calculate")} onPress={calculate} variant="vermilion" />
-        </View>
-        {result === null ? null : <ScoreResultPanel result={result} />}
-        {activeTable === null && result?.kind === "success" ? (
-          <View style={styles.savedNotice}>
-            <View style={styles.savedCopy}>
-              <Text style={styles.savedKicker}>{t("SAVED LOCALLY")}</Text>
-              <Text style={styles.savedTitle}>{t("Saved to your folio.")}</Text>
-            </View>
-            <ActionButton
-              label={t("View recent scores")}
-              onPress={() => router.push("/history")}
-              variant="paper"
-            />
-          </View>
-        ) : null}
-        {activeTable !== null && !editMode && result?.kind === "success" ? (
-          <View style={styles.recordResult}>
-            <Text style={styles.recordTitle}>{t("Score checked. Ready to update the table.")}</Text>
-            <ActionButton
-              label={t("Record result & advance round")}
-              onPress={recordScoredTableResult}
-              variant="vermilion"
-            />
-          </View>
-        ) : null}
-        {editMode && result?.kind === "success" && editReview === null ? (
-          <View style={styles.recordResult}>
-            <Text style={styles.recordTitle}>{t("Review before replacing the round.")}</Text>
-            <ActionButton
-              label={t("Save correction")}
-              onPress={previewCorrection}
-              variant="vermilion"
-            />
-          </View>
-        ) : null}
-        {editMode && editError !== null && editReview === null ? (
-          <Text aria-live="polite" style={styles.warning}>
-            {describeEditError(editError)}
-          </Text>
-        ) : null}
-        {editMode && editReview !== null ? (
-          <View aria-live="polite" style={styles.editConfirm}>
-            <Text style={styles.editConfirmTitle}>{t("Confirm this correction")}</Text>
-            <Text style={styles.editConfirmSubhead}>{t("Final score changes")}</Text>
-            {editReview.scoreChanges.map((change, index) => (
-              <Text key={index} style={styles.editConfirmScoreLine}>
-                {editPlayerName(index)}: {signedPoints(change)}
-              </Text>
-            ))}
-            {(() => {
-              // The re-scored round always changes; only surface the DOWNSTREAM
-              // rounds whose context shifted (matching the session-screen editor).
-              const laterChanges = editReview.changedRounds.filter(
-                (change) => change.roundId !== editRoundId,
-              );
-              return laterChanges.length > 0 ? (
-                <>
-                  <Text style={styles.editConfirmSubhead}>{t("Later rounds that shift")}</Text>
-                  {laterChanges.map((change) => (
-                    <Text key={change.roundId} style={styles.editConfirmNote}>
-                      {describeChangedRound(change)}
-                    </Text>
-                  ))}
-                </>
-              ) : null;
-            })()}
-            {editReview.warnings.map((warning, index) => (
-              <Text key={index} style={styles.editConfirmWarning}>
-                {describeEditWarning(warning)}
-              </Text>
-            ))}
-            <View style={styles.editConfirmActions}>
+          <div className={styles["calculateRow"]}>
+            <ActionButton label={t("Calculate")} onPress={calculate} variant="vermilion" />
+          </div>
+          {result === null ? null : <ScoreResultPanel result={result} />}
+          {activeTable === null && result?.kind === "success" ? (
+            <div className={styles["savedNotice"]}>
+              <div className={styles["savedCopy"]}>
+                <p className={styles["savedKicker"]}>{t("SAVED LOCALLY")}</p>
+                <p className={styles["savedTitle"]}>{t("Saved to your folio.")}</p>
+              </div>
               <ActionButton
-                label={t("Update this round")}
-                onPress={confirmCorrection}
-                variant="vermilion"
-              />
-              <ActionButton
-                label={t("Keep as recorded")}
-                onPress={cancelCorrection}
+                label={t("View recent scores")}
+                onPress={() => router.push("/history")}
                 variant="paper"
               />
-            </View>
-          </View>
-        ) : null}
-      </ScrollView>
-      {celebration === null ? null : (
-        <View key={celebration.key} style={styles.celebrationLayer}>
-          <CelebrationOverlay celebration={celebration.value} onDone={() => setCelebration(null)} />
-          <CelebrationBanner celebration={celebration.value} />
-        </View>
-      )}
-    </View>
+            </div>
+          ) : null}
+          {activeTable !== null && !editMode && result?.kind === "success" ? (
+            <div className={styles["recordResult"]}>
+              <p className={styles["recordTitle"]}>
+                {t("Score checked. Ready to update the table.")}
+              </p>
+              <ActionButton
+                label={t("Record result & advance round")}
+                onPress={recordScoredTableResult}
+                variant="vermilion"
+              />
+            </div>
+          ) : null}
+          {editMode && result?.kind === "success" && editReview === null ? (
+            <div className={styles["recordResult"]}>
+              <p className={styles["recordTitle"]}>{t("Review before replacing the round.")}</p>
+              <ActionButton
+                label={t("Save correction")}
+                onPress={previewCorrection}
+                variant="vermilion"
+              />
+            </div>
+          ) : null}
+          {editMode && editError !== null && editReview === null ? (
+            <p aria-live="polite" className={styles["warning"]}>
+              {describeEditError(editError)}
+            </p>
+          ) : null}
+          {editMode && editReview !== null ? (
+            <div aria-live="polite" className={styles["editConfirm"]}>
+              <p className={styles["editConfirmTitle"]}>{t("Confirm this correction")}</p>
+              <p className={styles["editConfirmSubhead"]}>{t("Final score changes")}</p>
+              {editReview.scoreChanges.map((change, index) => (
+                <p key={index} className={styles["editConfirmScoreLine"]}>
+                  {editPlayerName(index)}: {signedPoints(change)}
+                </p>
+              ))}
+              {(() => {
+                // The re-scored round always changes; only surface the DOWNSTREAM
+                // rounds whose context shifted (matching the session-screen editor).
+                const laterChanges = editReview.changedRounds.filter(
+                  (change) => change.roundId !== editRoundId,
+                );
+                return laterChanges.length > 0 ? (
+                  <>
+                    <p className={styles["editConfirmSubhead"]}>{t("Later rounds that shift")}</p>
+                    {laterChanges.map((change) => (
+                      <p key={change.roundId} className={styles["editConfirmNote"]}>
+                        {describeChangedRound(change)}
+                      </p>
+                    ))}
+                  </>
+                ) : null;
+              })()}
+              {editReview.warnings.map((warning, index) => (
+                <p key={index} className={styles["editConfirmWarning"]}>
+                  {describeEditWarning(warning)}
+                </p>
+              ))}
+              <div className={styles["editConfirmActions"]}>
+                <ActionButton
+                  label={t("Update this round")}
+                  onPress={confirmCorrection}
+                  variant="vermilion"
+                />
+                <ActionButton
+                  label={t("Keep as recorded")}
+                  onPress={cancelCorrection}
+                  variant="paper"
+                />
+              </div>
+            </div>
+          ) : null}
+        </div>
+        {celebration === null ? null : (
+          <div key={celebration.key} className={styles["celebrationLayer"]}>
+            <CelebrationOverlay
+              celebration={celebration.value}
+              onDone={() => setCelebration(null)}
+            />
+            <CelebrationBanner celebration={celebration.value} />
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
-
-const styles = {
-  column: { flexBasis: 0, flexGrow: 1, minWidth: 320 },
-  columns: { alignItems: "flex-start", flexDirection: "row", gap: space.x3 },
-  disclosure: {
-    alignItems: "center",
-    borderColor: color.line,
-    borderRadius: 10,
-    borderWidth: 1,
-    flexDirection: "row",
-    gap: space.x3,
-    justifyContent: "space-between",
-    marginTop: space.x3,
-    minHeight: 48,
-    paddingHorizontal: space.x3,
-  },
-  disclosureChevron: {
-    color: color.accent,
-    fontFamily: "monospace",
-    fontSize: 18,
-    fontWeight: "800",
-  },
-  disclosureLabel: {
-    color: color.inkMuted,
-    flex: 1,
-    fontFamily: "monospace",
-    fontSize: 11,
-    fontWeight: "700",
-    letterSpacing: 0.6,
-  },
-  compactTitle: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 22,
-    fontWeight: "800",
-    letterSpacing: -0.5,
-  },
-  emptyHand: {
-    alignItems: "flex-start",
-    flexDirection: "row",
-    flexShrink: 1,
-    flexWrap: "wrap",
-    gap: space.x3,
-  },
-  calculateRow: {
-    alignItems: "center",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: space.x4,
-    marginBottom: space.x5,
-  },
-  checkbox: {
-    alignItems: "center",
-    backgroundColor: color.paper,
-    borderColor: color.ink,
-    borderRadius: 4,
-    borderWidth: 1,
-    height: 24,
-    justifyContent: "center",
-    width: 24,
-  },
-  checkboxLabel: { color: color.ink, fontFamily: "serif", fontSize: 16, fontWeight: "700" },
-  checkboxRow: { alignItems: "center", flexDirection: "row", gap: space.x2, marginTop: space.x4 },
-  checkedBox: { backgroundColor: color.ink },
-  checkmark: { color: color.white, fontSize: 14, fontWeight: "800" },
-  chip: {
-    backgroundColor: color.paper,
-    borderColor: color.line,
-    borderRadius: 999,
-    borderWidth: 1,
-    minHeight: 48,
-    paddingHorizontal: space.x4,
-    paddingVertical: 10,
-  },
-  chipRow: { flexDirection: "row", flexWrap: "wrap", gap: space.x2, marginBottom: space.x3 },
-  chipText: { color: color.inkMuted, fontFamily: "serif", fontSize: 13, fontWeight: "700" },
-  content: {
-    alignSelf: "center",
-    maxWidth: 1000,
-    padding: space.x3,
-    paddingBottom: space.x7,
-    width: "100%",
-  },
-  contextGrid: { flexDirection: "row", flexWrap: "wrap", gap: space.x5 },
-  counterRow: { flexDirection: "row", flexWrap: "wrap", gap: space.x7, marginTop: space.x5 },
-  disabledChip: { opacity: 0.35 },
-  editConfirm: {
-    backgroundColor: "#F6DCD4",
-    borderColor: color.accent,
-    borderRadius: 12,
-    borderWidth: 1,
-    gap: space.x2,
-    marginBottom: space.x5,
-    marginTop: space.x4,
-    padding: space.x4,
-  },
-  editConfirmActions: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: space.x3,
-    marginTop: space.x3,
-  },
-  editConfirmNote: { color: color.inkMuted, fontFamily: "serif", fontSize: 13, lineHeight: 19 },
-  editConfirmScoreLine: {
-    color: color.ink,
-    fontFamily: "monospace",
-    fontSize: 13,
-    fontWeight: "700",
-  },
-  editConfirmSubhead: {
-    color: color.inkMuted,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "700",
-    letterSpacing: 1,
-    marginTop: space.x2,
-  },
-  editConfirmTitle: { color: color.ink, fontFamily: "serif", fontSize: 17, fontWeight: "700" },
-  editConfirmWarning: {
-    color: color.accent,
-    fontFamily: "serif",
-    fontSize: 13,
-    lineHeight: 19,
-  },
-  empty: {
-    color: color.inkMuted,
-    fontFamily: "serif",
-    fontSize: 15,
-    fontStyle: "italic",
-    paddingVertical: space.x3,
-  },
-  exampleAction: { alignSelf: "flex-start", marginBottom: space.x7 },
-  field: { gap: space.x2, minWidth: 260 },
-  fieldLabel: {
-    color: color.inkMuted,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "700",
-    letterSpacing: 1.2,
-    marginBottom: space.x2,
-    marginTop: space.x4,
-  },
-  handRow: {
-    alignItems: "flex-end",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 7,
-    minHeight: 76,
-  },
-  indicatorRow: {
-    alignItems: "center",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 7,
-    minHeight: 60,
-  },
-  intro: {
-    color: color.inkMuted,
-    fontFamily: "serif",
-    fontSize: 18,
-    lineHeight: 28,
-    marginBottom: space.x5,
-    maxWidth: 720,
-  },
-  kicker: {
-    color: color.accent,
-    fontFamily: "monospace",
-    fontSize: 10,
-    fontWeight: "800",
-    letterSpacing: 1.6,
-    marginTop: space.x7,
-  },
-  meldCard: {
-    backgroundColor: color.canvasDeep,
-    borderColor: color.line,
-    borderRadius: 10,
-    borderWidth: 1,
-    padding: space.x3,
-  },
-  meldHeader: {
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: space.x2,
-  },
-  meldLabel: {
-    color: color.inkMuted,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "700",
-    letterSpacing: 0.9,
-  },
-  meldList: { flexDirection: "row", flexWrap: "wrap", gap: space.x3, marginTop: space.x4 },
-  meldTiles: { flexDirection: "row", gap: 4 },
-  note: { color: color.accent, fontFamily: "serif", fontSize: 13, marginTop: space.x4 },
-  removeButton: {
-    alignItems: "center",
-    backgroundColor: color.ink,
-    borderRadius: 999,
-    height: 20,
-    justifyContent: "center",
-    position: "absolute",
-    right: -5,
-    top: -7,
-    width: 20,
-  },
-  removeLink: { color: color.accent, fontFamily: "serif", fontSize: 12, fontWeight: "700" },
-  removeText: { color: color.white, fontSize: 15, lineHeight: 17 },
-  // Decorative, so it must never intercept a press meant for the score beneath.
-  celebrationLayer: {
-    bottom: 0,
-    left: 0,
-    pointerEvents: "none",
-    position: "absolute",
-    right: 0,
-    top: 0,
-    zIndex: 40,
-  },
-  rulesChip: { justifyContent: "center", minHeight: 44, paddingVertical: 8 },
-  rulesLabel: {
-    color: color.inkMuted,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "700",
-    letterSpacing: 1.1,
-  },
-  linkedSummary: {
-    color: color.jade,
-    fontFamily: "serif",
-    fontSize: 15,
-    fontWeight: "700",
-    marginTop: space.x5,
-  },
-  linkedValue: {
-    color: color.jade,
-    fontFamily: "monospace",
-    fontSize: 12,
-    fontWeight: "800",
-    paddingVertical: space.x3,
-  },
-  recordResult: {
-    alignItems: "center",
-    backgroundColor: color.paper,
-    borderColor: color.accent,
-    borderRadius: 16,
-    borderWidth: 1,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: space.x4,
-    justifyContent: "space-between",
-    marginTop: space.x4,
-    padding: space.x5,
-  },
-  recordTitle: {
-    color: color.ink,
-    flex: 1,
-    fontFamily: "serif",
-    fontSize: 17,
-    fontWeight: "700",
-    minWidth: 220,
-  },
-  referenceImage: {
-    aspectRatio: 2.2,
-    backgroundColor: color.ink,
-    borderRadius: 10,
-    marginVertical: space.x3,
-    // The whole captured frame, uncropped — it is a reference for the hand below.
-    objectFit: "contain",
-    width: "100%",
-  },
-  referenceNote: {
-    color: color.inkMuted,
-    fontFamily: "serif",
-    fontSize: 13,
-  },
-  referencePanel: {
-    backgroundColor: color.paper,
-    borderColor: color.line,
-    borderRadius: 16,
-    borderWidth: 1,
-    marginBottom: space.x5,
-    padding: space.x4,
-  },
-  savedCopy: { flex: 1, minWidth: 190 },
-  savedKicker: {
-    color: color.jade,
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "700",
-    letterSpacing: 1,
-  },
-  savedNotice: {
-    alignItems: "center",
-    backgroundColor: color.paper,
-    borderColor: color.jade,
-    borderRadius: 12,
-    borderWidth: 1,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: space.x4,
-    justifyContent: "space-between",
-    marginBottom: space.x5,
-    padding: space.x4,
-  },
-  savedTitle: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 16,
-    fontWeight: "700",
-    marginTop: 2,
-  },
-  recognitionBanner: {
-    backgroundColor: "#F2E7D3",
-    borderColor: color.accent,
-    borderLeftWidth: 4,
-    borderRadius: 12,
-    borderWidth: 1,
-    marginBottom: space.x5,
-    padding: space.x4,
-  },
-  recognitionBannerKicker: {
-    color: color.accent,
-    fontFamily: "monospace",
-    fontSize: 10,
-    fontWeight: "800",
-    letterSpacing: 1.1,
-  },
-  recognitionBannerTitle: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 17,
-    fontWeight: "700",
-    lineHeight: 24,
-    marginTop: space.x2,
-  },
-  recognitionModel: {
-    color: color.inkMuted,
-    fontFamily: "monospace",
-    fontSize: 9,
-    letterSpacing: 0.6,
-    marginTop: space.x3,
-  },
-  safeArea: { backgroundColor: color.canvas, flex: 1 },
-  section: {
-    backgroundColor: color.paper,
-    borderColor: color.line,
-    borderRadius: 14,
-    borderWidth: 1,
-    marginBottom: space.x3,
-    padding: space.x3,
-  },
-  sectionDescription: {
-    color: color.inkMuted,
-    fontFamily: "serif",
-    fontSize: 12,
-    lineHeight: 17,
-    marginBottom: space.x2,
-  },
-  sectionTitle: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 18,
-    fontWeight: "800",
-    letterSpacing: -0.3,
-    marginBottom: space.x1,
-  },
-  sessionBanner: {
-    backgroundColor: color.jade,
-    borderRadius: 16,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: space.x5,
-    marginBottom: space.x5,
-    padding: space.x5,
-  },
-  sessionBannerCopy: {
-    flex: 1,
-    minWidth: 260,
-  },
-  sessionBannerKicker: {
-    color: "#8FC3AE",
-    fontFamily: "monospace",
-    fontSize: 9,
-    fontWeight: "800",
-    letterSpacing: 1.2,
-  },
-  sessionBannerTitle: {
-    color: color.white,
-    fontFamily: "serif",
-    fontSize: 18,
-    fontWeight: "700",
-    lineHeight: 25,
-    marginTop: space.x2,
-  },
-  sessionChoice: {
-    minWidth: 220,
-  },
-  selectedChip: { backgroundColor: color.ink, borderColor: color.ink },
-  selectedChipText: { color: color.white },
-  tileWithRemove: { marginRight: 2, marginTop: space.x2, position: "relative" },
-  title: {
-    color: color.ink,
-    fontFamily: "serif",
-    fontSize: 47,
-    fontWeight: "800",
-    letterSpacing: -1.8,
-    lineHeight: 50,
-    marginBottom: space.x4,
-    marginTop: space.x2,
-    maxWidth: 700,
-  },
-  topBar: { alignItems: "center", flexDirection: "row", justifyContent: "space-between" },
-  warning: { color: color.accent, fontFamily: "serif", fontSize: 14, marginTop: space.x3 },
-} satisfies Styles;

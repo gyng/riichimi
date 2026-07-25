@@ -1,21 +1,3 @@
-export {
-  ActivityIndicator,
-  Image,
-  Pressable,
-  ScrollView,
-  Text,
-  TextInput,
-  useWindowDimensions,
-  View,
-} from "./primitives";
-export type {
-  PressableProps,
-  PressableState,
-  Style,
-  StyleProp,
-  Styles,
-  ViewProps,
-} from "./primitives";
 export { classNames } from "./class-names";
 export { ActionButton } from "./atoms/action-button";
 export { MahjongTile, tileAccessibleName } from "./atoms/mahjong-tile";
@@ -26,7 +8,6 @@ export { MethodCard } from "./molecules/method-card";
 export { SegmentedControl } from "./molecules/segmented-control";
 export { CalculatorLanding } from "./organisms/calculator-landing";
 export { TopAppBar, TopAppBarAction } from "./organisms/top-app-bar";
-export { color, radius, space } from "./tokens/theme";
 export type { ActionButtonProps } from "./atoms/action-button";
 export type { MahjongTileProps } from "./atoms/mahjong-tile";
 export type { SectionLabelProps } from "./atoms/section-label";
