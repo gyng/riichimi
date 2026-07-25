@@ -22,6 +22,8 @@ export interface Messages {
     readonly history: string;
     readonly home: string;
     readonly manual: string;
+    /** Names the navigation landmark itself, not a destination inside it. */
+    readonly primary: string;
     readonly scan: string;
     readonly setup: string;
     readonly table: string;
@@ -52,6 +54,7 @@ export const messages: Record<Locale, Messages> = {
       history: "History",
       home: "home",
       manual: "Manual",
+      primary: "Primary",
       scan: "Scan",
       setup: "Setup",
       table: "Table",
@@ -77,6 +80,7 @@ export const messages: Record<Locale, Messages> = {
       history: "履歴",
       home: "ホーム",
       manual: "手入力",
+      primary: "メインナビゲーション",
       scan: "撮影",
       setup: "設定",
       table: "卓",
@@ -102,6 +106,7 @@ export const messages: Record<Locale, Messages> = {
       history: "记录",
       home: "首页",
       manual: "手动",
+      primary: "主导航",
       scan: "扫描",
       setup: "设置",
       table: "牌桌",
@@ -128,6 +133,7 @@ export const messages: Record<Locale, Messages> = {
       history: "紀錄",
       home: "首頁",
       manual: "手動",
+      primary: "主導覽",
       scan: "掃描",
       setup: "設定",
       table: "牌桌",

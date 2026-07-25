@@ -803,7 +803,7 @@ export function ManualCalculator({
           <div className={styles["topBar"]}>
             <h1 className={styles["compactTitle"]}>{t("Score a hand")}</h1>
             <button
-              aria-label="Scoring rules setup"
+              aria-label={t("Scoring rules setup")}
               role="link"
               onClick={() => router.push("/settings")}
               className={styles["rulesChip"]}
@@ -853,7 +853,7 @@ export function ManualCalculator({
               <div className={styles["sessionChoice"]}>
                 <p className={styles["fieldLabel"]}>{t("WINNER")}</p>
                 <SegmentedControl
-                  accessibilityLabel="Winning player"
+                  accessibilityLabel={t("Winning player")}
                   onChange={(value) => {
                     const index = Number(value);
                     setSessionWinnerIndex(index);
@@ -878,7 +878,7 @@ export function ManualCalculator({
                 <div className={styles["sessionChoice"]}>
                   <p className={styles["fieldLabel"]}>{t("DISCARDER")}</p>
                   <SegmentedControl
-                    accessibilityLabel="Discarding player"
+                    accessibilityLabel={t("Discarding player")}
                     onChange={(value) => {
                       setDiscarderIndex(Number(value));
                       resetResult();
@@ -897,7 +897,7 @@ export function ManualCalculator({
               description={`${concealedTiles.length}/${concealedCapacity} · ${t("tap to mark the winner")}`}
               title={t("Hand")}
             >
-              <div aria-label="Concealed hand" className={styles["handRow"]}>
+              <div aria-label={t("Concealed hand")} className={styles["handRow"]}>
                 {concealedTiles.length === 0 ? (
                   <div className={styles["emptyHand"]}>
                     <p className={styles["empty"]}>{t("Add tiles below.")}</p>
@@ -1005,7 +1005,7 @@ export function ManualCalculator({
               className={styles["column"]}
               title={t("Tiles")}
             >
-              <div aria-label="Tile destination" className={styles["chipRow"]}>
+              <div aria-label={t("Tile destination")} className={styles["chipRow"]}>
                 {pickerOptions.map((option) => {
                   const selected = pickerTarget === option.value;
                   const closedOnlyDisabled = option.value === "ura" && riichi === "none";
@@ -1051,7 +1051,7 @@ export function ManualCalculator({
               <div className={styles["field"]}>
                 <p className={styles["fieldLabel"]}>{t("WIN METHOD")}</p>
                 <SegmentedControl
-                  accessibilityLabel="Win method"
+                  accessibilityLabel={t("Win method")}
                   onChange={setWinMethod}
                   options={methodOptions}
                   value={method}
@@ -1060,7 +1060,7 @@ export function ManualCalculator({
             </div>
 
             <button
-              aria-label="Round and seat details"
+              aria-label={t("Round and seat details")}
               aria-expanded={showContextDetail}
               onClick={() => setShowContextDetail((visible) => !visible)}
               className={styles["disclosure"]}
@@ -1078,7 +1078,7 @@ export function ManualCalculator({
                     <p className={styles["fieldLabel"]}>{t("SEAT WIND")}</p>
                     {contextEditable ? (
                       <SegmentedControl
-                        accessibilityLabel="Seat wind"
+                        accessibilityLabel={t("Seat wind")}
                         onChange={setPlayerWind}
                         options={windOptions}
                         value={seatWind}
@@ -1091,7 +1091,7 @@ export function ManualCalculator({
                     <p className={styles["fieldLabel"]}>{t("ROUND WIND")}</p>
                     {contextEditable ? (
                       <SegmentedControl
-                        accessibilityLabel="Round wind"
+                        accessibilityLabel={t("Round wind")}
                         onChange={(value) => {
                           setRoundWind(value);
                           resetResult();
@@ -1108,7 +1108,7 @@ export function ManualCalculator({
                   <div className={styles["field"]}>
                     <p className={styles["fieldLabel"]}>{t("RIICHI")}</p>
                     <SegmentedControl
-                      accessibilityLabel="Riichi declaration"
+                      accessibilityLabel={t("Riichi declaration")}
                       onChange={chooseRiichi}
                       options={riichiOptions}
                       value={riichi}
@@ -1117,7 +1117,7 @@ export function ManualCalculator({
                   <div className={styles["field"]}>
                     <p className={styles["fieldLabel"]}>{t("SPECIAL WIN")}</p>
                     <SegmentedControl
-                      accessibilityLabel="Special win"
+                      accessibilityLabel={t("Special win")}
                       onChange={(value) => {
                         setSpecialEvent(value);
                         resetResult();

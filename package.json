@@ -18,7 +18,7 @@
     "start": "npm run start --workspace @riichimi/client",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "node scripts/run-e2e.mjs",
-    "test:ui": "npm run test --workspace @riichimi/client",
+    "test:ui": "npm run test:coverage --workspace @riichimi/client",
     "test:unit": "vitest run",
     "test:watch": "vitest",
     "web": "npm run web --workspace @riichimi/client",

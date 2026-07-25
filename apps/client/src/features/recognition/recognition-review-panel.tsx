@@ -217,7 +217,7 @@ export function RecognitionReviewPanel({
       </p>
 
       {showStructure ? (
-        <div aria-label="Hand structure" className={styles["structure"]}>
+        <div aria-label={t("Hand structure")} className={styles["structure"]}>
           <p className={styles["structureKicker"]}>{t("HAND STRUCTURE")}</p>
           <h3 className={styles["structureTitle"]}>
             {`${concealedCount} ${t(concealedCount === 1 ? "concealed tile" : "concealed tiles")} · ${meldGroups.length} ${t(meldGroups.length === 1 ? "called set" : "called sets")}`}
@@ -248,7 +248,7 @@ export function RecognitionReviewPanel({
         </div>
       ) : null}
 
-      <div aria-label="Recognized tiles" className={styles["detections"]}>
+      <div aria-label={t("Recognized tiles")} className={styles["detections"]}>
         {detections.map((detection, index) => {
           const tile = proposedTile(detection);
           const label = detectionLabel(detection, index, t);
@@ -336,7 +336,7 @@ export function RecognitionReviewPanel({
             )}
           </div>
           {showAllTiles ? (
-            <div aria-label="Complete tile picker" className={styles["allTiles"]}>
+            <div aria-label={t("Complete tile picker")} className={styles["allTiles"]}>
               {allTileChoices.map((tile) => {
                 const disabled = (countsWithoutSelected.get(canonicalizeTile(tile)) ?? 0) >= 4;
                 return (

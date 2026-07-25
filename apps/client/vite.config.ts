@@ -31,10 +31,13 @@ export default defineConfig(({ command }) => {
       css: { modules: { classNameStrategy: "non-scoped" } },
       environment: "jsdom",
       // A ratchet, not a target: these floors sit just under what the suite
-      // reaches, so coverage cannot quietly slide. Platform adapters and the
-      // WebMCP bridge stay outside the high floors on purpose — they wrap ONNX,
-      // storage, and the browser's model-context API, so a unit test would
-      // mostly assert that a mock was called. The browser dogfood drives those.
+      // reaches, so coverage cannot quietly slide. `npm run check` runs this
+      // suite with coverage, so they are a gate rather than dormant config.
+      //
+      // Platform adapters and the WebMCP bridge stay outside the high floors on
+      // purpose — they wrap ONNX, storage, the camera, and the browser's
+      // model-context API, so a unit test would mostly assert that a mock was
+      // called. The browser dogfood drives those for real instead.
       coverage: {
         include: ["src/**/*.{ts,tsx}", "../../packages/ui/src/**/*.{ts,tsx}"],
         provider: "v8",
@@ -43,10 +46,10 @@ export default defineConfig(({ command }) => {
           "src/components/**": { branches: 100, functions: 100, lines: 100, statements: 100 },
           "src/features/recognition/**": { branches: 78, functions: 92, lines: 92, statements: 92 },
           "src/i18n/**": { branches: 90, functions: 100, lines: 100, statements: 100 },
-          branches: 55,
-          functions: 49,
-          lines: 57,
-          statements: 56,
+          branches: 60,
+          functions: 58,
+          lines: 62,
+          statements: 62,
         },
       },
       // Cleared, not reset: these suites set a port's behaviour once in its

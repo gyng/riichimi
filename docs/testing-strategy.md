@@ -55,16 +55,16 @@ Every defect fix starts with the smallest reproducing test at the lowest suitabl
 ## What the gate enforces
 
 `npm run check` runs formatting, linting, **type checking**, the domain suite with
-coverage floors, and the component suite. Type checking was added after 37
-module-resolution errors survived a green run: oxlint's type-aware rules are not a
-substitute for `tsc`, and the two now both run.
+coverage floors, and the component suite with its own floors. Type checking was
+added after 37 module-resolution errors survived a green run: oxlint's type-aware
+rules are not a substitute for `tsc`, and the two now both run.
 
-The client's own coverage floors live in `apps/client/vite.config.ts` but are not
-part of the gate: `test:ui` runs without `--coverage`, so they only apply when
-asked for explicitly (`npm run test --workspace @riichimi/client -- --coverage`).
-That was true of the Jest configuration they were ported from, and is recorded
-here rather than quietly fixed — turning them on is a deliberate decision about
-which floors are right, not a side effect of a runner change.
+Both suites are gated on coverage. The client's floors live in
+`apps/client/vite.config.ts`; they had been dormant since the Jest configuration
+they were ported from ran without `--coverage`, so a drop in the component suite
+could not fail anything. `test:ui` now asks for coverage, which costs about 1.5
+seconds. `npm run test --workspace @riichimi/client` still runs the suite without
+it for a fast local loop.
 
 ## Coverage floors, and what is deliberately not chased
 

@@ -1,6 +1,7 @@
 import { classNames } from "@riichimi/ui";
 import type { NormalizedBounds } from "@riichimi/vision";
 
+import { useLocale } from "../../state/locale-context";
 import styles from "./tile-bounds-overlay.module.css";
 
 export interface TileBoundsBox {
@@ -25,8 +26,10 @@ export interface TileBoundsOverlayProps {
 // Tapping a box selects that tile, making the photo and the list two ways into
 // the same correction.
 export function TileBoundsOverlay({ boxes, selectedId, onSelect }: TileBoundsOverlayProps) {
+  const { t } = useLocale();
+
   return (
-    <div aria-label="Recognized tiles on the photo" className={styles["layer"]}>
+    <div aria-label={t("Recognized tiles on the photo")} className={styles["layer"]}>
       {boxes.map((box) => {
         const selected = box.id === selectedId;
         return (

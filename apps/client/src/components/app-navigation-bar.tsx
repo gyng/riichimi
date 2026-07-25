@@ -32,7 +32,9 @@ export function AppNavigationBar() {
     <TopAppBar
       brandGlyph="立"
       brandLabel="RIICHIMI"
+      homeLabel={`RIICHIMI ${messages.nav.home}`}
       items={items}
+      navLabel={messages.nav.primary}
       onBrandPress={() => {
         router.navigate("/");
       }}

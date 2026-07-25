@@ -7,6 +7,7 @@ function renderBar(overrides?: { onScan?: () => void; onBrand?: () => void }) {
     <TopAppBar
       brandGlyph="立"
       brandLabel="RIICHIMI"
+      homeLabel="RIICHIMI home"
       items={[
         {
           active: true,
@@ -16,6 +17,7 @@ function renderBar(overrides?: { onScan?: () => void; onBrand?: () => void }) {
         },
         { active: false, key: "/manual", label: "Manual", onPress: vi.fn<() => void>() },
       ]}
+      navLabel="Primary"
       onBrandPress={overrides?.onBrand ?? vi.fn<() => void>()}
     />,
   );

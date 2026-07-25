@@ -745,7 +745,7 @@ export function SessionScreen() {
                     <p className={styles["standingNet"]}>{signedPoints(entry.net)}</p>
                   </div>
                 ))}
-                <p aria-label="Shareable game summary" className={styles["summaryText"]}>
+                <p aria-label={t("Shareable game summary")} className={styles["summaryText"]}>
                   {summaryText}
                 </p>
                 {typeof navigator !== "undefined" && navigator.clipboard ? (

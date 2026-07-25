@@ -61,7 +61,7 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
 
       <p className={styles["fieldLabel"]}>{t("NAME")}</p>
       <input
-        aria-label="House rules name"
+        aria-label={t("House rules name")}
         className={classNames(styles["input"], locked && styles["locked"])}
         onChange={(event) => update({ label: event.target.value })}
         placeholder="House rules"
@@ -89,7 +89,7 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
 
       <p className={styles["fieldLabel"]}>{t("13+ HAN WITHOUT A YAKUMAN")}</p>
       <SegmentedControl
-        accessibilityLabel="Counted limit"
+        accessibilityLabel={t("Counted limit")}
         onChange={(countedLimit) => {
           if (!locked) {
             update({ countedLimit });
@@ -101,7 +101,7 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
 
       <p className={styles["fieldLabel"]}>{t("COMBINED YAKUMAN")}</p>
       <SegmentedControl
-        accessibilityLabel="Combined yakuman"
+        accessibilityLabel={t("Combined yakuman")}
         onChange={(yakumanStacking) => {
           if (!locked) {
             update({ yakumanStacking });
@@ -113,7 +113,7 @@ export function HouseRulesEditor({ locked }: { readonly locked: boolean }) {
 
       <p className={styles["fieldLabel"]}>{t("PAIR THAT IS BOTH WINDS")}</p>
       <SegmentedControl
-        accessibilityLabel="Double wind pair fu"
+        accessibilityLabel={t("Double wind pair fu")}
         onChange={(value) => {
           if (!locked) {
             update({ doubleWindPairFu: value === "4" ? 4 : 2 });

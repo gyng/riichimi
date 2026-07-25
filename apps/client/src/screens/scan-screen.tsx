@@ -397,7 +397,7 @@ export function ScanScreen() {
                 <div className={styles["layoutChoice"]}>
                   <p className={styles["layoutLabel"]}>{t("CAPTURE LAYOUT")}</p>
                   <SegmentedControl
-                    accessibilityLabel="Capture layout"
+                    accessibilityLabel={t("Capture layout")}
                     onChange={(value) => {
                       // A different layout is a different parse, so the photo is
                       // read again rather than leaving a stale result on screen.
@@ -509,13 +509,13 @@ export function ScanScreen() {
         <div className={styles["cameraChrome"]}>
           <div className={styles["cameraHeader"]}>
             <SegmentedControl
-              accessibilityLabel="Capture layout"
+              accessibilityLabel={t("Capture layout")}
               onChange={setCaptureLayout}
               options={layoutOptions}
               value={captureLayout}
             />
           </div>
-          <div aria-label="Tile alignment guide" className={styles["guide"]}>
+          <div aria-label={t("Tile alignment guide")} className={styles["guide"]}>
             {captureLayout === "natural" ? (
               <div className={classNames(styles["guideBand"], styles["guideBandWide"])}>
                 <p className={styles["guideBandLabel"]}>

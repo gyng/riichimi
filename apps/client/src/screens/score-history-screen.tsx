@@ -99,7 +99,7 @@ export function ScoreHistoryScreen() {
                       </span>
                     </div>
 
-                    <div aria-label="Saved concealed hand" className={styles["tiles"]}>
+                    <div aria-label={t("Saved concealed hand")} className={styles["tiles"]}>
                       {entry.hand.concealedTiles.map((tile, tileIndex) => (
                         <MahjongTile
                           key={`${entry.id}-${tile}-${tileIndex}`}

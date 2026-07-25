@@ -22,10 +22,12 @@ function sourceFiles(directory: string): string[] {
  * imperfect, so this looks only at the props that always render text and at
  * sentence-like literals, which is where untranslated copy actually hid.
  */
-const textProps = /(?<![-\w])(?:label|title|placeholder)=\{?"([^"]{4,})"/g;
-// `aria-label` is deliberately out of scope, and the lookbehind above is what
-// keeps it out. Accessible names are still authored in English: a real gap, but a
-// separate one — closing it means catalog entries in every locale, not a regex.
+const textProps =
+  /(?<![-\w])(?:label|title|placeholder|aria-label|accessibilityLabel)=\{?"([^"]{4,})"/g;
+// Accessible names count as copy: a screen reader is reading them out. Only
+// literal ones are caught — a name composed from a tile, a player, or a count is
+// built at runtime, and translating those needs an interpolating translator and a
+// locale-aware `tileAccessibleName`, which is a feature rather than a regex.
 // JSX text sits between a tag close `>` or expression `}` on the left and a tag
 // open `<` or expression `{` on the right. Matching both sides — and allowing
 // curly quotes and ellipsis inside — closes the gaps where raw copy hid next to
@@ -143,7 +145,7 @@ describe("untranslated-copy scanner", () => {
     );
   });
 
-  it("reads a text prop but not the accessible name beside it", () => {
+  it("reads an accessible name as copy, and a composed one not at all", () => {
     const findProps = (source: string): string[] => {
       textProps.lastIndex = 0;
       const found: string[] = [];
@@ -156,7 +158,9 @@ describe("untranslated-copy scanner", () => {
     };
 
     expect(findProps('label="Copy summary"')).toEqual(["Copy summary"]);
-    expect(findProps('aria-label="Shareable game summary"')).toEqual([]);
+    expect(findProps('aria-label="Shareable game summary"')).toEqual(["Shareable game summary"]);
+    // Composed at runtime, so there is no literal for the scanner to read.
+    expect(findProps("aria-label={`Remove score ${index + 1}`}")).toEqual([]);
   });
 
   it("exempts a brand name only when it stands alone", () => {

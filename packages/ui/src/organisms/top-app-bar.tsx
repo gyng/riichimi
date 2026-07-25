@@ -13,7 +13,12 @@ export interface TopAppBarItem {
 export interface TopAppBarProps {
   readonly brandGlyph: string;
   readonly brandLabel: string;
+  /** The brand link's accessible name — it goes home, which the wordmark alone
+      does not say. Supplied rather than composed here, so it can be translated. */
+  readonly homeLabel: string;
   readonly items: readonly TopAppBarItem[];
+  /** Names the navigation landmark, for anyone moving by landmark. */
+  readonly navLabel: string;
   readonly onBrandPress: () => void;
   readonly trailing?: ReactNode | undefined;
 }
@@ -29,14 +34,16 @@ export interface TopAppBarProps {
 export function TopAppBar({
   brandGlyph,
   brandLabel,
+  homeLabel,
   items,
+  navLabel,
   onBrandPress,
   trailing,
 }: TopAppBarProps) {
   return (
     <div className={styles["bar"]}>
       <button
-        aria-label={`${brandLabel} home`}
+        aria-label={homeLabel}
         className={styles["brand"]}
         onClick={onBrandPress}
         role="link"
@@ -48,7 +55,7 @@ export function TopAppBar({
         <span className={styles["brandLabel"]}>{brandLabel}</span>
       </button>
 
-      <nav aria-label="Primary" className={styles["nav"]}>
+      <nav aria-label={navLabel} className={styles["nav"]}>
         {items.map((item) => (
           <button
             aria-current={item.active ? "page" : undefined}

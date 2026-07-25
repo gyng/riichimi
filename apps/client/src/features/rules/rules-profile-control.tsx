@@ -59,7 +59,7 @@ export function RulesProfileControl({
       {locked ? null : (
         <div className={styles["control"]}>
           <SegmentedControl
-            accessibilityLabel="Scoring rules profile"
+            accessibilityLabel={t("Scoring rules profile")}
             onChange={(value) => {
               rules.selectProfile(parseRulesPreference(value));
             }}

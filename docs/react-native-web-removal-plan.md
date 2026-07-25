@@ -46,21 +46,40 @@ surviving as a transitive peer of `expo`.
   to their own fixed-pitch size; `resolveStyle` names it twice, as
   react-native-web did.
 - **jsdom.** No `matchMedia`, no `Element.animate`, no image decoding. The shared
-  setup stubs the first; the primitives feature-detect the second; the scan test
+  setup stubs the first; the celebration feature-detects the second; the scan test
   reports a size for the third.
+- **A border with no style paints nothing.** `border-width` alone is invisible
+  because `border-style`'s initial value is `none`, and the JS reset that used to
+  supply `solid` is gone. Every converted border sets all three.
+- **`flexBasis` is main-axis.** A card sized for a wrapping row turns that basis
+  into a height in a column. `min-width` says the same thing in both.
 
-## Deliberately left
+## Done in the follow-up pass
 
-- **Approach B (idiomatic DOM).** The primitives keep RN-shaped names and style
-  objects. Converting components to `div`/`span` with CSS Modules is now
-  unblocked and can go one component at a time.
-- **`paddingHorizontal` and friends** are still the authored form, expanded by
-  `resolveStyle`. Renaming them to CSS logical properties is cosmetic.
-- **`fontWeight: "700"`** stays quoted at ~85 sites; `Style` widens the type to
-  accept it. Numeric weights would be more idiomatic.
-- **Accessible names are English.** `aria-label` copy does not go through the
-  translator, and the i18n scanner deliberately does not cover it — closing that
-  needs catalog entries in every locale. See `src/i18n/coverage.test.ts`.
-- **Safe-area insets.** `SafeAreaView` was a zero-inset passthrough and is gone.
-  Honouring `env(safe-area-inset-*)` on notched devices would be a new behaviour,
-  not a restoration.
+The primitives are gone. Every component renders DOM elements and styles itself
+through a co-located CSS module, with tokens as custom properties in
+`tokens.css`. `:active` and `:disabled` replaced the JS pressed and disabled
+styles, media queries replaced the measured-width layouts, and the remaining
+deferred items closed with it:
+
+- **`paddingHorizontal`, quoted `fontWeight`, `lineHeight` in pixels** all went
+  away with the style objects — they are ordinary CSS now.
+- **Literal accessible names are translated** in all four locales, and the i18n
+  scanner covers `aria-label` and `accessibilityLabel` so the gap cannot reopen.
+- **Safe-area insets** are honoured once, in the app shell: the header takes the
+  top inset, the body the sides and bottom.
+- **The client's coverage floors are a gate**, not dormant config: `test:ui` runs
+  with `--coverage`.
+
+## Still left
+
+- **Composed accessible names.** A name built from a tile, a player, or a count
+  ("Remove 5 circles from hand") is still English. Translating those needs an
+  interpolating translator and a locale-aware `tileAccessibleName` — a feature
+  with its own design, not a catalog entry. The scanner reads literals only, and
+  a test pins that boundary.
+- **A `Checkbox` component.** Four features compose the same checkbox from shared
+  CSS. The markup is still repeated, and reuse now justifies promoting it.
+- **`aria-labelledby` over `aria-label`.** Several controls sit under a visible
+  label and name themselves again with `aria-label`, so the same string is
+  translated twice. Pointing at the visible label would leave one.
