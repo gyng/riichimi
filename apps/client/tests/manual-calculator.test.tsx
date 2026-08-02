@@ -5,6 +5,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { useLocalSearchParams } from "../src/navigation/router";
 import type { router } from "../src/navigation/router";
 
+import type * as exampleHands from "../src/features/manual-calculator/example-hands";
 import { ManualCalculator } from "../src/features/manual-calculator/manual-calculator";
 import * as announcerPreferenceStorage from "../src/infrastructure/announcer-preference-storage";
 import * as rulesPreferenceStorage from "../src/infrastructure/rules-preference-storage";
@@ -16,6 +17,13 @@ import { LocaleProvider } from "../src/state/locale-context";
 import { RulesProvider } from "../src/state/rules-context";
 import { ScoreHistoryProvider } from "../src/state/score-history-context";
 import { SessionProvider } from "../src/state/session-context";
+
+// The button deals a random hand now. These tests are about scoring a known
+// one, so they pin it to the worked example rather than the randomiser.
+vi.mock("../src/features/manual-calculator/example-hands", async (importOriginal) => {
+  const actual = await importOriginal<typeof exampleHands>();
+  return { ...actual, randomExampleHand: actual.workedExample };
+});
 
 vi.mock("../src/navigation/router", () => ({
   router: {
@@ -171,6 +179,31 @@ describe("ManualCalculator", () => {
         ],
       }),
     );
+  });
+
+  it("offers another hand once one has been dealt, so pressing again is possible", async () => {
+    // The offer used to live only in the empty hand, which made the second
+    // press unreachable: one example was all anyone could ever see.
+    render(<CalculatorUnderTest />);
+
+    expect(screen.queryByRole("button", { name: "Deal another" })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Try a scored example" }));
+    fireEvent.click(screen.getByRole("button", { name: "Deal another" }));
+
+    expect(screen.getByRole("button", { name: "Deal another" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Calculate" })).toBeInTheDocument();
+  });
+
+  it("withdraws the offer once the dealt hand has been edited", async () => {
+    // Dealing over tiles somebody chose themselves would discard work with no
+    // way back, so the offer stands only while the hand is untouched.
+    render(<CalculatorUnderTest />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Try a scored example" }));
+    fireEvent.click(screen.getAllByRole("button", { name: /Remove .* from hand/ })[0]!);
+
+    expect(screen.queryByRole("button", { name: "Deal another" })).not.toBeInTheDocument();
   });
 
   it("keeps the answer and the action in one place, so neither is scrolled away", async () => {

@@ -1,0 +1,66 @@
+/*
+ * Sits inside the jade score panel, so everything here is set against that
+ * ground rather than paper.
+ */
+.row {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-x2);
+  margin-top: var(--space-x3);
+}
+
+.toggle,
+.again {
+  align-items: center;
+  background-color: transparent;
+  border: 1px solid rgb(255 253 247 / 35%);
+  border-radius: 999px;
+  color: var(--color-white);
+  display: flex;
+  font-family: var(--font-serif);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  gap: var(--space-x2);
+  min-height: 40px;
+  padding: 0 var(--space-x4);
+}
+
+.toggle[aria-pressed="true"] {
+  background-color: rgb(255 253 247 / 14%);
+  border-color: rgb(255 253 247 / 70%);
+}
+
+.toggle:active,
+.again:active {
+  opacity: 0.72;
+}
+
+.speaker {
+  font-size: 0.9375rem;
+  line-height: 1;
+}
+
+/* The voice choice only appears once announcing is on, so it never asks a
+   question that has no consequence yet. */
+.voice {
+  display: flex;
+  flex-basis: 100%;
+  flex-direction: column;
+  gap: var(--space-x1);
+  margin-top: var(--space-x2);
+}
+
+.voiceLabel {
+  color: var(--color-canvas-deep);
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.075rem;
+}
+
+.voiceNote {
+  color: var(--color-canvas-deep);
+  font-family: var(--font-serif);
+  font-size: 0.75rem;
+}

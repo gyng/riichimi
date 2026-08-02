@@ -69,13 +69,22 @@ export const speech: SpeechPort = {
     utterance.rate = 0.9;
     utterance.pitch = 0.82;
     if (options?.onStart !== undefined) {
-      utterance.onstart = options.onStart;
+      utterance.addEventListener("start", options.onStart);
     }
     if (options?.onEnd !== undefined) {
-      utterance.onend = options.onEnd;
+      const finish = options.onEnd;
+      utterance.addEventListener("end", finish);
+      // An utterance that errors never fires `end`, and the announcement chains
+      // its second half off that event — so a silent failure would also swallow
+      // the celebration waiting behind it.
+      utterance.addEventListener("error", () => finish());
     }
-    // Replace anything still queued: the latest score is the one worth hearing.
-    voices.cancel();
+    // Only clear the queue when there is something in it. Calling `cancel()`
+    // unconditionally immediately before `speak()` is a known way to have the
+    // new utterance dropped instead of spoken.
+    if (voices.speaking || voices.pending) {
+      voices.cancel();
+    }
     voices.speak(utterance);
   },
 };

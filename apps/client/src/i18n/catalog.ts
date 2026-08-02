@@ -10,6 +10,9 @@ import type { Locale } from "./messages";
  */
 const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
   ja: {
+    "Announce wins": "和了を読み上げる",
+    "Announcing wins": "和了を読み上げ中",
+    "Say it again": "もう一度読み上げる",
     "Line the hand up along this band": "手牌をこの帯に沿えてください",
     "{count} of 14 tiles in view": "14枚中{count}枚を認識中",
     "See the audit": "内訳を見る",
@@ -125,6 +128,7 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     DISCARDER: "放銃者",
     DORA: "ドラ",
     "DORA INDICATORS": "ドラ表示牌",
+    "Deal another": "別の手牌を配る",
     Dealer: "親",
     "Declare riichi": "立直を宣言",
     "Delete this round": "この局を削除",
@@ -349,6 +353,9 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "yakuman never combine": "役満は複合しない",
   },
   "zh-Hans": {
+    "Announce wins": "朗读和牌",
+    "Announcing wins": "正在朗读和牌",
+    "Say it again": "再读一次",
     "Line the hand up along this band": "请将手牌对齐到此区域",
     "{count} of 14 tiles in view": "已看到 14 张中的 {count} 张",
     "See the audit": "查看明细",
@@ -459,6 +466,7 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     DISCARDER: "放铳者",
     DORA: "宝牌",
     "DORA INDICATORS": "宝牌指示牌",
+    "Deal another": "再来一副",
     Dealer: "庄家",
     "Declare riichi": "宣告立直",
     "Delete this round": "删除此局",
@@ -680,6 +688,9 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "yakuman never combine": "役满不复合",
   },
   "zh-Hant": {
+    "Announce wins": "朗讀和牌",
+    "Announcing wins": "正在朗讀和牌",
+    "Say it again": "再讀一次",
     "Line the hand up along this band": "請將手牌對齊到此區域",
     "{count} of 14 tiles in view": "已看到 14 張中的 {count} 張",
     "See the audit": "查看明細",
@@ -790,6 +801,7 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     DISCARDER: "放銃者",
     DORA: "寶牌",
     "DORA INDICATORS": "寶牌指示牌",
+    "Deal another": "再來一副",
     Dealer: "莊家",
     "Declare riichi": "宣告立直",
     "Delete this round": "刪除此局",

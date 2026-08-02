@@ -86,6 +86,14 @@
   gap: var(--space-x3);
 }
 
+/* Sits under the dealt tiles rather than beside the section title: the offer is
+   about the hand on screen, and a player pressing it repeatedly should not have
+   to move their eyes away from what changes. */
+.dealAgainRow {
+  display: flex;
+  margin-top: var(--space-x3);
+}
+
 /* Ippatsu only applies to a riichi hand, so it appears under the riichi choice
    rather than beside it. */
 .ippatsu {

@@ -224,10 +224,27 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   await page.getByRole("link", { name: "Manual" }).click();
   await expect(page).toHaveURL(/\/manual$/);
   await expect(page.getByRole("button", { name: "red five characters" })).toBeVisible();
-  await page.getByRole("button", { name: "Try a scored example" }).click();
-  await page.getByRole("button", { name: "Calculate" }).click();
-  await expect(page.getByRole("paragraph").filter({ hasText: "2 han · 20 fu" })).toBeInViewport();
-  await page.getByRole("heading", { name: "2 han · 20 fu" }).scrollIntoViewIfNeeded();
+  // The button deals a different hand each press, so the journey asserts the
+  // promise rather than one score: whatever it deals, it scores, and the answer
+  // is in view without scrolling for it.
+  const anyScore = /\d+ han · \d+ fu|MANGAN|HANEMAN|BAIMAN|SANBAIMAN|YAKUMAN/;
+  const dealt = new Set<string>();
+  let lastScore = "";
+  for (let press = 0; press < 4; press += 1) {
+    // The first press comes from the empty hand; after that the offer stands
+    // beside the dealt tiles, which is what makes pressing again possible.
+    await page
+      .getByRole("button", { name: press === 0 ? "Try a scored example" : "Deal another" })
+      .click();
+    await page.getByRole("button", { name: "Calculate" }).click();
+    const docked = page.getByRole("paragraph").filter({ hasText: anyScore }).first();
+    await expect(docked).toBeInViewport();
+    lastScore = (await docked.textContent()) ?? "";
+    dealt.add(lastScore);
+  }
+  // Pressing again has to be worth doing.
+  expect(dealt.size).toBeGreaterThan(1);
+  await page.getByRole("heading", { name: anyScore }).first().scrollIntoViewIfNeeded();
   await page.screenshot({
     path: "docs/checkpoints/2026-07-23-04-manual-score-desktop.png",
   });
@@ -235,7 +252,8 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   await page.goto("/");
   await page.getByRole("button", { name: "Saved scores" }).click();
   await expect(page).toHaveURL(/\/history$/);
-  await expect(page.getByText("2 han · 20 fu").filter({ visible: true })).toBeVisible();
+  // Every press was saved, so the hand scored last is the one waiting at the top.
+  await expect(page.getByText(lastScore).filter({ visible: true }).first()).toBeVisible();
 
   await page.goto("/");
   await page.getByRole("button", { name: "Scan a hand" }).click();

@@ -1,10 +1,13 @@
 import type { ScoreHandResult } from "@riichimi/score-core";
 import { classNames } from "@riichimi/ui";
 
+import { AnnounceBesideScore } from "../announcer/announce-beside-score";
 import { useLocale } from "../../state/locale-context";
 import styles from "./score-result-panel.module.css";
 
 export interface ScoreResultPanelProps {
+  /** Speaks the score on screen. Absent where announcing makes no sense. */
+  readonly onSayAgain?: (() => void) | undefined;
   readonly result: ScoreHandResult;
 }
 
@@ -12,7 +15,7 @@ function points(value: number): string {
   return new Intl.NumberFormat("en-US").format(value);
 }
 
-export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
+export function ScoreResultPanel({ onSayAgain, result }: ScoreResultPanelProps) {
   const { t } = useLocale();
   if (result.kind === "invalid") {
     return (
@@ -57,6 +60,7 @@ export function ScoreResultPanel({ result }: ScoreResultPanelProps) {
       <p className={styles["total"]}>
         {t("Winner receives")} {points(result.totalGain)} {t("points total")}
       </p>
+      {onSayAgain === undefined ? null : <AnnounceBesideScore onSayAgain={onSayAgain} />}
 
       <div className={styles["divider"]} />
 

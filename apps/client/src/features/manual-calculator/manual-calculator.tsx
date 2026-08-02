@@ -56,6 +56,8 @@ import type { RecognitionDraft } from "../recognition/recognition-draft";
 import { ScoreDock } from "./score-dock";
 import { ScoreResultPanel } from "./score-result-panel";
 import { TilePicker } from "./tile-picker";
+import { randomExampleHand, workedExample } from "./example-hands";
+import type { ExampleHand } from "./example-hands";
 import { celebrationFor } from "../celebration/celebration";
 import type { Celebration } from "../celebration/celebration";
 import { CelebrationOverlay } from "../celebration/celebration-overlay";
@@ -260,6 +262,10 @@ export function ManualCalculator({
     recognitionDraft?.concealedTiles ?? [],
   );
   const [melds, setMelds] = useState<readonly DeclaredMeld[]>(recognitionDraft?.melds ?? []);
+  // What the last press dealt, so the offer to deal again can stand while the
+  // dealt hand is untouched and withdraw itself the moment a player edits it —
+  // dealing over someone's own tiles would be a loss they cannot undo.
+  const [dealtHand, setDealtHand] = useState<string | null>(null);
   const [winningIndex, setWinningIndex] = useState<number | null>(
     recognitionDraft?.winningIndex ?? null,
   );
@@ -399,6 +405,29 @@ export function ManualCalculator({
     scoredDraft.current = true;
     calculate();
   });
+
+  /**
+   * Read a score out. Shared by scoring a hand and by the speaker beside the
+   * score, so what a replay says is what the win said.
+   */
+  function announce(scored: ScoreHandResult, onClimax?: () => void) {
+    if (scored.kind !== "success") {
+      return;
+    }
+    const announcement = announceWin(scored);
+    if (onClimax === undefined) {
+      speech.speak(announcementText(announcement));
+      return;
+    }
+    // Sync: read the yaku out, then stamp the limit as its climax is spoken.
+    speech.speak(announcementLead(announcement), {
+      onEnd: () => {
+        speech.speak(announcementTail(announcement), { onStart: onClimax });
+        // Safety net in case the start event never arrives.
+        globalThis.setTimeout(onClimax, 400);
+      },
+    });
+  }
 
   /** Take a player from the docked answer to the reasoning behind it. */
   function showAudit() {
@@ -606,55 +635,33 @@ export function ManualCalculator({
     }
     // Announcing is opt-in and never gates the score: the panel is already set.
     if (scoreResult.kind === "success" && announceWins && speech.available) {
-      const announcement = announceWin(scoreResult);
-      if (earned !== null) {
-        // Sync: read the yaku out, then stamp the limit as its climax is spoken.
-        speech.speak(announcementLead(announcement), {
-          onEnd: () => {
-            speech.speak(announcementTail(announcement), { onStart: fireCelebration });
-            // Safety net in case the start event never arrives.
-            globalThis.setTimeout(fireCelebration, 400);
-          },
-        });
-      } else {
-        speech.speak(announcementText(announcement));
-      }
+      announce(scoreResult, earned === null ? undefined : fireCelebration);
     } else {
       fireCelebration();
     }
     return scoreResult;
   }
 
-  function loadExample() {
-    setConcealedTiles([
-      "1m",
-      "2m",
-      "3m",
-      "4m",
-      "5m",
-      "6m",
-      "7p",
-      "8p",
-      "9p",
-      "2s",
-      "3s",
-      "4s",
-      "5p",
-      "5p",
-    ]);
+  function loadExample(example: ExampleHand = randomExampleHand()) {
+    setDealtHand(example.concealed.join(","));
+    setConcealedTiles([...example.concealed]);
     setMelds([]);
-    setWinningIndex(11);
-    setDoraIndicators(["9s"]);
+    setWinningIndex(example.winningIndex);
+    setDoraIndicators([...example.doraIndicators]);
     setUraDoraIndicators([]);
-    setMethod("tsumo");
+    setMethod(example.method);
     setSeatWind(
-      activeTable === null ? "south" : playerSeatWind(sessionWinnerIndex, activeTable.dealerIndex),
+      activeTable === null
+        ? example.seatWind
+        : playerSeatWind(sessionWinnerIndex, activeTable.dealerIndex),
     );
-    setRoundWind(activeTable?.roundWind ?? "east");
+    setRoundWind(activeTable?.roundWind ?? example.roundWind);
     setRiichi(
-      activeTable?.declaredRiichiPlayerIndices.includes(sessionWinnerIndex) === true
-        ? "riichi"
-        : "none",
+      activeTable === null
+        ? example.riichi
+        : activeTable.declaredRiichiPlayerIndices.includes(sessionWinnerIndex)
+          ? "riichi"
+          : "none",
     );
     setIppatsu(false);
     setSpecialEvent("normal");
@@ -757,7 +764,9 @@ export function ManualCalculator({
       description:
         "Load Riichimi's complete closed pinfu-tsumo example into the visible manual calculator for inspection or scoring.",
       execute: () => {
-        loadExample();
+        // The fixed hand, not a random one: an agent needs a score it can
+        // predict, and the browser dogfood asserts this exact one.
+        loadExample(workedExample());
         return webMcpResult(
           "Loaded the worked example. Call riichimi.manual.calculate after the UI updates.",
         );
@@ -936,7 +945,9 @@ export function ManualCalculator({
                     <p className={styles["empty"]}>{t("Add tiles below.")}</p>
                     <ActionButton
                       label={t("Try a scored example")}
-                      onPress={loadExample}
+                      onPress={() => {
+                        loadExample();
+                      }}
                       variant="paper"
                     />
                   </div>
@@ -962,6 +973,18 @@ export function ManualCalculator({
                   ))
                 )}
               </div>
+
+              {dealtHand !== null && dealtHand === concealedTiles.join(",") ? (
+                <div className={styles["dealAgainRow"]}>
+                  <ActionButton
+                    label={t("Deal another")}
+                    onPress={() => {
+                      loadExample();
+                    }}
+                    variant="paper"
+                  />
+                </div>
+              ) : null}
 
               {melds.length === 0 ? null : (
                 <div className={styles["meldList"]}>

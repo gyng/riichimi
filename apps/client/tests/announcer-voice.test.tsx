@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import * as announcerStorage from "../src/infrastructure/announcer-preference-storage";
+import { AnnounceBesideScore } from "../src/features/announcer/announce-beside-score";
 import { AnnounceControl } from "../src/features/announcer/announce-control";
 import { AnnouncerProvider } from "../src/state/announcer-context";
 import { LocaleProvider } from "../src/state/locale-context";
@@ -147,5 +148,70 @@ describe("choosing the announcer's voice", () => {
         "The voice could not be fetched. This device's own voice will read wins instead.",
       ),
     ).toBeInTheDocument();
+  });
+});
+
+describe("the announcer beside the score", () => {
+  it("speaks the hand on screen the moment it is switched on", async () => {
+    // The reason this control moved out of Setup: a player can hear whether
+    // their device makes any sound at all without scoring a second hand.
+    vi.mocked(announcerStorage.loadAnnouncerPreference).mockResolvedValue(false);
+    const sayAgain = vi.fn<() => void>();
+    render(
+      <LocaleProvider>
+        <AnnouncerProvider>
+          <AnnounceBesideScore onSayAgain={sayAgain} />
+        </AnnouncerProvider>
+      </LocaleProvider>,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: /Announce wins/ }));
+
+    expect(sayAgain).toHaveBeenCalledTimes(1);
+  });
+
+  it("replays the score on request", async () => {
+    const sayAgain = vi.fn<() => void>();
+    render(
+      <LocaleProvider>
+        <AnnouncerProvider>
+          <AnnounceBesideScore onSayAgain={sayAgain} />
+        </AnnouncerProvider>
+      </LocaleProvider>,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Say it again" }));
+
+    expect(sayAgain).toHaveBeenCalledTimes(1);
+  });
+
+  it("stops mid-sentence when switched off, rather than finishing", async () => {
+    const sayAgain = vi.fn<() => void>();
+    render(
+      <LocaleProvider>
+        <AnnouncerProvider>
+          <AnnounceBesideScore onSayAgain={sayAgain} />
+        </AnnouncerProvider>
+      </LocaleProvider>,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: /Announcing wins/ }));
+
+    expect(browser.cancel).toHaveBeenCalled();
+    expect(sayAgain).not.toHaveBeenCalled();
+  });
+
+  it("says nothing at all where the device has no voice", async () => {
+    browser.available = false;
+    const { container } = render(
+      <LocaleProvider>
+        <AnnouncerProvider>
+          <AnnounceBesideScore onSayAgain={vi.fn<() => void>()} />
+        </AnnouncerProvider>
+      </LocaleProvider>,
+    );
+
+    expect(container).toBeEmptyDOMElement();
+    browser.available = true;
   });
 });
