@@ -217,6 +217,18 @@ Went looking for ways to improve scan accuracy. The answer turned out to be abou
 - Two hypotheses were tested and dropped rather than shipped: the normalizer's silent crop-rejection fallback (1 of 46 crops, still correct), and train/serve skew from the app's nearest-neighbour resampling (identical top-1 at every simulated capture scale — the gap between the app and the evaluator is the face re-crop, not the filter).
 - The shipped `tile-classifier-v1.onnx` predates the crop correction and no longer reproduces byte-identically from the manifest. Nothing was retrained or promoted; that is a decision with its own gate.
 
+### 2026-08-03T01:50:00+08:00 — guided capture reads a hand as it actually sits
+
+Driven by 17 photographs of real games, none of which the app could read.
+
+- **Tiles no longer have to be separated.** `candidateComponents` merges touching faces and `groupByGaps` wants half a tile-width of clearance, so a revealed riichi hand — a contiguous row, and the most natural way to present a win — could not be read at all. It never needed to be: the guide already states how many tiles to lay out, so the count is known, and a row of known count divides without gaps to find. Cuts come from a dynamic program over seam positions, with spacing free to drift 0.7–1.42× the average so a row narrowing with perspective still divides.
+- Two details decided whether that worked, both found by being wrong first. **A seam is scored by the brightest pixel in its column, not the average** — average darkness picks the vertical strokes of 萬 over the seams either side and halves the tiles. And **every boundary is chosen, the outer two included** — pinning them to the row extent made the end tiles absorb its error, with interior tiles landing exactly on a 35px pitch while the first came out 46 and the last 28.
+- **The row is found by structure, not brightness.** The `luminance >= 125` rule reads a white table as one enormous tile: measured at **46–67% of the frame** on photographs taken on one, which breaks the localizer outright. Edge density separates tiles from table by 2.6–8.9× across every photograph tried, and is strongest (8.9×) exactly where the old rule was worst.
+- **The guide counts while you frame.** `CameraViewHandle` gained `samplePreview`, and the band reports "N of 14 tiles in view", so a short hand shows before the shutter rather than after a recognition that was never going to work.
+- A divided row has no gaps, so the winning tile cannot be read from spacing; that path reports `winningRoleCertain: false` and the review desk asks.
+- Coverage floors for `src/features/recognition` were re-seated 78/92 → 77/90, with the reasons recorded beside them: the splitter is a pixel loop whose `?? 0` guards are the compiler-mandated kind (confirmed by trying to delete them — `noUncheckedIndexedAccess` does apply to typed arrays), and a hand too short for the component locator now divides rather than falling through to the gap-reading code.
+- Deployed: CI and Pages green, and the live site smoke-tested in a browser — score-to-dock, deep-link reload, and the scan screen all working, with no failing asset requests.
+
 ## Visual evidence
 
 - [Mobile landing](docs/checkpoints/2026-07-23-01-home-mobile.png)
