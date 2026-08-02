@@ -52,6 +52,23 @@ Two features exist to stop the corpus from being read as more than it is:
 
 Unknown recall is deliberately **not** reported. Every crop in this corpus is a real tile face, so the corpus can measure false unknowns but never missed ones; measuring recall needs hard negatives — sticks, dice, racks, fingers, patterned tables.
 
+### Holding out a whole tile set
+
+`evaluate-recognizer.py` scores the 46 held-out crops. It cannot say whether the recognizer would cope with a tile design it has never seen, because 37 of those 46 come from the same Wikimedia series as two thirds of the training photographs.
+
+`cross-validate.py` answers that by holding out one photographed set at a time:
+
+```sh
+/tmp/riichimi-vision-venv/bin/python scripts/vision/cross-validate.py \
+  --assets /tmp/riichimi-tiles-source/Export/Regular \
+  --real-crops /tmp/riichimi-physical-crops \
+  --output docs/recognition-cross-validation-report.json
+```
+
+Each fold trains on two families and validates on the third, so out-of-fold predictions cover all 107 real training crops — more than twice the resolution of the held-out set, without spending any of it. It also reports what checkpoint selection costs: the epoch chosen by synthetic validation against the epoch a real fold would have chosen.
+
+Use it whenever the corpus grows. A new tile set is a new fold, and the fold's accuracy is the closest thing available to "what happens at somebody else's table".
+
 ### Test-time augmentation and temperature
 
 `--tta-views N` averages the probabilities of N scale/translate views per crop. There are no flips or rotations: a mirrored tile face is a different glyph, so a flip would average across a class boundary rather than over nuisance variation.
@@ -94,4 +111,6 @@ This is scaffolding for a **future learned localizer**; the shipped recognizer s
 
 The generated classifier is distributed under `CC-BY-SA-4.0`. Physical-photo training combines one CC BY-SA 3.0 source and two CC BY-SA 4.0 sources under the compatible later license; the glyph seed is CC0. See the model asset README and `physical-photo-crops.json` for provenance and source-separated partitions.
 
-This is a conservative beta, not a production-accuracy claim. Its 46-crop source-separated physical set is useful for model promotion and regression detection but is far below the 500 complete-hand release gate.
+This is a conservative beta, not a production-accuracy claim. Its 46-crop physical set is useful for regression detection but is far below the 500 complete-hand release gate — and it is separated by photograph rather than by tile design, so it measures the design the model trained on. The one held-out design scores 30.3%. See the audit.
+
+The `majiang2` crop boxes were corrected on 2026-08-02 (they were framed 25px too low), so the shipped `tile-classifier-v1.onnx` predates the current manifest and no longer reproduces byte-identically from it. `docs/recognition-model-v1-report.json` records what produced the shipped artifact; the next promotion picks up the corrected crops.

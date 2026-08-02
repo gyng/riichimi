@@ -1,0 +1,2597 @@
+{
+  "folds": [
+    {
+      "chosenByReal": {
+        "epoch": 5,
+        "realAccuracy": 1.0
+      },
+      "chosenBySynthetic": {
+        "epoch": 10,
+        "realAccuracy": 0.9729729890823364,
+        "syntheticAccuracy": 0.9930921052631579
+      },
+      "crops": 37,
+      "heldOut": "mahjong-eg-jp",
+      "history": [
+        {
+          "epoch": 1,
+          "real": 0.9189189076423645,
+          "synthetic": 0.8990131578947368
+        },
+        {
+          "epoch": 2,
+          "real": 0.8918918967247009,
+          "synthetic": 0.9088815789473684
+        },
+        {
+          "epoch": 3,
+          "real": 0.9459459185600281,
+          "synthetic": 0.975328947368421
+        },
+        {
+          "epoch": 4,
+          "real": 0.9729729890823364,
+          "synthetic": 0.9865131578947368
+        },
+        {
+          "epoch": 5,
+          "real": 1.0,
+          "synthetic": 0.9842105263157894
+        },
+        {
+          "epoch": 6,
+          "real": 1.0,
+          "synthetic": 0.9861842105263158
+        },
+        {
+          "epoch": 7,
+          "real": 1.0,
+          "synthetic": 0.9894736842105263
+        },
+        {
+          "epoch": 8,
+          "real": 1.0,
+          "synthetic": 0.9924342105263158
+        },
+        {
+          "epoch": 9,
+          "real": 1.0,
+          "synthetic": 0.9924342105263158
+        },
+        {
+          "epoch": 10,
+          "real": 0.9729729890823364,
+          "synthetic": 0.9930921052631579
+        },
+        {
+          "epoch": 11,
+          "real": 1.0,
+          "synthetic": 0.9917763157894737
+        },
+        {
+          "epoch": 12,
+          "real": 1.0,
+          "synthetic": 0.9927631578947368
+        }
+      ]
+    },
+    {
+      "chosenByReal": {
+        "epoch": 4,
+        "realAccuracy": 0.9729729890823364
+      },
+      "chosenBySynthetic": {
+        "epoch": 11,
+        "realAccuracy": 0.9459459185600281,
+        "syntheticAccuracy": 0.9930921052631579
+      },
+      "crops": 37,
+      "heldOut": "mahjong-eg-jp-a",
+      "history": [
+        {
+          "epoch": 1,
+          "real": 0.8918918967247009,
+          "synthetic": 0.9184210526315789
+        },
+        {
+          "epoch": 2,
+          "real": 0.9189189076423645,
+          "synthetic": 0.9648026315789474
+        },
+        {
+          "epoch": 3,
+          "real": 0.9459459185600281,
+          "synthetic": 0.9796052631578948
+        },
+        {
+          "epoch": 4,
+          "real": 0.9729729890823364,
+          "synthetic": 0.9861842105263158
+        },
+        {
+          "epoch": 5,
+          "real": 0.9459459185600281,
+          "synthetic": 0.9881578947368421
+        },
+        {
+          "epoch": 6,
+          "real": 0.9189189076423645,
+          "synthetic": 0.9904605263157895
+        },
+        {
+          "epoch": 7,
+          "real": 0.9459459185600281,
+          "synthetic": 0.9904605263157895
+        },
+        {
+          "epoch": 8,
+          "real": 0.9459459185600281,
+          "synthetic": 0.9914473684210526
+        },
+        {
+          "epoch": 9,
+          "real": 0.9459459185600281,
+          "synthetic": 0.9927631578947368
+        },
+        {
+          "epoch": 10,
+          "real": 0.9459459185600281,
+          "synthetic": 0.9924342105263158
+        },
+        {
+          "epoch": 11,
+          "real": 0.9459459185600281,
+          "synthetic": 0.9930921052631579
+        },
+        {
+          "epoch": 12,
+          "real": 0.9459459185600281,
+          "synthetic": 0.9930921052631579
+        }
+      ]
+    },
+    {
+      "chosenByReal": {
+        "epoch": 3,
+        "realAccuracy": 0.3333333432674408
+      },
+      "chosenBySynthetic": {
+        "epoch": 12,
+        "realAccuracy": 0.3030303120613098,
+        "syntheticAccuracy": 0.9944078947368421
+      },
+      "crops": 33,
+      "heldOut": "majiang2",
+      "history": [
+        {
+          "epoch": 1,
+          "real": 0.24242424964904785,
+          "synthetic": 0.9118421052631579
+        },
+        {
+          "epoch": 2,
+          "real": 0.27272728085517883,
+          "synthetic": 0.9592105263157895
+        },
+        {
+          "epoch": 3,
+          "real": 0.3333333432674408,
+          "synthetic": 0.9756578947368421
+        },
+        {
+          "epoch": 4,
+          "real": 0.27272728085517883,
+          "synthetic": 0.9825657894736842
+        },
+        {
+          "epoch": 5,
+          "real": 0.3030303120613098,
+          "synthetic": 0.9855263157894737
+        },
+        {
+          "epoch": 6,
+          "real": 0.3333333432674408,
+          "synthetic": 0.9884868421052632
+        },
+        {
+          "epoch": 7,
+          "real": 0.3030303120613098,
+          "synthetic": 0.9848684210526316
+        },
+        {
+          "epoch": 8,
+          "real": 0.3333333432674408,
+          "synthetic": 0.9901315789473685
+        },
+        {
+          "epoch": 9,
+          "real": 0.3333333432674408,
+          "synthetic": 0.9930921052631579
+        },
+        {
+          "epoch": 10,
+          "real": 0.3030303120613098,
+          "synthetic": 0.99375
+        },
+        {
+          "epoch": 11,
+          "real": 0.3333333432674408,
+          "synthetic": 0.99375
+        },
+        {
+          "epoch": 12,
+          "real": 0.3030303120613098,
+          "synthetic": 0.9944078947368421
+        }
+      ]
+    }
+  ],
+  "outOfFold": {
+    "crops": 107,
+    "meanConfidence": 0.7490053231192526,
+    "top1Accuracy": 0.7570093457943925,
+    "top3Accuracy": 0.822429906542056
+  },
+  "samples": [
+    {
+      "confidence": 0.965509831905365,
+      "correct": true,
+      "expected": "1m",
+      "prediction": "1m",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.965509831905365,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.004202142357826233,
+          "label": "west"
+        },
+        {
+          "confidence": 0.0022910351399332285,
+          "label": "4m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9520827531814575,
+      "correct": true,
+      "expected": "2m",
+      "prediction": "2m",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9520827531814575,
+          "label": "2m"
+        },
+        {
+          "confidence": 0.007468198426067829,
+          "label": "west"
+        },
+        {
+          "confidence": 0.005405388306826353,
+          "label": "1s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.966524600982666,
+      "correct": true,
+      "expected": "3m",
+      "prediction": "3m",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.966524600982666,
+          "label": "3m"
+        },
+        {
+          "confidence": 0.002455344656482339,
+          "label": "9p"
+        },
+        {
+          "confidence": 0.002328365808352828,
+          "label": "9m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9182268381118774,
+      "correct": true,
+      "expected": "4m",
+      "prediction": "4m",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9182268381118774,
+          "label": "4m"
+        },
+        {
+          "confidence": 0.01572173275053501,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.005620056763291359,
+          "label": "7p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8352856040000916,
+      "correct": true,
+      "expected": "5m",
+      "prediction": "5m",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.8352856040000916,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.02280968800187111,
+          "label": "green"
+        },
+        {
+          "confidence": 0.01243550330400467,
+          "label": "7m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8575081825256348,
+      "correct": true,
+      "expected": "6m",
+      "prediction": "6m",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.8575081825256348,
+          "label": "6m"
+        },
+        {
+          "confidence": 0.013750381767749786,
+          "label": "7m"
+        },
+        {
+          "confidence": 0.013723500072956085,
+          "label": "2s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9836787581443787,
+      "correct": true,
+      "expected": "7m",
+      "prediction": "7m",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9836787581443787,
+          "label": "7m"
+        },
+        {
+          "confidence": 0.001908745733089745,
+          "label": "2s"
+        },
+        {
+          "confidence": 0.001321500400081277,
+          "label": "3p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9887480735778809,
+      "correct": true,
+      "expected": "8m",
+      "prediction": "8m",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9887480735778809,
+          "label": "8m"
+        },
+        {
+          "confidence": 0.001067321514710784,
+          "label": "1p"
+        },
+        {
+          "confidence": 0.0009487627539783716,
+          "label": "1m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8764462471008301,
+      "correct": true,
+      "expected": "9m",
+      "prediction": "9m",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.8764462471008301,
+          "label": "9m"
+        },
+        {
+          "confidence": 0.018831394612789154,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.015489143319427967,
+          "label": "7m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9516309499740601,
+      "correct": true,
+      "expected": "1p",
+      "prediction": "1p",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9516309499740601,
+          "label": "1p"
+        },
+        {
+          "confidence": 0.010280265472829342,
+          "label": "south"
+        },
+        {
+          "confidence": 0.0033708622213453054,
+          "label": "white"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9784156680107117,
+      "correct": true,
+      "expected": "2p",
+      "prediction": "2p",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9784156680107117,
+          "label": "2p"
+        },
+        {
+          "confidence": 0.003483917098492384,
+          "label": "1s"
+        },
+        {
+          "confidence": 0.00185442715883255,
+          "label": "2s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9840913414955139,
+      "correct": true,
+      "expected": "3p",
+      "prediction": "3p",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9840913414955139,
+          "label": "3p"
+        },
+        {
+          "confidence": 0.003407362848520279,
+          "label": "2p"
+        },
+        {
+          "confidence": 0.001632494619116187,
+          "label": "green"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9435106515884399,
+      "correct": true,
+      "expected": "4p",
+      "prediction": "4p",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9435106515884399,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.012321979738771915,
+          "label": "8s"
+        },
+        {
+          "confidence": 0.005018055438995361,
+          "label": "4m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.5176612138748169,
+      "correct": true,
+      "expected": "5p",
+      "prediction": "5p",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.5176612138748169,
+          "label": "5p"
+        },
+        {
+          "confidence": 0.15150366723537445,
+          "label": "8p"
+        },
+        {
+          "confidence": 0.037985578179359436,
+          "label": "9p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.18459826707839966,
+      "correct": false,
+      "expected": "6p",
+      "prediction": "2p",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.18459826707839966,
+          "label": "2p"
+        },
+        {
+          "confidence": 0.18118877708911896,
+          "label": "6p"
+        },
+        {
+          "confidence": 0.07227422297000885,
+          "label": "4p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8958203792572021,
+      "correct": true,
+      "expected": "7p",
+      "prediction": "7p",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.8958203792572021,
+          "label": "7p"
+        },
+        {
+          "confidence": 0.02190728671848774,
+          "label": "8p"
+        },
+        {
+          "confidence": 0.0054929605685174465,
+          "label": "4p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9722561836242676,
+      "correct": true,
+      "expected": "8p",
+      "prediction": "8p",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9722561836242676,
+          "label": "8p"
+        },
+        {
+          "confidence": 0.002558294450864196,
+          "label": "green"
+        },
+        {
+          "confidence": 0.002418835647404194,
+          "label": "6s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.46201151609420776,
+      "correct": true,
+      "expected": "9p",
+      "prediction": "9p",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.46201151609420776,
+          "label": "9p"
+        },
+        {
+          "confidence": 0.06196551397442818,
+          "label": "1p"
+        },
+        {
+          "confidence": 0.061758045107126236,
+          "label": "8p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8016989827156067,
+      "correct": true,
+      "expected": "1s",
+      "prediction": "1s",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.8016989827156067,
+          "label": "1s"
+        },
+        {
+          "confidence": 0.052150387316942215,
+          "label": "8p"
+        },
+        {
+          "confidence": 0.030907362699508667,
+          "label": "2p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9692248106002808,
+      "correct": true,
+      "expected": "2s",
+      "prediction": "2s",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9692248106002808,
+          "label": "2s"
+        },
+        {
+          "confidence": 0.004636645317077637,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.003403186332434416,
+          "label": "7m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9857982993125916,
+      "correct": true,
+      "expected": "3s",
+      "prediction": "3s",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9857982993125916,
+          "label": "3s"
+        },
+        {
+          "confidence": 0.001348703633993864,
+          "label": "south"
+        },
+        {
+          "confidence": 0.0011023067636415362,
+          "label": "6p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9664493203163147,
+      "correct": true,
+      "expected": "4s",
+      "prediction": "4s",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9664493203163147,
+          "label": "4s"
+        },
+        {
+          "confidence": 0.0036367285065352917,
+          "label": "5s"
+        },
+        {
+          "confidence": 0.0031084332149475813,
+          "label": "2p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.977299153804779,
+      "correct": true,
+      "expected": "5s",
+      "prediction": "5s",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.977299153804779,
+          "label": "5s"
+        },
+        {
+          "confidence": 0.003008348634466529,
+          "label": "4s"
+        },
+        {
+          "confidence": 0.0013390153180807829,
+          "label": "south"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9472803473472595,
+      "correct": true,
+      "expected": "6s",
+      "prediction": "6s",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9472803473472595,
+          "label": "6s"
+        },
+        {
+          "confidence": 0.014429925940930843,
+          "label": "4s"
+        },
+        {
+          "confidence": 0.0035089824814349413,
+          "label": "9s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9693188071250916,
+      "correct": true,
+      "expected": "7s",
+      "prediction": "7s",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9693188071250916,
+          "label": "7s"
+        },
+        {
+          "confidence": 0.0023894510231912136,
+          "label": "9s"
+        },
+        {
+          "confidence": 0.0018409775802865624,
+          "label": "6s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9780290722846985,
+      "correct": true,
+      "expected": "8s",
+      "prediction": "8s",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9780290722846985,
+          "label": "8s"
+        },
+        {
+          "confidence": 0.002580392872914672,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.001612372579984367,
+          "label": "1s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9813666343688965,
+      "correct": true,
+      "expected": "9s",
+      "prediction": "9s",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9813666343688965,
+          "label": "9s"
+        },
+        {
+          "confidence": 0.0024482847657054663,
+          "label": "6s"
+        },
+        {
+          "confidence": 0.0014638140564784408,
+          "label": "7s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9888045191764832,
+      "correct": true,
+      "expected": "east",
+      "prediction": "east",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9888045191764832,
+          "label": "east"
+        },
+        {
+          "confidence": 0.0010460622143000364,
+          "label": "2p"
+        },
+        {
+          "confidence": 0.0009167885291390121,
+          "label": "north"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9684993624687195,
+      "correct": true,
+      "expected": "south",
+      "prediction": "south",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9684993624687195,
+          "label": "south"
+        },
+        {
+          "confidence": 0.0016400680178776383,
+          "label": "8m"
+        },
+        {
+          "confidence": 0.0015930163208395243,
+          "label": "7s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.974802553653717,
+      "correct": true,
+      "expected": "west",
+      "prediction": "west",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.974802553653717,
+          "label": "west"
+        },
+        {
+          "confidence": 0.002200862392783165,
+          "label": "red"
+        },
+        {
+          "confidence": 0.0020908459555357695,
+          "label": "2m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9839690923690796,
+      "correct": true,
+      "expected": "north",
+      "prediction": "north",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9839690923690796,
+          "label": "north"
+        },
+        {
+          "confidence": 0.001361269038170576,
+          "label": "3p"
+        },
+        {
+          "confidence": 0.0013362051686272025,
+          "label": "1s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9865303635597229,
+      "correct": true,
+      "expected": "white",
+      "prediction": "white",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9865303635597229,
+          "label": "white"
+        },
+        {
+          "confidence": 0.005620790645480156,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.0006686417036689818,
+          "label": "8m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9753872156143188,
+      "correct": true,
+      "expected": "green",
+      "prediction": "green",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9753872156143188,
+          "label": "green"
+        },
+        {
+          "confidence": 0.003170309355482459,
+          "label": "east"
+        },
+        {
+          "confidence": 0.002359712263569236,
+          "label": "4p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.969070553779602,
+      "correct": true,
+      "expected": "red",
+      "prediction": "red",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.969070553779602,
+          "label": "red"
+        },
+        {
+          "confidence": 0.004932404030114412,
+          "label": "2s"
+        },
+        {
+          "confidence": 0.0033074133098125458,
+          "label": "unknown"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.801070511341095,
+      "correct": true,
+      "expected": "0m",
+      "prediction": "0m",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.801070511341095,
+          "label": "0m"
+        },
+        {
+          "confidence": 0.05930681526660919,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.022347886115312576,
+          "label": "red"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.7779296040534973,
+      "correct": true,
+      "expected": "0p",
+      "prediction": "0p",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.7779296040534973,
+          "label": "0p"
+        },
+        {
+          "confidence": 0.0433906689286232,
+          "label": "1s"
+        },
+        {
+          "confidence": 0.04052693396806717,
+          "label": "5p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9226981997489929,
+      "correct": true,
+      "expected": "0s",
+      "prediction": "0s",
+      "sourceId": "mahjong-eg-jp",
+      "top3": [
+        {
+          "confidence": 0.9226981997489929,
+          "label": "0s"
+        },
+        {
+          "confidence": 0.010880764573812485,
+          "label": "5s"
+        },
+        {
+          "confidence": 0.006356437224894762,
+          "label": "2s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9455581307411194,
+      "correct": true,
+      "expected": "1m",
+      "prediction": "1m",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9455581307411194,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.003648557001724839,
+          "label": "0s"
+        },
+        {
+          "confidence": 0.0033785593695938587,
+          "label": "6m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8800709843635559,
+      "correct": true,
+      "expected": "2m",
+      "prediction": "2m",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.8800709843635559,
+          "label": "2m"
+        },
+        {
+          "confidence": 0.015457190573215485,
+          "label": "3m"
+        },
+        {
+          "confidence": 0.00809157732874155,
+          "label": "north"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9791593551635742,
+      "correct": true,
+      "expected": "3m",
+      "prediction": "3m",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9791593551635742,
+          "label": "3m"
+        },
+        {
+          "confidence": 0.0037303606513887644,
+          "label": "2m"
+        },
+        {
+          "confidence": 0.001417698455043137,
+          "label": "7s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9452778100967407,
+      "correct": true,
+      "expected": "4m",
+      "prediction": "4m",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9452778100967407,
+          "label": "4m"
+        },
+        {
+          "confidence": 0.004848307929933071,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.003946268931031227,
+          "label": "5p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9791417717933655,
+      "correct": true,
+      "expected": "5m",
+      "prediction": "5m",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9791417717933655,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.0029139488469809294,
+          "label": "6m"
+        },
+        {
+          "confidence": 0.0017461605602875352,
+          "label": "green"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9910134673118591,
+      "correct": true,
+      "expected": "6m",
+      "prediction": "6m",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9910134673118591,
+          "label": "6m"
+        },
+        {
+          "confidence": 0.0017127691535279155,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.0005250052781775594,
+          "label": "0m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9178845286369324,
+      "correct": true,
+      "expected": "7m",
+      "prediction": "7m",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9178845286369324,
+          "label": "7m"
+        },
+        {
+          "confidence": 0.006922455970197916,
+          "label": "6m"
+        },
+        {
+          "confidence": 0.005196934565901756,
+          "label": "9p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9803330302238464,
+      "correct": true,
+      "expected": "8m",
+      "prediction": "8m",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9803330302238464,
+          "label": "8m"
+        },
+        {
+          "confidence": 0.0016890919068828225,
+          "label": "9m"
+        },
+        {
+          "confidence": 0.0014732914278283715,
+          "label": "7p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9391868114471436,
+      "correct": true,
+      "expected": "9m",
+      "prediction": "9m",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9391868114471436,
+          "label": "9m"
+        },
+        {
+          "confidence": 0.008697118610143661,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.00616424111649394,
+          "label": "8m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9781540632247925,
+      "correct": true,
+      "expected": "1p",
+      "prediction": "1p",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9781540632247925,
+          "label": "1p"
+        },
+        {
+          "confidence": 0.0031485978979617357,
+          "label": "6m"
+        },
+        {
+          "confidence": 0.0022529801353812218,
+          "label": "1s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9166966080665588,
+      "correct": true,
+      "expected": "2p",
+      "prediction": "2p",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9166966080665588,
+          "label": "2p"
+        },
+        {
+          "confidence": 0.016584696248173714,
+          "label": "6p"
+        },
+        {
+          "confidence": 0.005738362669944763,
+          "label": "1s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9475426077842712,
+      "correct": true,
+      "expected": "3p",
+      "prediction": "3p",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9475426077842712,
+          "label": "3p"
+        },
+        {
+          "confidence": 0.0046368190087378025,
+          "label": "green"
+        },
+        {
+          "confidence": 0.003872151952236891,
+          "label": "9p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8313937783241272,
+      "correct": true,
+      "expected": "4p",
+      "prediction": "4p",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.8313937783241272,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.027418352663517,
+          "label": "5p"
+        },
+        {
+          "confidence": 0.018831130117177963,
+          "label": "8s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8651900887489319,
+      "correct": true,
+      "expected": "5p",
+      "prediction": "5p",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.8651900887489319,
+          "label": "5p"
+        },
+        {
+          "confidence": 0.01943725347518921,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.009879480116069317,
+          "label": "3s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9042413234710693,
+      "correct": true,
+      "expected": "6p",
+      "prediction": "6p",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9042413234710693,
+          "label": "6p"
+        },
+        {
+          "confidence": 0.014319801703095436,
+          "label": "4m"
+        },
+        {
+          "confidence": 0.012805546633899212,
+          "label": "9p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.3808901309967041,
+      "correct": false,
+      "expected": "7p",
+      "prediction": "6p",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.3808901309967041,
+          "label": "6p"
+        },
+        {
+          "confidence": 0.2184494435787201,
+          "label": "7p"
+        },
+        {
+          "confidence": 0.07322114706039429,
+          "label": "4m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.4571525752544403,
+      "correct": true,
+      "expected": "8p",
+      "prediction": "8p",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.4571525752544403,
+          "label": "8p"
+        },
+        {
+          "confidence": 0.1275486797094345,
+          "label": "2p"
+        },
+        {
+          "confidence": 0.037627194076776505,
+          "label": "1s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8427419662475586,
+      "correct": true,
+      "expected": "9p",
+      "prediction": "9p",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.8427419662475586,
+          "label": "9p"
+        },
+        {
+          "confidence": 0.02701726369559765,
+          "label": "0s"
+        },
+        {
+          "confidence": 0.011999158188700676,
+          "label": "8s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.1633208990097046,
+      "correct": false,
+      "expected": "1s",
+      "prediction": "red",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.1633208990097046,
+          "label": "red"
+        },
+        {
+          "confidence": 0.11942475289106369,
+          "label": "1s"
+        },
+        {
+          "confidence": 0.11117973178625107,
+          "label": "3p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9633961319923401,
+      "correct": true,
+      "expected": "2s",
+      "prediction": "2s",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9633961319923401,
+          "label": "2s"
+        },
+        {
+          "confidence": 0.004286520183086395,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.0037585997488349676,
+          "label": "4s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9394410252571106,
+      "correct": true,
+      "expected": "3s",
+      "prediction": "3s",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9394410252571106,
+          "label": "3s"
+        },
+        {
+          "confidence": 0.005248970817774534,
+          "label": "south"
+        },
+        {
+          "confidence": 0.004401437938213348,
+          "label": "4s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9676406979560852,
+      "correct": true,
+      "expected": "4s",
+      "prediction": "4s",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9676406979560852,
+          "label": "4s"
+        },
+        {
+          "confidence": 0.005519292317330837,
+          "label": "8p"
+        },
+        {
+          "confidence": 0.0022839161101728678,
+          "label": "5s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9255611896514893,
+      "correct": true,
+      "expected": "5s",
+      "prediction": "5s",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9255611896514893,
+          "label": "5s"
+        },
+        {
+          "confidence": 0.005452622193843126,
+          "label": "0s"
+        },
+        {
+          "confidence": 0.005057849455624819,
+          "label": "9s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9645298719406128,
+      "correct": true,
+      "expected": "6s",
+      "prediction": "6s",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9645298719406128,
+          "label": "6s"
+        },
+        {
+          "confidence": 0.0026830527931451797,
+          "label": "9s"
+        },
+        {
+          "confidence": 0.0023623332381248474,
+          "label": "8p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8619818091392517,
+      "correct": true,
+      "expected": "7s",
+      "prediction": "7s",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.8619818091392517,
+          "label": "7s"
+        },
+        {
+          "confidence": 0.010873000137507915,
+          "label": "6s"
+        },
+        {
+          "confidence": 0.010709300637245178,
+          "label": "3s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9376236796379089,
+      "correct": true,
+      "expected": "8s",
+      "prediction": "8s",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9376236796379089,
+          "label": "8s"
+        },
+        {
+          "confidence": 0.005629087798297405,
+          "label": "6s"
+        },
+        {
+          "confidence": 0.004447080194950104,
+          "label": "1p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.7206194400787354,
+      "correct": true,
+      "expected": "9s",
+      "prediction": "9s",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.7206194400787354,
+          "label": "9s"
+        },
+        {
+          "confidence": 0.033367305994033813,
+          "label": "6s"
+        },
+        {
+          "confidence": 0.019027043133974075,
+          "label": "5s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8884149789810181,
+      "correct": true,
+      "expected": "east",
+      "prediction": "east",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.8884149789810181,
+          "label": "east"
+        },
+        {
+          "confidence": 0.006718340329825878,
+          "label": "red"
+        },
+        {
+          "confidence": 0.0052828118205070496,
+          "label": "2s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9379348754882812,
+      "correct": true,
+      "expected": "south",
+      "prediction": "south",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9379348754882812,
+          "label": "south"
+        },
+        {
+          "confidence": 0.0058552175760269165,
+          "label": "3s"
+        },
+        {
+          "confidence": 0.005597330164164305,
+          "label": "8m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9131720066070557,
+      "correct": true,
+      "expected": "west",
+      "prediction": "west",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9131720066070557,
+          "label": "west"
+        },
+        {
+          "confidence": 0.010760820470750332,
+          "label": "1p"
+        },
+        {
+          "confidence": 0.007412956096231937,
+          "label": "1m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9508315920829773,
+      "correct": true,
+      "expected": "north",
+      "prediction": "north",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9508315920829773,
+          "label": "north"
+        },
+        {
+          "confidence": 0.006593344267457724,
+          "label": "3s"
+        },
+        {
+          "confidence": 0.0062894755974411964,
+          "label": "1s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9907033443450928,
+      "correct": true,
+      "expected": "white",
+      "prediction": "white",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9907033443450928,
+          "label": "white"
+        },
+        {
+          "confidence": 0.0047008884139359,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.0007434470462612808,
+          "label": "8m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9506182074546814,
+      "correct": true,
+      "expected": "green",
+      "prediction": "green",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9506182074546814,
+          "label": "green"
+        },
+        {
+          "confidence": 0.0049439785070717335,
+          "label": "1s"
+        },
+        {
+          "confidence": 0.004808004014194012,
+          "label": "0p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8288331627845764,
+      "correct": true,
+      "expected": "red",
+      "prediction": "red",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.8288331627845764,
+          "label": "red"
+        },
+        {
+          "confidence": 0.02051732689142227,
+          "label": "2s"
+        },
+        {
+          "confidence": 0.014969397336244583,
+          "label": "unknown"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.946790337562561,
+      "correct": true,
+      "expected": "0m",
+      "prediction": "0m",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.946790337562561,
+          "label": "0m"
+        },
+        {
+          "confidence": 0.009117857553064823,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.004494513850659132,
+          "label": "1p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9663172960281372,
+      "correct": true,
+      "expected": "0p",
+      "prediction": "0p",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9663172960281372,
+          "label": "0p"
+        },
+        {
+          "confidence": 0.004143193364143372,
+          "label": "0s"
+        },
+        {
+          "confidence": 0.003930280916392803,
+          "label": "5p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9639838933944702,
+      "correct": true,
+      "expected": "0s",
+      "prediction": "0s",
+      "sourceId": "mahjong-eg-jp-a",
+      "top3": [
+        {
+          "confidence": 0.9639838933944702,
+          "label": "0s"
+        },
+        {
+          "confidence": 0.002221000613644719,
+          "label": "6s"
+        },
+        {
+          "confidence": 0.0021574459969997406,
+          "label": "5s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9732447862625122,
+      "correct": true,
+      "expected": "1m",
+      "prediction": "1m",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.9732447862625122,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.004920259118080139,
+          "label": "7m"
+        },
+        {
+          "confidence": 0.0034110434353351593,
+          "label": "2m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8159340620040894,
+      "correct": false,
+      "expected": "2m",
+      "prediction": "1m",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.8159340620040894,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.04325660690665245,
+          "label": "2m"
+        },
+        {
+          "confidence": 0.011617033742368221,
+          "label": "6p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.5429424047470093,
+      "correct": false,
+      "expected": "3m",
+      "prediction": "1m",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.5429424047470093,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.07323367893695831,
+          "label": "7m"
+        },
+        {
+          "confidence": 0.05403861403465271,
+          "label": "6p"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.2302187830209732,
+      "correct": false,
+      "expected": "4m",
+      "prediction": "7m",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.2302187830209732,
+          "label": "7m"
+        },
+        {
+          "confidence": 0.1381082981824875,
+          "label": "0m"
+        },
+        {
+          "confidence": 0.09208828955888748,
+          "label": "1m"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.7198912501335144,
+      "correct": true,
+      "expected": "5m",
+      "prediction": "5m",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.7198912501335144,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.046484656631946564,
+          "label": "4m"
+        },
+        {
+          "confidence": 0.03567865490913391,
+          "label": "6p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.25985148549079895,
+      "correct": false,
+      "expected": "6m",
+      "prediction": "5m",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.25985148549079895,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.13462282717227936,
+          "label": "8m"
+        },
+        {
+          "confidence": 0.12977293133735657,
+          "label": "9m"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.7453954219818115,
+      "correct": true,
+      "expected": "7m",
+      "prediction": "7m",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.7453954219818115,
+          "label": "7m"
+        },
+        {
+          "confidence": 0.03329462185502052,
+          "label": "8m"
+        },
+        {
+          "confidence": 0.01814250275492668,
+          "label": "1m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.44997352361679077,
+      "correct": true,
+      "expected": "8m",
+      "prediction": "8m",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.44997352361679077,
+          "label": "8m"
+        },
+        {
+          "confidence": 0.05413617938756943,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.04517647996544838,
+          "label": "5m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.331124484539032,
+      "correct": false,
+      "expected": "9m",
+      "prediction": "7m",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.331124484539032,
+          "label": "7m"
+        },
+        {
+          "confidence": 0.09691005200147629,
+          "label": "0p"
+        },
+        {
+          "confidence": 0.05354764685034752,
+          "label": "0s"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.5803134441375732,
+      "correct": false,
+      "expected": "1p",
+      "prediction": "unknown",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.5803134441375732,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.05943313241004944,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.04058394581079483,
+          "label": "3s"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.2250104695558548,
+      "correct": false,
+      "expected": "2p",
+      "prediction": "unknown",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.2250104695558548,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.11607536673545837,
+          "label": "west"
+        },
+        {
+          "confidence": 0.09487082809209824,
+          "label": "9p"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.3507119417190552,
+      "correct": false,
+      "expected": "3p",
+      "prediction": "unknown",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.3507119417190552,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.137669637799263,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.04992443695664406,
+          "label": "0m"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.15984612703323364,
+      "correct": false,
+      "expected": "4p",
+      "prediction": "unknown",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.15984612703323364,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.14837729930877686,
+          "label": "9p"
+        },
+        {
+          "confidence": 0.07787805795669556,
+          "label": "7s"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.3770879805088043,
+      "correct": false,
+      "expected": "5p",
+      "prediction": "unknown",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.3770879805088043,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.0757313221693039,
+          "label": "1p"
+        },
+        {
+          "confidence": 0.061142679303884506,
+          "label": "1m"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.2515132427215576,
+      "correct": false,
+      "expected": "6p",
+      "prediction": "unknown",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.2515132427215576,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.2215433120727539,
+          "label": "1s"
+        },
+        {
+          "confidence": 0.06944620609283447,
+          "label": "0p"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.16966809332370758,
+      "correct": false,
+      "expected": "7p",
+      "prediction": "0m",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.16966809332370758,
+          "label": "0m"
+        },
+        {
+          "confidence": 0.09098532050848007,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.07882819324731827,
+          "label": "1s"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.8873452544212341,
+      "correct": false,
+      "expected": "8p",
+      "prediction": "unknown",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.8873452544212341,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.019401460886001587,
+          "label": "0m"
+        },
+        {
+          "confidence": 0.011507701128721237,
+          "label": "red"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.2808930575847626,
+      "correct": false,
+      "expected": "9p",
+      "prediction": "0p",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.2808930575847626,
+          "label": "0p"
+        },
+        {
+          "confidence": 0.14530818164348602,
+          "label": "7p"
+        },
+        {
+          "confidence": 0.08507949858903885,
+          "label": "4m"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.22838301956653595,
+      "correct": false,
+      "expected": "1s",
+      "prediction": "2m",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.22838301956653595,
+          "label": "2m"
+        },
+        {
+          "confidence": 0.20107905566692352,
+          "label": "8m"
+        },
+        {
+          "confidence": 0.046663444489240646,
+          "label": "1m"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.9555596709251404,
+      "correct": true,
+      "expected": "2s",
+      "prediction": "2s",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.9555596709251404,
+          "label": "2s"
+        },
+        {
+          "confidence": 0.012830953113734722,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.002367072505876422,
+          "label": "1m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.23344063758850098,
+      "correct": false,
+      "expected": "3s",
+      "prediction": "0p",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.23344063758850098,
+          "label": "0p"
+        },
+        {
+          "confidence": 0.22592125833034515,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.06624174118041992,
+          "label": "red"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.23428776860237122,
+      "correct": true,
+      "expected": "4s",
+      "prediction": "4s",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.23428776860237122,
+          "label": "4s"
+        },
+        {
+          "confidence": 0.19499808549880981,
+          "label": "9s"
+        },
+        {
+          "confidence": 0.06952280551195145,
+          "label": "0m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.7661831378936768,
+      "correct": false,
+      "expected": "5s",
+      "prediction": "9s",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.7661831378936768,
+          "label": "9s"
+        },
+        {
+          "confidence": 0.09661151468753815,
+          "label": "5s"
+        },
+        {
+          "confidence": 0.01344230305403471,
+          "label": "0m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.33025798201560974,
+      "correct": false,
+      "expected": "6s",
+      "prediction": "4p",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.33025798201560974,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.30236566066741943,
+          "label": "6s"
+        },
+        {
+          "confidence": 0.09403960406780243,
+          "label": "4s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.6440112590789795,
+      "correct": true,
+      "expected": "7s",
+      "prediction": "7s",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.6440112590789795,
+          "label": "7s"
+        },
+        {
+          "confidence": 0.07837696373462677,
+          "label": "4s"
+        },
+        {
+          "confidence": 0.06222572550177574,
+          "label": "3s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.19399641454219818,
+      "correct": false,
+      "expected": "8s",
+      "prediction": "4p",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.19399641454219818,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.18295228481292725,
+          "label": "5p"
+        },
+        {
+          "confidence": 0.07346121221780777,
+          "label": "8s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.09991994500160217,
+      "correct": false,
+      "expected": "9s",
+      "prediction": "4s",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.09991994500160217,
+          "label": "4s"
+        },
+        {
+          "confidence": 0.08753553777933121,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.06341158598661423,
+          "label": "0p"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.32386335730552673,
+      "correct": true,
+      "expected": "east",
+      "prediction": "east",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.32386335730552673,
+          "label": "east"
+        },
+        {
+          "confidence": 0.15269871056079865,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.12891654670238495,
+          "label": "2p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.7499505877494812,
+      "correct": true,
+      "expected": "south",
+      "prediction": "south",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.7499505877494812,
+          "label": "south"
+        },
+        {
+          "confidence": 0.03276792913675308,
+          "label": "green"
+        },
+        {
+          "confidence": 0.030578378587961197,
+          "label": "7s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.28661489486694336,
+      "correct": false,
+      "expected": "west",
+      "prediction": "green",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.28661489486694336,
+          "label": "green"
+        },
+        {
+          "confidence": 0.13375486433506012,
+          "label": "red"
+        },
+        {
+          "confidence": 0.0907665342092514,
+          "label": "white"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.3634107708930969,
+      "correct": false,
+      "expected": "north",
+      "prediction": "5m",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.3634107708930969,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.1293242871761322,
+          "label": "green"
+        },
+        {
+          "confidence": 0.1209145113825798,
+          "label": "red"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.36618033051490784,
+      "correct": false,
+      "expected": "green",
+      "prediction": "5m",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.36618033051490784,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.1255200058221817,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.06892981380224228,
+          "label": "east"
+        }
+      ],
+      "topThreeCorrect": false
+    },
+    {
+      "confidence": 0.39396604895591736,
+      "correct": true,
+      "expected": "red",
+      "prediction": "red",
+      "sourceId": "majiang2",
+      "top3": [
+        {
+          "confidence": 0.39396604895591736,
+          "label": "red"
+        },
+        {
+          "confidence": 0.08824985474348068,
+          "label": "2s"
+        },
+        {
+          "confidence": 0.06612075865268707,
+          "label": "west"
+        }
+      ],
+      "topThreeCorrect": true
+    }
+  ],
+  "schemaVersion": 1,
+  "selectionCost": {
+    "meanRealAccuracyGiveUp": 0.02811903754870097,
+    "note": "How much real accuracy the synthetic-validation checkpoint rule gives up against an oracle that picked the best epoch on the real fold. An oracle is optimistic by construction; the number bounds the loss rather than predicting the gain.",
+    "perFold": [0.027027010917663574, 0.02702707052230835, 0.03030303120613098]
+  }
+}

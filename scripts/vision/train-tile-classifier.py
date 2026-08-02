@@ -250,12 +250,26 @@ def generate(
     return images[order], labels[order]
 
 
-def generate_real(crops_path: Path, per_crop: int, seed: int) -> tuple[np.ndarray, np.ndarray]:
+def collect_real_samples(crops_path: Path) -> list[tuple[Path, int]]:
+    """Every physical training crop, paired with its class index."""
     samples: list[tuple[Path, int]] = []
     for class_index, label in enumerate(CLASSES):
         label_path = crops_path / "train" / label
         if label_path.exists():
             samples.extend((path, class_index) for path in sorted(label_path.glob("*.png")))
+    return samples
+
+
+def render_variants(
+    samples: list[tuple[Path, int]], per_crop: int, seed: int
+) -> tuple[np.ndarray, np.ndarray]:
+    """Augment a chosen set of crops.
+
+    Split out from `generate_real` so `cross-validate.py` can leave one
+    photographed tile set out of the training mixture and still augment the rest
+    exactly as training does. Two copies of this would drift, and a fold trained
+    on a different augmentation than the shipped model measures nothing.
+    """
     images = np.empty((len(samples) * per_crop, HEIGHT, WIDTH, 3), dtype=np.uint8)
     labels = np.empty(len(samples) * per_crop, dtype=np.int64)
     offset = 0
@@ -268,6 +282,10 @@ def generate_real(crops_path: Path, per_crop: int, seed: int) -> tuple[np.ndarra
             offset += 1
     order = np.random.default_rng(seed).permutation(len(labels))
     return images[order], labels[order]
+
+
+def generate_real(crops_path: Path, per_crop: int, seed: int) -> tuple[np.ndarray, np.ndarray]:
+    return render_variants(collect_real_samples(crops_path), per_crop, seed)
 
 
 def physical_training_sources(crops_path: Path) -> list[dict[str, str]]:

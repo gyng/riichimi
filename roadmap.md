@@ -31,8 +31,9 @@ Deliver a polished mobile/web riichi companion that reaches an auditable result 
 
 ## P0 — production recognition and release confidence
 
-1. **Representative recognition evidence** — now the single blocker, and the harness below proves it
-   - Grow the rights-cleared, source-separated corpus beyond the current 107 training / 46 held-out physical crops to at least 500 complete guided hands spanning tile sets, phones, lighting, glare, perspective, red fives, and hard negatives.
+1. **Representative recognition evidence** — the single blocker, and cross-validation now shows why
+   - **Separate the corpus by tile design, not just by photograph.** Four of seven sources are one Wikimedia series: two in training, and the third is 37 of the 46 held-out crops. The 93.48% headline is measured on the design the model trained on. Held-out cross-validation puts the one genuinely unseen design at **30.3%** and out-of-fold accuracy at **75.7%**. Until the corpus has several distinct designs on both sides of the split, the release metric flatters the recognizer.
+   - Grow the rights-cleared corpus beyond the current 107 training / 46 held-out physical crops to at least 500 complete guided hands spanning **tile designs**, phones, lighting, glare, perspective, red fives, and hard negatives — and count designs, not photographs, when judging whether it is representative.
    - **Add a third, source-separated validation partition.** Calibration currently cannot be fitted at all: the model is 100% accurate on the training split, and fitting on the evaluation split would be fitting to the test set.
    - **Include hard negatives** — sticks, dice, racks, fingers, patterned tables. Unknown recall is unmeasurable without them; the present corpus is all real tile faces.
    - Gate promotion on per-class accuracy, exact-hand accuracy, calibration, correction burden, and unknown-tile recall rather than the current smoke set.
@@ -44,7 +45,9 @@ Deliver a polished mobile/web riichi companion that reaches an auditable result 
 3. **Recognition robustness (safe-failure first)**
    - ~~Evaluation harness~~ — **done.** `scripts/vision/evaluate-recognizer.py` reports per-class and per-tile-set accuracy, ECE with reliability bins, correction burden per hand, false-unknown rate, a threshold sweep, and a 95% Wilson interval on every rate. `--baseline` states whether a change survives those intervals instead of implying it does.
    - ~~Test-time augmentation + confidence calibration~~ — **measured, not promoted.** TTA buys one crop of top-1 and costs one review per hand, which is a net loss for a review gate. Temperature scaling has no split to fit on. Neither separates from baseline. See the [model audit](docs/recognition-model-audit.md).
-   - **Raise coverage without raising silent errors.** The real target the harness identified: 3.26 reviews per scanned hand, with the model under-confident rather than over-confident and every error already one tap away in the top three. Blocked on a validation split.
+   - **Raise coverage without raising silent errors.** 3.26 reviews per scanned hand, with the model under-confident rather than over-confident and every error already one tap away in the top three — on the tile design it knows. Blocked on a validation split.
+   - **Select the checkpoint on real photographs.** Training keeps the epoch that scored best on synthetic vector art (99.4%, saturated, wrong distribution). Cross-validation puts the cost at 2.7–3.0 points of real accuracy per fold. A held-in real fold replaces it and needs no new data.
+   - ~~Leave-one-source-out cross-validation~~ — **done.** `scripts/vision/cross-validate.py` trains on two photographed sets and validates on the third, giving out-of-fold predictions for all 107 real crops without spending any of the held-out 46.
    - A learned localizer (to handle touching tiles and textured tables — the biggest practical brittleness) is gated on boxed real data; the synthetic hand renderer already scaffolds per-tile boxes for it.
 4. **Device QA**
    - Verify camera, storage recovery, rotation, large text, keyboard, screen readers, reduced motion, and offline restart on representative devices. Riichimi is browser-only, so this is mobile Safari and Chrome on real hardware.

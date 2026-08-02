@@ -40,7 +40,7 @@ Each failure produces dedicated recovery guidance and leaves photo replacement, 
 
 Training combines deterministic camera-style augmentation of CC0 tile artwork with 107 licensed physical-photo crops from three source photographs and distinct Japanese tile families. The artifact has 99.44% top-1 accuracy on a 3,040-image independent synthetic holdout and ONNX parity within `2.39e-6`. Synthetic accuracy validates the pipeline; it is not release evidence.
 
-The source-separated physical set now has 46 crops spanning a held-out Japanese tile family, red fives, and three unrelated photographs. V1 scores 43/46 top-1 (`93.48%`), up from V0's 34/46 (`73.91%`) on the same expanded set. At the conservative `0.75` threshold V1 accepts 36/46 and all 36 are correct (`100%` accepted accuracy at `78.26%` coverage), up from `28.26%` coverage. All three wrong predictions remain below threshold and therefore stay in review. These figures justify the V1 beta promotion and materially lower correction burden; they do not establish complete-hand or production accuracy.
+The source-separated physical set now has 46 crops spanning a held-out Japanese tile family, red fives, and three unrelated photographs. V1 scores 43/46 top-1 (`93.48%`), up from V0's 34/46 (`73.91%`) on the same expanded set. At the conservative `0.75` threshold V1 accepts 36/46 and all 36 are correct (`100%` accepted accuracy at `78.26%` coverage), up from `28.26%` coverage. All three wrong predictions remain below threshold and therefore stay in review. These figures justify the V1 beta promotion and materially lower correction burden; they do not establish complete-hand or production accuracy. Read them with "What the held-out set is actually measuring" below: 37 of the 46 crops come from the same photographic series as two thirds of the training set, so 93.48% describes the tile design the model trained on rather than an unfamiliar one.
 
 Exported-browser dogfood uses a guided composite derived from the held-out CC BY-SA 4.0 tile family. V1 reads all 15 tile classes correctly and asks for two low-confidence confirmations; V0's out-of-distribution demonstration required 15 confirmations. This is one repeatable integration fixture, not part of the 500-hand release set.
 
@@ -69,6 +69,45 @@ Both were run through the harness against the shipped artifact. Neither is shipp
 **Temperature scaling cannot be fitted with this corpus at all.** There is no split available to fit it on. The model is **100% accurate on the training partition**, so negative log-likelihood there falls without bound as confidence sharpens and the fit runs to the edge of the scan (`T = 0.05`); fitting on the evaluation partition would be fitting to the test set. The harness now refuses both rather than emitting a number that looks like a calibration. A third, source-separated validation partition is a prerequisite.
 
 For the record, sharpening does what the calibration curve predicts — at `T = 0.25`, coverage rises to 95.65% and ECE falls to `0.040` — but it also produces the corpus's first confident-wrong read, dropping accepted accuracy below 100%. That trade is exactly the one that needs a validation split to make responsibly.
+
+### What the held-out set is actually measuring
+
+The 93.48% figure above is measured almost entirely on the same tile design the model trained on.
+
+Four of the seven source photographs come from one Wikimedia series — `Mahjong eg JP`, `Mahjong eg JP A`, and `Mahjong eg JP Kantou`. Two are in training (74 of 107 crops) and the third is the evaluation set's dominant source (**37 of 46 crops**). The partition is separated by _photograph_, which is what the release gate asks for, but not by _tile design_, which is what generalization needs. "Held-out Japanese tile family" is true of the file and misleading about the tiles.
+
+The corpus contains exactly one visually distinct design — `majiang2`, a Chinese-style set — and it is in **training**, so nothing in the evaluation measures a design the model has not seen.
+
+`scripts/vision/cross-validate.py` measures it by holding out one photographed set at a time and training on the rest. On the corrected corpus:
+
+| Held out          | Crops | Top-1     |
+| ----------------- | ----- | --------- |
+| `mahjong-eg-jp`   | 37    | **97.3%** |
+| `mahjong-eg-jp-a` | 37    | **94.6%** |
+| `majiang2`        | 33    | **30.3%** |
+
+The two that generalize are two photographs of the same series, with the third still in training — so they measure recall of a design, not generalization to one. The one genuinely unseen design scores **30.3%**, and out-of-fold accuracy across all 107 real crops is **75.7%** against the 93.48% headline. Full run: [`recognition-cross-validation-report.json`](recognition-cross-validation-report.json).
+
+This is the single most important number in this document. It says the recognizer has learned one tile design and is graded on that design.
+
+### A framing defect in the majiang2 crops
+
+Found by inspecting what the classifier actually receives. All 33 `majiang2` boxes were positioned about 25px too low — roughly a third of a tile — so every crop straddled two tiles:
+
+- the rank numeral was cut off the top of **all nine** man tiles, leaving only the red 萬, which the classifier read as 中: `1m…9m → red`, every one;
+- the honour row fell off the tiles into the tray below, and came back `unknown` at up to 0.93 confidence.
+
+Thirty-one percent of the real training photographs were therefore teaching the model that nine different classes look like a red 萬 with no numeral. The boxes are corrected in the manifest and the collapse is gone — the fold's errors are now ordinary confusions (`2m → 1m`, `3m → 1m`) rather than a systematic one.
+
+**It did not improve accuracy.** The `majiang2` fold is 10/33 before and after, and out-of-fold moved 77.6% → 75.7%, comfortably inside the noise on 107 crops. The defect was real and worth removing; the family is simply a design the model has never seen, and cleaning its labels does not teach it one.
+
+Note on provenance: the shipped `tile-classifier-v1.onnx` was trained **before** this correction, so it no longer reproduces byte-identically from the current manifest. Its own report records what produced it; the next promotion picks up the corrected crops.
+
+### Checkpoint selection uses the wrong distribution
+
+`train-tile-classifier.py` keeps the epoch that scores best on a **synthetic** validation set built from the same CC0 vector artwork it trains on. That signal sits at 99.3–99.4% and saturates, while the quantity that matters moves underneath it.
+
+Cross-validation measures the cost: choosing the synthetic-preferred epoch gives up **2.7, 2.7, and 3.0 points** of real accuracy per fold against an oracle that picked the best epoch on the real fold. An oracle is optimistic by construction, so this bounds the loss rather than predicting the gain — but the selection signal is demonstrably not tracking the target. A held-in real fold is the obvious replacement and needs no new data.
 
 ### The corpus, not the technique, is the blocker
 

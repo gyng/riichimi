@@ -204,6 +204,18 @@ Measured by driving the built app at 390×844 rather than by reading the source.
 - Recorded what the screen-count budget cannot express: the scored calculator's count _rose_ (2.51 → 2.67) because the dock takes height out of the visible area, while the distance to the answer went to zero. The budget measures how much there is, not how far away the important part is, so it is now paired with a rule that says so.
 - Two findings were reported and not acted on. The tile picker's 34×46 targets are a documented, reasoned exception. And the IA promotes Scan — first in the bar, first on Home — while the recognizer costs 3.26 review taps per hand; that is a product positioning call rather than a defect, and it is the user's to make.
 
+### 2026-08-02T00:00:00+08:00 — what the recognizer's 93.5% is actually measuring
+
+Went looking for ways to improve scan accuracy. The answer turned out to be about the corpus, and it is not the one the numbers suggested.
+
+- **The held-out set measures the tile design the model trained on.** Four of the seven source photographs are one Wikimedia series (`Mahjong eg JP`, `… A`, `… Kantou`): two are in training and the third is **37 of the 46 held-out crops**. The partition is separated by photograph, which the release gate asks for, and not by tile design, which generalization needs.
+- **Added leave-one-source-out cross-validation** (`scripts/vision/cross-validate.py`), which holds out one photographed set at a time and trains on the rest — giving out-of-fold predictions for all 107 real crops without spending any of the held-out 46. Two folds from the same series score 97.3% and 94.6%; the corpus's one genuinely distinct design, `majiang2`, scores **30.3%**. Out-of-fold across all 107 crops is **75.7%** against the 93.48% headline.
+- **Found and fixed a framing defect in a third of the real training photographs.** All 33 `majiang2` boxes sat about 25px too low — a third of a tile — so every crop straddled two tiles: the rank numeral was cut off **all nine** man tiles, leaving only the red 萬, which the classifier read as 中 (`1m…9m → red`, every one), and the honour row fell into the tray below and came back `unknown` at up to 0.93 confidence. The collapse is gone; the fold's errors are now ordinary confusions.
+- **The fix did not improve accuracy**, and the report says so: `majiang2` is 10/33 before and after, and out-of-fold moved 77.6% → 75.7%, inside the noise on 107 crops. It removed real label noise from 31% of the physical corpus; it did not teach the model a design it has never seen.
+- **Quantified the checkpoint-selection defect.** Training keeps the epoch that scores best on a synthetic validation set built from the same vector artwork it trains on — 99.4%, saturated, and the wrong distribution. On the corrected corpus that costs **2.7, 2.7, and 3.0 points** of real accuracy per fold against an oracle. A held-in real fold replaces it and needs no new data.
+- Two hypotheses were tested and dropped rather than shipped: the normalizer's silent crop-rejection fallback (1 of 46 crops, still correct), and train/serve skew from the app's nearest-neighbour resampling (identical top-1 at every simulated capture scale — the gap between the app and the evaluator is the face re-crop, not the filter).
+- The shipped `tile-classifier-v1.onnx` predates the crop correction and no longer reproduces byte-identically from the manifest. Nothing was retrained or promoted; that is a decision with its own gate.
+
 ## Visual evidence
 
 - [Mobile landing](docs/checkpoints/2026-07-23-01-home-mobile.png)
