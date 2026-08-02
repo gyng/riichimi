@@ -103,11 +103,34 @@ Thirty-one percent of the real training photographs were therefore teaching the 
 
 Note on provenance: the shipped `tile-classifier-v1.onnx` was trained **before** this correction, so it no longer reproduces byte-identically from the current manifest. Its own report records what produced it; the next promotion picks up the corrected crops.
 
-### Checkpoint selection uses the wrong distribution
+### Checkpoint selection uses the wrong distribution, and it barely matters
 
-`train-tile-classifier.py` keeps the epoch that scores best on a **synthetic** validation set built from the same CC0 vector artwork it trains on. That signal sits at 99.3–99.4% and saturates, while the quantity that matters moves underneath it.
+`train-tile-classifier.py` keeps the epoch that scores best on a **synthetic** validation set built from the same CC0 vector artwork it trains on. That signal sits at 99.3–99.4% and saturates, while the quantity that matters moves underneath it. The selection signal is demonstrably not tracking the target.
 
-Cross-validation measures the cost: choosing the synthetic-preferred epoch gives up **2.7, 2.7, and 3.0 points** of real accuracy per fold against an oracle that picked the best epoch on the real fold. An oracle is optimistic by construction, so this bounds the loss rather than predicting the gain — but the selection signal is demonstrably not tracking the target. A held-in real fold is the obvious replacement and needs no new data.
+The per-fold oracle gap is 2.7, 2.7, and 3.0 points — but that is an oracle, optimistic by construction, and the aggregate curve says the practical gain is much smaller. Mean real accuracy across the three folds:
+
+| Epoch     | 1     | 3     | 5     | 6     | 8         | 9         | 10    | 11        | 12    |
+| --------- | ----- | ----- | ----- | ----- | --------- | --------- | ----- | --------- | ----- |
+| Mean real | 0.684 | 0.742 | 0.750 | 0.751 | **0.760** | **0.760** | 0.741 | **0.760** | 0.750 |
+
+Real accuracy climbs until about epoch 5 and then **plateaus**; it does not peak and decline, so there is no good epoch the synthetic signal is walking past. Choosing one shared epoch by cross-validation instead of per-fold synthetic scores recovers 0.741 → 0.760, which is **two crops in 107** and inside the interval.
+
+So this is a defect worth fixing for its own sake — a selection rule should measure the thing it is selecting for — but it is not an accuracy lever, and it was wrong of this document to imply otherwise. Note also that `majiang2` never exceeds 0.333 at **any** epoch: no training-schedule change touches the generalization problem.
+
+### A candidate trained on the corrected corpus
+
+The shipped V1 trained on the mis-framed `majiang2` crops, so a candidate was trained on the corrected corpus with identical settings and scored on the same held-out 46:
+
+|                            | top-1  | top-3  | coverage | accepted accuracy | confident-wrong | reviews/hand |
+| -------------------------- | ------ | ------ | -------- | ----------------- | --------------- | ------------ |
+| V1 (shipped)               | 0.9348 | 1.0000 | 0.7826   | 1.0000            | 0               | 3.26         |
+| Corrected-corpus candidate | 0.9348 | 1.0000 | 0.7826   | 1.0000            | 0               | 3.26         |
+
+Identical on every metric the gate reads. The models are genuinely different — the three errors moved from `1s → green`, `west → 1m`, `green → east` to `1s → 9s`, `green → east`, `2p → 4p` — but the held-out set cannot tell them apart, because it measures the design both models already know.
+
+**The candidate was not promoted.** There is no measured improvement to justify replacing the artifact, its SHA-256, and the browser fixture that depends on its exact review count. The corrected manifest is in place for the next promotion, when the corpus has a reason to produce one.
+
+This is the clearest demonstration in this document of what the corpus problem costs: a defect was found in a third of the physical training data, corrected, and retrained, and the release metric did not move by one crop.
 
 ### The corpus, not the technique, is the blocker
 
