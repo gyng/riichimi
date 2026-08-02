@@ -11,6 +11,7 @@ const destinations = [
   { key: "manual", route: "/manual" },
   { key: "table", route: "/session" },
   { key: "history", route: "/history" },
+  { key: "reference", route: "/reference" },
 ] as const satisfies readonly { key: keyof Messages["nav"]; route: string }[];
 
 /**

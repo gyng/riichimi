@@ -18,7 +18,7 @@ The domain has no knowledge of React, the DOM, cameras, ONNX, persistence, analy
 
 ### `packages/score-core`
 
-Owns tiles, melds, hands, invariants, decomposition, yaku, fu, limits, and payment policy. It must remain deterministic and framework-free.
+Owns tiles, melds, hands, invariants, decomposition, yaku, fu, limits, and payment policy. It must remain deterministic and framework-free. The yaku and fu catalogues live here as data, and the scorer builds every awarded yaku and every fu row through them, so the reference screen reads the same table the scorer works from rather than a second copy of it. An id with no catalogue entry throws instead of scoring under a name nobody wrote.
 
 ### `packages/rules`
 
@@ -68,7 +68,9 @@ Domain vocabulary is deliberately outside that catalog. Yaku names and fu-audit
 reasons originate in `score-core`, where importing an i18n layer would reverse
 the dependency direction; ruleset profile names (TENHOU, EMA, JPML, WRC,
 M.League) are proper nouns. Scoring _vocabulary_ around them is translated
-(han → 翻, fu → 符). Localizing the domain-originated strings needs an
+(han → 翻, fu → 符), as is the reference's prose: a catalogue entry's
+`requirement` is a description rather than a name, so the interface wraps it
+like any other copy. Localizing the domain-originated strings needs an
 interface-layer dictionary keyed by stable yaku id, which is a feature rather
 than a wrapping pass — see [rules profiles](rules-profiles.md).
 

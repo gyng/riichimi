@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router";
 import HistoryRoute from "../app/history";
 import HomeRoute from "../app/index";
 import ManualRoute from "../app/manual";
+import ReferenceRoute from "../app/reference";
 import ScanRoute from "../app/scan";
 import SessionRoute from "../app/session";
 import SettingsRoute from "../app/settings";
@@ -25,6 +26,7 @@ export const appRouter = createBrowserRouter(
         { element: <SessionRoute />, path: "session" },
         { element: <SettingsRoute />, path: "settings" },
         { element: <HistoryRoute />, path: "history" },
+        { element: <ReferenceRoute />, path: "reference" },
       ],
       element: <RootLayout />,
       path: "/",

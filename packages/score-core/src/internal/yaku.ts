@@ -13,67 +13,25 @@ import {
   tileSuit,
 } from "../domain/tile";
 import type { CanonicalTileId, Dragon, Wind } from "../domain/tile";
+import { yakuReference, yakumanReference } from "../domain/yaku-catalog";
 import type { StandardInterpretation } from "./hand-analysis";
 import type { NormalizedHand } from "./normalize-hand";
 
 const dragons: readonly Dragon[] = ["white", "green", "red"];
 const winds: readonly Wind[] = ["east", "south", "west", "north"];
 
-// The Japanese name in kanji for each yaku, keyed by id so the display and the
-// announcer can lead with it. Dragon and wind value-honour ids resolve to the
-// specific tile (白/發/中, 自風/場風). A missing id falls back to the English name.
-const JAPANESE: Readonly<Record<string, string>> = {
-  riichi: "立直",
-  "double-riichi": "ダブル立直",
-  ippatsu: "一発",
-  "menzen-tsumo": "門前清自摸和",
-  pinfu: "平和",
-  tanyao: "断幺九",
-  iipeikou: "一盃口",
-  "yakuhai-white": "白",
-  "yakuhai-green": "發",
-  "yakuhai-red": "中",
-  "yakuhai-seat": "自風",
-  "yakuhai-round": "場風",
-  haitei: "海底摸月",
-  houtei: "河底撈魚",
-  rinshan: "嶺上開花",
-  chankan: "槍槓",
-  "sanshoku-doujun": "三色同順",
-  ittsuu: "一気通貫",
-  chanta: "混全帯幺九",
-  chiitoitsu: "七対子",
-  toitoi: "対々和",
-  sanankou: "三暗刻",
-  "sanshoku-doukou": "三色同刻",
-  sankantsu: "三槓子",
-  shousangen: "小三元",
-  honroutou: "混老頭",
-  junchan: "純全帯幺九",
-  honitsu: "混一色",
-  chinitsu: "清一色",
-  ryanpeikou: "二盃口",
-  renhou: "人和",
-  "kokushi-musou": "国士無双",
-  suuankou: "四暗刻",
-  daisangen: "大三元",
-  shousuushii: "小四喜",
-  daisuushii: "大四喜",
-  tsuuiisou: "字一色",
-  chinroutou: "清老頭",
-  ryuuiisou: "緑一色",
-  "chuuren-poutou": "九蓮宝燈",
-  suukantsu: "四槓子",
-  tenhou: "天和",
-  chiihou: "地和",
-};
-
-function yaku(id: string, name: string, romanized: string, han: number): Yaku {
-  return { han, id, japanese: JAPANESE[id] ?? name, name, romanized };
+// The names come from the catalogue rather than from the call site, so the
+// reference screen and the score panel cannot end up calling the same yaku two
+// different things — and an id with no catalogue entry throws here rather than
+// scoring under a name nobody wrote.
+function yaku(id: string, han: number): Yaku {
+  const { japanese, name, romanized } = yakuReference(id);
+  return { han, id, japanese, name, romanized };
 }
 
-function yakuman(id: string, name: string, romanized: string, value: 1 | 2 = 1): Yakuman {
-  return { id, japanese: JAPANESE[id] ?? name, name, romanized, value };
+function yakuman(id: string, value: 1 | 2 = 1): Yakuman {
+  const { japanese, name, romanized } = yakumanReference(id);
+  return { id, japanese, name, romanized, value };
 }
 
 function isTripletLike(
@@ -166,31 +124,31 @@ function commonYaku(hand: NormalizedHand): Yaku[] {
   const result: Yaku[] = [];
 
   if (hand.context.riichi === "double-riichi") {
-    result.push(yaku("double-riichi", "Double riichi", "Daburu riichi", 2));
+    result.push(yaku("double-riichi", 2));
   } else if (hand.context.riichi === "riichi") {
-    result.push(yaku("riichi", "Riichi", "Riichi", 1));
+    result.push(yaku("riichi", 1));
   }
 
   if (hand.context.ippatsu) {
-    result.push(yaku("ippatsu", "Unbroken", "Ippatsu", 1));
+    result.push(yaku("ippatsu", 1));
   }
 
   if (hand.isClosed && hand.context.method === "tsumo") {
-    result.push(yaku("menzen-tsumo", "Fully concealed hand", "Menzen tsumo", 1));
+    result.push(yaku("menzen-tsumo", 1));
   }
 
   if (hand.context.chankan) {
-    result.push(yaku("chankan", "Robbing a quad", "Chankan", 1));
+    result.push(yaku("chankan", 1));
   }
 
   if (hand.context.rinshan) {
-    result.push(yaku("rinshan", "After a quad", "Rinshan kaihou", 1));
+    result.push(yaku("rinshan", 1));
   }
 
   if (hand.context.lastTile === "haitei") {
-    result.push(yaku("haitei", "Last tile draw", "Haitei", 1));
+    result.push(yaku("haitei", 1));
   } else if (hand.context.lastTile === "houtei") {
-    result.push(yaku("houtei", "Last tile claim", "Houtei", 1));
+    result.push(yaku("houtei", 1));
   }
 
   return result;
@@ -200,29 +158,29 @@ function addTileCompositionYaku(hand: NormalizedHand, result: Yaku[]): void {
   const allInside = hand.allHandTiles.every(isInside);
 
   if (allInside && (hand.isClosed || hand.rules.allowOpenTanyao)) {
-    result.push(yaku("tanyao", "All inside", "Tan'yao", 1));
+    result.push(yaku("tanyao", 1));
   }
 
   const suits = new Set(hand.allHandTiles.map(tileSuit).filter((suit) => suit !== null));
   const hasHonours = hand.allHandTiles.some(isHonor);
 
   if (suits.size === 1 && hasHonours) {
-    result.push(yaku("honitsu", "Common flush", "Hon'itsu", hand.isClosed ? 3 : 2));
+    result.push(yaku("honitsu", hand.isClosed ? 3 : 2));
   } else if (suits.size === 1 && !hasHonours) {
-    result.push(yaku("chinitsu", "Perfect flush", "Chin'itsu", hand.isClosed ? 6 : 5));
+    result.push(yaku("chinitsu", hand.isClosed ? 6 : 5));
   }
 
   const allTerminalsAndHonours = hand.allHandTiles.every(isTerminalOrHonor);
   const hasTerminal = hand.allHandTiles.some(isTerminal);
 
   if (allTerminalsAndHonours && hasHonours && hasTerminal) {
-    result.push(yaku("honroutou", "Common terminals", "Honroutou", 2));
+    result.push(yaku("honroutou", 2));
   }
 }
 
 export function evaluateSevenPairsYaku(hand: NormalizedHand): readonly Yaku[] {
   const result = commonYaku(hand);
-  result.push(yaku("chiitoitsu", "Seven pairs", "Chiitoitsu", 2));
+  result.push(yaku("chiitoitsu", 2));
   addTileCompositionYaku(hand, result);
   return result;
 }
@@ -246,7 +204,7 @@ export function evaluateStandardYaku(
     !valuePair(pair, hand) &&
     interpretation.placement.wait === "ryanmen"
   ) {
-    result.push(yaku("pinfu", "Pinfu", "Pinfu", 1));
+    result.push(yaku("pinfu", 1));
   }
 
   if (hand.isClosed) {
@@ -263,9 +221,9 @@ export function evaluateStandardYaku(
     );
 
     if (twinSequencePairs >= 2) {
-      result.push(yaku("ryanpeikou", "Double twin sequences", "Ryanpeikou", 3));
+      result.push(yaku("ryanpeikou", 3));
     } else if (twinSequencePairs === 1) {
-      result.push(yaku("iipeikou", "Twin sequences", "Iipeikou", 1));
+      result.push(yaku("iipeikou", 1));
     }
   }
 
@@ -273,42 +231,40 @@ export function evaluateStandardYaku(
 
   for (const group of triplets) {
     if (isDragon(group.tile)) {
-      result.push(yaku(`yakuhai-${group.tile}`, `Value honour: ${group.tile}`, "Yakuhai", 1));
+      result.push(yaku(`yakuhai-${group.tile}`, 1));
     }
 
     if (group.tile === hand.context.seatWind) {
-      result.push(yaku("yakuhai-seat", "Value honour: seat wind", "Yakuhai", 1));
+      result.push(yaku("yakuhai-seat", 1));
     }
 
     if (group.tile === hand.context.roundWind) {
-      result.push(yaku("yakuhai-round", "Value honour: round wind", "Yakuhai", 1));
+      result.push(yaku("yakuhai-round", 1));
     }
   }
 
   if (hasFullStraight(groups)) {
-    result.push(yaku("ittsuu", "Full straight", "Ikkitsuukan", hand.isClosed ? 2 : 1));
+    result.push(yaku("ittsuu", hand.isClosed ? 2 : 1));
   }
 
   if (hasMixedSequences(groups)) {
-    result.push(
-      yaku("sanshoku-doujun", "Mixed sequences", "Sanshoku doujun", hand.isClosed ? 2 : 1),
-    );
+    result.push(yaku("sanshoku-doujun", hand.isClosed ? 2 : 1));
   }
 
   if (hasMixedTriplets(groups)) {
-    result.push(yaku("sanshoku-doukou", "Mixed triplets", "Sanshoku doukou", 2));
+    result.push(yaku("sanshoku-doukou", 2));
   }
 
   if (triplets.length === 4) {
-    result.push(yaku("toitoi", "All triplets", "Toitoi", 2));
+    result.push(yaku("toitoi", 2));
   }
 
   if (concealedTripletCount(hand, interpretation) >= 3) {
-    result.push(yaku("sanankou", "Three concealed triplets", "San'ankou", 2));
+    result.push(yaku("sanankou", 2));
   }
 
   if (groups.filter(({ kind }) => kind === "quad").length >= 3) {
-    result.push(yaku("sankantsu", "Three quads", "Sankantsu", 2));
+    result.push(yaku("sankantsu", 2));
   }
 
   const groupsUseEnds = groups.every(groupHasTerminalOrHonor);
@@ -318,16 +274,16 @@ export function evaluateStandardYaku(
 
   if (groupsUseEnds && pairUsesEnd && hasSequence) {
     if (hasHonour) {
-      result.push(yaku("chanta", "Common ends", "Chanta", hand.isClosed ? 2 : 1));
+      result.push(yaku("chanta", hand.isClosed ? 2 : 1));
     } else {
-      result.push(yaku("junchan", "Perfect ends", "Junchan", hand.isClosed ? 3 : 2));
+      result.push(yaku("junchan", hand.isClosed ? 3 : 2));
     }
   }
 
   const dragonTriplets = triplets.filter(({ tile }) => isDragon(tile)).length;
 
   if (dragonTriplets === 2 && isDragon(pair)) {
-    result.push(yaku("shousangen", "Little dragons", "Shousangen", 2));
+    result.push(yaku("shousangen", 2));
   }
 
   return result;
@@ -403,33 +359,33 @@ export function evaluateYakuman(
   const result: Yakuman[] = [];
 
   if (hand.context.firstTurn === "tenhou") {
-    result.push(yakuman("tenhou", "Blessing of heaven", "Tenhou"));
+    result.push(yakuman("tenhou"));
   } else if (hand.context.firstTurn === "chiihou") {
-    result.push(yakuman("chiihou", "Blessing of earth", "Chiihou"));
+    result.push(yakuman("chiihou"));
   }
 
   if (thirteenOrphans) {
     const value = doubleYakuman && isThirteenOrphanWait(hand) ? 2 : 1;
-    result.push(yakuman("kokushi-musou", "Thirteen orphans", "Kokushi musou", value));
+    result.push(yakuman("kokushi-musou", value));
   }
 
   if (hasNineGates(hand)) {
     const value = doubleYakuman && isPureNineGates(hand) ? 2 : 1;
-    result.push(yakuman("chuuren-poutou", "Nine gates", "Chuuren poutou", value));
+    result.push(yakuman("chuuren-poutou", value));
   }
 
   const greenTiles = new Set<CanonicalTileId>(["2s", "3s", "4s", "6s", "8s", "green"]);
 
   if (hand.allHandTiles.every((tile) => greenTiles.has(tile))) {
-    result.push(yakuman("ryuuiisou", "All green", "Ryuuiisou"));
+    result.push(yakuman("ryuuiisou"));
   }
 
   if (hand.allHandTiles.every(isTerminal)) {
-    result.push(yakuman("chinroutou", "Perfect terminals", "Chinroutou"));
+    result.push(yakuman("chinroutou"));
   }
 
   if (hand.allHandTiles.every(isHonor)) {
-    result.push(yakuman("tsuuiisou", "All honours", "Tsuuiisou"));
+    result.push(yakuman("tsuuiisou"));
   }
 
   if (interpretation !== null) {
@@ -446,21 +402,21 @@ export function evaluateYakuman(
       // The single (tanki) wait is what pays double — a shanpon wait completed
       // by tsumo is a normal suuankou.
       const value = doubleYakuman && interpretation.placement.wait === "tanki" ? 2 : 1;
-      result.push(yakuman("suuankou", "Four concealed triplets", "Suuankou", value));
+      result.push(yakuman("suuankou", value));
     }
 
     if (interpretation.groups.filter(({ kind }) => kind === "quad").length === 4) {
-      result.push(yakuman("suukantsu", "Four quads", "Suukantsu"));
+      result.push(yakuman("suukantsu"));
     }
 
     if (dragonTriplets === 3) {
-      result.push(yakuman("daisangen", "Big dragons", "Daisangen"));
+      result.push(yakuman("daisangen"));
     }
 
     if (windTriplets === 4) {
-      result.push(yakuman("daisuushii", "Big winds", "Daisuushii", doubleYakuman ? 2 : 1));
+      result.push(yakuman("daisuushii", doubleYakuman ? 2 : 1));
     } else if (windTriplets === 3 && isWind(interpretation.decomposition.pair)) {
-      result.push(yakuman("shousuushii", "Little winds", "Shousuushii"));
+      result.push(yakuman("shousuushii"));
     }
   }
 
@@ -509,5 +465,5 @@ export function countDora(hand: NormalizedHand): DoraBreakdown {
 }
 
 export function renhouYaku(): readonly Yaku[] {
-  return [yaku("renhou", "Blessing of man", "Renhou", 5)];
+  return [yaku("renhou", 5)];
 }

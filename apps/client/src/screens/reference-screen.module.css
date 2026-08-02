@@ -1,0 +1,284 @@
+/*
+ * The rule book. A player reaches for it mid-hand to settle one question, so it
+ * is arranged for lookup rather than for reading: bands by han, the kanji first
+ * because that is what is printed on the sheet at the table, and a filter that
+ * accepts a reading as readily as a name.
+ */
+.screen {
+  composes: screen from "./screen.module.css";
+}
+
+.scroll {
+  composes: scroll from "./screen.module.css";
+}
+
+.content {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  max-width: 980px;
+  padding: var(--space-x5) var(--space-x5) var(--space-x8);
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--space-x5);
+  margin-top: var(--space-x6);
+}
+
+.kicker {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.1rem;
+}
+
+.title {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.0375rem;
+  margin-top: var(--space-x2);
+}
+
+.intro {
+  color: var(--color-ink-muted);
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.5rem;
+  margin-top: var(--space-x3);
+  max-width: 620px;
+}
+
+/* The two controls sit on one line where there is room and stack where there is
+   not, rather than the filter shrinking to a slot too small to read. */
+.controls {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-x4);
+  margin-bottom: var(--space-x5);
+}
+
+.field {
+  display: flex;
+  flex: 1 1 260px;
+  flex-direction: column;
+  gap: var(--space-x2);
+  min-width: 0;
+}
+
+.fieldLabel {
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.075rem;
+}
+
+.search {
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  min-height: 48px;
+  padding: 0 var(--space-x3);
+  width: 100%;
+}
+
+.band {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--space-x5);
+}
+
+.bandTitle {
+  border-bottom: 1px solid var(--color-line);
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.075rem;
+  padding-bottom: var(--space-x2);
+  text-transform: uppercase;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+}
+
+/* A ledger line rather than a card: the kanji holds a fixed column so a reader
+   can run down the left edge, and the value stays on the right. */
+.row {
+  align-items: baseline;
+  border-bottom: 1px solid var(--color-line);
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-x4);
+  padding: var(--space-x3) 0;
+}
+
+.japanese {
+  color: var(--color-ink);
+  flex-shrink: 0;
+  font-family: var(--font-serif);
+  font-size: 1.375rem;
+  font-weight: 700;
+  width: 9rem;
+}
+
+.fuValue {
+  color: var(--color-accent);
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  width: 4.5rem;
+}
+
+.rowBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.name {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.romanized {
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.025rem;
+  margin-top: 2px;
+}
+
+.requirement {
+  color: var(--color-ink-muted);
+  font-family: var(--font-serif);
+  font-size: 0.875rem;
+  line-height: 1.3125rem;
+  margin-top: var(--space-x2);
+}
+
+.value {
+  color: var(--color-ink-muted);
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-align: right;
+  width: 9rem;
+}
+
+.empty {
+  color: var(--color-ink-muted);
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-style: italic;
+  padding: var(--space-x5) 0;
+}
+
+.footnote {
+  color: var(--color-ink-muted);
+  font-family: var(--font-serif);
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
+.profile {
+  border-bottom: 1px solid var(--color-line);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-x4) 0;
+}
+
+.profileHead {
+  align-items: baseline;
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-x3);
+}
+
+.activeTag {
+  color: var(--color-jade);
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.0625rem;
+}
+
+/* Seven differences, laid out as term-and-value pairs so two profiles can be
+   compared by running down the same rows. */
+.differences {
+  display: grid;
+  gap: var(--space-x3) var(--space-x4);
+  /* A grid rather than a wrapping row: every profile then puts the same
+     question in the same place, which is what makes two of them comparable by
+     running down the page. */
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  margin-top: var(--space-x3);
+}
+
+.difference {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.differenceTerm {
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.0625rem;
+  text-transform: uppercase;
+}
+
+.differenceValue {
+  /* A `dd` carries an indent by default, which would step every value away
+     from the term above it. */
+  margin-left: 0;
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.source {
+  color: var(--color-accent);
+  font-family: var(--font-serif);
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-top: var(--space-x3);
+  min-height: 24px;
+}
+
+/* The kanji column is a luxury a narrow phone cannot afford: below this the
+   name leads and the reading follows it, which is the same order read aloud. */
+@media (width < 600px) {
+  .row {
+    flex-direction: column;
+    gap: var(--space-x2);
+  }
+
+  .japanese,
+  .fuValue,
+  .value {
+    text-align: left;
+    width: auto;
+  }
+}

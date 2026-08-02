@@ -1,5 +1,7 @@
 import type { StandardGroup } from "../domain/meld";
 import type { FuBreakdown, FuItem, Yaku } from "../domain/score";
+import { groupFuReference } from "../domain/fu-catalog";
+import type { GroupFuReference } from "../domain/fu-catalog";
 import { isTerminalOrHonor } from "../domain/tile";
 import type { StandardInterpretation } from "./hand-analysis";
 import type { NormalizedHand } from "./normalize-hand";
@@ -7,14 +9,12 @@ import type { NormalizedHand } from "./normalize-hand";
 function groupFu(
   group: Extract<StandardGroup, { readonly kind: "quad" | "triplet" }>,
   concealedForFu: boolean,
-): number {
-  const usesTerminalOrHonour = isTerminalOrHonor(group.tile);
-
-  if (group.kind === "triplet") {
-    return (usesTerminalOrHonour ? 4 : 2) * (concealedForFu ? 2 : 1);
-  }
-
-  return (usesTerminalOrHonour ? 16 : 8) * (concealedForFu ? 2 : 1);
+): GroupFuReference {
+  return groupFuReference(
+    group.kind,
+    isTerminalOrHonor(group.tile) ? "terminal/honour" : "inside",
+    concealedForFu,
+  );
 }
 
 export function sevenPairsFu(): FuBreakdown {
@@ -72,11 +72,8 @@ export function calculateStandardFu(
       group.kind === "triplet" &&
       groupIndex === completedGroupIndex;
     const concealedForFu = !group.open && !openedByRon;
-    const fu = groupFu(group, concealedForFu);
-    const openness = concealedForFu ? "Concealed" : "Melded";
-    const groupName = group.kind === "quad" ? "quad" : "triplet";
-    const tileKind = isTerminalOrHonor(group.tile) ? "terminal/honour" : "inside";
-    items.push({ fu, reason: `${openness} ${tileKind} ${groupName}` });
+    const row = groupFu(group, concealedForFu);
+    items.push({ fu: row.fu, reason: row.reason });
   });
 
   if (

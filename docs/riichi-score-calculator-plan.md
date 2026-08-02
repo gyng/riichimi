@@ -9,6 +9,7 @@ Build a mobile and web riichi mahjong calculator that turns a photo of a winning
 - Complete: deterministic WRC 2025 scoring, validation, decomposition, all listed yaku and yakuman, fu, limits, payments, and audit output.
 - Complete: accessible manual tile/meld/indicator entry and context-aware scoring on mobile and web.
 - Complete: a device-local, deduplicated 20-entry score folio with hand, context, yaku, payment, removal, clear confirmation, and reload recovery.
+- Complete: a reference of every yaku, the fu table, and what each ruleset decides, generated from the same catalogues the scorer builds its awards from — so a name, a han value, or an audit line cannot say one thing on the reference and another under a score.
 - Complete: local four-player sessions with riichi deposits, transfers, draws, dealer/round progression, history, recovery, deletion, and undo.
 - Complete: camera permission/capture flow, camera and gallery photo review, Android pending-picker recovery, photo-reference manual fallback, recognition contracts, confidence review, structural checks, tile-by-tile correction, winner reassignment, and a hard no-score-until-reviewed transition.
 - Complete: deterministic local blur, glare, edge-crop, and excessive-perspective diagnostics with specific retry guidance and manual escape paths.
@@ -57,6 +58,7 @@ The initial product should optimize for a guided winning-hand scan rather than u
 - Versioned, configurable rules profiles
 - Responsive mobile and web interface
 - Local history for recent calculations
+- A searchable reference for yaku, fu, and ruleset differences
 
 Start with one precisely documented rules profile. WRC 2025 is a suitable international baseline, followed by common Japanese casual and online-platform variants. Riichi rules vary in options such as red fives, open tanyao, kiriage mangan, kazoe yakuman, double yakuman, and responsibility payments, so these choices must live in data-driven rules profiles rather than being scattered through scoring code.
 
