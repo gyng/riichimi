@@ -116,6 +116,22 @@ The celebration fonts are the only notable new asset (`YujiSyuku` 115,380 bytes,
 `YujiBoku` 10,008), and each is subset to the few glyphs it draws. No
 optimization is warranted at this checkpoint.
 
+### Dropping the tile art's dead ids
+
+Recorded on 2026-08-02 after the tile generator learned to remove ids nothing
+references:
+
+- Shared entry: 924,112 bytes, **down 31,168 bytes (`3.3%`)** from 955,280. The
+  art is inlined SVG, so 1,566 dead `id` attributes were being parsed, bundled,
+  and written into the DOM on every tile.
+- Tile assets on disk: 437KB to 407KB.
+- Full build: 3,547,648 bytes.
+
+Another optimization that did not need pursuing — it fell out of fixing a
+correctness nit about duplicate ids. The saving is real all the same: the entry
+is now smaller than it was before four languages, the announcer, and the
+celebration were added.
+
 ## Feedback-loop budgets
 
 - Formatting should remain below 2 seconds locally.

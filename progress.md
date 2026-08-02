@@ -173,6 +173,14 @@ Recognition remains the open front. V1 materially improves source-separated phys
 - Ran TTA and temperature scaling through it, and shipped neither. TTA buys one crop of top-1 (93.48% → 95.65%) and costs one review per hand (3.26 → 4.24), a net loss for a review gate. Temperature scaling has no split to fit on: the model is **100% accurate on the training partition**, so likelihood improves without bound as confidence sharpens and the fit runs to the edge of the scan; fitting on evaluation would be fitting to the test. The harness now refuses both rather than emitting a number that looks like a calibration.
 - The headline: **neither change separates from baseline**. A 17.4-point coverage swing does not clear the intervals on 46 crops, where one crop is 2.2 points. The two synthetic-render A/B runs that landed "within noise" were reading the same limit. The corpus is the blocker, not the technique, and the report now says so instead of leaving it to judgement.
 
+### 2026-08-02T00:00:00+08:00 — the tile art stops shipping 1,566 dead ids
+
+- Taught `scripts/tiles/prepare-tile-assets.py` to drop every id nothing references. Inkscape names every shape it ever touched: **1,566 of the set's 1,689 ids** were on drawn elements that no `url(#…)` or `href` pointed at. Regenerating from upstream leaves 123 — the masks, filter, and cross-referenced glyph paths the art genuinely uses.
+- The regenerated files are byte-identical to the committed ones once ids are stripped, so the change is provably nothing but id removal.
+- It was a correctness fix that turned out to be a bundle win: the art is inlined SVG, so those ids were parsed, bundled, and written into the DOM on every tile. The shared entry fell **31,168 bytes (3.3%)** to 924,112, which is smaller than it was before four languages, the announcer, and the celebration were added. Tile assets went 437KB to 407KB.
+- Two tests hold it: `packages/ui/src/atoms/tile-art.test.ts` reads the assets and fails if a dead id returns or two tiles claim the same one, and a component test asserts a hand of different tiles produces no duplicate ids.
+- Left deliberately: an id is unique per tile, not per instance, so a hand holding two 5p still inlines that tile's three chrome ids twice. Nothing renders wrong. Fixing it means either hand-authoring the tile chrome as TSX to reach `useId` — giving up regeneration from upstream — or replacing the SVG bevel with CSS, which is a visual change wanting a design decision. Both are recorded in [tile art](docs/tile-art.md).
+
 ## Visual evidence
 
 - [Mobile landing](docs/checkpoints/2026-07-23-01-home-mobile.png)

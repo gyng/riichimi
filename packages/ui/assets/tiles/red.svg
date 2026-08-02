@@ -1,25 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400"><defs id="tredf-defs4">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400"><defs>
     <mask maskUnits="userSpaceOnUse" id="tredf-mask4222-0">
-      <rect ry="40" y="652.28" x="0" height="400.78" width="300.06" id="tredf-rect4224-8" style="opacity:1;fill:#ff3737;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <rect ry="40" y="652.28" x="0" height="400.78" width="300.06" style="opacity:1;fill:#ff3737;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     </mask>
     <filter style="color-interpolation-filters:sRGB" id="tredf-filter4198-8">
-      <feGaussianBlur stdDeviation="2.51 2.51" result="blur" id="tredf-feGaussianBlur4200-3" />
+      <feGaussianBlur stdDeviation="2.51 2.51" result="blur" />
     </filter>
     <mask maskUnits="userSpaceOnUse" id="tredf-mask4216-0">
-      <rect ry="40" y="-1325.6" x="-451.94" height="400.78" width="300.06" id="tredf-rect4218-5" style="opacity:1;fill:#ff3737;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" transform="scale(-1,-1)" />
+      <rect ry="40" y="-1325.6" x="-451.94" height="400.78" width="300.06" style="opacity:1;fill:#ff3737;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" transform="scale(-1,-1)" />
     </mask>
     </defs>
-  <g id="tredf-layer1" transform="translate(0,-652.36)">
-    <rect style="opacity:1;fill:#f5f0eb;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="tredf-rect4164" width="300.06" height="400.78" x="0" y="652.28" ry="40" />
-    <path transform="translate(-1.34e-7,-1.34e-6)" style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#tredf-filter4198-8)" d="M -4.77,775.07 C -9.65,741.99 -16.85,674.24 -1.28,652.06 19,625.94 233.5,631.63 263.31,653.91 276.21,662.65 70.35,663.12 47.1,691.74 24.39,719.11 0.65,818.19 -4.77,775.07 Z" id="tredf-path4166" mask="url(#tredf-mask4222-0)" />
-    <path id="tredf-path4221" d="m 151.74,1025.02 c -3.33,-9.31 -10.25,-68.45 5.32,-90.63 20.28,-26.12 219.44,-16.46 231.56,-9.93 11.07,5.32 -178.6,0.06 -204.85,34.87 -21.59,30 -26.5,82.18 -32.02,65.69 z" style="fill:#000000;fill-opacity:0.2;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#tredf-filter4198-8)" transform="matrix(-1,0,0,-1,451.94,1977.89)" mask="url(#tredf-mask4216-0)" />
+  <g transform="translate(0,-652.36)">
+    <rect style="opacity:1;fill:#f5f0eb;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" width="300.06" height="400.78" x="0" y="652.28" ry="40" />
+    <path transform="translate(-1.34e-7,-1.34e-6)" style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#tredf-filter4198-8)" d="M -4.77,775.07 C -9.65,741.99 -16.85,674.24 -1.28,652.06 19,625.94 233.5,631.63 263.31,653.91 276.21,662.65 70.35,663.12 47.1,691.74 24.39,719.11 0.65,818.19 -4.77,775.07 Z" mask="url(#tredf-mask4222-0)" />
+    <path d="m 151.74,1025.02 c -3.33,-9.31 -10.25,-68.45 5.32,-90.63 20.28,-26.12 219.44,-16.46 231.56,-9.93 11.07,5.32 -178.6,0.06 -204.85,34.87 -21.59,30 -26.5,82.18 -32.02,65.69 z" style="fill:#000000;fill-opacity:0.2;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#tredf-filter4198-8)" transform="matrix(-1,0,0,-1,451.94,1977.89)" mask="url(#tredf-mask4216-0)" />
   </g>
-<defs id="treda-defs4">
+<defs>
     </defs>
-  <g id="treda-layer1" transform="translate(0,-652.36)">
-    <g id="treda-g8162" transform="matrix(0.76,0,0,0.76,-168.71,381.17)">
-      <path style="fill:#b93c3c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m 233.73,85.41 c -62.02,16.68 -86.27,21.91 -166.16,42.85 -5.43,-0.1 -16.53,-0.93 -21.67,-9.51 -4.76,-5.92 -9.7,0.68 -9.44,6.74 0.37,8.33 0.6,15.29 4.48,19.2 21.66,19.95 29.08,41.32 32.22,65.74 -0.33,5.21 -4.62,10 3.19,9.65 7.87,-0.58 84.26,-6.63 140.41,-1.69 4.64,0.48 5.46,-3.68 5.15,-5.39 -2.64,-14.62 24.34,-61.36 33.38,-80.47 1.86,-3.94 11.82,-4.43 13.93,-4.94 -0.14,0.03 2.86,-1.72 1.1,-3.91 C 259.61,110.39 237.47,84.24 233.73,85.41 Z m -21.28,34.9 c 9.09,0.07 13.42,2.43 9.83,8.35 -11.11,22.31 -24.24,65.94 -28.21,65.26 -61.31,-0.42 -87.93,4.06 -94.02,2.05 -2.2,-0.82 -5.41,-24.9 -19.33,-42.18 -2.19,-2.72 -1.29,-4.7 2.25,-5.56 20.63,-4.62 99.8,-28.15 129.48,-27.92 z" transform="matrix(1.31,0,0,1.31,219.31,352.3)" id="treda-path8156" />
-      <path id="treda-path8160" d="m 367.91,395.1 c 0.38,4.16 -0.18,12.41 6.29,14.79 5.62,0.59 19.75,11.45 16.95,28.57 0.09,187.93 3.32,200.16 0.31,345.46 -5.63,52.58 6.73,80.47 10.82,86.97 2.94,6.59 6.13,5.52 7.6,1.44 12.98,-35.82 18.66,-12.55 14.7,-102.9 -0.58,-150.14 -2.89,-315.65 19.07,-327.81 8.67,-6.96 20.05,-28.69 17.35,-33.73 3.1,-4.97 -50.62,-54.04 -55.13,-49.5 -7.37,8.04 -36.65,21.96 -37.98,36.72 z" style="fill:#b93c3c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+  <g transform="translate(0,-652.36)">
+    <g transform="matrix(0.76,0,0,0.76,-168.71,381.17)">
+      <path style="fill:#b93c3c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m 233.73,85.41 c -62.02,16.68 -86.27,21.91 -166.16,42.85 -5.43,-0.1 -16.53,-0.93 -21.67,-9.51 -4.76,-5.92 -9.7,0.68 -9.44,6.74 0.37,8.33 0.6,15.29 4.48,19.2 21.66,19.95 29.08,41.32 32.22,65.74 -0.33,5.21 -4.62,10 3.19,9.65 7.87,-0.58 84.26,-6.63 140.41,-1.69 4.64,0.48 5.46,-3.68 5.15,-5.39 -2.64,-14.62 24.34,-61.36 33.38,-80.47 1.86,-3.94 11.82,-4.43 13.93,-4.94 -0.14,0.03 2.86,-1.72 1.1,-3.91 C 259.61,110.39 237.47,84.24 233.73,85.41 Z m -21.28,34.9 c 9.09,0.07 13.42,2.43 9.83,8.35 -11.11,22.31 -24.24,65.94 -28.21,65.26 -61.31,-0.42 -87.93,4.06 -94.02,2.05 -2.2,-0.82 -5.41,-24.9 -19.33,-42.18 -2.19,-2.72 -1.29,-4.7 2.25,-5.56 20.63,-4.62 99.8,-28.15 129.48,-27.92 z" transform="matrix(1.31,0,0,1.31,219.31,352.3)" />
+      <path d="m 367.91,395.1 c 0.38,4.16 -0.18,12.41 6.29,14.79 5.62,0.59 19.75,11.45 16.95,28.57 0.09,187.93 3.32,200.16 0.31,345.46 -5.63,52.58 6.73,80.47 10.82,86.97 2.94,6.59 6.13,5.52 7.6,1.44 12.98,-35.82 18.66,-12.55 14.7,-102.9 -0.58,-150.14 -2.89,-315.65 19.07,-327.81 8.67,-6.96 20.05,-28.69 17.35,-33.73 3.1,-4.97 -50.62,-54.04 -55.13,-49.5 -7.37,8.04 -36.65,21.96 -37.98,36.72 z" style="fill:#b93c3c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     </g>
   </g>
 </svg>

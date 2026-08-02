@@ -120,6 +120,24 @@ def prune_unused_defs(root: ElementTree.Element) -> None:
             return
 
 
+def strip_unreferenced_ids(root: ElementTree.Element) -> int:
+    """Drop every id nothing points at.
+
+    Inkscape names each shape it ever touched, so most ids are on drawn elements
+    that no `url(#…)` or `href` refers to. They are dead weight, and they are
+    also the bulk of the duplicate ids that appear when one tile renders twice —
+    the same tile inlines the same document, ids and all. Removing them leaves
+    only the handful the art genuinely cross-references.
+    """
+    used = referenced_ids(root, set())
+    removed = 0
+    for element in root.iter():
+        if "id" in element.attrib and element.attrib["id"] not in used:
+            del element.attrib["id"]
+            removed += 1
+    return removed
+
+
 NUMBER = re.compile(r"-?\d+\.\d+")
 
 
@@ -148,6 +166,7 @@ def main() -> None:
     ElementTree.register_namespace("", SVG_NS)
     args.output.mkdir(parents=True, exist_ok=True)
     total = 0
+    stripped = 0
 
     for tile_id, asset in sorted(TILES.items()):
         prefix = f"t{tile_id}"
@@ -162,13 +181,17 @@ def main() -> None:
             merged.append(child)
 
         prune_unused_defs(merged)
+        stripped += strip_unreferenced_ids(merged)
         round_numbers(merged)
 
         path = args.output / f"{tile_id}.svg"
         ElementTree.ElementTree(merged).write(path, encoding="unicode", xml_declaration=False)
         total += path.stat().st_size
 
-    print(f"wrote {len(TILES)} tiles to {args.output} ({total // 1024}KB total)")
+    print(
+        f"wrote {len(TILES)} tiles to {args.output} ({total // 1024}KB total; "
+        f"{stripped} unreferenced ids dropped)"
+    )
 
 
 if __name__ == "__main__":

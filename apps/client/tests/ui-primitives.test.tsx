@@ -171,6 +171,24 @@ describe("MahjongTile", () => {
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
+  it("does not collide element ids when a hand shows different tiles", async () => {
+    // The art is inlined SVG and SVG ids share one document-wide namespace, so
+    // two tiles on screen must not name the same thing. The preparation script
+    // prefixes what the art cross-references per tile and drops every id nothing
+    // points at; this is the assertion that keeps both true.
+    const { container } = render(
+      <>
+        {(["1p", "2p", "1s", "5p", "east", "green", "0m"] as const).map((tile) => (
+          <MahjongTile key={tile} tile={tile} />
+        ))}
+      </>,
+    );
+
+    const ids = [...container.querySelectorAll("[id]")].map((element) => element.id);
+
+    expect(ids).toHaveLength(new Set(ids).size);
+  });
+
   it("adds a corner rank only when that display is switched on", async () => {
     const { rerender } = render(
       <TileDisplayProvider showRankLabels={false}>
