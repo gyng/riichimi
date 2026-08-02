@@ -42,11 +42,7 @@ import { useEffect, useMemo, useRef, useState, useId } from "react";
 import type { ReactNode } from "react";
 
 import { useAnnouncer } from "../../state/announcer-context";
-import {
-  announcementLead,
-  announcementTail,
-  announcementText,
-} from "../announcer/announcement-text";
+import { announcementBeats } from "../announcer/announcement-text";
 import { createRoundCommandMetadata, useSession } from "../../state/session-context";
 import { useScoreHistory } from "../../state/score-history-context";
 import { useRules } from "../../state/rules-context";
@@ -287,12 +283,13 @@ export function ManualCalculator({
   // second mangan in a row plays again. It never gates the score.
   const [celebration, setCelebration] = useState<{ value: Celebration; key: number } | null>(null);
   const celebrationKey = useRef(0);
+  const announcementTimer = useRef<ReturnType<typeof globalThis.setTimeout> | undefined>(undefined);
   const [sessionWinnerIndex, setSessionWinnerIndex] = useState(0);
   const [discarderIndex, setDiscarderIndex] = useState(1);
   const [editReview, setEditReview] = useState<EditReview | null>(null);
   const [editError, setEditError] = useState<SessionEditError | null>(null);
   const [pendingCommand, setPendingCommand] = useState<SessionEditCommand | null>(null);
-  const { announceWins, celebrateWins, speech } = useAnnouncer();
+  const { announceWins, celebrateWins, pauseMs, speech } = useAnnouncer();
   // The docked answer needs somewhere to send a player who wants the reasoning.
   const audit = useRef<HTMLDivElement>(null);
   // Round context is set once per table, so it stays folded away during a hand.
@@ -414,19 +411,33 @@ export function ManualCalculator({
     if (scored.kind !== "success") {
       return;
     }
-    const announcement = announceWin(scored);
-    if (onClimax === undefined) {
-      speech.speak(announcementText(announcement));
-      return;
-    }
-    // Sync: read the yaku out, then stamp the limit as its climax is spoken.
-    speech.speak(announcementLead(announcement), {
-      onEnd: () => {
-        speech.speak(announcementTail(announcement), { onStart: onClimax });
+    const beats = announcementBeats(announceWin(scored));
+    // A previous announcement may still be waiting to speak its next beat; it
+    // must not arrive on top of this one.
+    globalThis.clearTimeout(announcementTimer.current);
+    // Each beat waits for the one before it to finish, then for the silence the
+    // chosen delivery asks for. Reading them as one string would let the engine
+    // run them together, which is the opposite of how a hand is called.
+    const speakFrom = (index: number) => {
+      const beat = beats[index];
+      if (beat === undefined) {
+        return;
+      }
+      const last = index === beats.length - 1;
+      speech.speak(beat, {
+        ...(last && onClimax !== undefined ? { onStart: onClimax } : {}),
+        onEnd: () => {
+          if (!last) {
+            announcementTimer.current = globalThis.setTimeout(() => speakFrom(index + 1), pauseMs);
+          }
+        },
+      });
+      if (last && onClimax !== undefined) {
         // Safety net in case the start event never arrives.
         globalThis.setTimeout(onClimax, 400);
-      },
-    });
+      }
+    };
+    speakFrom(0);
   }
 
   // Reads the score already on screen. No celebration: the confetti belongs to

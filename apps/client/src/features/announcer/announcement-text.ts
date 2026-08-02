@@ -1,5 +1,6 @@
 import type { AnnouncedTerm, WinAnnouncement } from "@riichimi/score-core";
 
+import { numberToKana } from "./japanese-number";
 import type { SpokenLine } from "./speech-port";
 
 /**
@@ -55,8 +56,7 @@ function counted(japanesePrefix: string, romajiPrefix: string, count: number): S
     return null;
   }
   return {
-    // The digit is deliberate: a Japanese voice reads ドラ2 as "ドラに".
-    japanese: `${japanesePrefix}${count}`,
+    japanese: `${japanesePrefix}${numberToKana(count)}`,
     romaji: `${romajiPrefix} ${NUMERAL[count] ?? String(count)}`,
   };
 }
@@ -80,17 +80,17 @@ function valueTerm(announcement: WinAnnouncement): SpokenLine | null {
     return null;
   }
   if (announcement.fu === null) {
-    return { japanese: `${announcement.han}ハン`, romaji: `${announcement.han} han` };
+    return { japanese: `${numberToKana(announcement.han)}ハン`, romaji: `${announcement.han} han` };
   }
   return {
-    japanese: `${announcement.han}ハン${announcement.fu}フ`,
+    japanese: `${numberToKana(announcement.han)}ハン${numberToKana(announcement.fu)}フ`,
     romaji: `${announcement.han} han ${announcement.fu} fu`,
   };
 }
 
 function pointsTerm(announcement: WinAnnouncement): SpokenLine {
   return {
-    japanese: `${announcement.points}テン`,
+    japanese: `${numberToKana(announcement.points)}テン`,
     romaji: `${new Intl.NumberFormat("en-US").format(announcement.points)} points`,
   };
 }
@@ -127,22 +127,27 @@ export function announcementText(announcement: WinAnnouncement): SpokenLine {
   );
 }
 
-/** The method, the yaku, and the dora — the build-up before the score. */
-export function announcementLead(announcement: WinAnnouncement): SpokenLine {
-  return line(
-    [
-      methodTerm[announcement.method],
-      ...announcement.headline.map(spoken),
-      ...doraTerms(announcement),
-    ],
-    false,
-  );
-}
-
-/** The points and then the limit — the climax, spoken as the stamp lands. */
-export function announcementTail(announcement: WinAnnouncement): SpokenLine {
-  return line(
-    [valueTerm(announcement), pointsTerm(announcement), limitTermFor(announcement)],
-    announcement.limit !== null,
-  );
+/**
+ * The announcement as separate beats: the call, then each yaku on its own, then
+ * each dora, then the score.
+ *
+ * One line per yaku rather than one line for all of them, because a hand is
+ * called with a beat between each — ツモ……リーチ……ピンフ — and commas inside a
+ * single utterance give a voice no room to do that. The caller holds the
+ * silence between beats, so its length stays a preference rather than becoming
+ * a property of the words.
+ *
+ * The last beat is the climax: the value, the points, and the limit together,
+ * which is what the stamp is timed against.
+ */
+export function announcementBeats(announcement: WinAnnouncement): readonly SpokenLine[] {
+  return [
+    line([methodTerm[announcement.method]], false),
+    ...announcement.headline.map((term) => line([spoken(term)], false)),
+    ...doraTerms(announcement).map((term) => line([term], false)),
+    line(
+      [valueTerm(announcement), pointsTerm(announcement), limitTermFor(announcement)],
+      announcement.limit !== null,
+    ),
+  ].filter((beat) => beat.japanese !== "");
 }

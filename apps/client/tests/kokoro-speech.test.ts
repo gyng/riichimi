@@ -4,8 +4,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 // is not that Kokoro synthesizes well — that is its job — but that this adapter
 // keeps its promise to the rest of the app: a voice never blocks, never throws
 // into a score, and never lets two utterances overlap.
-const { generate, fromPretrained } = vi.hoisted(() => ({
+const { fromPretrained, generate, generateFromIds, tokenizer } = vi.hoisted(() => ({
   generate: vi.fn<(text: string) => Promise<{ audio: Float32Array; sampling_rate: number }>>(),
+  // The Japanese path: phonemes in, audio out, no English reader involved.
+  generateFromIds:
+    vi.fn<(ids: unknown) => Promise<{ audio: Float32Array; sampling_rate: number }>>(),
+  tokenizer: vi.fn<(phonemes: string) => { input_ids: unknown }>(),
   fromPretrained: vi.fn<() => Promise<unknown>>(),
 }));
 
@@ -53,7 +57,13 @@ const audio = { audio: new Float32Array([0, 0.5, -0.5]), sampling_rate: 24_000 }
 beforeEach(() => {
   sources.length = 0;
   generate.mockResolvedValue(audio);
-  fromPretrained.mockResolvedValue({ generate });
+  generateFromIds.mockResolvedValue(audio);
+  tokenizer.mockImplementation((phonemes: string) => ({ input_ids: `ids(${phonemes})` }));
+  fromPretrained.mockResolvedValue({
+    generate,
+    generate_from_ids: generateFromIds,
+    tokenizer,
+  });
   Object.defineProperty(globalThis, "AudioContext", {
     configurable: true,
     value: FakeAudioContext,
@@ -93,12 +103,14 @@ describe("the neural voice adapter", () => {
     await vi.waitFor(() => {
       expect(sources[0]?.started).toBe(true);
     });
-    // The romanized form, because this engine has no Japanese voice to read
-    // kana with, and quicker than conversational.
-    expect(generate).toHaveBeenCalledWith("Two han, twenty fu", {
-      speed: 1.12,
-      voice: "af_heart",
+    // Read as Japanese phonemes by a Japanese speaker — not the English
+    // reader the package would otherwise force on it.
+    expect(tokenizer).toHaveBeenCalledWith("ɲihaɴ, ɲidʑɯːɸɯ", { truncation: true });
+    expect(generateFromIds).toHaveBeenCalledWith("ids(ɲihaɴ, ɲidʑɯːɸɯ)", {
+      speed: 1.1,
+      voice: "jf_alpha",
     });
+    expect(generate).not.toHaveBeenCalled();
   });
 
   it("reports the fetch, then readiness, to anyone watching", async () => {

@@ -53,6 +53,14 @@ vi.mock("../src/infrastructure/announcer-preference-storage", () => ({
   saveCelebratePreference: vi
     .fn<typeof announcerStorage.saveCelebratePreference>()
     .mockResolvedValue(undefined),
+  loadNeuralSpeaker: vi
+    .fn<typeof announcerStorage.loadNeuralSpeaker>()
+    .mockResolvedValue("jf_alpha"),
+  saveNeuralSpeaker: vi
+    .fn<typeof announcerStorage.saveNeuralSpeaker>()
+    .mockResolvedValue(undefined),
+  loadDelivery: vi.fn<typeof announcerStorage.loadDelivery>().mockResolvedValue("parlour"),
+  saveDelivery: vi.fn<typeof announcerStorage.saveDelivery>().mockResolvedValue(undefined),
 }));
 
 function renderControl() {

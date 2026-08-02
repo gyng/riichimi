@@ -56,6 +56,13 @@ if (voice !== null) {
   bestVoice(voice);
 }
 
+let pace = 1.1;
+
+/** The speaking rate the chosen delivery asks for. Set from Setup. */
+export function setSpeechPace(next: number): void {
+  pace = next;
+}
+
 export const speech: SpeechPort = {
   get available(): boolean {
     return synthesis() !== null;
@@ -83,7 +90,10 @@ export const speech: SpeechPort = {
     // quick, the way a called hand is actually shouted across a table. An
     // English voice reading romaji cannot carry that, so it stays lower and
     // more deliberate rather than sounding like a cartoon.
-    utterance.rate = japanese ? 1.12 : 0.95;
+    // A Japanese voice reads the announcement as written and can carry the
+    // lift; an English voice reading romaji cannot, so it stays lower and more
+    // deliberate rather than sounding like a cartoon.
+    utterance.rate = japanese ? pace : Math.min(pace, 1) * 0.95;
     utterance.pitch = japanese ? 1.45 : 0.9;
     if (options?.onStart !== undefined) {
       utterance.addEventListener("start", options.onStart);

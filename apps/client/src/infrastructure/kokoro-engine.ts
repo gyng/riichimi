@@ -33,6 +33,21 @@ export interface KokoroEngine {
     text: string,
     options: { readonly voice: string; readonly speed: number },
   ): Promise<SynthesizedAudio>;
+  /**
+   * The lower-level entry: phoneme ids straight to the model, skipping the
+   * English grapheme-to-phoneme step that `generate` performs.
+   *
+   * This is how the Japanese voices become reachable. They are in the published
+   * weights — `jf_alpha` and the rest — and the wrapper refuses them only
+   * because its own reader speaks English. Given phonemes it has no such
+   * opinion, and this app writes every line it speaks, so supplying them is a
+   * table lookup rather than a guess.
+   */
+  generate_from_ids(
+    ids: unknown,
+    options: { readonly voice: string; readonly speed: number },
+  ): Promise<SynthesizedAudio>;
+  tokenizer(phonemes: string, options: { readonly truncation: boolean }): { input_ids: unknown };
 }
 
 interface KokoroModule {

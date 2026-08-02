@@ -1,6 +1,7 @@
 import { Checkbox, SegmentedControl } from "@riichimi/ui";
 import { useEffect, useId, useState } from "react";
 
+import { DELIVERIES, NEURAL_SPEAKERS } from "./announcer-preference";
 import { neuralVoiceState, watchNeuralVoice } from "../../infrastructure/kokoro-speech";
 import type { NeuralVoiceState } from "../../infrastructure/kokoro-speech";
 import { neuralVoiceOffered } from "../../infrastructure/speech-selection";
@@ -20,13 +21,19 @@ export function AnnounceControl() {
   const {
     announceWins,
     celebrateWins,
+    delivery,
     setAnnounceWins,
     setCelebrateWins,
+    setDelivery,
+    setSpeaker,
     setVoice,
+    speaker,
     speech,
     voice,
   } = useAnnouncer();
   const voiceLabelId = useId();
+  const speakerLabelId = useId();
+  const deliveryLabelId = useId();
   const [neural, setNeural] = useState<NeuralVoiceState>(neuralVoiceState);
 
   // The download runs outside React, so subscribe rather than poll.
@@ -85,6 +92,39 @@ export function AnnounceControl() {
           {/* The fetch is slow and silent otherwise, so say what is happening —
               and say when it failed, because the browser voice quietly takes
               over and a player should know why it sounds different. */}
+          {voice === "neural" ? (
+            <>
+              <p className={styles["fieldLabel"]} id={speakerLabelId}>
+                {t("SPEAKER")}
+              </p>
+              <SegmentedControl
+                labelledBy={speakerLabelId}
+                onChange={setSpeaker}
+                options={NEURAL_SPEAKERS.map((option) => ({
+                  label: t(option.label),
+                  value: option.id,
+                }))}
+                value={speaker}
+              />
+              <p className={styles["note"]}>
+                {t("Japanese speakers from the same download. Switching is instant.")}
+              </p>
+            </>
+          ) : null}
+
+          <p className={styles["fieldLabel"]} id={deliveryLabelId}>
+            {t("DELIVERY")}
+          </p>
+          <SegmentedControl
+            labelledBy={deliveryLabelId}
+            onChange={setDelivery}
+            options={DELIVERIES.map((option) => ({ label: t(option.label), value: option.id }))}
+            value={delivery}
+          />
+          <p className={styles["note"]}>
+            {t("How long the announcer holds between the call, each yaku, and the score.")}
+          </p>
+
           {voice === "neural" && neural.kind === "loading" ? (
             <p aria-live="polite" className={styles["note"]}>
               {t("Fetching the voice…")}

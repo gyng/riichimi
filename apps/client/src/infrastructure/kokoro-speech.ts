@@ -1,4 +1,6 @@
 import type { SpeakOptions, SpeechPort, SpokenLine } from "../features/announcer/speech-port";
+import type { NeuralSpeaker } from "../features/announcer/announcer-preference";
+import { kanaToPhonemes } from "../features/announcer/kana-phonemes";
 import type { KokoroEngine } from "./kokoro-engine";
 import { loadKokoroModule } from "./kokoro-engine";
 
@@ -19,14 +21,26 @@ const MODEL = "onnx-community/Kokoro-82M-v1.0-ONNX";
 const PRECISION = "q8";
 
 /**
- * kokoro-js 1.2.1 publishes English speakers only — no Japanese voice exists in
- * the package — so this engine always reads the romanized line. `af_heart` is
- * the clearest of them for short, shouted terms.
+ * The English speaker used only when the Japanese path is unavailable.
+ *
+ * kokoro-js exposes English voices alone, because its own reader speaks
+ * English. The weights carry five Japanese speakers, and the model takes
+ * phonemes directly, so this adapter reads the announcement itself and reaches
+ * them — an American voice saying "Tsumo. Riichi." was never the intent.
  */
-const VOICE = "af_heart";
+const FALLBACK_VOICE = "af_heart";
 
-/** Quicker than conversational: these are called hands, not sentences. */
-const SPEED = 1.12;
+let speaker: NeuralSpeaker = "jf_alpha";
+let pace = 1.1;
+
+/** Which Japanese speaker reads a win, and how quickly. Set from Setup. */
+export function setNeuralSpeaker(next: NeuralSpeaker): void {
+  speaker = next;
+}
+
+export function setNeuralPace(next: number): void {
+  pace = next;
+}
 
 export type NeuralVoiceState =
   | { readonly kind: "idle" }
@@ -125,13 +139,45 @@ function stop(): void {
   playing = null;
 }
 
-async function say(text: string, options: SpeakOptions | undefined, token: number): Promise<void> {
+/**
+ * Reads the Japanese line with a Japanese speaker where it can, and falls back
+ * to the romanized line rather than going silent if anything about the phoneme
+ * path fails — a voice must never be the reason a score goes unheard.
+ */
+async function synthesize(ready: KokoroEngine, line: SpokenLine) {
+  const phonemes = kanaToPhonemes(line.japanese);
+  if (phonemes !== "") {
+    try {
+      // Deliberately not registering the speaker in `voices` first: that
+      // registry is a frozen getter, and writing to it throws under strict mode
+      // — which sent every Japanese line down the English fallback. Only
+      // `generate` consults it, and this path does not go through `generate`.
+      const { input_ids } = ready.tokenizer(phonemes, { truncation: true });
+      return await ready.generate_from_ids(input_ids, { speed: pace, voice: speaker });
+    } catch (error: unknown) {
+      // Falling back is right — a voice must never be why a score goes unheard
+      // — but silently was not: it hid an English voice reading a Japanese
+      // announcement for a whole release.
+      announce({
+        kind: "failed",
+        reason: `The Japanese voice could not speak (${error instanceof Error ? error.message : "unknown"}); using the English one.`,
+      });
+    }
+  }
+  return ready.generate(line.romaji, { speed: pace, voice: FALLBACK_VOICE });
+}
+
+async function say(
+  line: SpokenLine,
+  options: SpeakOptions | undefined,
+  token: number,
+): Promise<void> {
   const ready = await prepareNeuralVoice();
   const output = audioContext();
   if (ready === null || output === null || token !== generation) {
     return;
   }
-  const audio = await ready.generate(text, { speed: SPEED, voice: VOICE });
+  const audio = await synthesize(ready, line);
   if (token !== generation) {
     return;
   }
@@ -176,7 +222,7 @@ export const kokoroSpeech: SpeechPort = {
     stop();
     const token = generation;
     // Fire and forget by design: a voice must never delay or fail a score.
-    void say(line.romaji, options, token).catch(() => {
+    void say(line, options, token).catch(() => {
       announce({ kind: "failed", reason: "The voice could not speak." });
     });
   },

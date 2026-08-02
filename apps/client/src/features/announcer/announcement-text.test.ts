@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { WinAnnouncement } from "@riichimi/score-core";
-import { announcementLead, announcementTail, announcementText } from "./announcement-text";
+import { announcementBeats, announcementText } from "./announcement-text";
 
 const noDora = { dora: 0, redDora: 0, total: 0, uraDora: 0 } as const;
 
@@ -29,7 +29,7 @@ describe("announcing a win in Japanese", () => {
           ],
         }),
       ).japanese,
-    ).toBe("ロン、ジュンチャン、サンショクドウジュン、4ハン30フ、8000テン。");
+    ).toBe("ロン、ジュンチャン、サンショクドウジュン、ヨンハンサンジュウフ、ハッセンテン。");
   });
 
   it("names the limit after the points, which is the order a table hears it", () => {
@@ -45,7 +45,7 @@ describe("announcing a win in Japanese", () => {
       }),
     );
 
-    expect(line.japanese).toBe("ツモ、リーチ、12000テン、ハネマン！");
+    expect(line.japanese).toBe("ツモ、リーチ、イチマンニセンテン、ハネマン！");
     expect(line.romaji).toBe("Tsumo. Riichi. 12,000 points. Haneman!");
   });
 
@@ -54,8 +54,8 @@ describe("announcing a win in Japanese", () => {
       announcement({ dora: { dora: 2, redDora: 1, total: 3, uraDora: 0 } }),
     );
 
-    expect(line.japanese).toContain("ドラ2");
-    expect(line.japanese).toContain("アカドラ1");
+    expect(line.japanese).toContain("ドラニ");
+    expect(line.japanese).toContain("アカドライチ");
     expect(line.romaji).toContain("dora ni");
     expect(line.romaji).toContain("aka dora ichi");
   });
@@ -66,26 +66,35 @@ describe("announcing a win in Japanese", () => {
 
   it("still announces a hand with no fu breakdown", () => {
     expect(announcementText(announcement({ fu: null, han: 5, points: 12_000 })).japanese).toBe(
-      "ロン、5ハン、12000テン。",
+      "ロン、ゴハン、イチマンニセンテン。",
     );
   });
 
-  it("splits into a yaku lead and a points-and-limit climax for a synced reveal", () => {
-    const yakuman = announcement({
-      dora: { dora: 1, redDora: 0, total: 1, uraDora: 0 },
-      fu: null,
-      han: null,
-      headline: [{ kana: "スーアンコー", romaji: "Suuankou" }],
-      limit: "yakuman",
-      method: "tsumo",
-      points: 32_000,
-    });
+  it("gives every yaku a beat of its own, so a pause can fall between them", () => {
+    const beats = announcementBeats(
+      announcement({
+        dora: { dora: 1, redDora: 0, total: 1, uraDora: 0 },
+        fu: null,
+        han: null,
+        headline: [
+          { kana: "リーチ", romaji: "Riichi" },
+          { kana: "スーアンコー", romaji: "Suuankou" },
+        ],
+        limit: "yakuman",
+        method: "tsumo",
+        points: 32_000,
+      }),
+    );
 
-    // The lead carries the build-up, including the dora; the tail lands the
-    // points and then the name.
-    expect(announcementLead(yakuman).japanese).toBe("ツモ、スーアンコー、ドラ1。");
-    expect(announcementTail(yakuman).japanese).toBe("32000テン、ヤクマン！");
-    expect(announcementTail(yakuman).romaji).toBe("32,000 points. Yakuman!");
+    // Separate utterances, not commas: the caller holds the silence between
+    // them, and the last one is the climax the stamp is timed against.
+    expect(beats.map((beat) => beat.japanese)).toEqual([
+      "ツモ。",
+      "リーチ。",
+      "スーアンコー。",
+      "ドライチ。",
+      "サンマンニセンテン、ヤクマン！",
+    ]);
   });
 
   it("keeps a romanized reading of every line for an engine with no Japanese voice", () => {

@@ -74,6 +74,18 @@ vi.mock("../src/infrastructure/announcer-preference-storage", () => ({
   saveAnnouncerVoice: vi
     .fn<typeof announcerPreferenceStorage.saveAnnouncerVoice>()
     .mockResolvedValue(undefined),
+  loadNeuralSpeaker: vi
+    .fn<typeof announcerPreferenceStorage.loadNeuralSpeaker>()
+    .mockResolvedValue("jf_alpha"),
+  saveNeuralSpeaker: vi
+    .fn<typeof announcerPreferenceStorage.saveNeuralSpeaker>()
+    .mockResolvedValue(undefined),
+  loadDelivery: vi
+    .fn<typeof announcerPreferenceStorage.loadDelivery>()
+    .mockResolvedValue("parlour"),
+  saveDelivery: vi
+    .fn<typeof announcerPreferenceStorage.saveDelivery>()
+    .mockResolvedValue(undefined),
 }));
 
 // Held in a plain binding rather than read back off the mocked module: the
@@ -154,11 +166,11 @@ describe("ManualCalculator", () => {
     fireEvent.click(screen.getByRole("button", { name: "Try a scored example" }));
     fireEvent.click(screen.getByRole("button", { name: "Calculate" }));
 
+    // The call comes first and alone: each beat is its own utterance so a
+    // pause can fall between them.
     expect(speak).toHaveBeenCalledWith(
-      expect.objectContaining({
-        japanese: "ツモ、メンゼンツモ、ピンフ、2ハン20フ、1500テン。",
-        romaji: "Tsumo. Menzen tsumo. Pinfu. 2 han 20 fu. 1,500 points.",
-      }),
+      expect.objectContaining({ japanese: "ツモ。", romaji: "Tsumo." }),
+      expect.anything(),
     );
   });
 
@@ -198,11 +210,11 @@ describe("ManualCalculator", () => {
     speak.mockClear();
     fireEvent.click(await screen.findByRole("button", { name: "Say it again" }));
 
+    // The call comes first and alone: each beat is its own utterance so a
+    // pause can fall between them.
     expect(speak).toHaveBeenCalledWith(
-      expect.objectContaining({
-        japanese: "ツモ、メンゼンツモ、ピンフ、2ハン20フ、1500テン。",
-        romaji: "Tsumo. Menzen tsumo. Pinfu. 2 han 20 fu. 1,500 points.",
-      }),
+      expect.objectContaining({ japanese: "ツモ。", romaji: "Tsumo." }),
+      expect.anything(),
     );
   });
 
