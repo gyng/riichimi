@@ -160,6 +160,19 @@ Recognition remains the open front. V1 materially improves source-separated phys
 - Added a bundle checkpoint for the CSS and localization work: 955,280 bytes of JavaScript plus a 48,843-byte stylesheet, 3.1% over the pre-conversion single-file entry for four languages, the announcer, and the celebration. Cold Vite build is 1.64 seconds.
 - Cleared a high-severity `react-router` advisory (`GHSA-qwww-vcr4-c8h2`) by upgrading rather than accepting an exception: `react-router-dom` 7.18.1 → `react-router` 8.3.0, which drops the `react-router-dom` package and pulled `react`/`react-dom` to 19.2.8. `npm audit` is clean. Two install hazards found and documented on the way: `packages/ui` pinning React one patch behind the client produced two React copies and 50 dead component tests, and npm will not install react-router's own `cookie-es` dependency in this workspace. See [dependency policy](docs/dependencies.md).
 
+### 2026-08-02T00:00:00+08:00 — an evaluation harness that can say "we cannot tell"
+
+- Added `scripts/vision/evaluate-recognizer.py`. It reports per-class and per-tile-set accuracy, expected and maximum calibration error with reliability bins, the operating point plus a 0.50–0.95 threshold sweep, correction burden per scanned hand, and false-unknown rate — and puts a **95% Wilson interval on every rate**, marking any slice under three crops `resolvable: false`. `--baseline` compares two runs and states whether the difference survives those intervals.
+- Fixed the corpus preparation, which no longer reproduced: Wikimedia rejects the script's bare user-agent with HTTP 429, which reads as rate limiting and is not. All 153 crops now rebuild and verify against their pinned SHA-256. `prepared.json` also records `sourceId`, the per-tile-set slice key.
+- What the harness found on the shipped V1 artifact:
+  - **The gate works.** All three errors are low-confidence (0.12, 0.20, 0.32 against a 0.75 threshold); no wrong read is accepted.
+  - **Every error is one tap from correct** — top-3 accuracy is 46/46, and the review desk already offers the top three.
+  - **Correction burden is 3.26 reviews per 15-tile hand**; only 2.5% of hands clear untouched. That is the number to move.
+  - **The model is under-confident, not over-confident** (ECE 0.140, one over-confident read; reads at 0.42 confidence are 100% correct).
+  - **36 of 37 classes cannot be measured** at one or two crops each, and unknown recall cannot be measured at all without hard negatives.
+- Ran TTA and temperature scaling through it, and shipped neither. TTA buys one crop of top-1 (93.48% → 95.65%) and costs one review per hand (3.26 → 4.24), a net loss for a review gate. Temperature scaling has no split to fit on: the model is **100% accurate on the training partition**, so likelihood improves without bound as confidence sharpens and the fit runs to the edge of the scan; fitting on evaluation would be fitting to the test. The harness now refuses both rather than emitting a number that looks like a calibration.
+- The headline: **neither change separates from baseline**. A 17.4-point coverage swing does not clear the intervals on 46 crops, where one crop is 2.2 points. The two synthetic-render A/B runs that landed "within noise" were reading the same limit. The corpus is the blocker, not the technique, and the report now says so instead of leaving it to judgement.
+
 ## Visual evidence
 
 - [Mobile landing](docs/checkpoints/2026-07-23-01-home-mobile.png)

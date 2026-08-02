@@ -52,8 +52,14 @@ def main() -> None:
         source_path = source_directory / f"{source['id']}{extension}"
         if not source_path.exists():
             print(f"Downloading {source['pageUrl']}…", flush=True)
+            # Wikimedia's user-agent policy requires a contact URL and rejects a
+            # bare tool name with HTTP 429, which reads as rate limiting and is
+            # not — it is the same on the first request of the day.
             request = urllib.request.Request(
-                source["url"], headers={"User-Agent": "RiichimiVisionResearch/0.1"}
+                source["url"],
+                headers={
+                    "User-Agent": "RiichimiVisionResearch/0.1 (https://github.com/gyng/riichimi)"
+                },
             )
             with urllib.request.urlopen(request) as response:
                 source_path.write_bytes(response.read())
@@ -74,6 +80,10 @@ def main() -> None:
                     "license": source["license"],
                     "pageUrl": source["pageUrl"],
                     "partition": source["partition"],
+                    # The slice key for per-tile-set reporting: one id is one
+                    # photographed tile set, which is the axis a classifier
+                    # actually overfits to.
+                    "sourceId": source["id"],
                     "sourceSha256": digest,
                 }
             )

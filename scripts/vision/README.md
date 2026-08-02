@@ -2,7 +2,7 @@
 
 Riichimi uses a two-stage guided recognizer: deterministic crop localization followed by a compact ONNX tile classifier. This keeps the runtime small and makes capture failures visible instead of asking a detector to infer arbitrary table layouts.
 
-The recognizer consumes exactly 15 crops per pass: 14 concealed/winning tiles and one dora indicator. Web lazy-loads the WebGL runtime; native uses ONNX Runtime React Native. Confidence below `0.75`, unknown classes, impossible tile counts, and uncertain winner placement remain in review.
+The recognizer consumes exactly 15 crops per pass: 14 concealed/winning tiles and one dora indicator. The WebGL runtime is lazy-loaded, fetched only when a read is requested. Confidence below `0.75`, unknown classes, impossible tile counts, and uncertain winner placement remain in review.
 
 ## Reproduce the classifier
 
@@ -30,6 +30,38 @@ python3 -m venv /tmp/riichimi-vision-venv
 ```
 
 Synthetic validation measures whether the training and export pipeline works; it is not physical-photo release evidence. Public-domain physical-photo smoke evaluation and representative guided-hand evaluation are reported separately.
+
+## Deciding whether a change is real
+
+`evaluate-physical-crops.py` answers "how often is it right". `evaluate-recognizer.py` answers the question a review-gated scanner actually has: does the model know when it is wrong, what does a person have to do about it, and can this corpus tell the difference at all.
+
+```sh
+/tmp/riichimi-vision-venv/bin/python scripts/vision/evaluate-recognizer.py \
+  --model apps/client/assets/models/tile-classifier-v1.onnx \
+  --training-report docs/recognition-model-v1-report.json \
+  --crops /tmp/riichimi-physical-crops \
+  --output docs/recognition-eval-v1-report.json
+```
+
+It reports per-class and per-tile-set accuracy, expected and maximum calibration error with reliability bins, the operating point at a confidence threshold plus a sweep from 0.50 to 0.95, correction burden per scanned hand, and false-unknown rate.
+
+Two features exist to stop the corpus from being read as more than it is:
+
+- **Every rate carries a 95% Wilson interval**, and any slice with fewer than `--minimum-support` crops is marked `resolvable: false`. 36 of the 37 evaluated classes have fewer than three crops, so per-class accuracy is a tally, not a measurement.
+- **`--baseline <report>` states whether a difference survives those intervals.** On 46 crops the smallest possible move is one crop, or 2.2 points, so the verdict is usually `within-noise`. That is the honest answer, and it is why the roadmap puts corpus growth ahead of model tuning.
+
+Unknown recall is deliberately **not** reported. Every crop in this corpus is a real tile face, so the corpus can measure false unknowns but never missed ones; measuring recall needs hard negatives — sticks, dice, racks, fingers, patterned tables.
+
+### Test-time augmentation and temperature
+
+`--tta-views N` averages the probabilities of N scale/translate views per crop. There are no flips or rotations: a mirrored tile face is a different glyph, so a flip would average across a class boundary rather than over nuisance variation.
+
+`--fit-temperature-on <partition>` fits a softmax temperature by minimizing NLL on a partition that is not the one being scored. It refuses two mistakes rather than quietly producing a number:
+
+- fitting on the partition being reported, which measures the fit rather than the model;
+- fitting on a partition the model separates perfectly, where likelihood improves without bound as confidence sharpens and the fit runs to the edge of the scan.
+
+The second is not hypothetical here — see the audit's calibration note.
 
 ## Synthetic-physical 3D renders (Blender)
 

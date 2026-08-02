@@ -31,8 +31,10 @@ Deliver a polished mobile/web riichi companion that reaches an auditable result 
 
 ## P0 — production recognition and release confidence
 
-1. **Representative recognition evidence**
+1. **Representative recognition evidence** — now the single blocker, and the harness below proves it
    - Grow the rights-cleared, source-separated corpus beyond the current 107 training / 46 held-out physical crops to at least 500 complete guided hands spanning tile sets, phones, lighting, glare, perspective, red fives, and hard negatives.
+   - **Add a third, source-separated validation partition.** Calibration currently cannot be fitted at all: the model is 100% accurate on the training split, and fitting on the evaluation split would be fitting to the test set.
+   - **Include hard negatives** — sticks, dice, racks, fingers, patterned tables. Unknown recall is unmeasurable without them; the present corpus is all real tile faces.
    - Gate promotion on per-class accuracy, exact-hand accuracy, calibration, correction burden, and unknown-tile recall rather than the current smoke set.
    - Add immutable candidate manifests and safe model rollback after a candidate passes.
 2. **Recognition review refinement**
@@ -40,12 +42,13 @@ Deliver a polished mobile/web riichi companion that reaches an auditable result 
    - Measure correction burden and refine keyboard/screen-reader traversal on representative devices.
    - Expand from the deliberately narrow closed-hand guide to calls and kans only after each layout has independent evidence.
 3. **Recognition robustness (safe-failure first)**
-   - **Evaluation harness** — per-class accuracy, calibration (ECE / reliability), per-tile-set slices, unknown recall, and correction-burden reporting over the real held-out crops, so any recognizer change is measurable rather than lost in the 46-crop noise floor. Prerequisite for everything below.
-   - **Test-time augmentation + confidence calibration** — average predictions over small crops/flips and apply temperature scaling, then measure accepted-coverage/accepted-accuracy/ECE on the real crops. Targets the axis that matters most for a review-gated scanner: catching its own errors (fewer confident-wrong, better unknown-flagging), not just raw top-1.
+   - ~~Evaluation harness~~ — **done.** `scripts/vision/evaluate-recognizer.py` reports per-class and per-tile-set accuracy, ECE with reliability bins, correction burden per hand, false-unknown rate, a threshold sweep, and a 95% Wilson interval on every rate. `--baseline` states whether a change survives those intervals instead of implying it does.
+   - ~~Test-time augmentation + confidence calibration~~ — **measured, not promoted.** TTA buys one crop of top-1 and costs one review per hand, which is a net loss for a review gate. Temperature scaling has no split to fit on. Neither separates from baseline. See the [model audit](docs/recognition-model-audit.md).
+   - **Raise coverage without raising silent errors.** The real target the harness identified: 3.26 reviews per scanned hand, with the model under-confident rather than over-confident and every error already one tap away in the top three. Blocked on a validation split.
    - A learned localizer (to handle touching tiles and textured tables — the biggest practical brittleness) is gated on boxed real data; the synthetic hand renderer already scaffolds per-tile boxes for it.
 4. **Device QA**
-   - Verify camera, storage recovery, rotation, large text, keyboard, screen readers, reduced motion, and offline restart on representative iOS, Android, and web devices.
-   - Benchmark model initialization, preprocessing, inference, memory, thermals, and interaction responsiveness in custom native builds.
+   - Verify camera, storage recovery, rotation, large text, keyboard, screen readers, reduced motion, and offline restart on representative devices. Riichimi is browser-only, so this is mobile Safari and Chrome on real hardware.
+   - Benchmark model initialization, preprocessing, inference, memory, thermals, and interaction responsiveness on mid-range phones.
 
 Exit gate: representative guided scans meet documented accuracy and latency targets on mid-range hardware, the full journey passes on all targets, and failures degrade cleanly to manual entry.
 

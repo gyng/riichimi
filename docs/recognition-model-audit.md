@@ -1,6 +1,6 @@
 # Physical-tile recognition model audit
 
-Last reviewed: **2026-07-23**
+Last reviewed: **2026-08-02**
 
 ## Decision
 
@@ -35,7 +35,7 @@ Each failure produces dedicated recovery guidance and leaves photo replacement, 
 - Size: 1,866,535 bytes
 - Input: fixed RGB/NCHW `15 × 3 × 64 × 48`
 - Classes: 34 canonical tiles, three red fives, and `unknown`
-- Runtime: lazy ONNX Runtime WebGL on web; ONNX Runtime React Native on native builds
+- Runtime: lazy ONNX Runtime WebGL, fetched only when a read is requested
 - License: `CC-BY-SA-4.0`; full attribution is beside the artifact
 
 Training combines deterministic camera-style augmentation of CC0 tile artwork with 107 licensed physical-photo crops from three source photographs and distinct Japanese tile families. The artifact has 99.44% top-1 accuracy on a 3,040-image independent synthetic holdout and ONNX parity within `2.39e-6`. Synthetic accuracy validates the pipeline; it is not release evidence.
@@ -43,6 +43,36 @@ Training combines deterministic camera-style augmentation of CC0 tile artwork wi
 The source-separated physical set now has 46 crops spanning a held-out Japanese tile family, red fives, and three unrelated photographs. V1 scores 43/46 top-1 (`93.48%`), up from V0's 34/46 (`73.91%`) on the same expanded set. At the conservative `0.75` threshold V1 accepts 36/46 and all 36 are correct (`100%` accepted accuracy at `78.26%` coverage), up from `28.26%` coverage. All three wrong predictions remain below threshold and therefore stay in review. These figures justify the V1 beta promotion and materially lower correction burden; they do not establish complete-hand or production accuracy.
 
 Exported-browser dogfood uses a guided composite derived from the held-out CC BY-SA 4.0 tile family. V1 reads all 15 tile classes correctly and asks for two low-confidence confirmations; V0's out-of-distribution demonstration required 15 confirmations. This is one repeatable integration fixture, not part of the 500-hand release set.
+
+## What the evaluation harness measures
+
+`scripts/vision/evaluate-recognizer.py` reports the axes a review gate depends on. The full run for the shipped V1 artifact is in [`recognition-eval-v1-report.json`](recognition-eval-v1-report.json).
+
+**The review gate is doing its job.** All three errors on the held-out set are low-confidence — `0.12`, `0.20`, `0.32`, against a `0.75` threshold — so none is accepted and none reaches a score silently. Confident-wrong reads are 0 of 46.
+
+**Every error is one tap from correct.** Top-3 accuracy is 46/46. The review desk already offers the top three as one-tap choices, so the corpus contains no error that needs the full 37-tile picker. The three confusions are `1s → green`, `west → 1m`, and `green → east`, all from the Kantou family — the honour tiles and the green-dominant `1s`.
+
+**Correction burden is 3.26 reviews per 15-tile hand**, and only 2.5% of hands would clear the gate untouched. That is the number to move, and it is a coverage problem rather than an accuracy problem.
+
+**The model is under-confident, not over-confident.** Expected calibration error is `0.140` and maximum is `0.577`, but only one read sits on the over-confident side: reads at `0.42` confidence are 100% correct. Coverage is being spent on caution the model has not earned in the wrong direction.
+
+**Per-class accuracy is not measurable here.** 36 of the 37 evaluated classes have fewer than three crops. The harness marks those slices `resolvable: false` so a 100% off one sample is not read as evidence.
+
+**Unknown recall is not measurable here.** Every crop is a real tile face, so the corpus measures false unknowns (0 of 46) but never missed ones. Recall needs hard negatives.
+
+### Test-time augmentation and temperature scaling: measured, not promoted
+
+Both were run through the harness against the shipped artifact. Neither is shipped.
+
+**TTA** (5 averaged scale/translate views, no flips — a mirrored tile face is a different glyph) improves top-1 from 93.48% to 95.65%, one crop. It also _lowers_ accepted coverage from 78.26% to 71.74%, because averaging softens confidence, which raises correction burden from 3.26 to 4.24 reviews per hand. For a review-gated scanner that is a net loss: one fewer error in exchange for one more review on every hand. Recorded in [`recognition-eval-v1-tta-report.json`](recognition-eval-v1-tta-report.json).
+
+**Temperature scaling cannot be fitted with this corpus at all.** There is no split available to fit it on. The model is **100% accurate on the training partition**, so negative log-likelihood there falls without bound as confidence sharpens and the fit runs to the edge of the scan (`T = 0.05`); fitting on the evaluation partition would be fitting to the test set. The harness now refuses both rather than emitting a number that looks like a calibration. A third, source-separated validation partition is a prerequisite.
+
+For the record, sharpening does what the calibration curve predicts — at `T = 0.25`, coverage rises to 95.65% and ECE falls to `0.040` — but it also produces the corpus's first confident-wrong read, dropping accepted accuracy below 100%. That trade is exactly the one that needs a validation split to make responsibly.
+
+### The corpus, not the technique, is the blocker
+
+Neither change separates from baseline under 95% Wilson intervals. A **+17.4 point** coverage swing does not separate on 46 crops, because one crop is 2.2 points. The two synthetic-render A/B runs that landed "within noise" were reading the same limit. Until the corpus grows, recognizer tuning cannot be evaluated, and the harness now says so in the report rather than leaving it to judgement.
 
 ## Rights and provenance
 

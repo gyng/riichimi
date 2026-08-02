@@ -1,0 +1,1935 @@
+{
+  "calibration": {
+    "expectedCalibrationError": 0.18516860416401987,
+    "maximumCalibrationError": 0.8169566243886948,
+    "overconfident": 0,
+    "reliability": [
+      {
+        "accuracy": 1.0,
+        "count": 2,
+        "gap": 0.8169566243886948,
+        "lowerBound": 0.1,
+        "meanConfidence": 0.18304337561130524,
+        "upperBound": 0.2
+      },
+      {
+        "accuracy": 0.3333333333333333,
+        "count": 3,
+        "gap": 0.09800025324026743,
+        "lowerBound": 0.2,
+        "meanConfidence": 0.2353330800930659,
+        "upperBound": 0.30000000000000004
+      },
+      {
+        "accuracy": 1.0,
+        "count": 2,
+        "gap": 0.6421250998973846,
+        "lowerBound": 0.30000000000000004,
+        "meanConfidence": 0.35787490010261536,
+        "upperBound": 0.4
+      },
+      {
+        "accuracy": 1.0,
+        "count": 1,
+        "gap": 0.5471298098564148,
+        "lowerBound": 0.4,
+        "meanConfidence": 0.4528701901435852,
+        "upperBound": 0.5
+      },
+      {
+        "accuracy": 1.0,
+        "count": 4,
+        "gap": 0.3563225567340851,
+        "lowerBound": 0.6000000000000001,
+        "meanConfidence": 0.6436774432659149,
+        "upperBound": 0.7000000000000001
+      },
+      {
+        "accuracy": 1.0,
+        "count": 1,
+        "gap": 0.2965940237045288,
+        "lowerBound": 0.7000000000000001,
+        "meanConfidence": 0.7034059762954712,
+        "upperBound": 0.8
+      },
+      {
+        "accuracy": 1.0,
+        "count": 13,
+        "gap": 0.1436794721163236,
+        "lowerBound": 0.8,
+        "meanConfidence": 0.8563205278836764,
+        "upperBound": 0.9
+      },
+      {
+        "accuracy": 1.0,
+        "count": 20,
+        "gap": 0.058437219262123086,
+        "lowerBound": 0.9,
+        "meanConfidence": 0.9415627807378769,
+        "upperBound": 1.0
+      }
+    ]
+  },
+  "configuration": {
+    "calibrationBins": 10,
+    "handSize": 15,
+    "minimumSupport": 3,
+    "model": "/home/g/p/richii/apps/client/assets/models/tile-classifier-v1.onnx",
+    "partition": "evaluation",
+    "temperature": 1.0,
+    "temperatureFittedOn": null,
+    "ttaViews": 5
+  },
+  "operatingPoint": {
+    "acceptedAccuracy": {
+      "count": 33,
+      "interval95": [0.8957265699643882, 1.0],
+      "total": 33,
+      "value": 1.0
+    },
+    "acceptedCoverage": {
+      "count": 33,
+      "interval95": [0.5745116426970621, 0.8267595845508592],
+      "total": 46,
+      "value": 0.717391304347826
+    },
+    "confidentWrong": {
+      "count": 0,
+      "interval95": [0.0, 0.07707617732978073],
+      "total": 46,
+      "value": 0.0
+    },
+    "correctionBurden": {
+      "reviewedPerHand": 4.239130434782608,
+      "silentErrorsPerHand": 0.0,
+      "handsWithNoReview": 0.006860276545243142
+    },
+    "threshold": 0.75
+  },
+  "perClass": [
+    {
+      "accuracy": {
+        "count": 2,
+        "interval95": [0.34237195288961925, 1.0],
+        "total": 2,
+        "value": 1.0
+      },
+      "meanConfidence": 0.45915088802576065,
+      "name": "0m",
+      "resolvable": false,
+      "support": 2
+    },
+    {
+      "accuracy": {
+        "count": 2,
+        "interval95": [0.34237195288961925, 1.0],
+        "total": 2,
+        "value": 1.0
+      },
+      "meanConfidence": 0.7571934163570404,
+      "name": "0p",
+      "resolvable": false,
+      "support": 2
+    },
+    {
+      "accuracy": {
+        "count": 2,
+        "interval95": [0.34237195288961925, 1.0],
+        "total": 2,
+        "value": 1.0
+      },
+      "meanConfidence": 0.8972334861755371,
+      "name": "0s",
+      "resolvable": false,
+      "support": 2
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.8696739077568054,
+      "name": "1m",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.9319225549697876,
+      "name": "1p",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.18770432472229004,
+      "name": "1s",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.34220415353775024,
+      "name": "2m",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 2,
+        "interval95": [0.34237195288961925, 1.0],
+        "total": 2,
+        "value": 1.0
+      },
+      "meanConfidence": 0.5495516508817673,
+      "name": "2p",
+      "resolvable": false,
+      "support": 2
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.9756393432617188,
+      "name": "2s",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.6746671199798584,
+      "name": "3m",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.9608286023139954,
+      "name": "3p",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.9632981419563293,
+      "name": "3s",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.9349926710128784,
+      "name": "4m",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 3,
+        "interval95": [0.43849391955098227, 1.0],
+        "total": 3,
+        "value": 1.0
+      },
+      "meanConfidence": 0.6474274198214213,
+      "name": "4p",
+      "resolvable": true,
+      "support": 3
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.88224858045578,
+      "name": "4s",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 2,
+        "interval95": [0.34237195288961925, 1.0],
+        "total": 2,
+        "value": 1.0
+      },
+      "meanConfidence": 0.6449177265167236,
+      "name": "5m",
+      "resolvable": false,
+      "support": 2
+    },
+    {
+      "accuracy": {
+        "count": 2,
+        "interval95": [0.34237195288961925, 1.0],
+        "total": 2,
+        "value": 1.0
+      },
+      "meanConfidence": 0.8610180914402008,
+      "name": "5p",
+      "resolvable": false,
+      "support": 2
+    },
+    {
+      "accuracy": {
+        "count": 2,
+        "interval95": [0.34237195288961925, 1.0],
+        "total": 2,
+        "value": 1.0
+      },
+      "meanConfidence": 0.95794478058815,
+      "name": "5s",
+      "resolvable": false,
+      "support": 2
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.9171341061592102,
+      "name": "6m",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.8921471834182739,
+      "name": "6p",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.9012025594711304,
+      "name": "6s",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.9103838205337524,
+      "name": "7m",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.8344281911849976,
+      "name": "7p",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.8952337503433228,
+      "name": "7s",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.9793548583984375,
+      "name": "8m",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.6541109681129456,
+      "name": "8p",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.9259401559829712,
+      "name": "8s",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.8173961639404297,
+      "name": "9m",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.9174772500991821,
+      "name": "9p",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.8607915043830872,
+      "name": "9s",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.9839422106742859,
+      "name": "east",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 0,
+        "interval95": [0.0, 0.7934567085261071],
+        "total": 1,
+        "value": 0.0
+      },
+      "meanConfidence": 0.2822505831718445,
+      "name": "green",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.8210805654525757,
+      "name": "north",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.9077483415603638,
+      "name": "red",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.8594058156013489,
+      "name": "south",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 0,
+        "interval95": [0.0, 0.7934567085261071],
+        "total": 1,
+        "value": 0.0
+      },
+      "meanConfidence": 0.2088528573513031,
+      "name": "west",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.9938815832138062,
+      "name": "white",
+      "resolvable": false,
+      "support": 1
+    }
+  ],
+  "perTileSet": [
+    {
+      "accuracy": {
+        "count": 1,
+        "interval95": [0.20654329147389294, 1.0],
+        "total": 1,
+        "value": 1.0
+      },
+      "meanConfidence": 0.17838242650032043,
+      "name": "dora-wanpai",
+      "resolvable": false,
+      "support": 1
+    },
+    {
+      "accuracy": {
+        "count": 6,
+        "interval95": [0.6096569663469354, 0.9999999999999999],
+        "total": 6,
+        "value": 1.0
+      },
+      "meanConfidence": 0.8698822557926178,
+      "name": "japanese-mahjong-tiles-2",
+      "resolvable": true,
+      "support": 6
+    },
+    {
+      "accuracy": {
+        "count": 35,
+        "interval95": [0.822950349364601, 0.9850493372294601],
+        "total": 37,
+        "value": 0.9459459459459459
+      },
+      "meanConfidence": 0.7865430692563186,
+      "name": "mahjong-eg-jp-kantou",
+      "resolvable": true,
+      "support": 37
+    },
+    {
+      "accuracy": {
+        "count": 2,
+        "interval95": [0.34237195288961925, 1.0],
+        "total": 2,
+        "value": 1.0
+      },
+      "meanConfidence": 0.4912373423576355,
+      "name": "mahjong-tiles-195606345",
+      "resolvable": false,
+      "support": 2
+    }
+  ],
+  "resolution": {
+    "evaluatedCrops": 46,
+    "smallestDistinguishableChange": 0.021739130434782608,
+    "unresolvableClasses": 36
+  },
+  "samples": [
+    {
+      "confidence": 0.9319225549697876,
+      "correct": true,
+      "expected": "1p",
+      "prediction": "1p",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.9319225549697876,
+          "label": "1p"
+        },
+        {
+          "confidence": 0.012019069865345955,
+          "label": "8p"
+        },
+        {
+          "confidence": 0.004596469923853874,
+          "label": "green"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9207208752632141,
+      "correct": true,
+      "expected": "2p",
+      "prediction": "2p",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.9207208752632141,
+          "label": "2p"
+        },
+        {
+          "confidence": 0.013676563277840614,
+          "label": "4m"
+        },
+        {
+          "confidence": 0.006808404810726643,
+          "label": "4p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9608286023139954,
+      "correct": true,
+      "expected": "3p",
+      "prediction": "3p",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.9608286023139954,
+          "label": "3p"
+        },
+        {
+          "confidence": 0.0030572358518838882,
+          "label": "8s"
+        },
+        {
+          "confidence": 0.002515251049771905,
+          "label": "unknown"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9598075747489929,
+      "correct": true,
+      "expected": "4p",
+      "prediction": "4p",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.9598075747489929,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.004911321680992842,
+          "label": "6s"
+        },
+        {
+          "confidence": 0.003271712688729167,
+          "label": "8s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8052229881286621,
+      "correct": true,
+      "expected": "5p",
+      "prediction": "5p",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.8052229881286621,
+          "label": "5p"
+        },
+        {
+          "confidence": 0.03638997673988342,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.012128220871090889,
+          "label": "0p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8921471834182739,
+      "correct": true,
+      "expected": "6p",
+      "prediction": "6p",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.8921471834182739,
+          "label": "6p"
+        },
+        {
+          "confidence": 0.031657375395298004,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.01380536425858736,
+          "label": "4p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8344281911849976,
+      "correct": true,
+      "expected": "7p",
+      "prediction": "7p",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.8344281911849976,
+          "label": "7p"
+        },
+        {
+          "confidence": 0.03660551458597183,
+          "label": "6p"
+        },
+        {
+          "confidence": 0.014538401737809181,
+          "label": "4p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.6541109681129456,
+      "correct": true,
+      "expected": "8p",
+      "prediction": "8p",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.6541109681129456,
+          "label": "8p"
+        },
+        {
+          "confidence": 0.13474150002002716,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.023097310215234756,
+          "label": "5p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9174772500991821,
+      "correct": true,
+      "expected": "9p",
+      "prediction": "9p",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.9174772500991821,
+          "label": "9p"
+        },
+        {
+          "confidence": 0.008429951965808868,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.007458628620952368,
+          "label": "1m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.18770432472229004,
+      "correct": true,
+      "expected": "1s",
+      "prediction": "1s",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.18770432472229004,
+          "label": "1s"
+        },
+        {
+          "confidence": 0.12472404539585114,
+          "label": "green"
+        },
+        {
+          "confidence": 0.05529363825917244,
+          "label": "8p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9756393432617188,
+      "correct": true,
+      "expected": "2s",
+      "prediction": "2s",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.9756393432617188,
+          "label": "2s"
+        },
+        {
+          "confidence": 0.0028575025498867035,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.0016088623087853193,
+          "label": "5m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9632981419563293,
+      "correct": true,
+      "expected": "3s",
+      "prediction": "3s",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.9632981419563293,
+          "label": "3s"
+        },
+        {
+          "confidence": 0.0034257196821272373,
+          "label": "7m"
+        },
+        {
+          "confidence": 0.002607978181913495,
+          "label": "5s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.88224858045578,
+      "correct": true,
+      "expected": "4s",
+      "prediction": "4s",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.88224858045578,
+          "label": "4s"
+        },
+        {
+          "confidence": 0.021819841116666794,
+          "label": "5s"
+        },
+        {
+          "confidence": 0.007604843936860561,
+          "label": "8s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9454428553581238,
+      "correct": true,
+      "expected": "5s",
+      "prediction": "5s",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.9454428553581238,
+          "label": "5s"
+        },
+        {
+          "confidence": 0.00648000743240118,
+          "label": "9s"
+        },
+        {
+          "confidence": 0.0046461718156933784,
+          "label": "8s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9012025594711304,
+      "correct": true,
+      "expected": "6s",
+      "prediction": "6s",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.9012025594711304,
+          "label": "6s"
+        },
+        {
+          "confidence": 0.009546491317451,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.008394337259232998,
+          "label": "4s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8952337503433228,
+      "correct": true,
+      "expected": "7s",
+      "prediction": "7s",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.8952337503433228,
+          "label": "7s"
+        },
+        {
+          "confidence": 0.014719153754413128,
+          "label": "6s"
+        },
+        {
+          "confidence": 0.006200282368808985,
+          "label": "3s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9259401559829712,
+      "correct": true,
+      "expected": "8s",
+      "prediction": "8s",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.9259401559829712,
+          "label": "8s"
+        },
+        {
+          "confidence": 0.007545520551502705,
+          "label": "9p"
+        },
+        {
+          "confidence": 0.006188592873513699,
+          "label": "4p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8607915043830872,
+      "correct": true,
+      "expected": "9s",
+      "prediction": "9s",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.8607915043830872,
+          "label": "9s"
+        },
+        {
+          "confidence": 0.016968781128525734,
+          "label": "6s"
+        },
+        {
+          "confidence": 0.014352753758430481,
+          "label": "8p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8696739077568054,
+      "correct": true,
+      "expected": "1m",
+      "prediction": "1m",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.8696739077568054,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.05513088032603264,
+          "label": "4m"
+        },
+        {
+          "confidence": 0.03869039565324783,
+          "label": "0m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.34220415353775024,
+      "correct": true,
+      "expected": "2m",
+      "prediction": "2m",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.34220415353775024,
+          "label": "2m"
+        },
+        {
+          "confidence": 0.1325179785490036,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.1150471419095993,
+          "label": "3m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.6746671199798584,
+      "correct": true,
+      "expected": "3m",
+      "prediction": "3m",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.6746671199798584,
+          "label": "3m"
+        },
+        {
+          "confidence": 0.10829398781061172,
+          "label": "2m"
+        },
+        {
+          "confidence": 0.04836895689368248,
+          "label": "8m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9349926710128784,
+      "correct": true,
+      "expected": "4m",
+      "prediction": "4m",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.9349926710128784,
+          "label": "4m"
+        },
+        {
+          "confidence": 0.018123403191566467,
+          "label": "9m"
+        },
+        {
+          "confidence": 0.0038002412766218185,
+          "label": "5m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.4528701901435852,
+      "correct": true,
+      "expected": "5m",
+      "prediction": "5m",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.4528701901435852,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.07510162144899368,
+          "label": "9m"
+        },
+        {
+          "confidence": 0.046917133033275604,
+          "label": "3m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9171341061592102,
+      "correct": true,
+      "expected": "6m",
+      "prediction": "6m",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.9171341061592102,
+          "label": "6m"
+        },
+        {
+          "confidence": 0.019117649644613266,
+          "label": "8m"
+        },
+        {
+          "confidence": 0.012161406688392162,
+          "label": "5m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9103838205337524,
+      "correct": true,
+      "expected": "7m",
+      "prediction": "7m",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.9103838205337524,
+          "label": "7m"
+        },
+        {
+          "confidence": 0.013840749859809875,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.012938348576426506,
+          "label": "6m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9793548583984375,
+      "correct": true,
+      "expected": "8m",
+      "prediction": "8m",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.9793548583984375,
+          "label": "8m"
+        },
+        {
+          "confidence": 0.004566223360598087,
+          "label": "7p"
+        },
+        {
+          "confidence": 0.0031639966182410717,
+          "label": "unknown"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8173961639404297,
+      "correct": true,
+      "expected": "9m",
+      "prediction": "9m",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.8173961639404297,
+          "label": "9m"
+        },
+        {
+          "confidence": 0.05182592198252678,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.01438099890947342,
+          "label": "8m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9839422106742859,
+      "correct": true,
+      "expected": "east",
+      "prediction": "east",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.9839422106742859,
+          "label": "east"
+        },
+        {
+          "confidence": 0.0023867208510637283,
+          "label": "7m"
+        },
+        {
+          "confidence": 0.0011345476377755404,
+          "label": "0p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8594058156013489,
+      "correct": true,
+      "expected": "south",
+      "prediction": "south",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.8594058156013489,
+          "label": "south"
+        },
+        {
+          "confidence": 0.022456442937254906,
+          "label": "7m"
+        },
+        {
+          "confidence": 0.021785017102956772,
+          "label": "green"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.2088528573513031,
+      "correct": false,
+      "expected": "west",
+      "prediction": "1m",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.2088528573513031,
+          "label": "1m"
+        },
+        {
+          "confidence": 0.17707185447216034,
+          "label": "west"
+        },
+        {
+          "confidence": 0.11756594479084015,
+          "label": "4p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8210805654525757,
+      "correct": true,
+      "expected": "north",
+      "prediction": "north",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.8210805654525757,
+          "label": "north"
+        },
+        {
+          "confidence": 0.0561881959438324,
+          "label": "east"
+        },
+        {
+          "confidence": 0.01949162967503071,
+          "label": "3s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9938815832138062,
+      "correct": true,
+      "expected": "white",
+      "prediction": "white",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.9938815832138062,
+          "label": "white"
+        },
+        {
+          "confidence": 0.0013994111213833094,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.0007200272521004081,
+          "label": "4m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.2822505831718445,
+      "correct": false,
+      "expected": "green",
+      "prediction": "east",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.2822505831718445,
+          "label": "east"
+        },
+        {
+          "confidence": 0.1915500909090042,
+          "label": "green"
+        },
+        {
+          "confidence": 0.04578123241662979,
+          "label": "5p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9077483415603638,
+      "correct": true,
+      "expected": "red",
+      "prediction": "red",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.9077483415603638,
+          "label": "red"
+        },
+        {
+          "confidence": 0.018341578543186188,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.014950679615139961,
+          "label": "7p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.6370026469230652,
+      "correct": true,
+      "expected": "0p",
+      "prediction": "0p",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.6370026469230652,
+          "label": "0p"
+        },
+        {
+          "confidence": 0.05245782807469368,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.02880309894680977,
+          "label": "5p"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8801887631416321,
+      "correct": true,
+      "expected": "0s",
+      "prediction": "0s",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.8801887631416321,
+          "label": "0s"
+        },
+        {
+          "confidence": 0.019668761640787125,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.009300216101109982,
+          "label": "1s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.2148957997560501,
+      "correct": true,
+      "expected": "0m",
+      "prediction": "0m",
+      "sourceId": "mahjong-eg-jp-kantou",
+      "top3": [
+        {
+          "confidence": 0.2148957997560501,
+          "label": "0m"
+        },
+        {
+          "confidence": 0.13079437613487244,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.06402244418859482,
+          "label": "8m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8369652628898621,
+      "correct": true,
+      "expected": "5m",
+      "prediction": "5m",
+      "sourceId": "japanese-mahjong-tiles-2",
+      "top3": [
+        {
+          "confidence": 0.8369652628898621,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.017017195001244545,
+          "label": "3m"
+        },
+        {
+          "confidence": 0.015098018571734428,
+          "label": "6s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9704467058181763,
+      "correct": true,
+      "expected": "5s",
+      "prediction": "5s",
+      "sourceId": "japanese-mahjong-tiles-2",
+      "top3": [
+        {
+          "confidence": 0.9704467058181763,
+          "label": "5s"
+        },
+        {
+          "confidence": 0.002681751037016511,
+          "label": "8s"
+        },
+        {
+          "confidence": 0.002109538298100233,
+          "label": "5m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9168131947517395,
+      "correct": true,
+      "expected": "5p",
+      "prediction": "5p",
+      "sourceId": "japanese-mahjong-tiles-2",
+      "top3": [
+        {
+          "confidence": 0.9168131947517395,
+          "label": "5p"
+        },
+        {
+          "confidence": 0.009590266272425652,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.008973534218966961,
+          "label": "1s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.7034059762954712,
+      "correct": true,
+      "expected": "0m",
+      "prediction": "0m",
+      "sourceId": "japanese-mahjong-tiles-2",
+      "top3": [
+        {
+          "confidence": 0.7034059762954712,
+          "label": "0m"
+        },
+        {
+          "confidence": 0.051188837736845016,
+          "label": "5m"
+        },
+        {
+          "confidence": 0.022566210478544235,
+          "label": "unknown"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.9142782092094421,
+      "correct": true,
+      "expected": "0s",
+      "prediction": "0s",
+      "sourceId": "japanese-mahjong-tiles-2",
+      "top3": [
+        {
+          "confidence": 0.9142782092094421,
+          "label": "0s"
+        },
+        {
+          "confidence": 0.010221749544143677,
+          "label": "5s"
+        },
+        {
+          "confidence": 0.005979153327643871,
+          "label": "1m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.8773841857910156,
+      "correct": true,
+      "expected": "0p",
+      "prediction": "0p",
+      "sourceId": "japanese-mahjong-tiles-2",
+      "top3": [
+        {
+          "confidence": 0.8773841857910156,
+          "label": "0p"
+        },
+        {
+          "confidence": 0.011149684898555279,
+          "label": "unknown"
+        },
+        {
+          "confidence": 0.009985988959670067,
+          "label": "0m"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.37354564666748047,
+      "correct": true,
+      "expected": "4p",
+      "prediction": "4p",
+      "sourceId": "mahjong-tiles-195606345",
+      "top3": [
+        {
+          "confidence": 0.37354564666748047,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.2508074641227722,
+          "label": "9p"
+        },
+        {
+          "confidence": 0.05921747535467148,
+          "label": "7s"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.6089290380477905,
+      "correct": true,
+      "expected": "4p",
+      "prediction": "4p",
+      "sourceId": "mahjong-tiles-195606345",
+      "top3": [
+        {
+          "confidence": 0.6089290380477905,
+          "label": "4p"
+        },
+        {
+          "confidence": 0.08369685709476471,
+          "label": "9p"
+        },
+        {
+          "confidence": 0.06838327646255493,
+          "label": "north"
+        }
+      ],
+      "topThreeCorrect": true
+    },
+    {
+      "confidence": 0.17838242650032043,
+      "correct": true,
+      "expected": "2p",
+      "prediction": "2p",
+      "sourceId": "dora-wanpai",
+      "top3": [
+        {
+          "confidence": 0.17838242650032043,
+          "label": "2p"
+        },
+        {
+          "confidence": 0.15336015820503235,
+          "label": "6p"
+        },
+        {
+          "confidence": 0.09696107357740402,
+          "label": "unknown"
+        }
+      ],
+      "topThreeCorrect": true
+    }
+  ],
+  "schemaVersion": 2,
+  "thresholdSweep": [
+    {
+      "acceptedAccuracy": {
+        "count": 38,
+        "interval95": [0.90818706741616, 0.9999999999999999],
+        "total": 38,
+        "value": 1.0
+      },
+      "acceptedCoverage": {
+        "count": 38,
+        "interval95": [0.6927636765607748, 0.9091431643111074],
+        "total": 46,
+        "value": 0.8260869565217391
+      },
+      "confidentWrong": {
+        "count": 0,
+        "interval95": [0.0, 0.07707617732978073],
+        "total": 46,
+        "value": 0.0
+      },
+      "correctionBurden": {
+        "reviewedPerHand": 2.608695652173913,
+        "silentErrorsPerHand": 0.0,
+        "handsWithNoReview": 0.05693593723062989
+      },
+      "threshold": 0.5
+    },
+    {
+      "acceptedAccuracy": {
+        "count": 38,
+        "interval95": [0.90818706741616, 0.9999999999999999],
+        "total": 38,
+        "value": 1.0
+      },
+      "acceptedCoverage": {
+        "count": 38,
+        "interval95": [0.6927636765607748, 0.9091431643111074],
+        "total": 46,
+        "value": 0.8260869565217391
+      },
+      "confidentWrong": {
+        "count": 0,
+        "interval95": [0.0, 0.07707617732978073],
+        "total": 46,
+        "value": 0.0
+      },
+      "correctionBurden": {
+        "reviewedPerHand": 2.608695652173913,
+        "silentErrorsPerHand": 0.0,
+        "handsWithNoReview": 0.05693593723062989
+      },
+      "threshold": 0.55
+    },
+    {
+      "acceptedAccuracy": {
+        "count": 38,
+        "interval95": [0.90818706741616, 0.9999999999999999],
+        "total": 38,
+        "value": 1.0
+      },
+      "acceptedCoverage": {
+        "count": 38,
+        "interval95": [0.6927636765607748, 0.9091431643111074],
+        "total": 46,
+        "value": 0.8260869565217391
+      },
+      "confidentWrong": {
+        "count": 0,
+        "interval95": [0.0, 0.07707617732978073],
+        "total": 46,
+        "value": 0.0
+      },
+      "correctionBurden": {
+        "reviewedPerHand": 2.608695652173913,
+        "silentErrorsPerHand": 0.0,
+        "handsWithNoReview": 0.05693593723062989
+      },
+      "threshold": 0.6
+    },
+    {
+      "acceptedAccuracy": {
+        "count": 36,
+        "interval95": [0.9035781695514236, 1.0],
+        "total": 36,
+        "value": 1.0
+      },
+      "acceptedCoverage": {
+        "count": 36,
+        "interval95": [0.6442603416081054, 0.8773922538141925],
+        "total": 46,
+        "value": 0.782608695652174
+      },
+      "confidentWrong": {
+        "count": 0,
+        "interval95": [0.0, 0.07707617732978073],
+        "total": 46,
+        "value": 0.0
+      },
+      "correctionBurden": {
+        "reviewedPerHand": 3.260869565217391,
+        "silentErrorsPerHand": 0.0,
+        "handsWithNoReview": 0.025302884687115806
+      },
+      "threshold": 0.65
+    },
+    {
+      "acceptedAccuracy": {
+        "count": 34,
+        "interval95": [0.8984820937803899, 1.0],
+        "total": 34,
+        "value": 1.0
+      },
+      "acceptedCoverage": {
+        "count": 34,
+        "interval95": [0.5974057019172069, 0.8439926480555066],
+        "total": 46,
+        "value": 0.7391304347826086
+      },
+      "confidentWrong": {
+        "count": 0,
+        "interval95": [0.0, 0.07707617732978073],
+        "total": 46,
+        "value": 0.0
+      },
+      "correctionBurden": {
+        "reviewedPerHand": 3.9130434782608696,
+        "silentErrorsPerHand": 0.0,
+        "handsWithNoReview": 0.010735351786962475
+      },
+      "threshold": 0.7
+    },
+    {
+      "acceptedAccuracy": {
+        "count": 33,
+        "interval95": [0.8957265699643882, 1.0],
+        "total": 33,
+        "value": 1.0
+      },
+      "acceptedCoverage": {
+        "count": 33,
+        "interval95": [0.5745116426970621, 0.8267595845508592],
+        "total": 46,
+        "value": 0.717391304347826
+      },
+      "confidentWrong": {
+        "count": 0,
+        "interval95": [0.0, 0.07707617732978073],
+        "total": 46,
+        "value": 0.0
+      },
+      "correctionBurden": {
+        "reviewedPerHand": 4.239130434782608,
+        "silentErrorsPerHand": 0.0,
+        "handsWithNoReview": 0.006860276545243142
+      },
+      "threshold": 0.75
+    },
+    {
+      "acceptedAccuracy": {
+        "count": 33,
+        "interval95": [0.8957265699643882, 1.0],
+        "total": 33,
+        "value": 1.0
+      },
+      "acceptedCoverage": {
+        "count": 33,
+        "interval95": [0.5745116426970621, 0.8267595845508592],
+        "total": 46,
+        "value": 0.717391304347826
+      },
+      "confidentWrong": {
+        "count": 0,
+        "interval95": [0.0, 0.07707617732978073],
+        "total": 46,
+        "value": 0.0
+      },
+      "correctionBurden": {
+        "reviewedPerHand": 4.239130434782608,
+        "silentErrorsPerHand": 0.0,
+        "handsWithNoReview": 0.006860276545243142
+      },
+      "threshold": 0.8
+    },
+    {
+      "acceptedAccuracy": {
+        "count": 28,
+        "interval95": [0.8793527963418923, 1.0],
+        "total": 28,
+        "value": 1.0
+      },
+      "acceptedCoverage": {
+        "count": 28,
+        "interval95": [0.4645658371764493, 0.7360697764475116],
+        "total": 46,
+        "value": 0.6086956521739131
+      },
+      "confidentWrong": {
+        "count": 0,
+        "interval95": [0.0, 0.07707617732978073],
+        "total": 46,
+        "value": 0.0
+      },
+      "correctionBurden": {
+        "reviewedPerHand": 5.869565217391305,
+        "silentErrorsPerHand": 0.0,
+        "handsWithNoReview": 0.0005834491277451148
+      },
+      "threshold": 0.85
+    },
+    {
+      "acceptedAccuracy": {
+        "count": 20,
+        "interval95": [0.8388698745050667, 1.0],
+        "total": 20,
+        "value": 1.0
+      },
+      "acceptedCoverage": {
+        "count": 20,
+        "interval95": [0.3020904595919057, 0.5775281722337178],
+        "total": 46,
+        "value": 0.43478260869565216
+      },
+      "confidentWrong": {
+        "count": 0,
+        "interval95": [0.0, 0.07707617732978073],
+        "total": 46,
+        "value": 0.0
+      },
+      "correctionBurden": {
+        "reviewedPerHand": 8.478260869565217,
+        "silentErrorsPerHand": 0.0,
+        "handsWithNoReview": 3.750442053385514e-6
+      },
+      "threshold": 0.9
+    },
+    {
+      "acceptedAccuracy": {
+        "count": 8,
+        "interval95": [0.6755843804891231, 1.0],
+        "total": 8,
+        "value": 1.0
+      },
+      "acceptedCoverage": {
+        "count": 8,
+        "interval95": [0.09085683568889254, 0.3072363234392253],
+        "total": 46,
+        "value": 0.17391304347826086
+      },
+      "confidentWrong": {
+        "count": 0,
+        "interval95": [0.0, 0.07707617732978073],
+        "total": 46,
+        "value": 0.0
+      },
+      "correctionBurden": {
+        "reviewedPerHand": 12.391304347826088,
+        "silentErrorsPerHand": 0.0,
+        "handsWithNoReview": 4.02700649120846e-12
+      },
+      "threshold": 0.95
+    }
+  ],
+  "top1Accuracy": {
+    "count": 44,
+    "interval95": [0.8546747708094659, 0.9879948064111691],
+    "total": 46,
+    "value": 0.9565217391304348
+  },
+  "top3Accuracy": {
+    "count": 46,
+    "interval95": [0.9229238226702192, 1.0],
+    "total": 46,
+    "value": 1.0
+  },
+  "unknown": {
+    "falseUnknownRate": {
+      "count": 0,
+      "interval95": [0.0, 0.07707617732978073],
+      "total": 46,
+      "value": 0.0
+    },
+    "recallMeasurable": false,
+    "why": "Unknown recall needs hard negatives \u2014 sticks, dice, racks, fingers, patterned tables. Every crop in this corpus is a real tile face, so the corpus can only measure false unknowns, never missed ones."
+  },
+  "comparison": {
+    "metrics": [
+      {
+        "baseline": 0.9347826086956522,
+        "current": 0.9565217391304348,
+        "delta": 0.021739130434782594,
+        "metric": "top1Accuracy",
+        "separated": false
+      },
+      {
+        "baseline": 0.782608695652174,
+        "current": 0.717391304347826,
+        "delta": -0.0652173913043479,
+        "metric": "operatingPoint.acceptedCoverage",
+        "separated": false
+      },
+      {
+        "baseline": 0.0,
+        "current": 0.0,
+        "delta": 0.0,
+        "metric": "operatingPoint.confidentWrong",
+        "separated": false
+      }
+    ],
+    "verdict": "within-noise: the held-out set cannot resolve this change"
+  }
+}
