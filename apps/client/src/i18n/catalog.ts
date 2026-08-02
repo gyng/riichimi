@@ -10,6 +10,8 @@ import type { Locale } from "./messages";
  */
 const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
   ja: {
+    "Line the hand up along this band": "手牌をこの帯に沿えてください",
+    "{count} of 14 tiles in view": "14枚中{count}枚を認識中",
     "See the audit": "内訳を見る",
     "See why": "理由を見る",
     "Fetching the voice…": "音声を取得しています…",
@@ -347,6 +349,8 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "yakuman never combine": "役満は複合しない",
   },
   "zh-Hans": {
+    "Line the hand up along this band": "请将手牌对齐到此区域",
+    "{count} of 14 tiles in view": "已看到 14 张中的 {count} 张",
     "See the audit": "查看明细",
     "See why": "查看原因",
     "Fetching the voice…": "正在获取语音…",
@@ -676,6 +680,8 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "yakuman never combine": "役满不复合",
   },
   "zh-Hant": {
+    "Line the hand up along this band": "請將手牌對齊到此區域",
+    "{count} of 14 tiles in view": "已看到 14 張中的 {count} 張",
     "See the audit": "查看明細",
     "See why": "查看原因",
     "Fetching the voice…": "正在取得語音…",

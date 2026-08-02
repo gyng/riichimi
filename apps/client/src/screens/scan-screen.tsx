@@ -3,6 +3,7 @@ import { ActionButton, SegmentedControl, classNames } from "@riichimi/ui";
 import { reviewRecognition } from "@riichimi/vision";
 import type { CaptureLayout, DetectedTile, RecognitionResult } from "@riichimi/vision";
 import { CameraView, useCameraPermissions } from "../infrastructure/camera";
+import { estimateTileCount } from "../features/recognition/tile-row";
 import type { CameraViewHandle } from "../infrastructure/camera";
 import * as ImagePicker from "../infrastructure/photo-library";
 import { router } from "../navigation/router";
@@ -101,6 +102,26 @@ export function ScanScreen() {
   // already on screen instead of repeating them.
   const labelId = useId();
   const labelIds = { layout: `${labelId}-layout` };
+  // What the guide reports while the shot is still being framed. Null until the
+  // preview has something to read, so "no reading yet" never looks like "none".
+  const [tilesInView, setTilesInView] = useState<number | null>(null);
+
+  // Counting while framing turns the capture from a guess into a gauge: a player
+  // can see the hand is short a tile before pressing the shutter rather than
+  // after waiting for a recognition that was never going to work.
+  useEffect(() => {
+    if (photoUri !== null) {
+      setTilesInView(null);
+      return () => {};
+    }
+    const timer = globalThis.setInterval(() => {
+      const frame = camera.current?.samplePreview();
+      setTilesInView(frame === null || frame === undefined ? null : estimateTileCount(frame));
+    }, 400);
+    return () => {
+      globalThis.clearInterval(timer);
+    };
+  }, [photoUri]);
 
   useEffect(() => {
     let active = true;
@@ -526,6 +547,11 @@ export function ScanScreen() {
               <div className={classNames(styles["guideBand"], styles["guideBandWide"])}>
                 <p className={styles["guideBandLabel"]}>
                   {t("HAND \u00b7 MELDS \u00b7 DORA LAST")}
+                </p>
+                <p aria-live="polite" className={styles["guideCount"]}>
+                  {tilesInView === null
+                    ? t("Line the hand up along this band")
+                    : t("{count} of 14 tiles in view", { count: String(tilesInView) })}
                 </p>
               </div>
             ) : (

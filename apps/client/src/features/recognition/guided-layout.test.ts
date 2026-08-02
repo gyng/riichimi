@@ -132,3 +132,53 @@ describe("locateGuidedTiles", () => {
     ).toThrow(RangeError);
   });
 });
+
+/**
+ * A revealed hand as it actually sits on the table: fourteen tiles pushed
+ * together, with a dora indicator below. Connected components sees one wide
+ * region, not fourteen tiles.
+ */
+function touchingHandFrame(): PixelFrame {
+  const { data } = blankFrame();
+  for (let index = 0; index < 14; index += 1) {
+    const left = 16 + index * 38;
+    drawRectangle(data, left, 42, left + 37, 96);
+    // The seam: a dark line the full height of the tile, which is all that
+    // distinguishes one face from the next when they touch.
+    for (let y = 42; y < 96; y += 1) {
+      const offset = (y * width + left + 37) * 4;
+      data[offset] = 30;
+      data[offset + 1] = 28;
+      data[offset + 2] = 26;
+    }
+  }
+  drawRectangle(data, 300, 150, 334, 204);
+  return { data, height, width };
+}
+
+describe("a hand whose tiles are touching", () => {
+  it("reads fourteen tiles from a row with no gaps between them", () => {
+    // The most natural way to present a winning hand, and the one the
+    // gap-finding locator cannot read at all.
+    const layout = locateGuidedTiles(touchingHandFrame());
+
+    expect(layout.kind).toBe("success");
+    if (layout.kind !== "success") {
+      return;
+    }
+    expect(layout.concealed).toHaveLength(14);
+    for (let index = 1; index < layout.concealed.length; index += 1) {
+      const previous = layout.concealed[index - 1]!;
+      const current = layout.concealed[index]!;
+      expect(current.x).toBeGreaterThan(previous.x);
+    }
+  });
+
+  it("does not claim to know the winning tile when there is no gap to read it from", () => {
+    // Spacing is what marks the winning tile, and a divided row has none. The
+    // review desk asks rather than guessing.
+    const layout = locateGuidedTiles(touchingHandFrame());
+
+    expect(layout).toMatchObject({ kind: "success", winningRoleCertain: false });
+  });
+});

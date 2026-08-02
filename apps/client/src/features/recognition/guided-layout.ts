@@ -1,5 +1,7 @@
 import type { NormalizedBounds } from "@riichimi/vision";
 
+import { splitTileRow } from "./tile-row";
+
 export interface PixelFrame {
   readonly data: Uint8ClampedArray;
   readonly height: number;
@@ -238,7 +240,35 @@ export function locateGuidedTiles(frame: PixelFrame): GuidedLayoutResult {
     }
   }
 
-  const totalTiles = concealedRow.length + melds.reduce((sum, meld) => sum + meld.length, 0);
+  const meldTiles = melds.reduce((sum, meld) => sum + meld.length, 0);
+
+  // Touching tiles are one bright region, so a revealed hand — the most natural
+  // way to present a winning hand — arrives here as far too few components.
+  // The count is known, so the row can be divided rather than refused.
+  const expectedConcealed = 14 - meldTiles;
+  if (concealedRow.length < expectedConcealed && expectedConcealed >= 2) {
+    const bounds = {
+      bottom: Math.max(...concealedRow.map((item) => item.bottom)),
+      left: Math.min(...concealedRow.map((item) => item.left)),
+      right: Math.max(...concealedRow.map((item) => item.right)),
+      top: Math.min(...concealedRow.map((item) => item.top)),
+    };
+    const split = splitTileRow(frame, bounds, expectedConcealed);
+    if (split.kind === "success") {
+      return {
+        concealed: split.tiles,
+        dora: normalized(dora, frame),
+        kind: "success",
+        melds: melds.map((meld) => meld.map((component) => normalized(component, frame))),
+        // A divided row has no gaps to read, so the winning tile cannot be
+        // inferred from spacing. The review desk asks rather than guessing.
+        winningIndex: split.tiles.length - 1,
+        winningRoleCertain: false,
+      };
+    }
+  }
+
+  const totalTiles = concealedRow.length + meldTiles;
   if (totalTiles < 14 || totalTiles > 18) {
     return failure(
       `A winning hand is 14–18 tiles (with kans); found ${totalTiles} across the hand and melds.`,

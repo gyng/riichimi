@@ -88,6 +88,20 @@ export interface CameraViewHandle {
   takePictureAsync(options?: {
     readonly quality?: number;
   }): Promise<{ readonly uri: string } | undefined>;
+  /**
+   * A small snapshot of the live preview, for guidance while the shot is still
+   * being framed — telling a player how many tiles are in view before they
+   * commit to a capture. Small on purpose: it runs several times a second and
+   * only has to be good enough to count seams.
+   *
+   * Null whenever there is nothing to sample, which callers must treat as "no
+   * reading" rather than "no tiles".
+   */
+  samplePreview(width?: number): {
+    readonly data: Uint8ClampedArray;
+    readonly height: number;
+    readonly width: number;
+  } | null;
 }
 
 export interface CameraViewProps {
@@ -142,6 +156,24 @@ export const CameraView = forwardRef<CameraViewHandle, CameraViewProps>(function
   useImperativeHandle(
     ref,
     () => ({
+      samplePreview(width = 320) {
+        const element = video.current;
+        if (element === null || element.videoWidth === 0) {
+          return null;
+        }
+        const scale = width / element.videoWidth;
+        const height = Math.max(1, Math.round(element.videoHeight * scale));
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        if (context === null) {
+          return null;
+        }
+        context.drawImage(element, 0, 0, width, height);
+        const { data } = context.getImageData(0, 0, width, height);
+        return { data, height, width };
+      },
       async takePictureAsync(options) {
         const element = video.current;
         if (element === null || element.videoWidth === 0) {
