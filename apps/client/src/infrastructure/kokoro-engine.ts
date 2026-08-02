@@ -48,13 +48,24 @@ interface KokoroModule {
   };
 }
 
-function isKokoroModule(value: unknown): value is KokoroModule {
+/**
+ * Exported for the test: this is the only part of the loader that can be
+ * exercised without fetching third-party code over the network, and it is the
+ * part that decides whether the voice works at all.
+ */
+export function isKokoroModule(value: unknown): value is KokoroModule {
   if (typeof value !== "object" || value === null || !("KokoroTTS" in value)) {
     return false;
   }
   const { KokoroTTS } = value;
+  // `KokoroTTS` is a class, and `typeof` a class is "function", not "object".
+  // Demanding "object" here rejected the real module on every device and turned
+  // the neural voice into a permanent "could not be fetched" — the download was
+  // never even attempted. What matters is that the static factory is callable.
+  if (typeof KokoroTTS !== "object" && typeof KokoroTTS !== "function") {
+    return false;
+  }
   return (
-    typeof KokoroTTS === "object" &&
     KokoroTTS !== null &&
     "from_pretrained" in KokoroTTS &&
     typeof KokoroTTS.from_pretrained === "function"
