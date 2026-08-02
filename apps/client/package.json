@@ -17,11 +17,12 @@
     "@riichimi/session-core": "*",
     "@riichimi/ui": "*",
     "@riichimi/vision": "*",
+    "cookie-es": "3.1.1",
     "jpeg-js": "0.4.4",
     "onnxruntime-web": "1.27.0",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "react-router-dom": "7.18.1"
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-router": "8.3.0"
   },
   "devDependencies": {
     "@testing-library/dom": "10.4.1",

@@ -1,4 +1,4 @@
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router";
 
 // Navigation adapter over react-router. Screens report intent — "go to /manual
 // with these params" — without knowing which router is underneath; the route

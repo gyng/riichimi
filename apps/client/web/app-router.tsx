@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter } from "react-router";
 
 import HistoryRoute from "../app/history";
 import HomeRoute from "../app/index";

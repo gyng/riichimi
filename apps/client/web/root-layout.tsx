@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 
 import { AppNavigationBar } from "../src/components/app-navigation-bar";
 import { WebMcpBridge } from "../src/features/webmcp/webmcp-bridge";

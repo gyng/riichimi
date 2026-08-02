@@ -3,7 +3,7 @@ import "./global.css";
 
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { RouterProvider } from "react-router-dom";
+import { RouterProvider } from "react-router";
 
 import bokuUrl from "../assets/fonts/YujiBoku-celebration.ttf";
 import syukuUrl from "../assets/fonts/YujiSyuku-celebration.ttf";
