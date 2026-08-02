@@ -115,5 +115,5 @@ The V1 beta does **not** pass this gate because it has no 500-hand representativ
 1. Collect consented, rights-cleared full guided hands across tile sets, phones, lighting, glare, perspective, red fives, and hard negatives.
 2. Keep training/evaluation source-separated and publish tile-family slices.
 3. Measure exact-hand accuracy, correction burden, unknown recall, initialization, inference latency, and peak memory on representative devices.
-4. Add native custom-development-build and real-device camera checks; the ONNX native module is not available in Expo Go.
+4. Add real-device camera checks across representative phones. Riichimi is browser-only, so this means mobile Safari and Chrome on real hardware rather than a native build.
 5. Promote the beta only when the release manifest passes without overriding a threshold.

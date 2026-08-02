@@ -10,6 +10,6 @@ Until the first public release, only the current `main` branch receives security
 
 ## Dependency triage
 
-Dependency updates are pinned through `package-lock.json`, reviewed in grouped pull requests, and verified with the complete quality gate and web export. Do not run `npm audit fix --force`; it may replace Expo with an incompatible version.
+Dependency updates are pinned through `package-lock.json`, reviewed in grouped pull requests, and verified with the complete quality gate and web build. A new version is not adopted until it has been published for seven days; see the [dependency policy](docs/dependencies.md). Do not run `npm audit fix --force` — it resolves advisories by downgrading, and has proposed replacing a current dependency with a years-old major version.
 
-As of 2026-07-23, `npm audit --omit=dev` reports a moderate `uuid` advisory (`GHSA-w5hq-g745-h8pq`) through Expo's Xcode/configuration toolchain. Riichimi does not invoke the affected UUID buffer API, and the package is build tooling rather than shipped application behavior. npm currently proposes an incompatible downgrade from Expo 57 to Expo 46. The project therefore accepts this transitive finding temporarily and will remove the exception when Expo updates the dependency chain. Re-evaluate it on every Expo upgrade or if the affected code becomes reachable.
+An accepted finding is recorded here with the reason it is unreachable and the condition that would end the exception. There are no accepted findings at present.

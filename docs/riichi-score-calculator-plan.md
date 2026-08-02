@@ -273,7 +273,7 @@ An optional backend can later provide:
 - Establish annotation format and dataset pipeline
 - Train the first detector and classifier
 - Build guided capture and preprocessing
-- Export and run the models through ONNX on representative web and native devices
+- Export and run the models through ONNX in representative mobile and desktop browsers
 - Measure per-tile and exact-hand accuracy by tile set and capture condition
 
 ### Phase 4: scanner beta — 3 to 5 weeks

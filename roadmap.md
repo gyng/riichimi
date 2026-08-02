@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: **2026-07-24T02:00:00+08:00**
+Last updated: **2026-08-02T00:00:00+08:00**
 
 ## Product objective
 
@@ -9,7 +9,8 @@ Deliver a polished mobile/web riichi companion that reaches an auditable result 
 ## Shipped foundation
 
 - WRC 2025 scoring with validation, decomposition, yaku/yakuman, fu, limits, payments, and explanations.
-- Responsive React 19 / Expo manual calculator and guided camera capture with private photo-reference fallback.
+- A web-only React 19 client on Vite, rendering real DOM elements styled by co-located CSS Modules over design tokens. No React Native, react-native-web, or Expo package remains — see [ADR 0004](docs/decisions/0004-web-only-dom-primitives.md).
+- A responsive manual calculator and guided camera capture with private photo-reference fallback.
 - Local table sessions with round context, riichi deposits, exhaustive-draw transfers, progression, history, persistence, erase confirmation, and undo.
 - Recognition contracts and confidence-aware correction prioritization.
 - Camera and gallery photo review with reference-preserving manual handoff and Android picker recovery.
@@ -22,7 +23,11 @@ Deliver a polished mobile/web riichi companion that reaches an auditable result 
 - Persistent WRC 2025 and explicit red-five-table profiles, with rules-aware tile entry, score attribution, legacy migration, and immutable per-table pinning.
 - Typed WebMCP tools with visible, recoverable mutations.
 - A deduplicated local score folio with audit details, removal, clear confirmation, and reload-safe direct links.
-- Unit, component, browser, coverage, formatting, lint, type, export, and screenshot checkpoints.
+- Editable completed rounds over an event-sourced session log, with lossless v1→v2 migration, signed-score-change confirmation, and full undo — see [ADR 0004 (session log)](docs/decisions/0004-event-sourced-session-log.md).
+- Named ruleset profiles with cited primary sources — WRC 2025, WRC red-five, Tenhou ranked, EMA 2016, JPML A, and M.League — plus a game-summary export.
+- Four-language localization (English, 日本語, 简体中文, 繁體中文) covering visible copy and runtime-composed accessible names, guarded by an untranslated-string scanner.
+- A win announcer behind a swappable speech port, with a stroke-by-stroke limit-hand celebration that honours `prefers-reduced-motion`.
+- Unit, component, browser, coverage, formatting, lint, type, build, and screenshot checkpoints.
 
 ## P0 — production recognition and release confidence
 
@@ -46,28 +51,21 @@ Exit gate: representative guided scans meet documented accuracy and latency targ
 
 ## P1 — rules and session completeness
 
-- Cross-check the scoring engine against published tables and canonical worked hands; retain every discrepancy as a regression test. (Done for the payment table and closed/open/ambiguous worked hands; keep extending as rules grow.)
-- Game-summary export (done) and result-card sharing built on top of it.
-- **Editable completed rounds.** Requires a replayable event log first: `declareRiichi` is not currently recorded as an event, so editing a past round and recomputing downstream would lose riichi-stick timing and silently corrupt scores. A Fable architect pass owns the design; implementation is delegated from that design. The feature must never silently change scores — every recompute is auditable and reversible.
-- **Named, versioned, immutable ruleset profiles**, added without branching in UI components:
-  - Tenhou and Mahjong Soul (Jantama) variants.
-  - EMA (European Mahjong Association) competition rules.
-  - M.League rules.
-  - JPML (Japan Professional Mahjong League, rulebook A) rules.
-    These differ across aka dora, open tanyao (kuitan), kiriage mangan, kazoe cap (sanbaiman vs yonbaiman), double-wind-pair fu, uma/oka, starting/return points, tobi/busting, and nagashi mangan — so `ScoringRules` and the session model must grow beyond the current WRC-only shape (e.g. `countedLimit` is presently fixed to `"yonbaiman"`, double-wind pair fu is fixed at +2). Expand the scoring cross-check corpus per profile as each lands.
-- **House-rule editor** — let users compose and persist a custom ruleset profile from the same option set, with validation, sensible presets, and immutable per-table pinning.
+- Keep extending the scoring cross-check as rules grow. The payment table, closed/open/ambiguous worked hands, and each shipped profile are covered; every discrepancy stays as a regression test.
+- **Result-card sharing** built on the game-summary export.
+- **Mahjong Soul (Jantama).** Deliberately not shipped with the other profiles. Two of its options are not stated on its official page, and it is the one ruleset paying single-yaku double yakuman. The engine now scores that case, so what remains is a sourcing problem, not an engine one: adopt the profile when the missing options have a citable primary source.
+- **Domain-vocabulary localization.** Yaku names and fu-audit reasons still render in English in every locale, because they originate in `score-core` where an i18n import would reverse the dependency direction. The fix is an interface-layer dictionary keyed by stable yaku id; fu reasons are composed English and need structuring first. This is a feature, not a wrapping pass.
 - Expand WebMCP only for proven high-value tasks; preserve visible effects, schema validation, and human control.
 
-## P1 — experience, localization, and audio
+## P1 — experience and audio
 
-- **Mobile-first UI pass.** Design the primary layouts for narrow phones first (48px+ touch targets, thumb reach, one-handed scoring, bottom-anchored primary actions), then scale up to desktop — rather than adapting a desktop layout down. Re-audit every screen against real device widths and large text.
-- **Win announcer (Mahjong Soul style).** Announce the winning hand and its yaku/score. Build a TTS **port/abstraction** so the voice backend is swappable: start with the browser Web Speech API (Web TTS), and keep the interface ready for later on-device engines (Piper, Moonshine). Respect reduced-motion and quiet/mute preferences; never block scoring on audio, and keep audio out of the domain (adapter only).
-- **Internationalization, especially CJK.** Extract all user-facing strings behind an i18n layer; support Japanese and Chinese alongside English, with correct CJK typography, tile/term names, and pluralization. Keep number/point/date formatting locale-correct at the interface layer without leaking locale or `Intl`/clock access into the domain.
+- **Local neural voice.** The announcer speaks through a swappable speech port with a Web Speech adapter. A local engine (Kokoro via ONNX, Piper) would remove the dependence on whatever voice the OS happens to ship and make the announcement sound the same everywhere. Gate it on bundle cost and lazy delivery — it must never delay a score.
+- **Device-width re-audit.** The layouts are authored mobile-first with media queries rather than measured widths, but they have not been re-audited against real device widths, large text, and landscape since the CSS conversion.
 
 ## P2 — operational polish
 
-- Add CI matrices for quality, static export, browser dogfood, and platform builds.
-- Add signed build/release provenance, dependency review, privacy copy, and store-ready metadata.
+- Add CI matrices for quality, static build, and browser dogfood.
+- Add signed build/release provenance, dependency review, and privacy copy.
 - Measure startup, memory, model initialization, inference, and bundle growth; run targeted optimization only when a documented budget is crossed.
 - Add consented, metadata-stripped recognition feedback only after retention and deletion policy is approved.
 

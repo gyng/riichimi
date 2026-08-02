@@ -9,4 +9,4 @@ Keep changes small, behavior-focused, and aligned with the inward dependency rul
 5. Run `npm run build:web` when client or shared runtime code changes.
 6. Update documentation or add an ADR when a durable design decision changes.
 
-Commit generated `package-lock.json`, but do not commit `.expo`, `dist`, coverage, logs, captured hands, or model training data. Never weaken a lint rule, type-safety option, test, or coverage floor without explaining the underlying design problem in the change.
+Commit generated `package-lock.json`, but do not commit `dist`, coverage, logs, captured hands, or model training data. Never weaken a lint rule, type-safety option, test, or coverage floor without explaining the underlying design problem in the change.

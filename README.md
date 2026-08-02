@@ -58,7 +58,7 @@ docs                   Plan, architecture, decisions, testing strategy
 
 Recognition is a **review-gated beta**. It reaches 93.48% top-1 on a 46-crop physical set, and 100% accuracy among reads it accepts above its own threshold — which is why nothing scores without your confirmation. That figure is not production accuracy, and [the model audit](docs/recognition-model-audit.md) says exactly what it is and is not.
 
-Mahjong Soul is deliberately absent from the rulesets: two of its options are not stated on its official page, and it is the one ruleset paying single-yaku double yakuman, which the engine does not detect. [Why that matters](docs/rules-profiles.md).
+Mahjong Soul is deliberately absent from the rulesets: two of its options are not stated on its official page, so the profile cannot be sourced the way the others are. [Why that matters](docs/rules-profiles.md).
 
 The translations are machine-produced and have not been read by a player in those languages.
 

@@ -92,12 +92,36 @@ Recorded on 2026-07-25 after replacing react-native-web with local DOM primitive
 This is a bundle win large enough to record but not one that needed pursuing: it
 fell out of removing an indirection, which is the cheapest kind.
 
+### CSS Modules, tokens, and localization
+
+Recorded on 2026-08-02 after converting `packages/ui` and every screen to real
+CSS with design tokens, adding four-language localization, and shipping the win
+announcer:
+
+- Shared entry: 955,280 bytes of JavaScript plus a 48,843-byte stylesheet, so
+  1,004,123 bytes together against the 973,730-byte single-file entry before the
+  conversion. That is **30,393 bytes (`3.1%`)** for four languages, the
+  announcer, and the celebration — and the split is worth more than the delta:
+  the stylesheet is static, cacheable, and parsed off the JavaScript critical
+  path instead of being constructed at runtime.
+- Gzipped, the pair is 204.29 kB + 7.99 kB. CSS compresses to 16% of its size;
+  the same rules expressed as style objects in JavaScript did not.
+- Full build: 3,578,816 bytes. The ONNX model (1,866,535) and the lazy WebGL
+  inference chunk (462,468) still dominate, and both are unchanged.
+- Cold Vite build: 1.64 seconds wall, 370,804 KB peak RSS, 197 modules — far
+  inside the 45-second CI budget.
+- Full check: 292 framework-free tests and 155 component tests.
+
+The celebration fonts are the only notable new asset (`YujiSyuku` 115,380 bytes,
+`YujiBoku` 10,008), and each is subset to the few glyphs it draws. No
+optimization is warranted at this checkpoint.
+
 ## Feedback-loop budgets
 
 - Formatting should remain below 2 seconds locally.
 - Framework-free unit tests should remain below 2 seconds for the ordinary suite.
 - Component tests should remain below 15 seconds before sharding or isolation changes are considered.
-- A cold web export should remain below 45 seconds in CI before targeted build profiling is required.
+- A cold web build should remain below 45 seconds in CI before targeted build profiling is required.
 - Any change that grows the shared entry bundle by more than 10% needs a bundle explanation.
 - Camera capture must keep the UI responsive; recognition and image preprocessing must not block interaction frames.
 
@@ -117,4 +141,4 @@ Use runner timing output to locate slow files. Remove unnecessary environment se
 
 ### Builds
 
-Compare cold and warm runs. Inspect Metro bundle composition and duplicate dependencies before adding caching or custom transforms. Record the command, machine class, revision, and result for any optimization that becomes a durable engineering decision.
+Compare cold and warm runs. Inspect the Vite/Rolldown bundle composition and duplicate dependencies before adding caching or custom transforms. Record the command, machine class, revision, and result for any optimization that becomes a durable engineering decision.

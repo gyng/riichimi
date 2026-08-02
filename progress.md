@@ -1,10 +1,14 @@
 # Progress
 
-Last updated: **2026-07-24T03:13:42+08:00**
+Last updated: **2026-08-02T00:00:00+08:00**
 
 ## Current state
 
-Riichimi is a polished, local-first scoring and table-session app on mobile-width web and desktop web. Its scoring, persistent rules profiles, WebMCP surface, guided camera/gallery recognition beta, mandatory review handoff, and critical browser journeys are implemented and verified. V1 materially improves source-separated physical recognition and browser correction burden, while production accuracy remains intentionally gated on a representative complete-hand corpus and real-device evaluation.
+Riichimi is a polished, local-first scoring and table-session app for the browser. Its scoring, six sourced rules profiles plus a house-rule editor, editable event-sourced rounds, four-language localization, win announcer, WebMCP surface, guided camera/gallery recognition beta, mandatory review handoff, and critical browser journeys are implemented and verified.
+
+The client is web-only: a React 19 app on Vite rendering real DOM elements styled by co-located CSS Modules over design tokens, with no React Native, react-native-web, or Expo package in the tree.
+
+Recognition remains the open front. V1 materially improves source-separated physical accuracy and browser correction burden, but production accuracy is intentionally gated on a representative complete-hand corpus and real-device evaluation, and the 46-crop held-out set is too small to resolve a change from noise.
 
 ## Timestamped checkpoints
 
@@ -120,6 +124,42 @@ Riichimi is a polished, local-first scoring and table-session app on mobile-widt
   - Phase 4a/4b: the session-screen inline editor with a mandatory signed-score-change confirmation, and win re-scoring through the calculator in edit mode (honba/context seeded but manually editable).
 - Browser-dogfooded the full edit flow including a real v1→v2 migration on load; edits are undoable. Final gate: `npm run check` at 214 domain + 50 UI tests, `build:web` passing.
 
+### 2026-07-24T09:08:16+08:00 — rulesets, house rules, localization, and the mobile pass
+
+- Extended the guided recognizer to **called melds and kans** across four phases: localization, inference into the scored draft, review behind the confirm gate, and an explicit hand-structure confirmation. A scan is now one tap, guided by layout, with a natural single-row capture as the default.
+- Added **four sourced ruleset profiles** — Tenhou ranked, EMA 2016, M.League, and JPML A — each citing a primary source and differing only in profile data, never in UI branches. Added a **house-rule editor** so a table can compose and persist its own profile from the same option set.
+- Translated the interface into **Japanese, Simplified Chinese, and Traditional Chinese**, following the device language, with the catalog keyed by the English source string so an untranslated key falls back rather than showing a key name.
+- Ran the mobile-first pass: play surfaces fit a phone, the home is a dashboard rather than a second nav bar, the table's primary action comes first, navigation moved to a persistent top app bar, and landscape uses the width it gives.
+- Tiles draw with real mahjong faces.
+- Renamed the project from `richii` to `riichimi`, and added a screenshot rig, a terse README, and Pages deployment.
+- Added type checking to the gate after 37 module-resolution errors survived a green run — oxlint's type-aware rules are not a substitute for `tsc`.
+
+### 2026-07-24T22:46:13+08:00 — the announcer and the limit-hand celebration
+
+- A scored win is **announced through a swappable speech port**. The port is narrow (`available`, `speak`, `cancel`) so a local neural voice can replace the Web Speech adapter without touching the announcement text or the calculator.
+- Limit hands **celebrate**: fire, lightning, and brush calligraphy revealed stroke by stroke, synced to the announcement, with a bell. Both the voice and the celebration are user switches, and the celebration drops to a still frame under `prefers-reduced-motion`.
+- Every yaku is **named in Japanese**, kanji first in the score panel.
+- The engine scores **single-yaku double yakuman** (13-wait kokushi, pure nine gates, tanki suuankou, daisuushii), gated by a ruleset flag that every shipped profile currently sets to false.
+- Tile review is anchored to the photograph, and its localization is complete.
+
+### 2026-07-25T21:32:16+08:00 — web-only on Vite, then no React Native at all
+
+- Migrated the client to a **web-only Vite app** routed by `react-router`. Metro could not bundle onnxruntime-web or kokoro-js, and native was dropped rather than worked around. Platform splits went with it: every `foo.web.ts` became `foo.ts`.
+- Dropped `react-native-svg` for DOM SVG. This also **fixed the dev server**: its Flow-typed Fabric/codegen files broke Vite's dependency optimizer and blanked the tile routes.
+- Removed **react-native-web** entirely, then the last Expo packages, taking `react-native` out of the install tree — it had been surviving as a transitive peer. The lockfile went from 850 to 335 packages. The shims that had been aliased over `expo-router`/`expo-camera`/`expo-image-picker` are ordinary adapters now, and `vite.config.ts` aliases nothing. See [ADR 0004](docs/decisions/0004-web-only-dom-primitives.md).
+- Converted `packages/ui` and every screen to **real CSS Modules over design tokens**, then deleted the transitional DOM primitives. `:active` and `:disabled` replaced JS pressed and disabled styles; media queries replaced measured-width layouts.
+- **Accessible names are localized**, including the ones composed at runtime: `translate` fills `{placeholder}` slots so a composed name is one source string a translator sees whole, and tile vocabulary is joined by a locale-owned rule — a screen reader reading Japanese no longer says "5 circles". Controls point at the visible label with `aria-labelledby` instead of duplicating it. The untranslated-string scanner now covers `aria-label` and fails on a template literal, so the gap cannot reopen.
+- The client's **coverage floors became a gate** rather than dormant config: `test:ui` runs with `--coverage`. They had been inert since the Jest configuration they were ported from ran without it.
+- Entry bundle: 1,274,035 → 973,730 bytes (−24%) from the react-native-web removal alone.
+
+### 2026-08-02T00:00:00+08:00 — documentation reconciliation
+
+- Reconciled the documentation with the shipped app after a week of architectural change: `README`, `CONTRIBUTING`, `SECURITY`, `architecture.md`, `performance.md`, the plan, and the model audit no longer describe an Expo/Metro toolchain that does not exist.
+- Recorded the architectural boundaries the change introduced: a **localization** section (why yaku names and fu reasons stay English at the interface ring) and an **audio** section (the speech port, and how both win-feedback channels fail quiet).
+- Corrected two documentation claims that had gone false: the README said the engine does not detect single-yaku double yakuman, and `SECURITY.md` documented an Expo `uuid` advisory that no longer exists in the tree.
+- Added a bundle checkpoint for the CSS and localization work: 955,280 bytes of JavaScript plus a 48,843-byte stylesheet, 3.1% over the pre-conversion single-file entry for four languages, the announcer, and the celebration. Cold Vite build is 1.64 seconds.
+- Cleared a high-severity `react-router` advisory (`GHSA-qwww-vcr4-c8h2`) by upgrading rather than accepting an exception: `react-router-dom` 7.18.1 → `react-router` 8.3.0, which drops the `react-router-dom` package and pulled `react`/`react-dom` to 19.2.8. `npm audit` is clean. Two install hazards found and documented on the way: `packages/ui` pinning React one patch behind the client produced two React copies and 50 dead component tests, and npm will not install react-router's own `cookie-es` dependency in this workspace. See [dependency policy](docs/dependencies.md).
+
 ## Visual evidence
 
 - [Mobile landing](docs/checkpoints/2026-07-23-01-home-mobile.png)
@@ -150,4 +190,6 @@ npm run test:e2e
 ## External and environment constraints
 
 - Guided physical-tile recognition is a licensed, working beta with materially stronger crop evidence, but production accuracy is not claimed until the 500-hand representative gate and device benchmarks pass.
-- Native iOS/Android inference requires a custom development build because ONNX Runtime React Native is not available in Expo Go; camera, SQLite, large-text, screen-reader, latency, and memory passes still require real simulators/devices.
+- The 46-crop held-out set cannot resolve a recognizer change from noise. Two controlled synthetic-render A/B runs both landed inside it, which is a measurement limit rather than a result about renders.
+- Riichimi is browser-only, so device QA means mobile Safari and Chrome on real hardware. Camera, large-text, screen-reader, latency, and memory passes on representative phones remain unverified.
+- Yaku names and fu-audit reasons render in English in every locale by design; see the localization boundary in [architecture](docs/architecture.md).
