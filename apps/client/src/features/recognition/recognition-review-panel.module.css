@@ -32,15 +32,15 @@
 .kicker {
   color: var(--color-accent);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: 0.0625rem;
 }
 
 .title {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 21px;
+  font-size: 1.3125rem;
   font-weight: 700;
 }
 
@@ -48,15 +48,15 @@
 .progress {
   color: var(--color-jade);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 800;
 }
 
 .instructions {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   margin-top: var(--space-x2);
 }
 
@@ -77,23 +77,23 @@
 .structureKicker {
   color: var(--color-accent);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: 0.0625rem;
 }
 
 .structureTitle {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 17px;
+  font-size: 1.0625rem;
   font-weight: 700;
 }
 
 .structureCopy {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 13px;
-  line-height: 19px;
+  font-size: 0.8125rem;
+  line-height: 1.1875rem;
 }
 
 .structureGroup {
@@ -148,7 +148,7 @@
 .position {
   color: var(--color-ink-muted);
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 0.5rem;
   font-weight: 700;
 }
 
@@ -159,15 +159,15 @@
 .reviewFlag {
   color: var(--color-accent);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 800;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.025rem;
 }
 
 .confidenceOk {
   color: var(--color-jade);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 700;
 }
 
@@ -182,7 +182,7 @@
   color: var(--color-accent);
   display: flex;
   font-family: var(--font-serif);
-  font-size: 28px;
+  font-size: 1.75rem;
   font-weight: 800;
   justify-content: center;
   width: 38px;
@@ -203,15 +203,15 @@
 .editorKicker {
   color: var(--color-accent);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: 0.0625rem;
 }
 
 .editorTitle {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 19px;
+  font-size: 1.1875rem;
   font-weight: 700;
 }
 
@@ -235,9 +235,9 @@
 .suggestionLabel {
   color: var(--color-jade);
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 0.5rem;
   font-weight: 800;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.05rem;
 }
 
 .editorActions {

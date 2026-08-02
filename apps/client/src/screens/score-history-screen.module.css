@@ -34,8 +34,8 @@
 .rules {
   color: var(--color-ink-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 1px;
+  font-size: 0.5625rem;
+  letter-spacing: 0.0625rem;
 }
 
 .header {
@@ -48,18 +48,18 @@
 .kicker {
   color: var(--color-accent);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 1.7px;
+  letter-spacing: 0.10625rem;
 }
 
 .title {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 50px;
+  font-size: 3.125rem;
   font-weight: 800;
-  letter-spacing: -1.8px;
-  line-height: 54px;
+  letter-spacing: -0.1125rem;
+  line-height: 3.375rem;
   margin-bottom: var(--space-x4);
   margin-top: var(--space-x3);
 }
@@ -67,16 +67,16 @@
 .intro {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 18px;
-  line-height: 28px;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
   max-width: 650px;
 }
 
 .muted {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 15px;
-  line-height: 22px;
+  font-size: 0.9375rem;
+  line-height: 1.375rem;
 }
 
 /* An empty folio is still a page: 零 set large in the paper's own tone, so the
@@ -96,7 +96,7 @@
 .emptyNumber {
   color: var(--color-canvas-deep);
   font-family: var(--font-serif);
-  font-size: 96px;
+  font-size: 6rem;
   font-weight: 900;
 }
 
@@ -110,7 +110,7 @@
 .emptyTitle {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 28px;
+  font-size: 1.75rem;
   font-weight: 800;
   margin-bottom: var(--space-x2);
 }
@@ -145,7 +145,7 @@
 .entryIndex {
   color: var(--color-accent);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 800;
 }
 
@@ -178,14 +178,14 @@
 .entryMeta {
   color: var(--color-ink-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.7px;
+  font-size: 0.5625rem;
+  letter-spacing: 0.04375rem;
 }
 
 .score {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 30px;
+  font-size: 1.875rem;
   font-weight: 800;
   margin-top: 3px;
 }
@@ -196,7 +196,7 @@
   border-radius: 999px;
   color: var(--color-jade);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 800;
   padding: var(--space-x2) var(--space-x3);
 }
@@ -220,8 +220,8 @@
 .fact {
   color: var(--color-ink-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.6px;
+  font-size: 0.5625rem;
+  letter-spacing: 0.0375rem;
 }
 
 /* Payment and total set apart on the canvas tone, because they are the figures a
@@ -242,14 +242,14 @@
 .resultKicker {
   color: var(--color-jade);
   font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: 1px;
+  font-size: 0.5rem;
+  letter-spacing: 0.0625rem;
 }
 
 .payment {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 17px;
+  font-size: 1.0625rem;
   font-weight: 700;
   margin-top: 2px;
 }
@@ -263,7 +263,7 @@
 .total {
   color: var(--color-accent);
   font-family: var(--font-serif);
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 800;
   margin-top: 1px;
 }
@@ -281,7 +281,7 @@
   border-radius: 999px;
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 700;
   padding: var(--space-x2) var(--space-x3);
 }
@@ -301,7 +301,7 @@
 .rulesLabel {
   color: var(--color-ink-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
 }
 
 /* Destructive, so it is a word rather than a button: deliberate to reach, and it
@@ -311,7 +311,7 @@
   color: var(--color-accent);
   display: flex;
   font-family: var(--font-serif);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 700;
   justify-content: center;
   min-height: 48px;
@@ -340,7 +340,7 @@
 .clearTitle {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 700;
 }
 
@@ -355,7 +355,7 @@
   align-self: center;
   color: var(--color-accent);
   font-family: var(--font-serif);
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 700;
   margin-top: var(--space-x6);
   padding: var(--space-x3);

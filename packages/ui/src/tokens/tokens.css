@@ -5,6 +5,15 @@
  *
  * The visual direction is a Japanese scoring ledger: warm paper, sumi ink,
  * restrained vermilion, and a precise grid rhythm.
+ *
+ * Type is measured in `rem`, spacing in `px`. A reader who raises their
+ * browser's default font size is asking for larger text, not a larger app: the
+ * grid rhythm below stays where it is while every `font-size`, `line-height`,
+ * and `letter-spacing` grows with the request. Stated in px, as they were, that
+ * request did nothing at all — the whole interface ignored it.
+ *
+ * So: never write `font-size` in px. 1rem is 16px at the default, and the
+ * conversion is size/16 — 9px is 0.5625rem, 13px is 0.8125rem.
  */
 :root {
   /* Ink and paper. `canvas` is the page, `paper` the panels laid on it. */

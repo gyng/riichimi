@@ -24,7 +24,7 @@
 .title {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 700;
   margin-top: 2px;
 }
@@ -50,6 +50,6 @@
 .error {
   color: var(--color-accent);
   font-family: var(--font-serif);
-  font-size: 13px;
+  font-size: 0.8125rem;
   width: 100%;
 }

@@ -158,7 +158,9 @@ describe("ManualCalculator", () => {
     fireEvent.click(screen.getByRole("button", { name: "Try a scored example" }));
     fireEvent.click(screen.getByRole("button", { name: "Calculate" }));
 
-    expect(screen.getByText("2 han · 20 fu")).toBeInTheDocument();
+    // Twice on purpose: the dock carries the answer so it is never below the
+    // fold, and the audit panel repeats it at the head of its reasoning.
+    expect(screen.getAllByText("2 han · 20 fu")).toHaveLength(2);
     expect(screen.getByText("Fully concealed hand")).toBeInTheDocument();
     expect(screen.getAllByText("Pinfu")).toHaveLength(2);
     expect(screen.getByText("Saved to your folio.")).toBeInTheDocument();
@@ -169,6 +171,52 @@ describe("ManualCalculator", () => {
         ],
       }),
     );
+  });
+
+  it("keeps the answer and the action in one place, so neither is scrolled away", async () => {
+    // The hand, picker, and context run to about two and a half screens on a
+    // phone, so a score rendered after them is off screen at the moment it is
+    // produced. The dock holds whichever of the two is currently useful.
+    render(<CalculatorUnderTest />);
+    await screen.findByText("WORLD RIICHI RULES 2025");
+
+    const dock = screen.getByRole("button", { name: "Calculate" }).closest("div");
+    expect(dock).not.toBeNull();
+    expect(dock?.textContent).not.toContain("han");
+
+    fireEvent.click(screen.getByRole("button", { name: "Try a scored example" }));
+    fireEvent.click(screen.getByRole("button", { name: "Calculate" }));
+
+    // Calculate has done its job and given its place to the score.
+    expect(screen.queryByRole("button", { name: "Calculate" })).not.toBeInTheDocument();
+    const audit = screen.getByRole("button", { name: "See the audit" });
+    expect(audit.closest("div")?.textContent).toContain("2 han · 20 fu");
+    expect(audit.closest("div")?.textContent).toContain("700 / 400");
+  });
+
+  it("hands the dock back to Calculate the moment the hand changes", async () => {
+    render(<CalculatorUnderTest />);
+    await screen.findByText("WORLD RIICHI RULES 2025");
+    fireEvent.click(screen.getByRole("button", { name: "Try a scored example" }));
+    fireEvent.click(screen.getByRole("button", { name: "Calculate" }));
+    expect(screen.getByRole("button", { name: "See the audit" })).toBeInTheDocument();
+
+    // Any edit invalidates the answer, so the dock must stop showing one.
+    fireEvent.click(screen.getByRole("radio", { name: "Ron" }));
+
+    expect(screen.getByRole("button", { name: "Calculate" })).toBeInTheDocument();
+    expect(screen.queryByText("2 han · 20 fu")).not.toBeInTheDocument();
+  });
+
+  it("says what is wrong in the dock when a hand cannot score", async () => {
+    render(<CalculatorUnderTest />);
+    await screen.findByText("WORLD RIICHI RULES 2025");
+
+    fireEvent.click(screen.getByRole("button", { name: "Calculate" }));
+
+    // A failed calculation is still an answer, and it belongs in the same place.
+    const why = screen.getByRole("button", { name: "See why" });
+    expect(why.closest("div")?.textContent).toContain("Check the hand");
   });
 
   it("explains the first missing input instead of producing a partial score", async () => {
@@ -228,7 +276,7 @@ describe("ManualCalculator", () => {
       // Re-score the hand as the worked pinfu-tsumo example.
       fireEvent.click(screen.getByRole("button", { name: "Try a scored example" }));
       fireEvent.click(screen.getByRole("button", { name: "Calculate" }));
-      expect(screen.getByText("2 han · 20 fu")).toBeInTheDocument();
+      expect(screen.getAllByText("2 han · 20 fu").length).toBeGreaterThan(0);
 
       fireEvent.click(screen.getByRole("button", { name: "Save correction" }));
 

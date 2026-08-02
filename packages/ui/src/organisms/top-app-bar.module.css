@@ -28,7 +28,7 @@
   color: var(--color-white);
   display: flex;
   font-family: var(--font-serif);
-  font-size: 17px;
+  font-size: 1.0625rem;
   font-weight: 700;
   height: 30px;
   justify-content: center;
@@ -38,9 +38,9 @@
 .brandLabel {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 900;
-  letter-spacing: 2px;
+  letter-spacing: 0.125rem;
 }
 
 .nav {
@@ -60,10 +60,10 @@
   color: var(--color-ink-muted);
   display: flex;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
   justify-content: center;
-  letter-spacing: 1.1px;
+  letter-spacing: 0.06875rem;
   min-height: 48px;
   min-width: 44px;
   padding: 0 var(--space-x1);
@@ -107,9 +107,9 @@
   color: var(--color-ink);
   cursor: pointer;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.03125rem;
   min-height: 48px;
   padding: 0 var(--space-x3) 0 0;
   /* The control is as wide as its longest language, so the current one is set

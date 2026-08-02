@@ -193,6 +193,17 @@ Recognition remains the open front. V1 materially improves source-separated phys
 - Honesty about the trade: this is the one place Riichimi is not local-first. It is opt-in, off by default, states its ~90 MB download before the choice is made, reports the fetch and any failure in a live region, and falls back to the browser voice.
 - Ten adapter tests cover the guarantees rather than the synthesis: speaking never blocks or throws into a score, the engine is fetched once however many wins are announced, an overtaken utterance is dropped _before_ the expensive generation rather than after, a failed fetch is reported and retried rather than latching, and cancel stops what is playing. Seven more cover the choice itself, including that the download size is readable before choosing.
 
+### 2026-08-02T00:00:00+08:00 — a UX review of the running app, and its four fixes
+
+Measured by driving the built app at 390×844 rather than by reading the source.
+
+- **The answer was below the fold at the moment it was produced.** After Calculate, the result panel's top edge landed at 839px of an 844px viewport: a player saw the tile picker, the Calculate button, and the words `MAXIMUM-VALUE INTERPRETATION`. The fix is not a better scroll — a scroll fixes it once and breaks again when a player scrolls up to change a tile. The action now sits in a **dock below the scroll region and becomes the score once there is one**, which costs no new state because every input already clears the result. The audit keeps the reasoning; `See the audit` goes to it. The browser dogfood asserts `toBeInViewport()` so it cannot regress.
+- **Setup was 93% over its density budget on dead space alone.** `.card { flex: 1 1 320px }` is a width in Setup's wrapping row and a _height_ in its column below 700px, so four cards padded themselves out with **685px of nothing** (243 + 216 + 176 + 50). Restated as `min-width` — which the project's own notes had already prescribed twice — Setup went **1.93 → 1.26 screens** with no content removed. The previous encounter with this trap was fixed at a call site (the table screen wraps the rules card in a row), which left it loaded for the next caller.
+- **Nothing scaled with the reader's font size.** 261 `font-size`, `line-height`, and `letter-spacing` declarations, all px, zero rem: a 200% default font left `h1` at 22px and labels at 9px, and 53 declarations sat under 12px. All converted; type now scales 22 → 33 → 44px across a 16/24/32px root with no horizontal overflow at any size. Rendered output at the default is unchanged.
+- **Home put every control in the upper third**, where a thumb reaches last, and left 57% of the phone empty below. The title stays at the top and the controls drop to the bottom: primary actions moved from y=135–199 to y=596–660. Desktop is untouched.
+- Recorded what the screen-count budget cannot express: the scored calculator's count _rose_ (2.51 → 2.67) because the dock takes height out of the visible area, while the distance to the answer went to zero. The budget measures how much there is, not how far away the important part is, so it is now paired with a rule that says so.
+- Two findings were reported and not acted on. The tile picker's 34×46 targets are a documented, reasoned exception. And the IA promotes Scan — first in the bar, first on Home — while the recognizer costs 3.26 review taps per hand; that is a product positioning call rather than a defect, and it is the user's to make.
+
 ## Visual evidence
 
 - [Mobile landing](docs/checkpoints/2026-07-23-01-home-mobile.png)

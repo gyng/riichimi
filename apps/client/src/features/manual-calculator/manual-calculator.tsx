@@ -53,6 +53,7 @@ import { useRules } from "../../state/rules-context";
 import { useLocale } from "../../state/locale-context";
 import { useWebMcpTools, webMcpResult } from "../../infrastructure/webmcp";
 import type { RecognitionDraft } from "../recognition/recognition-draft";
+import { ScoreDock } from "./score-dock";
 import { ScoreResultPanel } from "./score-result-panel";
 import { TilePicker } from "./tile-picker";
 import { celebrationFor } from "../celebration/celebration";
@@ -286,6 +287,8 @@ export function ManualCalculator({
   const [editError, setEditError] = useState<SessionEditError | null>(null);
   const [pendingCommand, setPendingCommand] = useState<SessionEditCommand | null>(null);
   const { announceWins, celebrateWins, speech } = useAnnouncer();
+  // The docked answer needs somewhere to send a player who wants the reasoning.
+  const audit = useRef<HTMLDivElement>(null);
   // Round context is set once per table, so it stays folded away during a hand.
   const [showContextDetail, setShowContextDetail] = useState(false);
   const concealedCapacity = 14 - melds.length * 3;
@@ -396,6 +399,18 @@ export function ManualCalculator({
     scoredDraft.current = true;
     calculate();
   });
+
+  /** Take a player from the docked answer to the reasoning behind it. */
+  function showAudit() {
+    audit.current?.scrollIntoView({
+      // A jump is disorienting when the audit is two screens away; a scroll
+      // shows how far it was. Reduced motion gets the jump.
+      behavior: globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
+      block: "start",
+    });
+  }
 
   function resetResult() {
     setResult(null);
@@ -1205,10 +1220,7 @@ export function ManualCalculator({
             )}
           </Section>
 
-          <div className={styles["calculateRow"]}>
-            <ActionButton label={t("Calculate")} onPress={calculate} variant="vermilion" />
-          </div>
-          {result === null ? null : <ScoreResultPanel result={result} />}
+          <div ref={audit}>{result === null ? null : <ScoreResultPanel result={result} />}</div>
           {activeTable === null && result?.kind === "success" ? (
             <div className={styles["savedNotice"]}>
               <div className={styles["savedCopy"]}>
@@ -1305,6 +1317,7 @@ export function ManualCalculator({
           </div>
         )}
       </div>
+      <ScoreDock onCalculate={calculate} onShowAudit={showAudit} result={result} />
     </div>
   );
 }

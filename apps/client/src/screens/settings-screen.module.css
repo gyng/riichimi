@@ -19,9 +19,9 @@
 .title {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 26px;
+  font-size: 1.625rem;
   font-weight: 800;
-  letter-spacing: -0.6px;
+  letter-spacing: -0.0375rem;
 }
 
 .cards {

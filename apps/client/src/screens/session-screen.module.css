@@ -25,7 +25,7 @@
   color: var(--color-ink-muted);
   flex-shrink: 1;
   font-family: var(--font-serif);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .riichiPill {
@@ -50,18 +50,18 @@
 .riichiPillLabel {
   color: var(--color-jade);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 800;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.05rem;
 }
 
 .riichiDeclared {
   align-self: flex-start;
   color: var(--color-accent);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 800;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.0375rem;
   min-height: 40px;
   padding-top: 12px;
 }
@@ -82,14 +82,14 @@
 .disclosureChevron {
   color: var(--color-accent);
   font-family: var(--font-mono);
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 800;
 }
 
 .disclosureLabel {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 700;
 }
 
@@ -104,24 +104,24 @@
 .confirmScoreLine {
   color: var(--color-ink);
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 700;
 }
 
 .confirmSubhead {
   color: var(--color-ink-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.0625rem;
   margin-top: var(--space-x2);
 }
 
 .confirmWarning {
   color: var(--color-accent);
   font-family: var(--font-serif);
-  font-size: 13px;
-  line-height: 19px;
+  font-size: 0.8125rem;
+  line-height: 1.1875rem;
 }
 
 .content {
@@ -143,7 +143,7 @@
 .delta {
   color: var(--color-jade);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
 }
 
@@ -161,7 +161,7 @@
 .editStatus {
   color: var(--color-jade);
   font-family: var(--font-serif);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 700;
 }
 
@@ -188,7 +188,7 @@
 .editorTitle {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 17px;
+  font-size: 1.0625rem;
   font-weight: 800;
 }
 
@@ -224,21 +224,21 @@
 .endLinkText {
   color: var(--color-accent);
   font-family: var(--font-serif);
-  font-size: 14px;
+  font-size: 0.875rem;
   text-decoration-line: underline;
 }
 
 .endTitle {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 17px;
+  font-size: 1.0625rem;
   font-weight: 700;
 }
 
 .error {
   color: var(--color-accent);
   font-family: var(--font-serif);
-  font-size: 14px;
+  font-size: 0.875rem;
   margin-top: var(--space-x3);
 }
 
@@ -267,7 +267,7 @@
 .historyMeta {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 12px;
+  font-size: 0.75rem;
   margin-top: 2px;
 }
 
@@ -285,7 +285,7 @@
 .historyTitle {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 700;
 }
 
@@ -295,7 +295,7 @@
   border-radius: 8px;
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 17px;
+  font-size: 1.0625rem;
   min-height: 48px;
   padding-left: var(--space-x3);
   padding-right: var(--space-x3);
@@ -304,8 +304,8 @@
 .intro {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 18px;
-  line-height: 28px;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
   margin-bottom: var(--space-x4);
   max-width: 720px;
 }
@@ -313,25 +313,25 @@
 .kicker {
   color: var(--color-accent);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 800;
-  letter-spacing: 1.5px;
+  letter-spacing: 0.09375rem;
   margin-top: var(--space-x7);
 }
 
 .label {
   color: var(--color-ink-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.0625rem;
 }
 
 .muted {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 14px;
-  line-height: 21px;
+  font-size: 0.875rem;
+  line-height: 1.3125rem;
 }
 
 .nameField {
@@ -363,7 +363,7 @@
 .panelTitle {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 17px;
+  font-size: 1.0625rem;
   font-weight: 800;
 }
 
@@ -392,16 +392,16 @@
 .playerName {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 700;
 }
 
 .playerScore {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 22px;
+  font-size: 1.375rem;
   font-weight: 800;
-  letter-spacing: -0.8px;
+  letter-spacing: -0.05rem;
   margin-bottom: var(--space-x2);
 }
 
@@ -415,27 +415,27 @@
 .roundMeta {
   color: var(--color-ink-muted);
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 1px;
+  font-size: 0.6875rem;
+  letter-spacing: 0.0625rem;
   margin-bottom: var(--space-x5);
 }
 
 .roundTitle {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 30px;
+  font-size: 1.875rem;
   font-weight: 800;
-  letter-spacing: -1.5px;
-  line-height: 52px;
+  letter-spacing: -0.09375rem;
+  line-height: 3.25rem;
   margin-top: var(--space-x2);
 }
 
 .rules {
   color: var(--color-ink-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.0625rem;
 }
 
 .rulesRow {
@@ -459,14 +459,14 @@
   color: var(--color-ink);
   flex: 1;
   font-family: var(--font-serif);
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 700;
 }
 
 .standingNet {
   color: var(--color-ink-muted);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 0.75rem;
   min-width: 72px;
   text-align: right;
 }
@@ -474,7 +474,7 @@
 .standingRank {
   color: var(--color-accent);
   font-family: var(--font-serif);
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 800;
   min-width: 20px;
 }
@@ -492,7 +492,7 @@
 .standingScore {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 800;
   min-width: 84px;
   text-align: right;
@@ -507,8 +507,8 @@
   border-radius: 8px;
   color: var(--color-ink);
   font-family: var(--font-mono);
-  font-size: 12px;
-  line-height: 18px;
+  font-size: 0.75rem;
+  line-height: 1.125rem;
   padding: var(--space-x3);
   user-select: text;
 }
@@ -536,17 +536,17 @@
 .tenpaiText {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 700;
 }
 
 .title {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 47px;
+  font-size: 2.9375rem;
   font-weight: 800;
-  letter-spacing: -1.7px;
-  line-height: 51px;
+  letter-spacing: -0.10625rem;
+  line-height: 3.1875rem;
   margin-bottom: var(--space-x4);
   margin-top: var(--space-x2);
   max-width: 700px;

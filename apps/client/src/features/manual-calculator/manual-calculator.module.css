@@ -56,7 +56,7 @@
 .disclosureChevron {
   color: var(--color-accent);
   font-family: var(--font-mono);
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 800;
 }
 
@@ -64,17 +64,17 @@
   color: var(--color-ink-muted);
   flex: 1;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.0375rem;
 }
 
 .compactTitle {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 22px;
+  font-size: 1.375rem;
   font-weight: 800;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.03125rem;
 }
 
 .emptyHand {
@@ -84,15 +84,6 @@
   flex-shrink: 1;
   flex-wrap: wrap;
   gap: var(--space-x3);
-}
-
-.calculateRow {
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: var(--space-x4);
-  margin-bottom: var(--space-x5);
 }
 
 /* Ippatsu only applies to a riichi hand, so it appears under the riichi choice
@@ -125,7 +116,7 @@
 .chipText {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 700;
 }
 
@@ -183,44 +174,44 @@
 .editConfirmNote {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 13px;
-  line-height: 19px;
+  font-size: 0.8125rem;
+  line-height: 1.1875rem;
 }
 
 .editConfirmScoreLine {
   color: var(--color-ink);
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 700;
 }
 
 .editConfirmSubhead {
   color: var(--color-ink-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.0625rem;
   margin-top: var(--space-x2);
 }
 
 .editConfirmTitle {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 17px;
+  font-size: 1.0625rem;
   font-weight: 700;
 }
 
 .editConfirmWarning {
   color: var(--color-accent);
   font-family: var(--font-serif);
-  font-size: 13px;
-  line-height: 19px;
+  font-size: 0.8125rem;
+  line-height: 1.1875rem;
 }
 
 .empty {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-style: italic;
   padding-top: var(--space-x3);
   padding-bottom: var(--space-x3);
@@ -241,9 +232,9 @@
 .fieldLabel {
   color: var(--color-ink-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 700;
-  letter-spacing: 1.2px;
+  letter-spacing: 0.075rem;
   margin-bottom: var(--space-x2);
   margin-top: var(--space-x4);
 }
@@ -269,8 +260,8 @@
 .intro {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 18px;
-  line-height: 28px;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
   margin-bottom: var(--space-x5);
   max-width: 720px;
 }
@@ -278,9 +269,9 @@
 .kicker {
   color: var(--color-accent);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 800;
-  letter-spacing: 1.6px;
+  letter-spacing: 0.1rem;
   margin-top: var(--space-x7);
 }
 
@@ -304,9 +295,9 @@
 .meldLabel {
   color: var(--color-ink-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 700;
-  letter-spacing: 0.9px;
+  letter-spacing: 0.05625rem;
 }
 
 .meldList {
@@ -326,7 +317,7 @@
 .note {
   color: var(--color-accent);
   font-family: var(--font-serif);
-  font-size: 13px;
+  font-size: 0.8125rem;
   margin-top: var(--space-x4);
 }
 
@@ -347,14 +338,14 @@
 .removeLink {
   color: var(--color-accent);
   font-family: var(--font-serif);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 700;
 }
 
 .removeText {
   color: var(--color-white);
-  font-size: 15px;
-  line-height: 17px;
+  font-size: 0.9375rem;
+  line-height: 1.0625rem;
 }
 
 .celebrationLayer {
@@ -381,15 +372,15 @@
 .rulesLabel {
   color: var(--color-ink-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 700;
-  letter-spacing: 1.1px;
+  letter-spacing: 0.06875rem;
 }
 
 .linkedSummary {
   color: var(--color-jade);
   font-family: var(--font-serif);
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 700;
   margin-top: var(--space-x5);
 }
@@ -397,7 +388,7 @@
 .linkedValue {
   color: var(--color-jade);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 800;
   padding-top: var(--space-x3);
   padding-bottom: var(--space-x3);
@@ -421,7 +412,7 @@
   color: var(--color-ink);
   flex: 1;
   font-family: var(--font-serif);
-  font-size: 17px;
+  font-size: 1.0625rem;
   font-weight: 700;
   min-width: 220px;
 }
@@ -441,7 +432,7 @@
 .referenceNote {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .referencePanel {
@@ -464,9 +455,9 @@
 .savedKicker {
   color: var(--color-jade);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.0625rem;
 }
 
 .savedNotice {
@@ -486,7 +477,7 @@
 .savedTitle {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 700;
   margin-top: 2px;
 }
@@ -506,25 +497,25 @@
 .recognitionBannerKicker {
   color: var(--color-accent);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 800;
-  letter-spacing: 1.1px;
+  letter-spacing: 0.06875rem;
 }
 
 .recognitionBannerTitle {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 17px;
+  font-size: 1.0625rem;
   font-weight: 700;
-  line-height: 24px;
+  line-height: 1.5rem;
   margin-top: var(--space-x2);
 }
 
 .recognitionModel {
   color: var(--color-ink-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.6px;
+  font-size: 0.5625rem;
+  letter-spacing: 0.0375rem;
   margin-top: var(--space-x3);
 }
 
@@ -541,17 +532,17 @@
 .sectionDescription {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 12px;
-  line-height: 17px;
+  font-size: 0.75rem;
+  line-height: 1.0625rem;
   margin-bottom: var(--space-x2);
 }
 
 .sectionTitle {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 800;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.01875rem;
   margin-bottom: var(--space-x1);
 }
 
@@ -576,17 +567,17 @@
 .sessionBannerKicker {
   color: #8fc3ae;
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 800;
-  letter-spacing: 1.2px;
+  letter-spacing: 0.075rem;
 }
 
 .sessionBannerTitle {
   color: var(--color-white);
   font-family: var(--font-serif);
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 700;
-  line-height: 25px;
+  line-height: 1.5625rem;
   margin-top: var(--space-x2);
 }
 
@@ -618,10 +609,10 @@
 .title {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 47px;
+  font-size: 2.9375rem;
   font-weight: 800;
-  letter-spacing: -1.8px;
-  line-height: 50px;
+  letter-spacing: -0.1125rem;
+  line-height: 3.125rem;
   margin-bottom: var(--space-x4);
   margin-top: var(--space-x2);
   max-width: 700px;
@@ -637,6 +628,6 @@
 .warning {
   color: var(--color-accent);
   font-family: var(--font-serif);
-  font-size: 14px;
+  font-size: 0.875rem;
   margin-top: var(--space-x3);
 }

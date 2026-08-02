@@ -18,7 +18,7 @@
 .cameraError {
   color: var(--color-white);
   font-family: var(--font-serif);
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 .cameraChrome {
@@ -40,7 +40,7 @@
 .cameraHint {
   color: var(--color-white);
   font-family: var(--font-serif);
-  font-size: 16px;
+  font-size: 1rem;
   text-shadow: 0 1px 4px var(--color-ink);
 }
 
@@ -65,7 +65,7 @@
 .error {
   color: var(--color-accent);
   font-family: var(--font-serif);
-  font-size: 14px;
+  font-size: 0.875rem;
   margin-top: var(--space-x4);
 }
 
@@ -94,9 +94,9 @@
 .guideBandLabel {
   color: rgb(255 253 247 / 92%);
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 0.5rem;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: 0.0625rem;
 }
 
 .guideBandNarrow {
@@ -117,17 +117,17 @@
 .guideLabel {
   color: var(--color-white);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.0625rem;
 }
 
 .kicker {
   color: var(--color-accent);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 1.5px;
+  letter-spacing: 0.09375rem;
 }
 
 .layoutChoice {
@@ -140,17 +140,17 @@
 .layoutHint {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 13px;
-  line-height: 19px;
+  font-size: 0.8125rem;
+  line-height: 1.1875rem;
   margin-top: var(--space-x2);
 }
 
 .layoutLabel {
   color: var(--color-ink-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 700;
-  letter-spacing: 1.2px;
+  letter-spacing: 0.075rem;
 }
 
 .permissionActions {
@@ -163,8 +163,8 @@
 .permissionBody {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 18px;
-  line-height: 28px;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
   margin-bottom: var(--space-x6);
   max-width: 660px;
 }
@@ -172,8 +172,8 @@
 .permissionSampleNote {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 13px;
-  line-height: 19px;
+  font-size: 0.8125rem;
+  line-height: 1.1875rem;
   margin-top: var(--space-x4);
   max-width: 520px;
 }
@@ -190,10 +190,10 @@
 .permissionTitle {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 46px;
+  font-size: 2.875rem;
   font-weight: 700;
-  letter-spacing: -1.7px;
-  line-height: 50px;
+  letter-spacing: -0.10625rem;
+  line-height: 3.125rem;
   margin-bottom: var(--space-x4);
   margin-top: var(--space-x3);
 }
@@ -237,8 +237,8 @@
 .reviewBody {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 15px;
-  line-height: 22px;
+  font-size: 0.9375rem;
+  line-height: 1.375rem;
   margin-bottom: var(--space-x4);
 }
 
@@ -252,25 +252,25 @@
 .recognitionCopy {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 13px;
-  line-height: 19px;
+  font-size: 0.8125rem;
+  line-height: 1.1875rem;
   margin-top: var(--space-x1);
 }
 
 .recognitionError {
   color: var(--color-accent);
   font-family: var(--font-serif);
-  font-size: 14px;
-  line-height: 21px;
+  font-size: 0.875rem;
+  line-height: 1.3125rem;
   margin-bottom: var(--space-x4);
 }
 
 .recognitionKicker {
   color: var(--color-accent);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: 0.0625rem;
 }
 
 .recognitionResult {
@@ -294,7 +294,7 @@
 .recognitionTitle {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 700;
   margin-top: var(--space-x1);
 }
@@ -302,7 +302,7 @@
 .reviewTitle {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 23px;
+  font-size: 1.4375rem;
   font-weight: 700;
   margin-bottom: var(--space-x2);
 }
@@ -317,5 +317,5 @@
 .status {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 15px;
+  font-size: 0.9375rem;
 }

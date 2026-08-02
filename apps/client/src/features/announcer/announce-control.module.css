@@ -15,9 +15,9 @@
 .fieldLabel {
   color: var(--color-ink-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 700;
-  letter-spacing: 1.2px;
+  letter-spacing: 0.075rem;
   margin-bottom: var(--space-x2);
   margin-top: var(--space-x4);
 }

@@ -6,17 +6,30 @@
  * a component now, with its own stylesheet.
  */
 
-/* Sized as an item of Setup's wrapping row: 320px of width to start, then an
-   equal share of the rest. A caller in a column must wrap it in a row. */
+/* Wants 320px of width, then an equal share of the rest.
+ *
+ * Said as `min-width` rather than `flex: 1 1 320px` because flex-basis is the
+ * main axis, not the width: in Setup's column below 700px the same declaration
+ * meant a 320px minimum *height*, and four cards padded themselves out with
+ * 685px of nothing. `min-width` means the same thing in a row and says nothing
+ * in a column, so a caller can stack these without knowing the rule exists.
+ * The `min-width: 0` below 700px lets a card narrower than 320px still fit. */
 .card {
   background-color: var(--color-paper);
   border: 1px solid var(--color-line);
   border-radius: 12px;
   display: flex;
-  flex: 1 1 320px;
+  flex: 1 1 auto;
   flex-direction: column;
   margin-bottom: var(--space-x5);
+  min-width: 320px;
   padding: var(--space-x4);
+}
+
+@media (width < 700px) {
+  .card {
+    min-width: 0;
+  }
 }
 
 /* Jade, and quieter than the vermilion section rubrics: these say where a
@@ -24,14 +37,14 @@
 .kicker {
   color: var(--color-jade);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: 0.0625rem;
 }
 
 .note {
   color: var(--color-ink-muted);
   font-family: var(--font-serif);
-  font-size: 13px;
-  line-height: 19px;
+  font-size: 0.8125rem;
+  line-height: 1.1875rem;
 }

@@ -95,6 +95,8 @@ React conventions:
 - Express state in CSS where CSS already has it: `:active`, `:disabled`, `:focus-visible`, `::after`. A pressed state does not need React state.
 - Express a responsive layout as a media query, not a measured viewport width. A width read in JavaScript reflows a render late and costs a re-render on every resize.
 - Never write a colour, spacing step, or font stack as a literal; take it from a token in `tokens.css`.
+- Write `font-size`, `line-height`, and `letter-spacing` in `rem`, never `px`: a reader who raises their browser's default font size is asking for larger text, and px ignores the request. Spacing stays in px so the grid rhythm holds while type grows.
+- Reach for `flex-basis` (including the third value of `flex`) only when you know which axis the container runs. It is the main axis, so a `320px` basis meant for a row becomes a 320px _height_ in a column. `min-width` says the intended thing in both.
 
 ## UI, UX, information architecture, and cognitive science
 

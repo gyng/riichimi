@@ -9,12 +9,33 @@
   width: 100%;
 }
 
+/*
+ * On a phone this screen is short — four rows in an 844px window — and left at
+ * the top it put every control in the upper third, which is the part of a phone
+ * a thumb reaches last. The block sits low instead, so the two ways to score a
+ * hand are where the hand already is. The space it leaves is above the
+ * headline, where emptiness reads as margin rather than as a page that stopped.
+ */
+@media (width < 700px) {
+  .root {
+    flex-grow: 1;
+    padding-bottom: var(--space-x7);
+  }
+
+  /* The title stays where a title belongs and the controls drop to the thumb,
+     so the space between them reads as margin rather than as a page that
+     stopped early. */
+  .headline {
+    margin-bottom: auto;
+  }
+}
+
 .headline {
   color: var(--color-ink);
   font-family: var(--font-serif);
-  font-size: 26px;
+  font-size: 1.625rem;
   font-weight: 800;
-  letter-spacing: -0.6px;
+  letter-spacing: -0.0375rem;
 }
 
 /* Wraps to a column on a narrow phone rather than shrinking both below a
@@ -34,7 +55,7 @@
   /* 160 of width to start, then an equal share of the rest. */
   flex: 1 1 160px;
   font-family: var(--font-serif);
-  font-size: 17px;
+  font-size: 1.0625rem;
   font-weight: 800;
   justify-content: center;
   min-height: 64px;
@@ -61,7 +82,7 @@
   display: flex;
   flex-direction: row;
   font-family: var(--font-serif);
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 700;
   gap: var(--space-x3);
   justify-content: space-between;
@@ -82,14 +103,14 @@
 
 .rowArrow {
   color: var(--color-accent);
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 800;
 }
 
 .rowCount {
   color: var(--color-accent);
   font-family: var(--font-mono);
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 800;
 }
 

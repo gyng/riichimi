@@ -10,6 +10,8 @@ import type { Locale } from "./messages";
  */
 const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
   ja: {
+    "See the audit": "内訳を見る",
+    "See why": "理由を見る",
     "Fetching the voice…": "音声を取得しています…",
     Neural: "ニューラル",
     "The same voice on every device. Fetches about 90 MB once, then reads offline like the rest of the app.":
@@ -345,6 +347,8 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "yakuman never combine": "役満は複合しない",
   },
   "zh-Hans": {
+    "See the audit": "查看明细",
+    "See why": "查看原因",
     "Fetching the voice…": "正在获取语音…",
     Neural: "神经网络",
     "The same voice on every device. Fetches about 90 MB once, then reads offline like the rest of the app.":
@@ -672,6 +676,8 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "yakuman never combine": "役满不复合",
   },
   "zh-Hant": {
+    "See the audit": "查看明細",
+    "See why": "查看原因",
     "Fetching the voice…": "正在取得語音…",
     Neural: "神經網路",
     "The same voice on every device. Fetches about 90 MB once, then reads offline like the rest of the app.":

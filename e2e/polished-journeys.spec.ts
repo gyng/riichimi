@@ -88,9 +88,12 @@ test("dogfoods the polished mobile scoring and table flows through WebMCP", asyn
   await expect(page.getByText(/14\/14 ·/)).toBeVisible();
   const scoreResult = await executeTool(page, "riichimi.manual.calculate");
   expect(scoreResult).toMatchObject({ structuredContent: { kind: "success" } });
-  const mobileScore = page.getByText("2 han · 20 fu").filter({ visible: true });
-  await expect(mobileScore).toBeVisible();
-  await mobileScore.scrollIntoViewIfNeeded();
+  // The score must be readable where the player already is. The hand, picker,
+  // and context run past two screens on a phone, so an answer that only exists
+  // at the bottom of them is an answer nobody sees; the dock holds it in view.
+  const dockedScore = page.getByRole("paragraph").filter({ hasText: "2 han · 20 fu" });
+  await expect(dockedScore).toBeInViewport();
+  await expect(page.getByRole("heading", { name: "2 han · 20 fu" })).toBeAttached();
   await page.screenshot({
     fullPage: true,
     path: "docs/checkpoints/2026-07-23-02-manual-score-mobile.png",
@@ -223,9 +226,8 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   await expect(page.getByRole("button", { name: "red five characters" })).toBeVisible();
   await page.getByRole("button", { name: "Try a scored example" }).click();
   await page.getByRole("button", { name: "Calculate" }).click();
-  const desktopScore = page.getByText("2 han · 20 fu").filter({ visible: true });
-  await expect(desktopScore).toBeVisible();
-  await desktopScore.scrollIntoViewIfNeeded();
+  await expect(page.getByRole("paragraph").filter({ hasText: "2 han · 20 fu" })).toBeInViewport();
+  await page.getByRole("heading", { name: "2 han · 20 fu" }).scrollIntoViewIfNeeded();
   await page.screenshot({
     path: "docs/checkpoints/2026-07-23-04-manual-score-desktop.png",
   });
