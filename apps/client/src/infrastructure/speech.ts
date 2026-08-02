@@ -1,21 +1,29 @@
-import type { SpeakOptions, SpeechPort } from "../features/announcer/speech-port";
+import type { SpeakOptions, SpeechPort, SpokenLine } from "../features/announcer/speech-port";
 
 function synthesis(): SpeechSynthesis | null {
   const candidate: unknown = globalThis.speechSynthesis;
   return typeof candidate === "undefined" || candidate === null ? null : globalThis.speechSynthesis;
 }
 
+function isJapanese(voice: SpeechSynthesisVoice): boolean {
+  return voice.lang.toLowerCase().startsWith("ja");
+}
+
 // Prefer a natural/neural voice: OS voices vary wildly, and the ones marked
 // neural/natural/enhanced are a large jump over the default robotic fallback.
-// English first, since the announcement is romaji and English words.
+// Japanese first — the announcement is Japanese, and a device that has a
+// Japanese voice should use it whatever else it offers.
 function rank(voice: SpeechSynthesisVoice): number {
   const name = voice.name.toLowerCase();
   const lang = voice.lang.toLowerCase();
   let score = 0;
+  if (isJapanese(voice)) {
+    score += 20;
+  }
   if (/neural|natural|enhanced|premium/.test(name)) {
     score += 6;
   }
-  if (/google|microsoft|siri|samantha|daniel/.test(name)) {
+  if (/google|microsoft|siri|kyoko|o-ren|otoya|nanami|haruka|samantha|daniel/.test(name)) {
     score += 3;
   }
   if (lang.startsWith("en")) {
@@ -55,19 +63,28 @@ export const speech: SpeechPort = {
   cancel(): void {
     synthesis()?.cancel();
   },
-  speak(text: string, options?: SpeakOptions): void {
+  speak(line: SpokenLine, options?: SpeakOptions): void {
     const voices = synthesis();
     if (voices === null) {
       return;
     }
-    const utterance = new globalThis.SpeechSynthesisUtterance(text);
     const picked = bestVoice(voices);
+    // Kana read by an English voice is noise, not an accent, so a device with
+    // no Japanese voice hears the romanized line instead.
+    const japanese = picked !== null && isJapanese(picked);
+    const utterance = new globalThis.SpeechSynthesisUtterance(
+      japanese ? line.japanese : line.romaji,
+    );
     if (picked !== null) {
       utterance.voice = picked;
+      utterance.lang = picked.lang;
     }
-    // Voice direction: deliberate and deep, so a called hand lands with weight.
-    utterance.rate = 0.9;
-    utterance.pitch = 0.82;
+    // Voice direction: the announcer at a parlour, not a newsreader. Bright and
+    // quick, the way a called hand is actually shouted across a table. An
+    // English voice reading romaji cannot carry that, so it stays lower and
+    // more deliberate rather than sounding like a cartoon.
+    utterance.rate = japanese ? 1.12 : 0.95;
+    utterance.pitch = japanese ? 1.45 : 0.9;
     if (options?.onStart !== undefined) {
       utterance.addEventListener("start", options.onStart);
     }

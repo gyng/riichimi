@@ -154,7 +154,12 @@ describe("ManualCalculator", () => {
     fireEvent.click(screen.getByRole("button", { name: "Try a scored example" }));
     fireEvent.click(screen.getByRole("button", { name: "Calculate" }));
 
-    expect(speak).toHaveBeenCalledWith("Tsumo. Menzen tsumo. Pinfu. 2 han 20 fu. 1,500 points.");
+    expect(speak).toHaveBeenCalledWith(
+      expect.objectContaining({
+        japanese: "ツモ、メンゼンツモ、ピンフ、2ハン20フ、1500テン。",
+        romaji: "Tsumo. Menzen tsumo. Pinfu. 2 han 20 fu. 1,500 points.",
+      }),
+    );
   });
 
   it("scores the complete worked example through the user-facing flow", async () => {
@@ -193,7 +198,12 @@ describe("ManualCalculator", () => {
     speak.mockClear();
     fireEvent.click(await screen.findByRole("button", { name: "Say it again" }));
 
-    expect(speak).toHaveBeenCalledWith("Tsumo. Menzen tsumo. Pinfu. 2 han 20 fu. 1,500 points.");
+    expect(speak).toHaveBeenCalledWith(
+      expect.objectContaining({
+        japanese: "ツモ、メンゼンツモ、ピンフ、2ハン20フ、1500テン。",
+        romaji: "Tsumo. Menzen tsumo. Pinfu. 2 han 20 fu. 1,500 points.",
+      }),
+    );
   });
 
   it("offers another hand once one has been dealt, so pressing again is possible", async () => {

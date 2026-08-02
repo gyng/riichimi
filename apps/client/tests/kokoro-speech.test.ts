@@ -86,12 +86,19 @@ describe("the neural voice adapter", () => {
     const { kokoroSpeech } = await freshModule();
 
     // `speak` returns void by contract: scoring has already been rendered.
-    expect(kokoroSpeech.speak("Two han, twenty fu")).toBeUndefined();
+    expect(
+      kokoroSpeech.speak({ japanese: "ニハン、ニジュウフ", romaji: "Two han, twenty fu" }),
+    ).toBeUndefined();
 
     await vi.waitFor(() => {
       expect(sources[0]?.started).toBe(true);
     });
-    expect(generate).toHaveBeenCalledWith("Two han, twenty fu", { speed: 1, voice: "af_heart" });
+    // The romanized form, because this engine has no Japanese voice to read
+    // kana with, and quicker than conversational.
+    expect(generate).toHaveBeenCalledWith("Two han, twenty fu", {
+      speed: 1.12,
+      voice: "af_heart",
+    });
   });
 
   it("reports the fetch, then readiness, to anyone watching", async () => {
@@ -99,7 +106,7 @@ describe("the neural voice adapter", () => {
     const seen: string[] = [];
     watchNeuralVoice((state) => seen.push(state.kind));
 
-    kokoroSpeech.speak("Mangan");
+    kokoroSpeech.speak({ japanese: "Mangan", romaji: "Mangan" });
 
     await vi.waitFor(() => {
       expect(seen).toContain("ready");
@@ -110,11 +117,11 @@ describe("the neural voice adapter", () => {
   it("fetches the engine once, however many wins are announced", async () => {
     const { kokoroSpeech } = await freshModule();
 
-    kokoroSpeech.speak("First");
+    kokoroSpeech.speak({ japanese: "First", romaji: "First" });
     await vi.waitFor(() => {
       expect(sources).toHaveLength(1);
     });
-    kokoroSpeech.speak("Second");
+    kokoroSpeech.speak({ japanese: "Second", romaji: "Second" });
     await vi.waitFor(() => {
       expect(sources).toHaveLength(2);
     });
@@ -125,8 +132,14 @@ describe("the neural voice adapter", () => {
   it("drops an utterance that a newer one overtook", async () => {
     const { kokoroSpeech } = await freshModule();
 
-    kokoroSpeech.speak("The hand nobody waited for");
-    kokoroSpeech.speak("The hand that just scored");
+    kokoroSpeech.speak({
+      japanese: "The hand nobody waited for",
+      romaji: "The hand nobody waited for",
+    });
+    kokoroSpeech.speak({
+      japanese: "The hand that just scored",
+      romaji: "The hand that just scored",
+    });
 
     await vi.waitFor(() => {
       expect(sources).toHaveLength(1);
@@ -140,7 +153,7 @@ describe("the neural voice adapter", () => {
 
   it("stops what is playing when cancelled", async () => {
     const { kokoroSpeech } = await freshModule();
-    kokoroSpeech.speak("Riichi, tsumo, pinfu");
+    kokoroSpeech.speak({ japanese: "Riichi, tsumo, pinfu", romaji: "Riichi, tsumo, pinfu" });
     await vi.waitFor(() => {
       expect(sources[0]?.started).toBe(true);
     });
@@ -156,7 +169,7 @@ describe("the neural voice adapter", () => {
     const seen: string[] = [];
     watchNeuralVoice((state) => seen.push(state.kind));
 
-    expect(() => kokoroSpeech.speak("Haneman")).not.toThrow();
+    expect(() => kokoroSpeech.speak({ japanese: "Haneman", romaji: "Haneman" })).not.toThrow();
 
     await vi.waitFor(() => {
       expect(neuralVoiceState().kind).toBe("failed");
@@ -169,12 +182,12 @@ describe("the neural voice adapter", () => {
     fromPretrained.mockRejectedValueOnce(new Error("offline"));
     const { kokoroSpeech, neuralVoiceState } = await freshModule();
 
-    kokoroSpeech.speak("First try");
+    kokoroSpeech.speak({ japanese: "First try", romaji: "First try" });
     await vi.waitFor(() => {
       expect(neuralVoiceState().kind).toBe("failed");
     });
 
-    kokoroSpeech.speak("Second try");
+    kokoroSpeech.speak({ japanese: "Second try", romaji: "Second try" });
 
     await vi.waitFor(() => {
       expect(neuralVoiceState().kind).toBe("ready");
@@ -186,7 +199,10 @@ describe("the neural voice adapter", () => {
     const onStart = vi.fn<() => void>();
     const onEnd = vi.fn<() => void>();
 
-    kokoroSpeech.speak("Two han, twenty fu", { onEnd, onStart });
+    kokoroSpeech.speak(
+      { japanese: "Two han, twenty fu", romaji: "Two han, twenty fu" },
+      { onEnd, onStart },
+    );
 
     await vi.waitFor(() => {
       expect(onStart).toHaveBeenCalled();

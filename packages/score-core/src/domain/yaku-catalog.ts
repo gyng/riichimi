@@ -15,6 +15,8 @@ export interface YakuReference {
   /** The ordinary value with no called sets. */
   readonly closedHan: number;
   readonly id: string;
+  /** How the name is said, for a voice reading it aloud: リーチ, not 立直. */
+  readonly kana: string;
   /** Japanese name in kanji, e.g. 立直. */
   readonly japanese: string;
   /** English name, as the score panel shows it. */
@@ -28,6 +30,8 @@ export interface YakuReference {
 
 export interface YakumanReference {
   readonly id: string;
+  /** How the name is said, for a voice reading it aloud. */
+  readonly kana: string;
   readonly japanese: string;
   readonly name: string;
   /** Set when a ruleset can pay this one double, and what earns the double. */
@@ -40,6 +44,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 1,
     id: "riichi",
+    kana: "リーチ",
     japanese: "立直",
     name: "Riichi",
     openHan: null,
@@ -49,6 +54,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 2,
     id: "double-riichi",
+    kana: "ダブルリーチ",
     japanese: "ダブル立直",
     name: "Double riichi",
     openHan: null,
@@ -58,6 +64,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 1,
     id: "ippatsu",
+    kana: "イッパツ",
     japanese: "一発",
     name: "Unbroken",
     openHan: null,
@@ -67,6 +74,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 1,
     id: "menzen-tsumo",
+    kana: "メンゼンツモ",
     japanese: "門前清自摸和",
     name: "Fully concealed hand",
     openHan: null,
@@ -76,6 +84,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 1,
     id: "chankan",
+    kana: "チャンカン",
     japanese: "槍槓",
     name: "Robbing a quad",
     openHan: 1,
@@ -85,6 +94,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 1,
     id: "rinshan",
+    kana: "リンシャンカイホウ",
     japanese: "嶺上開花",
     name: "After a quad",
     openHan: 1,
@@ -94,6 +104,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 1,
     id: "haitei",
+    kana: "ハイテイ",
     japanese: "海底摸月",
     name: "Last tile draw",
     openHan: 1,
@@ -103,6 +114,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 1,
     id: "houtei",
+    kana: "ホウテイ",
     japanese: "河底撈魚",
     name: "Last tile claim",
     openHan: 1,
@@ -112,6 +124,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 1,
     id: "pinfu",
+    kana: "ピンフ",
     japanese: "平和",
     name: "Pinfu",
     openHan: null,
@@ -121,6 +134,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 1,
     id: "tanyao",
+    kana: "タンヤオ",
     japanese: "断幺九",
     name: "All inside",
     // Whether an open hand keeps it is a ruleset decision; the Setup card names
@@ -132,6 +146,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 1,
     id: "iipeikou",
+    kana: "イーペーコー",
     japanese: "一盃口",
     name: "Twin sequences",
     openHan: null,
@@ -141,6 +156,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 3,
     id: "ryanpeikou",
+    kana: "リャンペーコー",
     japanese: "二盃口",
     name: "Double twin sequences",
     openHan: null,
@@ -150,6 +166,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 1,
     id: "yakuhai-white",
+    kana: "ハク",
     japanese: "白",
     name: "Value honour: white",
     openHan: 1,
@@ -159,6 +176,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 1,
     id: "yakuhai-green",
+    kana: "ハツ",
     japanese: "發",
     name: "Value honour: green",
     openHan: 1,
@@ -168,6 +186,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 1,
     id: "yakuhai-red",
+    kana: "チュン",
     japanese: "中",
     name: "Value honour: red",
     openHan: 1,
@@ -177,6 +196,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 1,
     id: "yakuhai-seat",
+    kana: "ジカゼ",
     japanese: "自風",
     name: "Value honour: seat wind",
     openHan: 1,
@@ -186,6 +206,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 1,
     id: "yakuhai-round",
+    kana: "バカゼ",
     japanese: "場風",
     name: "Value honour: round wind",
     openHan: 1,
@@ -195,6 +216,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 2,
     id: "sanshoku-doujun",
+    kana: "サンショクドウジュン",
     japanese: "三色同順",
     name: "Mixed sequences",
     openHan: 1,
@@ -204,6 +226,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 2,
     id: "ittsuu",
+    kana: "イッツー",
     japanese: "一気通貫",
     name: "Full straight",
     openHan: 1,
@@ -213,6 +236,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 2,
     id: "chanta",
+    kana: "チャンタ",
     japanese: "混全帯幺九",
     name: "Common ends",
     openHan: 1,
@@ -222,6 +246,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 3,
     id: "junchan",
+    kana: "ジュンチャン",
     japanese: "純全帯幺九",
     name: "Perfect ends",
     openHan: 2,
@@ -231,6 +256,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 2,
     id: "chiitoitsu",
+    kana: "チートイツ",
     japanese: "七対子",
     name: "Seven pairs",
     openHan: null,
@@ -240,6 +266,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 2,
     id: "toitoi",
+    kana: "トイトイ",
     japanese: "対々和",
     name: "All triplets",
     openHan: 2,
@@ -249,6 +276,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 2,
     id: "sanankou",
+    kana: "サンアンコー",
     japanese: "三暗刻",
     name: "Three concealed triplets",
     openHan: 2,
@@ -258,6 +286,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 2,
     id: "sanshoku-doukou",
+    kana: "サンショクドウコー",
     japanese: "三色同刻",
     name: "Mixed triplets",
     openHan: 2,
@@ -267,6 +296,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 2,
     id: "sankantsu",
+    kana: "サンカンツ",
     japanese: "三槓子",
     name: "Three quads",
     openHan: 2,
@@ -276,6 +306,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 2,
     id: "shousangen",
+    kana: "ショウサンゲン",
     japanese: "小三元",
     name: "Little dragons",
     openHan: 2,
@@ -285,6 +316,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 2,
     id: "honroutou",
+    kana: "ホンロウトウ",
     japanese: "混老頭",
     name: "Common terminals",
     openHan: 2,
@@ -294,6 +326,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 3,
     id: "honitsu",
+    kana: "ホンイツ",
     japanese: "混一色",
     name: "Common flush",
     openHan: 2,
@@ -303,6 +336,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 6,
     id: "chinitsu",
+    kana: "チンイツ",
     japanese: "清一色",
     name: "Perfect flush",
     openHan: 5,
@@ -312,6 +346,7 @@ export const yakuCatalog: readonly YakuReference[] = [
   {
     closedHan: 5,
     id: "renhou",
+    kana: "レンホウ",
     japanese: "人和",
     name: "Blessing of man",
     openHan: null,
@@ -324,6 +359,7 @@ export const yakumanCatalog: readonly YakumanReference[] = [
   {
     doubleWhen: null,
     id: "tenhou",
+    kana: "テンホウ",
     japanese: "天和",
     name: "Blessing of heaven",
     requirement: "The dealer's opening fourteen tiles are already a winning hand.",
@@ -332,6 +368,7 @@ export const yakumanCatalog: readonly YakumanReference[] = [
   {
     doubleWhen: null,
     id: "chiihou",
+    kana: "チーホウ",
     japanese: "地和",
     name: "Blessing of earth",
     requirement: "A non-dealer wins on their first draw, with no call before it.",
@@ -340,6 +377,7 @@ export const yakumanCatalog: readonly YakumanReference[] = [
   {
     doubleWhen: "Waiting on all thirteen tiles.",
     id: "kokushi-musou",
+    kana: "コクシムソウ",
     japanese: "国士無双",
     name: "Thirteen orphans",
     requirement: "One of each terminal and honour, and a second copy of any one of them.",
@@ -348,6 +386,7 @@ export const yakumanCatalog: readonly YakumanReference[] = [
   {
     doubleWhen: "Waiting on all nine tiles.",
     id: "chuuren-poutou",
+    kana: "チューレンポートー",
     japanese: "九蓮宝燈",
     name: "Nine gates",
     requirement: "1112345678999 in one suit, closed, plus any tile of that suit.",
@@ -356,6 +395,7 @@ export const yakumanCatalog: readonly YakumanReference[] = [
   {
     doubleWhen: "Completed on the pair.",
     id: "suuankou",
+    kana: "スーアンコー",
     japanese: "四暗刻",
     name: "Four concealed triplets",
     requirement: "Four triplets, none of them called or completed by ron.",
@@ -364,6 +404,7 @@ export const yakumanCatalog: readonly YakumanReference[] = [
   {
     doubleWhen: null,
     id: "suukantsu",
+    kana: "スーカンツ",
     japanese: "四槓子",
     name: "Four quads",
     requirement: "All four quads in one hand.",
@@ -372,6 +413,7 @@ export const yakumanCatalog: readonly YakumanReference[] = [
   {
     doubleWhen: null,
     id: "daisangen",
+    kana: "ダイサンゲン",
     japanese: "大三元",
     name: "Big dragons",
     requirement: "Triplets of all three dragons.",
@@ -380,6 +422,7 @@ export const yakumanCatalog: readonly YakumanReference[] = [
   {
     doubleWhen: null,
     id: "shousuushii",
+    kana: "ショウスーシー",
     japanese: "小四喜",
     name: "Little winds",
     requirement: "Triplets of three winds and a pair of the fourth.",
@@ -388,6 +431,7 @@ export const yakumanCatalog: readonly YakumanReference[] = [
   {
     doubleWhen: "Under a ruleset that pays it double.",
     id: "daisuushii",
+    kana: "ダイスーシー",
     japanese: "大四喜",
     name: "Big winds",
     requirement: "Triplets of all four winds.",
@@ -396,6 +440,7 @@ export const yakumanCatalog: readonly YakumanReference[] = [
   {
     doubleWhen: null,
     id: "tsuuiisou",
+    kana: "ツーイーソー",
     japanese: "字一色",
     name: "All honours",
     requirement: "Winds and dragons only.",
@@ -404,6 +449,7 @@ export const yakumanCatalog: readonly YakumanReference[] = [
   {
     doubleWhen: null,
     id: "chinroutou",
+    kana: "チンロウトウ",
     japanese: "清老頭",
     name: "Perfect terminals",
     requirement: "Ones and nines only.",
@@ -412,6 +458,7 @@ export const yakumanCatalog: readonly YakumanReference[] = [
   {
     doubleWhen: null,
     id: "ryuuiisou",
+    kana: "リューイーソー",
     japanese: "緑一色",
     name: "All green",
     requirement: "Only 2, 3, 4, 6, 8 of bamboo and the green dragon.",

@@ -3,7 +3,7 @@ export { fuCatalog, groupFuCatalog } from "./domain/fu-catalog";
 export type { FuReference, GroupFuReference } from "./domain/fu-catalog";
 export { yakuCatalog, yakumanCatalog } from "./domain/yaku-catalog";
 export type { YakuReference, YakumanReference } from "./domain/yaku-catalog";
-export type { WinAnnouncement } from "./domain/announcement";
+export type { AnnouncedTerm, WinAnnouncement } from "./domain/announcement";
 export { auditTileInventory } from "./domain/tile-inventory";
 export { scoreHand } from "./application/score-hand";
 export { calculateBasePoints, calculatePayments } from "./internal/payments";

@@ -1,4 +1,4 @@
-import type { SpeakOptions, SpeechPort } from "../features/announcer/speech-port";
+import type { SpeakOptions, SpeechPort, SpokenLine } from "../features/announcer/speech-port";
 import type { KokoroEngine } from "./kokoro-engine";
 import { loadKokoroModule } from "./kokoro-engine";
 
@@ -18,8 +18,15 @@ const MODEL = "onnx-community/Kokoro-82M-v1.0-ONNX";
 /** Quantized weights: about a quarter of the download for a voice this short. */
 const PRECISION = "q8";
 
-/** A clear, unhurried American voice — the announcement is romaji and English. */
+/**
+ * kokoro-js 1.2.1 publishes English speakers only — no Japanese voice exists in
+ * the package — so this engine always reads the romanized line. `af_heart` is
+ * the clearest of them for short, shouted terms.
+ */
 const VOICE = "af_heart";
+
+/** Quicker than conversational: these are called hands, not sentences. */
+const SPEED = 1.12;
 
 export type NeuralVoiceState =
   | { readonly kind: "idle" }
@@ -124,7 +131,7 @@ async function say(text: string, options: SpeakOptions | undefined, token: numbe
   if (ready === null || output === null || token !== generation) {
     return;
   }
-  const audio = await ready.generate(text, { speed: 1, voice: VOICE });
+  const audio = await ready.generate(text, { speed: SPEED, voice: VOICE });
   if (token !== generation) {
     return;
   }
@@ -165,11 +172,11 @@ export const kokoroSpeech: SpeechPort = {
   cancel(): void {
     stop();
   },
-  speak(text: string, options?: SpeakOptions): void {
+  speak(line: SpokenLine, options?: SpeakOptions): void {
     stop();
     const token = generation;
     // Fire and forget by design: a voice must never delay or fail a score.
-    void say(text, options, token).catch(() => {
+    void say(line.romaji, options, token).catch(() => {
       announce({ kind: "failed", reason: "The voice could not speak." });
     });
   },

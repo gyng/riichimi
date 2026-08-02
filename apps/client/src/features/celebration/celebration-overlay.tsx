@@ -83,6 +83,31 @@ function compile(gl: WebGLRenderingContext, type: number, source: string): WebGL
   return shader;
 }
 
+/**
+ * How large a buffer the fire is drawn into.
+ *
+ * The shader colours every pixel every frame, so its cost is the buffer's area
+ * and nothing else. At native resolution a 1512×900 window on a 2× display is
+ * 5.4 million fragments a frame — eight times a phone's — which is how a desk
+ * ended up with a celebration that gave up after half a second while the same
+ * build ran it in full on a phone. A soft fire loses nothing by being drawn
+ * smaller and scaled up, so the buffer is capped and the pixels are spent where
+ * they show.
+ */
+export function drawingBufferSize(
+  cssWidth: number,
+  cssHeight: number,
+  devicePixelRatio: number,
+): { readonly height: number; readonly width: number } {
+  const BUDGET = 1_400_000;
+  const wanted = cssWidth * cssHeight * devicePixelRatio * devicePixelRatio;
+  const scale = wanted > BUDGET ? Math.sqrt(BUDGET / wanted) : 1;
+  return {
+    height: Math.max(1, Math.floor(cssHeight * devicePixelRatio * scale)),
+    width: Math.max(1, Math.floor(cssWidth * devicePixelRatio * scale)),
+  };
+}
+
 export function CelebrationOverlay({ celebration, onDone }: CelebrationOverlayProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const doneRef = useRef(onDone);
@@ -140,9 +165,10 @@ export function CelebrationOverlay({ celebration, onDone }: CelebrationOverlayPr
 
     const dpr = Math.min(globalThis.devicePixelRatio || 1, 2);
     const resize = () => {
-      canvas.width = Math.floor(canvas.clientWidth * dpr);
-      canvas.height = Math.floor(canvas.clientHeight * dpr);
-      gl.viewport(0, 0, canvas.width, canvas.height);
+      const { height, width } = drawingBufferSize(canvas.clientWidth, canvas.clientHeight, dpr);
+      canvas.width = width;
+      canvas.height = height;
+      gl.viewport(0, 0, width, height);
     };
     resize();
 
@@ -150,6 +176,7 @@ export function CelebrationOverlay({ celebration, onDone }: CelebrationOverlayPr
     let raf = 0;
     let last = start;
     let slowFrames = 0;
+    let degraded = false;
 
     const frame = (now: number) => {
       const elapsed = now - start;
@@ -158,17 +185,26 @@ export function CelebrationOverlay({ celebration, onDone }: CelebrationOverlayPr
         finish();
         return;
       }
-      // Frame-budget guard: if the device can't keep up, bail rather than jank.
-      if (now - last > 45) {
+      // Frame-budget guard. Dropping the fire is the right answer on a device
+      // that cannot draw it, but this used to end the whole celebration — the
+      // stamp naming the hand went with it, which is the part actually worth
+      // seeing. Now only the shader stops, and the stamp plays out its time.
+      if (!degraded && now - last > 45) {
         slowFrames += 1;
         if (slowFrames > 6) {
-          finish();
-          return;
+          degraded = true;
+          gl.clearColor(0, 0, 0, 0);
+          gl.clear(gl.COLOR_BUFFER_BIT);
         }
-      } else {
+      } else if (!degraded) {
         slowFrames = 0;
       }
       last = now;
+
+      if (degraded) {
+        raf = requestAnimationFrame(frame);
+        return;
+      }
 
       const fadeIn = Math.min(progress / 0.06, 1);
       const fadeOut = Math.min((1 - progress) / 0.35, 1);
