@@ -225,8 +225,8 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
   await expect(page).toHaveURL(/\/manual$/);
   await expect(page.getByRole("button", { name: "red five characters" })).toBeVisible();
   // The button deals a different hand each press, so the journey asserts the
-  // promise rather than one score: whatever it deals, it scores, and the answer
-  // is in view without scrolling for it.
+  // promise rather than one score: whatever it deals, it scores, and the audit
+  // stands in its own column beside the hand instead of two screens under it.
   const anyScore = /\d+ han · \d+ fu|MANGAN|HANEMAN|BAIMAN|SANBAIMAN|YAKUMAN/;
   const dealt = new Set<string>();
   let lastScore = "";
@@ -237,14 +237,15 @@ test("dogfoods visible desktop scoring and camera recovery without an agent", as
       .getByRole("button", { name: press === 0 ? "Try a scored example" : "Deal another" })
       .click();
     await page.getByRole("button", { name: "Calculate" }).click();
-    const docked = page.getByRole("paragraph").filter({ hasText: anyScore }).first();
-    await expect(docked).toBeInViewport();
-    lastScore = (await docked.textContent()) ?? "";
+    const headline = page.getByRole("heading", { name: anyScore }).first();
+    await expect(headline).toBeInViewport();
+    lastScore = (await headline.textContent()) ?? "";
     dealt.add(lastScore);
   }
   // Pressing again has to be worth doing.
   expect(dealt.size).toBeGreaterThan(1);
-  await page.getByRole("heading", { name: anyScore }).first().scrollIntoViewIfNeeded();
+  // The announcer belongs to the score, not to a settings screen a route away.
+  await expect(page.getByRole("button", { name: /Announce wins/ })).toBeVisible();
   await page.screenshot({
     path: "docs/checkpoints/2026-07-23-04-manual-score-desktop.png",
   });

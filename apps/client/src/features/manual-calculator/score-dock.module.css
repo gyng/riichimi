@@ -61,6 +61,25 @@
   color: var(--color-canvas-deep);
 }
 
+/* On a desk the score has a column of its own beside the hand, so a bar that
+   repeats it — and a button that scrolls to a panel already on screen — is one
+   answer in two places. The action survives, because there is still exactly one
+   moment when a player wants it. */
+@media (width >= 1180px) {
+  .scored,
+  .problem {
+    display: none;
+  }
+
+  /* Thumb reach is a phone argument. On a desk the action belongs at the end of
+     the reading order, under the column the answer will appear in — so the bar
+     stays full width and the button lines up with the content above it. */
+  .dock {
+    justify-content: flex-end;
+    padding-right: max(var(--space-x4), calc((100% - 1400px) / 2 + var(--space-x3)));
+  }
+}
+
 /* A scored hand is worth a whole line of its own on a narrow phone; the button
    sits under it rather than squeezing the number. */
 @media (width < 360px) {

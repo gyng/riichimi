@@ -361,6 +361,10 @@
   flex-direction: column;
   bottom: 0px;
   left: 0px;
+  /* The stamp's shockwave rings expand past the screen at their widest. Without
+     this the page gains 90-odd pixels of sideways scroll on a phone for the
+     length of the celebration. */
+  overflow: hidden;
   pointer-events: none;
   position: absolute;
   right: 0px;
@@ -638,4 +642,104 @@
   font-family: var(--font-serif);
   font-size: 0.875rem;
   margin-top: var(--space-x3);
+}
+
+/* Nothing to say on a phone: the score arrives where the reading order already
+   goes. The desk layout below turns it on. */
+.scorePlaceholder {
+  display: none;
+}
+
+.scorePlaceholderKicker {
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.0625rem;
+}
+
+.scorePlaceholderCopy {
+  color: var(--color-ink-muted);
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  font-style: italic;
+  line-height: 1.375rem;
+  margin-top: var(--space-x2);
+}
+
+/*
+ * A desk, not a long phone page. Past this width the three parts of the job —
+ * the hand and its round, the tiles that fill it, the score it produces — each
+ * get a column, so the answer is beside the inputs instead of two screens under
+ * them. The columns are the same elements in the same order; only their
+ * placement changes, so nothing about the phone layout is spent on this.
+ */
+@media (width >= 1180px) {
+  .content {
+    display: grid;
+    align-items: start;
+    column-gap: var(--space-x3);
+    /* Dense so the score column starts level with the hand: it is last in the
+       document, which is right for a phone and would otherwise leave it
+       stranded a row below everything it belongs beside. */
+    grid-auto-flow: row dense;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr) minmax(0, 1.1fr);
+    max-width: 1400px;
+  }
+
+  /* Anything that speaks about the whole screen keeps the whole width. */
+  .topBar,
+  .recognitionBanner,
+  .referencePanel,
+  .sessionBanner,
+  .savedNotice,
+  .recordResult,
+  .editConfirm {
+    grid-column: 1 / -1;
+  }
+
+  /* The wrapper's only job was to make a row on a tablet; here the grid places
+     its children directly. */
+  .columns {
+    display: contents;
+  }
+
+  .handColumn,
+  .contextColumn {
+    grid-column: 1;
+  }
+
+  /* The picker is taller than the hand and the round put together, and the
+     slack lands in the hand's row. Letting the card take it keeps the two on
+     the left reading as a column rather than as two cards adrift. */
+  .handColumn {
+    align-self: stretch;
+  }
+
+  /* The picker is the tallest card, and stands beside both of them. */
+  .tilesColumn {
+    grid-column: 2;
+    grid-row: span 2;
+  }
+
+  .scoreColumn {
+    grid-column: 3;
+    grid-row: span 3;
+    /* Follows the eye down a long yaku list while a tile is being corrected on
+       the left. Bounded so a yakuman's breakdown scrolls inside the column
+       rather than pushing the page. */
+    align-self: start;
+    max-height: calc(100vh - var(--space-x8));
+    overflow-y: auto;
+    position: sticky;
+    top: 0;
+  }
+
+  .scorePlaceholder {
+    display: flex;
+    border: 1px dashed var(--color-line);
+    border-radius: 14px;
+    flex-direction: column;
+    padding: var(--space-x4);
+  }
 }

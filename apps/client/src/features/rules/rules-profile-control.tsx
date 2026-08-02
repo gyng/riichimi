@@ -47,27 +47,33 @@ export function RulesProfileControl({
 
   return (
     <div className={styles["card"]}>
-      <div className={styles["copy"]}>
-        <p className={styles["kicker"]}>
-          {locked ? t("SCORING RULES · PINNED TO TABLE") : t("SCORING RULES · SAVED LOCALLY")}
-        </p>
-        <h2 className={styles["title"]}>{selected.label}</h2>
-        <p className={styles["note"]}>
-          {locked ? t("Pinned at East 1.") : describeProfile(selected, t)}
-        </p>
-      </div>
-      {locked ? null : (
-        <div className={styles["control"]}>
-          <SegmentedControl
-            accessibilityLabel={t("Scoring rules profile")}
-            onChange={(value) => {
-              rules.selectProfile(parseRulesPreference(value));
-            }}
-            options={options}
-            value={selected.id}
-          />
+      {/* The row is a box of its own rather than the card itself: the card's
+          shape is composed from the shared Setup card, and a direction set here
+          would be decided by which stylesheet the bundler happened to emit
+          last. */}
+      <div className={styles["layout"]}>
+        <div className={styles["copy"]}>
+          <p className={styles["kicker"]}>
+            {locked ? t("SCORING RULES · PINNED TO TABLE") : t("SCORING RULES · SAVED LOCALLY")}
+          </p>
+          <h2 className={styles["title"]}>{selected.label}</h2>
+          <p className={styles["note"]}>
+            {locked ? t("Pinned at East 1.") : describeProfile(selected, t)}
+          </p>
         </div>
-      )}
+        {locked ? null : (
+          <div className={styles["control"]}>
+            <SegmentedControl
+              accessibilityLabel={t("Scoring rules profile")}
+              onChange={(value) => {
+                rules.selectProfile(parseRulesPreference(value));
+              }}
+              options={options}
+              value={selected.id}
+            />
+          </div>
+        )}
+      </div>
       {isHouse ? (
         <div className={styles["editor"]}>
           <HouseRulesEditor locked={locked} />

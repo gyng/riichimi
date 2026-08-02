@@ -4,7 +4,12 @@
 .card {
   composes: card from "../setup-card.module.css";
 
+  gap: var(--space-x4);
+}
+
+.layout {
   align-items: center;
+  display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   gap: var(--space-x4);

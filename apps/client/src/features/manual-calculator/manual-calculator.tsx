@@ -429,6 +429,14 @@ export function ManualCalculator({
     });
   }
 
+  // Reads the score already on screen. No celebration: the confetti belongs to
+  // the moment a hand is scored, not to every replay of it.
+  function sayAgain() {
+    if (result !== null) {
+      announce(result);
+    }
+  }
+
   /** Take a player from the docked answer to the reasoning behind it. */
   function showAudit() {
     audit.current?.scrollIntoView({
@@ -935,7 +943,7 @@ export function ManualCalculator({
 
           <div className={styles["columns"]}>
             <Section
-              className={styles["column"]}
+              className={classNames(styles["column"], styles["handColumn"])}
               description={`${concealedTiles.length}/${concealedCapacity} · ${t("tap to mark the winner")}`}
               title={t("Hand")}
             >
@@ -1058,7 +1066,7 @@ export function ManualCalculator({
 
             <Section
               description={pickerTarget === "chi" ? t("Chi: pick the lowest tile.") : undefined}
-              className={styles["column"]}
+              className={classNames(styles["column"], styles["tilesColumn"])}
               title={t("Tiles")}
             >
               <div aria-label={t("Tile destination")} className={styles["chipRow"]}>
@@ -1102,7 +1110,7 @@ export function ManualCalculator({
             </Section>
           </div>
 
-          <Section title={t("Context")}>
+          <Section className={styles["contextColumn"]} title={t("Context")}>
             <div className={styles["contextGrid"]}>
               <div className={styles["field"]}>
                 <p id={labelIds.method} className={styles["fieldLabel"]}>
@@ -1243,7 +1251,21 @@ export function ManualCalculator({
             )}
           </Section>
 
-          <div ref={audit}>{result === null ? null : <ScoreResultPanel result={result} />}</div>
+          <div className={styles["scoreColumn"]} ref={audit}>
+            {result === null ? (
+              // Only ever seen on a desk, where the third column would otherwise
+              // be an unexplained gap. On a phone the score simply follows the
+              // context, and there is no gap to explain.
+              <div aria-hidden className={styles["scorePlaceholder"]}>
+                <p className={styles["scorePlaceholderKicker"]}>{t("SCORE")}</p>
+                <p className={styles["scorePlaceholderCopy"]}>
+                  {t("The hand, its yaku, and the payments appear here once you calculate.")}
+                </p>
+              </div>
+            ) : (
+              <ScoreResultPanel result={result} onSayAgain={sayAgain} />
+            )}
+          </div>
           {activeTable === null && result?.kind === "success" ? (
             <div className={styles["savedNotice"]}>
               <div className={styles["savedCopy"]}>

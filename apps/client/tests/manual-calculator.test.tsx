@@ -181,6 +181,21 @@ describe("ManualCalculator", () => {
     );
   });
 
+  it("puts the announcer beside the score it reads, and replays that score on request", async () => {
+    // The panel takes the replay as a prop and renders nothing without it, so
+    // the controls can be present, correct, and reach no voice at all.
+    vi.mocked(announcerPreferenceStorage.loadAnnouncerPreference).mockResolvedValueOnce(true);
+    render(<CalculatorUnderTest />);
+    await screen.findByRole("button", { name: "Try a scored example" });
+
+    fireEvent.click(screen.getByRole("button", { name: "Try a scored example" }));
+    fireEvent.click(screen.getByRole("button", { name: "Calculate" }));
+    speak.mockClear();
+    fireEvent.click(await screen.findByRole("button", { name: "Say it again" }));
+
+    expect(speak).toHaveBeenCalledWith("Tsumo. Menzen tsumo. Pinfu. 2 han 20 fu. 1,500 points.");
+  });
+
   it("offers another hand once one has been dealt, so pressing again is possible", async () => {
     // The offer used to live only in the empty hand, which made the second
     // press unreachable: one example was all anyone could ever see.
