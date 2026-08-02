@@ -81,6 +81,16 @@ describe("the reference", () => {
     expect(screen.queryByText("立直")).not.toBeInTheDocument();
   });
 
+  it("ignores the space a reader types after a word", () => {
+    // Typing "pinfu " matched nothing and emptied the reference, which reads as
+    // "this app has no pinfu" rather than as a stray keystroke.
+    renderReference();
+
+    fireEvent.change(screen.getByLabelText("FIND A YAKU"), { target: { value: "pinfu " } });
+
+    expect(screen.getByText("平和")).toBeInTheDocument();
+  });
+
   it("says so when nothing matches, rather than showing an empty page", () => {
     renderReference();
 

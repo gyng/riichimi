@@ -15,10 +15,12 @@ type Chapter = "yaku" | "fu" | "rulesets";
 const BANDS = [1, 2, 3, 5, 6] as const;
 
 function matches(entry: YakuReference | YakumanReference, query: string): boolean {
-  if (query === "") {
+  // Trimmed: a trailing space is the most ordinary thing to type after a word,
+  // and matching it literally emptied the whole reference.
+  const needle = query.trim().toLowerCase();
+  if (needle === "") {
     return true;
   }
-  const needle = query.toLowerCase();
   return [entry.japanese, entry.name, entry.romanized, entry.requirement].some((field) =>
     field.toLowerCase().includes(needle),
   );
