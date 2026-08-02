@@ -62,6 +62,8 @@ Mahjong Soul is deliberately absent from the rulesets: two of its options are no
 
 The translations are machine-produced and have not been read by a player in those languages.
 
+Everything runs on your device except one thing you have to ask for: the optional neural announcer voice fetches its engine and weights (about 90 MB) the first time you turn it on. The voice that ships is your browser's own, and nothing is fetched unless you pick the other one.
+
 ## Credits
 
 Tile art from [FluffyStuff/riichi-mahjong-tiles](https://github.com/FluffyStuff/riichi-mahjong-tiles), public domain under CC0. See [tile art](docs/tile-art.md) for how it is prepared.

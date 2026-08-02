@@ -181,6 +181,18 @@ Recognition remains the open front. V1 materially improves source-separated phys
 - Two tests hold it: `packages/ui/src/atoms/tile-art.test.ts` reads the assets and fails if a dead id returns or two tiles claim the same one, and a component test asserts a hand of different tiles produces no duplicate ids.
 - Left deliberately: an id is unique per tile, not per instance, so a hand holding two 5p still inlines that tile's three chrome ids twice. Nothing renders wrong. Fixing it means either hand-authoring the tile chrome as TSX to reach `useId` — giving up regeneration from upstream — or replacing the SVG bevel with CSS, which is a visual change wanting a design decision. Both are recorded in [tile art](docs/tile-art.md).
 
+### 2026-08-02T00:00:00+08:00 — a neural voice that costs 5 KB
+
+- Wired **Kokoro 82M** behind the existing speech port, selectable from Setup and off by default. Only `speech-selection.ts` knows there are two engines; the announcement text, the calculator, and the celebration are unchanged by the choice.
+- It is **not installed and not bundled**. The engine is imported from a CDN when a player selects it, and its weights come from the Hugging Face hub. The measurements behind that decision:
+  - bundling `kokoro-js` put a **21.6 MB ONNX WASM binary** plus a 1.3 MB JavaScript chunk into the build — the deploy went from 3.5 MB to about 25 MB, six times the whole app, for a voice that is off by default;
+  - the WASM could not be excluded. It arrives through `new URL(…, import.meta.url)`, which `rolldownOptions.external` does not intercept and a `resolveId` hook does not see, and every pattern broad enough to catch it also caught the scanner's own onnxruntime-web — the browser dogfood caught that immediately, with guided reads failing;
+  - installing it even for types pulled `@huggingface/transformers` and `sharp`, reintroducing **three high-severity libvips advisories with no fix available** into a tree that had just been cleared.
+- As shipped: the lockfile is byte-identical to before the feature, `npm audit` is clean, the install tree stays at 347 MB rather than 750 MB, and the shared entry grows **5,096 bytes (0.55%)** for the adapter and the control.
+- The types are declared locally and the CDN module is validated on arrival, because code fetched over the network is external input like any other.
+- Honesty about the trade: this is the one place Riichimi is not local-first. It is opt-in, off by default, states its ~90 MB download before the choice is made, reports the fetch and any failure in a live region, and falls back to the browser voice.
+- Ten adapter tests cover the guarantees rather than the synthesis: speaking never blocks or throws into a score, the engine is fetched once however many wins are announced, an overtaken utterance is dropped _before_ the expensive generation rather than after, a failed fetch is reported and retried rather than latching, and cancel stops what is playing. Seven more cover the choice itself, including that the download size is readable before choosing.
+
 ## Visual evidence
 
 - [Mobile landing](docs/checkpoints/2026-07-23-01-home-mobile.png)

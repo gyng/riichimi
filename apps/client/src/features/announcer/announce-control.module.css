@@ -9,3 +9,15 @@
 .note {
   composes: note from "../setup-card.module.css";
 }
+
+/* Names the voice group above it, in the same treatment the house-rules editor
+   uses for the same job. */
+.fieldLabel {
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  margin-bottom: var(--space-x2);
+  margin-top: var(--space-x4);
+}

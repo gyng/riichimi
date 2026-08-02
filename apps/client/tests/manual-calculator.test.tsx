@@ -60,6 +60,12 @@ vi.mock("../src/infrastructure/announcer-preference-storage", () => ({
   saveCelebratePreference: vi
     .fn<typeof announcerPreferenceStorage.saveCelebratePreference>()
     .mockResolvedValue(undefined),
+  loadAnnouncerVoice: vi
+    .fn<typeof announcerPreferenceStorage.loadAnnouncerVoice>()
+    .mockResolvedValue("system"),
+  saveAnnouncerVoice: vi
+    .fn<typeof announcerPreferenceStorage.saveAnnouncerVoice>()
+    .mockResolvedValue(undefined),
 }));
 
 // Held in a plain binding rather than read back off the mocked module: the

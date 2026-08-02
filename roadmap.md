@@ -62,7 +62,8 @@ Exit gate: representative guided scans meet documented accuracy and latency targ
 
 ## P1 — experience and audio
 
-- **Local neural voice.** The announcer speaks through a swappable speech port with a Web Speech adapter. A local engine (Kokoro via ONNX, Piper) would remove the dependence on whatever voice the OS happens to ship and make the announcement sound the same everywhere. Gate it on bundle cost and lazy delivery — it must never delay a score.
+- ~~Local neural voice~~ — **done.** Kokoro 82M sits behind the same speech port as the browser voice, chosen from Setup, off by default. It costs 5 KB in the shared entry and nothing in the install tree: the engine is fetched from a CDN when selected rather than bundled, because bundling it means a 21.6 MB WASM binary in every deploy and `sharp`'s unfixed libvips advisories in the tree.
+- **A neural voice that speaks Japanese.** The shipped one reads romaji and English in an American voice. Kokoro has Japanese voices; the announcement text would need to be composed per locale rather than transliterated, which is the same id-keyed dictionary problem as the yaku names above.
 - **Device-width re-audit.** The layouts are authored mobile-first with media queries rather than measured widths, but they have not been re-audited against real device widths, large text, and landscape since the CSS conversion.
 
 ## P2 — operational polish

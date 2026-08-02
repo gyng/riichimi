@@ -1,14 +1,36 @@
-import { Checkbox } from "@riichimi/ui";
+import { Checkbox, SegmentedControl } from "@riichimi/ui";
+import { useEffect, useId, useState } from "react";
 
-import { speech } from "../../infrastructure/speech";
+import { neuralVoiceState, watchNeuralVoice } from "../../infrastructure/kokoro-speech";
+import type { NeuralVoiceState } from "../../infrastructure/kokoro-speech";
+import { neuralVoiceOffered } from "../../infrastructure/speech-selection";
 import { useAnnouncer } from "../../state/announcer-context";
 import { useLocale } from "../../state/locale-context";
 import styles from "./announce-control.module.css";
 
+const voiceOptions = (t: (source: string) => string) =>
+  [
+    { label: t("This device"), value: "system" },
+    { label: t("Neural"), value: "neural" },
+  ] as const;
+
 /** Setup controls for the win celebration and the spoken announcement. */
 export function AnnounceControl() {
   const { t } = useLocale();
-  const { announceWins, setAnnounceWins, celebrateWins, setCelebrateWins } = useAnnouncer();
+  const {
+    announceWins,
+    celebrateWins,
+    setAnnounceWins,
+    setCelebrateWins,
+    setVoice,
+    speech,
+    voice,
+  } = useAnnouncer();
+  const voiceLabelId = useId();
+  const [neural, setNeural] = useState<NeuralVoiceState>(neuralVoiceState);
+
+  // The download runs outside React, so subscribe rather than poll.
+  useEffect(() => watchNeuralVoice(setNeural), []);
 
   return (
     <div className={styles["card"]}>
@@ -37,6 +59,42 @@ export function AnnounceControl() {
             }}
           />
           <p className={styles["note"]}>{t("Reads the han, fu, and points when a hand scores.")}</p>
+        </>
+      ) : null}
+
+      {announceWins && neuralVoiceOffered() ? (
+        <>
+          <p className={styles["fieldLabel"]} id={voiceLabelId}>
+            {t("VOICE")}
+          </p>
+          <SegmentedControl
+            labelledBy={voiceLabelId}
+            onChange={(next) => {
+              setVoice(next);
+            }}
+            options={voiceOptions(t)}
+            value={voice}
+          />
+          <p className={styles["note"]}>
+            {voice === "neural"
+              ? t(
+                  "The same voice on every device. Fetches about 90 MB once, then reads offline like the rest of the app.",
+                )
+              : t("Whatever voice this device already has. Nothing to fetch.")}
+          </p>
+          {/* The fetch is slow and silent otherwise, so say what is happening —
+              and say when it failed, because the browser voice quietly takes
+              over and a player should know why it sounds different. */}
+          {voice === "neural" && neural.kind === "loading" ? (
+            <p aria-live="polite" className={styles["note"]}>
+              {t("Fetching the voice…")}
+            </p>
+          ) : null}
+          {voice === "neural" && neural.kind === "failed" ? (
+            <p aria-live="polite" className={styles["note"]}>
+              {t("The voice could not be fetched. This device's own voice will read wins instead.")}
+            </p>
+          ) : null}
         </>
       ) : null}
     </div>

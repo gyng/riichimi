@@ -10,6 +10,16 @@ import type { Locale } from "./messages";
  */
 const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
   ja: {
+    "Fetching the voice…": "音声を取得しています…",
+    Neural: "ニューラル",
+    "The same voice on every device. Fetches about 90 MB once, then reads offline like the rest of the app.":
+      "どの端末でも同じ声になります。初回に約90MBを取得すれば、あとはアプリの他の機能と同じくオフラインで読み上げます。",
+    "The voice could not be fetched. This device's own voice will read wins instead.":
+      "音声を取得できませんでした。代わりにこの端末の音声が和了を読み上げます。",
+    "This device": "この端末",
+    VOICE: "音声",
+    "Whatever voice this device already has. Nothing to fetch.":
+      "この端末にすでにある声を使います。ダウンロードは不要です。",
     "Called set {position} isn't a call — move to hand":
       "副露{position}は鳴きではない — 手牌へ移動",
     "{brand} home": "{brand}ホーム",
@@ -335,6 +345,15 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "yakuman never combine": "役満は複合しない",
   },
   "zh-Hans": {
+    "Fetching the voice…": "正在获取语音…",
+    Neural: "神经网络",
+    "The same voice on every device. Fetches about 90 MB once, then reads offline like the rest of the app.":
+      "在任何设备上都是同一把声音。首次下载约 90 MB，之后与应用其余部分一样离线朗读。",
+    "The voice could not be fetched. This device's own voice will read wins instead.":
+      "无法获取语音，将改用本机语音朗读和牌。",
+    "This device": "本机",
+    VOICE: "语音",
+    "Whatever voice this device already has. Nothing to fetch.": "使用本机已有的语音，无需下载。",
     "Called set {position} isn't a call — move to hand": "第{position}组不是副露 — 移入手牌",
     "{brand} home": "{brand}首页",
     "Decrease {label}": "减少{label}",
@@ -653,6 +672,15 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "yakuman never combine": "役满不复合",
   },
   "zh-Hant": {
+    "Fetching the voice…": "正在取得語音…",
+    Neural: "神經網路",
+    "The same voice on every device. Fetches about 90 MB once, then reads offline like the rest of the app.":
+      "在任何裝置上都是同一把聲音。首次下載約 90 MB，之後與應用程式其餘部分一樣離線朗讀。",
+    "The voice could not be fetched. This device's own voice will read wins instead.":
+      "無法取得語音，將改用本機語音朗讀和牌。",
+    "This device": "本機",
+    VOICE: "語音",
+    "Whatever voice this device already has. Nothing to fetch.": "使用本機已有的語音，無需下載。",
     "Called set {position} isn't a call — move to hand": "第{position}組不是副露 — 移入手牌",
     "{brand} home": "{brand}首頁",
     "Decrease {label}": "減少{label}",

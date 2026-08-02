@@ -41,7 +41,6 @@ import { router, useLocalSearchParams } from "../../navigation/router";
 import { useEffect, useMemo, useRef, useState, useId } from "react";
 import type { ReactNode } from "react";
 
-import { speech } from "../../infrastructure/speech";
 import { useAnnouncer } from "../../state/announcer-context";
 import {
   announcementLead,
@@ -286,7 +285,7 @@ export function ManualCalculator({
   const [editReview, setEditReview] = useState<EditReview | null>(null);
   const [editError, setEditError] = useState<SessionEditError | null>(null);
   const [pendingCommand, setPendingCommand] = useState<SessionEditCommand | null>(null);
-  const { announceWins, celebrateWins } = useAnnouncer();
+  const { announceWins, celebrateWins, speech } = useAnnouncer();
   // Round context is set once per table, so it stays folded away during a hand.
   const [showContextDetail, setShowContextDetail] = useState(false);
   const concealedCapacity = 14 - melds.length * 3;

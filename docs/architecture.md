@@ -75,9 +75,25 @@ than a wrapping pass — see [rules profiles](rules-profiles.md).
 ## Audio
 
 The win announcer speaks through a narrow speech port, so the voice backend is
-swappable and no domain or application code knows which engine is present. A Web
-Speech adapter implements it today; a local neural voice can replace the adapter
-without touching the announcement text or the calculator.
+swappable and no domain or application code knows which engine is present. Two
+adapters implement it: the browser's own Web Speech voice, and a neural voice
+(Kokoro 82M) that runs on the device. Only `speech-selection.ts` knows there is
+more than one — callers hold a `SpeechPort` and never learn which answered.
+
+The neural voice is **not installed and not bundled**. Its engine is imported
+from a CDN at the moment a player selects it, and its weights come from the
+Hugging Face hub. That is deliberate rather than convenient: bundling
+`kokoro-js` puts a 21.6 MB ONNX WASM binary and 1.3 MB of JavaScript into every
+deploy — six times the size of the whole app — for a voice that is off by
+default, and installing it pulls `sharp` with high-severity libvips advisories
+that have no fix. The engine is a download either way, so the code is one too.
+The types it needs are declared in `kokoro-engine.ts`, and the module is
+validated when it arrives, because code fetched over the network is external
+input like any other.
+
+This is the one place Riichimi is not local-first, and it is opt-in, off by
+default, disclosed with its download size before the choice, and falls back to
+the browser voice when the fetch fails.
 
 Both kinds of win feedback are user-controlled and fail quiet. The voice is off
 until switched on and reports `available: false` where no engine exists; the

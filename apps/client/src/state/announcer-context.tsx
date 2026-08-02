@@ -1,18 +1,27 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
+import type { AnnouncerVoice } from "../features/announcer/announcer-preference";
+import type { SpeechPort } from "../features/announcer/speech-port";
 import {
   loadAnnouncerPreference,
+  loadAnnouncerVoice,
   loadCelebratePreference,
   saveAnnouncerPreference,
+  saveAnnouncerVoice,
   saveCelebratePreference,
 } from "../infrastructure/announcer-preference-storage";
+import { speechFor } from "../infrastructure/speech-selection";
 
 interface AnnouncerPreference {
   readonly announceWins: boolean;
   readonly setAnnounceWins: (enabled: boolean) => void;
   readonly celebrateWins: boolean;
   readonly setCelebrateWins: (enabled: boolean) => void;
+  readonly voice: AnnouncerVoice;
+  readonly setVoice: (voice: AnnouncerVoice) => void;
+  /** The engine the current choice resolves to. Callers speak through this. */
+  readonly speech: SpeechPort;
 }
 
 const AnnouncerContext = createContext<AnnouncerPreference>({
@@ -20,6 +29,9 @@ const AnnouncerContext = createContext<AnnouncerPreference>({
   setAnnounceWins: () => {},
   celebrateWins: true,
   setCelebrateWins: () => {},
+  voice: "system",
+  setVoice: () => {},
+  speech: speechFor("system"),
 });
 
 /**
@@ -31,8 +43,10 @@ const AnnouncerContext = createContext<AnnouncerPreference>({
 export function AnnouncerProvider({ children }: { readonly children: ReactNode }) {
   const announceChanged = useRef(false);
   const celebrateChanged = useRef(false);
+  const voiceChanged = useRef(false);
   const [announceWins, setAnnounce] = useState(false);
   const [celebrateWins, setCelebrate] = useState(true);
+  const [voice, setVoiceState] = useState<AnnouncerVoice>("system");
 
   useEffect(() => {
     let active = true;
@@ -53,6 +67,15 @@ export function AnnouncerProvider({ children }: { readonly children: ReactNode }
       })
       .catch(() => {
         // A device that cannot read the preference keeps the default.
+      });
+    void loadAnnouncerVoice()
+      .then((stored) => {
+        if (active && !voiceChanged.current) {
+          setVoiceState(stored);
+        }
+      })
+      .catch(() => {
+        // A device that cannot read the preference keeps the browser voice.
       });
     return () => {
       active = false;
@@ -75,9 +98,27 @@ export function AnnouncerProvider({ children }: { readonly children: ReactNode }
     });
   }
 
+  function setVoice(next: AnnouncerVoice) {
+    voiceChanged.current = true;
+    // Whichever engine was talking should stop before the other starts.
+    speechFor(voice).cancel();
+    setVoiceState(next);
+    void saveAnnouncerVoice(next).catch(() => {
+      // Losing the preference is not worth interrupting scoring.
+    });
+  }
+
   return (
     <AnnouncerContext.Provider
-      value={{ announceWins, setAnnounceWins, celebrateWins, setCelebrateWins }}
+      value={{
+        announceWins,
+        celebrateWins,
+        setAnnounceWins,
+        setCelebrateWins,
+        setVoice,
+        speech: speechFor(voice),
+        voice,
+      }}
     >
       {children}
     </AnnouncerContext.Provider>
