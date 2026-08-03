@@ -24,22 +24,30 @@
   justify-content: center;
 }
 
-/* One character's square. Sized in the component, from the count of characters. */
+/* One character's square, sized from its own type size so the rings, the glyph
+   and the box all scale together from a single `font-size`. That size is a CSS
+   `min()` of a tier ramp and a share of the viewport, so a long word still fits
+   a phone without JavaScript ever measuring one. */
 .cell {
   align-items: center;
+  aspect-ratio: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  line-height: 1;
   position: relative;
+  width: 1.14em;
 }
 
 /* A shockwave ring, expanded and faded as its character lands. Starts invisible
    so the first painted frame is not a flash of the full-size ring. */
 .ring {
-  border: 4px solid;
+  border: 0.05em solid;
   border-radius: 999px;
+  height: 100%;
   opacity: 0;
   position: absolute;
+  width: 100%;
 }
 
 /* The two brush layers of one character, scaled and revealed together. */
@@ -53,7 +61,9 @@
    brushed and dimensional rather than as a flat silhouette. */
 .layer {
   font-family: YujiBoku, var(--font-serif);
+  font-size: 0.877em;
   inset: 0;
+  line-height: 1.14em;
   position: absolute;
   text-align: center;
 }

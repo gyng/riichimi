@@ -212,7 +212,14 @@ export function CelebrationOverlay({ celebration, onDone }: CelebrationOverlayPr
       gl.uniform1f(u.time, elapsed / 1000);
       gl.uniform1f(u.intensity, Math.min(celebration.tier / 7, 1));
       gl.uniform1f(u.alpha, fadeIn * fadeOut);
-      gl.uniform1f(u.flash, Math.max(0, 1 - elapsed / 220));
+      // Two flashes, not one. The old single flash decayed over the first
+      // 220ms — it peaked before the first character had even landed, spending
+      // the biggest accent on the anticipation instead of the payoff. Ignition
+      // is now the quieter of the two, and the loud one lands with the
+      // character that completes the word.
+      const ignition = Math.max(0, 1 - elapsed / 200) * 0.55;
+      const climax = Math.max(0, 1 - Math.abs(elapsed - celebration.climaxAtMs) / 240);
+      gl.uniform1f(u.flash, Math.max(ignition, climax));
       gl.uniform1f(u.lightning, celebration.lightning ? 1 : 0);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       raf = requestAnimationFrame(frame);

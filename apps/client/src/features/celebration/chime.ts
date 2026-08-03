@@ -1,4 +1,4 @@
-import type { ChimePort } from "./chime-port";
+import type { ChimePort, StrikeOptions } from "./chime-port";
 
 let context: AudioContext | null = null;
 
@@ -19,7 +19,7 @@ export const chime: ChimePort = {
   get available(): boolean {
     return typeof globalThis.AudioContext !== "undefined";
   },
-  strike(intensity: number): void {
+  strike(intensity: number, options?: StrikeOptions): void {
     const ac = audio();
     if (ac === null) {
       return;
@@ -28,16 +28,33 @@ export const chime: ChimePort = {
     void ac.resume();
 
     const level = Math.max(0, Math.min(1, intensity));
+    const deep = options?.deep ?? false;
     const now = ac.currentTime;
     const fundamental = 300 - level * 90; // deeper for the bigger hands
-    const decay = 1.1 + level * 1.4;
-    const peak = 0.26 + level * 0.22;
+    const decay = (1.1 + level * 1.4) * (deep ? 1.7 : 1);
+    const peak = (0.26 + level * 0.22) * (deep ? 1.15 : 1);
 
     const master = ac.createGain();
     master.gain.setValueAtTime(0.0001, now);
     master.gain.exponentialRampToValueAtTime(peak, now + 0.006); // sharp strike
     master.gain.exponentialRampToValueAtTime(0.0001, now + decay);
     master.connect(ac.destination);
+
+    if (deep) {
+      // An octave under the bell, sine and slow: felt more than heard, which is
+      // what makes a big hand land rather than merely ring.
+      const sub = ac.createOscillator();
+      sub.type = "sine";
+      sub.frequency.setValueAtTime(fundamental / 2, now);
+      sub.frequency.exponentialRampToValueAtTime(fundamental / 2.12, now + decay);
+      const subGain = ac.createGain();
+      subGain.gain.setValueAtTime(0.0001, now);
+      subGain.gain.exponentialRampToValueAtTime(0.55 + level * 0.35, now + 0.02);
+      subGain.gain.exponentialRampToValueAtTime(0.0001, now + decay);
+      sub.connect(subGain).connect(master);
+      sub.start(now);
+      sub.stop(now + decay);
+    }
 
     PARTIALS.forEach((ratio, index) => {
       const osc = ac.createOscillator();

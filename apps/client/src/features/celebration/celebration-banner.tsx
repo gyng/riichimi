@@ -9,36 +9,36 @@ export interface CelebrationBannerProps {
   readonly celebration: Celebration;
 }
 
-// The limit written the way it is called at the table, in kanji, for the brush.
-const TERMS: Readonly<Record<string, string>> = {
-  mangan: "満貫",
-  haneman: "跳満",
-  baiman: "倍満",
-  sanbaiman: "三倍満",
-  yonbaiman: "数え役満",
-  yakuman: "役満",
-  "double yakuman": "ダブル役満",
-};
-
 // The cubic ease-out the reveal has always run on, as its Bézier equivalent. It
 // eases the timeline once; every keyframe list below is read against that eased
 // progress, which is what keeps the characters in step with each other.
 const EASE_OUT_CUBIC = "cubic-bezier(0.215, 0.61, 0.355, 1)";
 
-function termFor(limit: string): string {
-  return TERMS[limit] ?? "役満";
-}
-
-// Colour carries the escalation: vermilion for the smaller limits, a hotter red
-// through the counted ones, gold once a hand reaches yakuman.
+/**
+ * Colour carries the escalation, and it now steps on every rung rather than
+ * twice: mangan, haneman and baiman used to share one vermilion, which is where
+ * most celebrations live and so where the difference was least visible.
+ */
 function palette(tier: number): { readonly ink: string; readonly halo: string } {
+  if (tier >= 8) {
+    return { ink: "#F3D169", halo: "rgba(255,246,206,1)" };
+  }
   if (tier >= 6) {
     return { ink: "#E8B23A", halo: "rgba(255,236,170,0.95)" };
+  }
+  if (tier >= 5) {
+    return { ink: "#D9601C", halo: "rgba(255,228,186,0.93)" };
   }
   if (tier >= 4) {
     return { ink: "#D23B18", halo: "rgba(255,224,180,0.92)" };
   }
-  return { ink: "#B63824", halo: "rgba(255,244,232,0.9)" };
+  if (tier >= 3) {
+    return { ink: "#C43220", halo: "rgba(255,236,214,0.9)" };
+  }
+  if (tier >= 2) {
+    return { ink: "#B63824", halo: "rgba(255,244,232,0.9)" };
+  }
+  return { ink: "#9E3521", halo: "rgba(255,248,240,0.86)" };
 }
 
 function prefersReducedMotion(): boolean {
@@ -81,9 +81,9 @@ function animate(
 interface StampProps {
   readonly burstMax: number;
   readonly burstPeak: number;
-  readonly cell: number;
   readonly character: string;
-  readonly fontSize: number;
+  /** The last character completes the word, and lands harder than the rest. */
+  readonly climax: boolean;
   readonly glow: number;
   readonly halo: string;
   readonly ink: string;
@@ -101,9 +101,8 @@ interface StampProps {
 function Stamp({
   burstMax,
   burstPeak,
-  cell,
   character,
-  fontSize,
+  climax,
   glow,
   halo,
   ink,
@@ -111,6 +110,10 @@ function Stamp({
   start,
   timing,
 }: StampProps) {
+  // Every character used to land identically, so the one that completes the
+  // word — the whole point of the reveal — arrived like the first.
+  const weight = climax ? 1.45 : 1;
+  const settle = climax ? 0.16 : 0.11;
   const outerRing = useRef<HTMLDivElement | null>(null);
   const innerRing = useRef<HTMLDivElement | null>(null);
   const glyphs = useRef<HTMLDivElement | null>(null);
@@ -132,15 +135,15 @@ function Stamp({
         "transform",
         [
           [start, "scale(0.2)"],
-          [start + 0.2, `scale(${burstMax * factor})`],
+          [start + 0.2, `scale(${burstMax * factor * weight})`],
         ],
         timing,
       ),
     ];
 
     const running = [
-      ...ring(outerRing.current, burstPeak * 0.6, 1.35),
-      ...ring(innerRing.current, burstPeak, 1),
+      ...ring(outerRing.current, burstPeak * 0.6 * weight, 1.35),
+      ...ring(innerRing.current, Math.min(1, burstPeak * weight), 1),
       animate(
         glyphs.current,
         "opacity",
@@ -154,9 +157,9 @@ function Stamp({
         glyphs.current,
         "transform",
         [
-          [start, `scale(${popFrom})`],
-          [start + 0.04, "scale(0.84)"],
-          [start + 0.11, "scale(1)"],
+          [start, `scale(${popFrom * weight})`],
+          [start + 0.04, `scale(${climax ? 0.78 : 0.84})`],
+          [start + settle, "scale(1)"],
         ],
         timing,
       ),
@@ -167,38 +170,20 @@ function Stamp({
         animation?.cancel();
       }
     };
-  }, [burstMax, burstPeak, popFrom, start, timing]);
+  }, [burstMax, burstPeak, climax, popFrom, settle, start, timing, weight]);
 
   return (
-    <div className={styles["cell"]} style={{ height: cell, width: cell }}>
+    <div className={styles["cell"]}>
       {/* Twin shockwave rings — the outer one wider and softer. */}
-      <div
-        className={styles["ring"]}
-        ref={outerRing}
-        style={{ borderColor: halo, height: cell, width: cell }}
-      />
-      <div
-        className={styles["ring"]}
-        ref={innerRing}
-        style={{ borderColor: ink, height: cell, width: cell }}
-      />
+      <div className={styles["ring"]} ref={outerRing} style={{ borderColor: halo }} />
+      <div className={styles["ring"]} ref={innerRing} style={{ borderColor: ink }} />
       {/* An ink outline sits under the coloured fill so the stroke reads as
           brushed and dimensional rather than a flat silhouette. */}
       <div className={styles["stack"]} ref={glyphs} style={{ transform: `scale(${popFrom})` }}>
-        <span
-          className={classNames(styles["layer"], styles["outline"])}
-          style={{ fontSize, lineHeight: `${cell}px` }}
-        >
-          {character}
-        </span>
+        <span className={classNames(styles["layer"], styles["outline"])}>{character}</span>
         <span
           className={styles["layer"]}
-          style={{
-            color: ink,
-            fontSize,
-            lineHeight: `${cell}px`,
-            textShadow: `0 0 ${glow}px ${halo}`,
-          }}
+          style={{ color: ink, textShadow: `0 0 ${String(glow)}px ${halo}` }}
         >
           {character}
         </span>
@@ -214,19 +199,24 @@ function Stamp({
 export function CelebrationBanner({ celebration }: CelebrationBannerProps) {
   const root = useRef<HTMLDivElement | null>(null);
   // The terms are all single-unit (BMP) glyphs, so a plain split is correct.
-  const chars = useMemo(() => termFor(celebration.limit).split(""), [celebration.limit]);
+  const chars = useMemo(() => celebration.term.split(""), [celebration.term]);
   const { ink, halo } = palette(celebration.tier);
   // Read once: a player who turns motion off mid-celebration should not have the
   // stamp restart under them.
   const [reduce] = useState(prefersReducedMotion);
 
   const total = celebration.durationMs;
-  // Characters reveal across the first stretch of the timeline, spaced so they
-  // always fit before the hold-and-fade — whatever the duration or count.
-  const startFraction = (index: number): number =>
-    chars.length <= 1 ? 0 : (index / chars.length) * 0.55;
-  const fontSize = Math.min(148, Math.floor((330 / chars.length) * 1.05));
-  const cell = fontSize * 1.14;
+  // A fixed silence between characters, taken from the tier. The old spacing
+  // divided one stretch of the timeline among however many characters there
+  // were, so a longer word — which is always a bigger hand — read faster.
+  const startFractions = useMemo(
+    () =>
+      chars.map(
+        (_, index) =>
+          (celebration.climaxAtMs - celebration.gapMs * (chars.length - 1 - index)) / total,
+      ),
+    [celebration.climaxAtMs, celebration.gapMs, chars, total],
+  );
 
   // One timing shared by every element, so they run off a single eased timeline.
   // Filled both ways: the stamp starts hidden and stays faded once it has gone.
@@ -245,19 +235,25 @@ export function CelebrationBanner({ celebration }: CelebrationBannerProps) {
     const strength = Math.min(celebration.tier / 7, 1);
 
     if (reduce) {
+      // Still escalates: the bell is not motion, and neither is holding a
+      // bigger hand on screen for longer.
       if (chime.available) {
-        chime.strike(strength);
+        chime.strike(strength, { deep: true });
       }
     } else {
       chars.forEach((_, index) => {
+        const climax = index === chars.length - 1;
         const timer = setTimeout(
           () => {
-            // Later characters ring a touch harder, cresting on the last.
+            // Later characters ring harder, and the one that completes the word
+            // rings deepest — an octave under, held longer.
             if (!cancelled && chime.available) {
-              chime.strike(strength * (0.72 + 0.28 * ((index + 1) / chars.length)));
+              chime.strike(strength * (0.72 + 0.28 * ((index + 1) / chars.length)), {
+                deep: climax,
+              });
             }
           },
-          (chars.length <= 1 ? 0 : (index / chars.length) * 0.55) * total + 40,
+          (startFractions[index] ?? 0) * total + 40,
         );
         timers.push(timer);
       });
@@ -269,22 +265,25 @@ export function CelebrationBanner({ celebration }: CelebrationBannerProps) {
         clearTimeout(timer);
       }
     };
-  }, [celebration, chars, reduce, total]);
+  }, [celebration, chars, reduce, startFractions, total]);
 
-  // The whole stamp fades out at the end, uncovering the score beneath.
+  // The whole stamp fades out at the end, uncovering the score beneath. The
+  // hold before it is a fixed length rather than a fraction, so a bigger hand
+  // stays up longer instead of merely fading more slowly.
+  const fadeFraction = 520 / total;
   useEffect(() => {
     const fade = animate(
       root.current,
       "opacity",
       [
         [0, 1],
-        [0.78, 1],
+        [1 - fadeFraction, 1],
         [1, 0],
       ],
       timing,
     );
     return () => fade?.cancel();
-  }, [timing]);
+  }, [fadeFraction, timing]);
 
   const burstMax = 1.6 + celebration.tier * 0.2;
   const burstPeak = Math.min(0.65, 0.4 + celebration.tier * 0.055);
@@ -293,20 +292,20 @@ export function CelebrationBanner({ celebration }: CelebrationBannerProps) {
 
   return (
     <div aria-hidden className={styles["root"]} ref={root}>
-      <div className={styles["row"]}>
+      {/* The row carries the type size; every part of a stamp is sized from it. */}
+      <div className={styles["row"]} style={{ fontSize: celebration.fontSize }}>
         {chars.map((character, index) => (
           <Stamp
             burstMax={burstMax}
             burstPeak={burstPeak}
-            cell={cell}
             character={character}
-            fontSize={fontSize}
+            climax={index === chars.length - 1}
             glow={glow}
             halo={halo}
             ink={ink}
             key={index}
             popFrom={popFrom}
-            start={startFraction(index)}
+            start={startFractions[index] ?? 0}
             timing={timing}
           />
         ))}

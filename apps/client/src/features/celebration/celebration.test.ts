@@ -74,7 +74,41 @@ describe("celebrationFor", () => {
     expect(celebrationFor(atLimit("yonbaiman"))?.tier).toBe(5);
     expect(celebrationFor(atLimit("yakuman"))?.tier).toBe(6);
     expect(celebrationFor(atLimit("double yakuman"))?.tier).toBe(7);
-    expect(celebrationFor(atLimit("3x yakuman"))?.tier).toBe(7);
+    // The scale continues past a single yakuman rather than stopping there: a
+    // hand worth four of them used to celebrate exactly like a hand worth one.
+    expect(celebrationFor(atLimit("triple yakuman"))?.tier).toBe(8);
+    expect(celebrationFor(atLimit("quadruple yakuman"))?.tier).toBe(9);
+    expect(celebrationFor(atLimit("3x yakuman"))?.tier).toBe(9);
+  });
+
+  it("gives every multiple its own stamp instead of reusing 役満", () => {
+    expect(celebrationFor(atLimit("yakuman"))?.term).toBe("役満");
+    expect(celebrationFor(atLimit("double yakuman"))?.term).toBe("二倍役満");
+    expect(celebrationFor(atLimit("triple yakuman"))?.term).toBe("三倍役満");
+    expect(celebrationFor(atLimit("quadruple yakuman"))?.term).toBe("四倍役満");
+  });
+
+  it("sizes and paces from the tier, so a bigger hand is bigger and slower", () => {
+    const mangan = celebrationFor(atLimit("mangan"));
+    const quadruple = celebrationFor(atLimit("quadruple yakuman"));
+
+    // Both are a `min()` of a tier ramp and a share of the viewport. The ramp
+    // used to run the other way: it came from the character count, so the
+    // longest word — always the biggest hand — got the smallest type and the
+    // most hurried cadence.
+    expect(mangan?.fontSize).toContain("5.2rem");
+    expect(quadruple?.fontSize).toContain("13.2rem");
+    expect(quadruple?.gapMs).toBeGreaterThan(mangan?.gapMs ?? 0);
+    expect(quadruple?.durationMs).toBeGreaterThan((mangan?.durationMs ?? 0) * 2);
+  });
+
+  it("lands the climax on the character that completes the word", () => {
+    const sanbaiman = celebrationFor(atLimit("sanbaiman"));
+
+    // 三倍満 is three characters, so the last lands two gaps after ignition —
+    // and the flash, the hardest ring and the deepest bell all read from this.
+    expect(sanbaiman?.climaxAtMs).toBe(140 + (sanbaiman?.gapMs ?? 0) * 2);
+    expect(sanbaiman?.climaxAtMs).toBeLessThan(sanbaiman?.durationMs ?? 0);
   });
 
   it("adds lightning only from baiman upward, and lengthens with the tier", () => {
