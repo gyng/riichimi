@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import { useEffect, useRef } from "react";
+
 import { classNames } from "../class-names";
 import styles from "./top-app-bar.module.css";
 
@@ -40,6 +42,21 @@ export function TopAppBar({
   onBrandPress,
   trailing,
 }: TopAppBarProps) {
+  const active = useRef<HTMLButtonElement | null>(null);
+  const activeKey = items.find((item) => item.active)?.key;
+
+  // Below the phone breakpoint the destinations scroll, so the one you are on
+  // can sit past the fade with nothing to say it is there. Bringing it into
+  // view is the difference between a row that looks like four destinations and
+  // one that looks like the row it is.
+  useEffect(() => {
+    const item = active.current;
+    // Absent under jsdom, and the bar is perfectly usable without it.
+    if (typeof item?.scrollIntoView === "function") {
+      item.scrollIntoView({ block: "nearest", inline: "center" });
+    }
+  }, [activeKey]);
+
   return (
     <div className={styles["bar"]}>
       <button
@@ -62,6 +79,7 @@ export function TopAppBar({
             className={classNames(styles["item"], item.active && styles["itemActive"])}
             key={item.key}
             onClick={item.onPress}
+            ref={item.active ? active : undefined}
             role="link"
             type="button"
           >

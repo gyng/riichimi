@@ -1,6 +1,34 @@
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
 import { defineConfig } from "vitest/config";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { join } from "node:path";
+
+import { routePaths } from "./web/route-paths";
+
+/**
+ * Write the SPA shell to a real file at every route.
+ *
+ * Static hosting has no rewrite rule, so a deep link only answers 200 if a file
+ * exists at that path. The `404.html` fallback rendered the right page but
+ * answered 404 for every route but the root — correct to a reader, broken to a
+ * crawler, a link checker, or an uptime monitor.
+ */
+function prerenderRouteShells() {
+  return {
+    name: "riichimi-route-shells",
+    async closeBundle() {
+      const dist = join(import.meta.dirname, "dist");
+      const shell = await readFile(join(dist, "index.html"), "utf8");
+      await Promise.all(
+        routePaths.map(async (path) => {
+          await mkdir(join(dist, path), { recursive: true });
+          await writeFile(join(dist, path, "index.html"), shell);
+        }),
+      );
+    },
+  };
+}
 
 // Web-only build: plain DOM and CSS through Vite. Nothing is aliased away — the
 // router, camera, and photo-library adapters are ordinary modules under `src/`,
@@ -24,6 +52,7 @@ export default defineConfig(({ command }) => {
       react(),
       // Tile art `.svg` imports become plain DOM <svg> React components.
       svgr({ include: "**/*.svg" }),
+      ...(production ? [prerenderRouteShells()] : []),
     ],
     // Component tests run against this same config, so a screen resolves its
     // adapters and tile art in a test exactly as it does in the browser.

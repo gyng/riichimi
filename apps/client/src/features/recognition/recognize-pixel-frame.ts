@@ -6,7 +6,7 @@ import type {
   RecognitionResult,
 } from "@riichimi/vision";
 
-import { inspectFrameExposure, inspectLocatedCapture } from "./capture-quality";
+import { inspectFrameExposure, inspectFrameTilt, inspectLocatedCapture } from "./capture-quality";
 import type { CaptureQualityIssueKind } from "./capture-quality";
 import { classifyBatchLogits } from "./classifier-output";
 import { locateGuidedTiles } from "./guided-layout";
@@ -46,6 +46,14 @@ export async function recognizePixelFrame(
   const layout =
     captureLayout === "natural" ? locateSingleRowTiles(frame) : locateGuidedTiles(frame);
   if (layout.kind === "failure") {
+    // A turned row is not found at all, so its failure arrives here with
+    // nothing measured and nothing to say. Asked now, the frame can still
+    // explain itself — and "square the camera up" is a fix a player can act on,
+    // where "retry with another photo" is a dead end.
+    const tiltIssue = inspectFrameTilt(frame);
+    if (tiltIssue !== null) {
+      throw new GuidedRecognitionError(tiltIssue.kind, tiltIssue.message);
+    }
     throw new GuidedRecognitionError("layout", layout.message);
   }
   const qualityIssue = inspectLocatedCapture(frame, layout);

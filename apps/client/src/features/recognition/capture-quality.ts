@@ -1,8 +1,9 @@
 import type { NormalizedBounds } from "@riichimi/vision";
 
 import type { GuidedLayoutResult, PixelFrame } from "./guided-layout";
+import { estimateRowTiltDegrees } from "./tile-row";
 
-export type CaptureQualityIssueKind = "blur" | "crop" | "glare" | "perspective";
+export type CaptureQualityIssueKind = "blur" | "crop" | "glare" | "perspective" | "tilt";
 
 export interface CaptureQualityIssue {
   readonly kind: CaptureQualityIssueKind;
@@ -79,6 +80,26 @@ function perspectiveIsExcessive(bounds: readonly NormalizedBounds[]): boolean {
   const heightScale = Math.max(...heights) / minimumHeight;
   const aspectRatioSpread = Math.max(...aspectRatios) - Math.min(...aspectRatios);
   return heightScale > maximumHeightScale || aspectRatioSpread > maximumAspectRatioSpread;
+}
+
+/**
+ * Past about four degrees of turn the row is not found at all, so this has to
+ * run before the locator rather than over its result: the failure it explains
+ * is one where there is nothing to measure afterwards. A dead "retry with
+ * another photo" is the one outcome the capture flow should never produce when
+ * the fix is as simple as holding the phone straight.
+ */
+const maximumTiltDegrees = 4;
+
+export function inspectFrameTilt(frame: PixelFrame): CaptureQualityIssue | null {
+  const tilt = estimateRowTiltDegrees(frame);
+  if (tilt === null || Math.abs(tilt) <= maximumTiltDegrees) {
+    return null;
+  }
+  return {
+    kind: "tilt",
+    message: `The tile row is turned about ${String(Math.abs(tilt))}° in the frame. Square the camera up with the row and retake it.`,
+  };
 }
 
 export function inspectFrameExposure(frame: PixelFrame): CaptureQualityIssue | null {

@@ -117,6 +117,92 @@ function span(profile: Float32Array, threshold: number): { from: number; to: num
 }
 
 /**
+ * How far the tile row is turned in the frame, in degrees, or null when there
+ * is no row-like band to measure.
+ *
+ * Everything downstream reads the frame by scanline: the row band is found by
+ * summing edge density along each row of pixels, and the seams between tiles by
+ * summing down each column. Both assume the row is level. A row turned even a
+ * few degrees smears its edges across many scanlines, the peak flattens, and
+ * the band is never found — the read fails outright, with nothing to tell a
+ * player that holding the phone straight would have fixed it.
+ *
+ * Measured on a small copy, and only coarsely: this exists to say "you are
+ * askew, and by roughly this much", not to rectify anything.
+ */
+export function estimateRowTiltDegrees(frame: PixelFrame): number | null {
+  const scaled = downscale(frame, 200);
+  if (scaled === null) {
+    return null;
+  }
+  let bestAngle: number | null = null;
+  let bestSharpness = 0;
+  for (let angle = -14; angle <= 14; angle += 2) {
+    const sharpness = rowBandSharpness(scaled, angle);
+    if (sharpness > bestSharpness) {
+      bestSharpness = sharpness;
+      bestAngle = angle;
+    }
+  }
+  return bestAngle;
+}
+
+/**
+ * How sharply the frame's edge density peaks into a band when read at `angle`.
+ * A level row concentrates its edges into few scanlines and scores high; the
+ * same row read at the wrong angle spreads them and scores low.
+ */
+function rowBandSharpness(frame: PixelFrame, angle: number): number {
+  const { height, width } = frame;
+  const density = edges(luminanceOf(frame), width, height);
+  const radians = (angle * Math.PI) / 180;
+  const slope = Math.tan(radians);
+  const centre = width / 2;
+  const rows = new Float32Array(height);
+  for (let y = 0; y < height; y += 1) {
+    let total = 0;
+    let counted = 0;
+    for (let x = 0; x < width; x += 1) {
+      // Follow the line the row would lie on at this angle, rather than the
+      // scanline, and sum the edges along it.
+      const sampled = Math.round(y + (x - centre) * slope);
+      if (sampled >= 0 && sampled < height) {
+        total += density[sampled * width + x] ?? 0;
+        counted += 1;
+      }
+    }
+    rows[y] = counted === 0 ? 0 : total / counted;
+  }
+  const mean = rows.reduce((sum, value) => sum + value, 0) / height;
+  return mean === 0 ? 0 : Math.max(...rows) / mean;
+}
+
+/** A cheap nearest-neighbour copy, for measurements that do not need detail. */
+function downscale(frame: PixelFrame, target: number): PixelFrame | null {
+  const { data, height, width } = frame;
+  if (width < 32 || height < 32) {
+    return null;
+  }
+  const scale = Math.min(1, target / width);
+  const outWidth = Math.max(8, Math.round(width * scale));
+  const outHeight = Math.max(8, Math.round(height * scale));
+  const out = new Uint8ClampedArray(outWidth * outHeight * 4);
+  for (let y = 0; y < outHeight; y += 1) {
+    const sourceY = Math.min(height - 1, Math.floor(y / scale));
+    for (let x = 0; x < outWidth; x += 1) {
+      const sourceX = Math.min(width - 1, Math.floor(x / scale));
+      const from = (sourceY * width + sourceX) * 4;
+      const to = (y * outWidth + x) * 4;
+      out[to] = data[from] ?? 0;
+      out[to + 1] = data[from + 1] ?? 0;
+      out[to + 2] = data[from + 2] ?? 0;
+      out[to + 3] = 255;
+    }
+  }
+  return { data: out, height: outHeight, width: outWidth };
+}
+
+/**
  * Locate the band of the frame holding the tiles, by where the edges are.
  *
  * Works on a dark mat and a pale table alike, which a luminance threshold

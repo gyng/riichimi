@@ -67,7 +67,14 @@ export function ScoreResultPanel({ onSayAgain, result }: ScoreResultPanelProps) 
       <p className={styles["sectionTitle"]}>
         {result.yakuman.length > 0 ? t("Yakuman") : t("Yaku")}
       </p>
-      {(result.yakuman.length > 0 ? result.yakuman : result.yaku).map((item) => (
+      {/* Cheapest first, the same order the announcement reads them in. The two
+          surfaces used to disagree: the voice built towards the big yaku while
+          the panel listed them in the order the detector happened to find
+          them. */}
+      {(result.yakuman.length > 0
+        ? result.yakuman
+        : result.yaku.toSorted((left, right) => left.han - right.han)
+      ).map((item) => (
         <div className={styles["lineItem"]} key={item.id}>
           <div className={styles["lineCopy"]}>
             <p className={styles["japanese"]}>{item.japanese}</p>

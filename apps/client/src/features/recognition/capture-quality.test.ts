@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { inspectFrameExposure, inspectLocatedCapture } from "./capture-quality";
+import { inspectFrameExposure, inspectFrameTilt, inspectLocatedCapture } from "./capture-quality";
 import type { PixelFrame, GuidedLayoutResult } from "./guided-layout";
 
 function frame(fill = 32): PixelFrame {
@@ -97,5 +97,56 @@ describe("capture quality", () => {
 
   it("rejects a located but textureless frame as too blurry", () => {
     expect(inspectLocatedCapture(frame(), layout())).toMatchObject({ kind: "blur" });
+  });
+});
+
+/**
+ * A row of dark tiles on a pale table, drawn at a given angle. Enough for the
+ * measurement, which reads edge density and nothing finer.
+ */
+function rowAtAngle(degrees: number): PixelFrame {
+  const width = 240;
+  const height = 120;
+  const data = new Uint8ClampedArray(width * height * 4);
+  const slope = Math.tan((degrees * Math.PI) / 180);
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const centre = height / 2 + (x - width / 2) * slope;
+      // Tile faces, with a gap between each so there are edges to find.
+      const onRow = Math.abs(y - centre) < 22 && x % 24 < 20 && x > 20 && x < width - 20;
+      const value = onRow ? 40 : 232;
+      const index = (y * width + x) * 4;
+      data[index] = value;
+      data[index + 1] = value;
+      data[index + 2] = value;
+      data[index + 3] = 255;
+    }
+  }
+  return { data, height, width };
+}
+
+describe("inspectFrameTilt", () => {
+  it("says nothing about a row that is square with the frame", () => {
+    expect(inspectFrameTilt(rowAtAngle(0))).toBeNull();
+  });
+
+  it("names the turn on a row the locator would fail to find at all", () => {
+    // Past about four degrees the row band is never found, and the read used to
+    // end in "retry with another photo" with no reason a player could act on.
+    const issue = inspectFrameTilt(rowAtAngle(10));
+
+    expect(issue?.kind).toBe("tilt");
+    expect(issue?.message).toMatch(/turned about \d+° in the frame/);
+    expect(issue?.message).toContain("Square the camera up");
+  });
+
+  it("reads a turn either way", () => {
+    expect(inspectFrameTilt(rowAtAngle(-10))?.kind).toBe("tilt");
+  });
+
+  it("stays quiet on a frame too small to measure", () => {
+    expect(
+      inspectFrameTilt({ data: new Uint8ClampedArray(4 * 4 * 4), height: 4, width: 4 }),
+    ).toBeNull();
   });
 });
