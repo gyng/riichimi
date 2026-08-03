@@ -15,6 +15,17 @@ function audio(): AudioContext | null {
 const PARTIALS: readonly number[] = [1, 2.02, 2.76, 3.99, 5.4];
 const PARTIAL_GAINS: readonly number[] = [1, 0.5, 0.4, 0.26, 0.16];
 
+/**
+ * Every strike still sounding, so a new celebration can silence the last one.
+ * A strike removes itself once its own decay has run out.
+ */
+interface Ringing {
+  readonly master: GainNode;
+  readonly sources: readonly AudioScheduledSourceNode[];
+}
+
+let ringing: Ringing[] = [];
+
 export const chime: ChimePort = {
   get available(): boolean {
     return typeof globalThis.AudioContext !== "undefined";
@@ -34,6 +45,7 @@ export const chime: ChimePort = {
     const decay = (1.1 + level * 1.4) * (deep ? 1.7 : 1);
     const peak = (0.26 + level * 0.22) * (deep ? 1.15 : 1);
 
+    const sources: AudioScheduledSourceNode[] = [];
     const master = ac.createGain();
     master.gain.setValueAtTime(0.0001, now);
     master.gain.exponentialRampToValueAtTime(peak, now + 0.006); // sharp strike
@@ -54,6 +66,7 @@ export const chime: ChimePort = {
       sub.connect(subGain).connect(master);
       sub.start(now);
       sub.stop(now + decay);
+      sources.push(sub);
     }
 
     PARTIALS.forEach((ratio, index) => {
@@ -67,6 +80,35 @@ export const chime: ChimePort = {
       osc.connect(gain).connect(master);
       osc.start(now);
       osc.stop(now + decay);
+      sources.push(osc);
     });
+
+    const struck: Ringing = { master, sources };
+    ringing.push(struck);
+    // Stops tracking itself once it has died away on its own, so the list holds
+    // only what could still be heard.
+    globalThis.setTimeout(
+      () => {
+        ringing = ringing.filter((entry) => entry !== struck);
+      },
+      decay * 1000 + 60,
+    );
+  },
+  stop(): void {
+    const ac = audio();
+    if (ac === null) {
+      return;
+    }
+    const now = ac.currentTime;
+    for (const struck of ringing) {
+      // Ramped rather than cut: stopping a ringing oscillator dead is a click.
+      struck.master.gain.cancelScheduledValues(now);
+      struck.master.gain.setValueAtTime(Math.max(struck.master.gain.value, 0.0001), now);
+      struck.master.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+      for (const source of struck.sources) {
+        source.stop(now + 0.09);
+      }
+    }
+    ringing = [];
   },
 };

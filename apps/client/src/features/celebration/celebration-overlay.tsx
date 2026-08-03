@@ -210,7 +210,9 @@ export function CelebrationOverlay({ celebration, onDone }: CelebrationOverlayPr
       const fadeOut = Math.min((1 - progress) / 0.35, 1);
       gl.uniform2f(u.res, canvas.width, canvas.height);
       gl.uniform1f(u.time, elapsed / 1000);
-      gl.uniform1f(u.intensity, Math.min(celebration.tier / 7, 1));
+      // Against the top of the scale, which now runs to nine: normalizing by
+      // seven pinned everything from a double yakuman upward at full intensity.
+      gl.uniform1f(u.intensity, Math.min(celebration.tier / 9, 1));
       gl.uniform1f(u.alpha, fadeIn * fadeOut);
       // Two flashes, not one. The old single flash decayed over the first
       // 220ms — it peaked before the first character had even landed, spending

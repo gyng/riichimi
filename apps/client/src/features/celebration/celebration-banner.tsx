@@ -232,7 +232,15 @@ export function CelebrationBanner({ celebration }: CelebrationBannerProps) {
   useEffect(() => {
     let cancelled = false;
     const timers: ReturnType<typeof setTimeout>[] = [];
-    const strength = Math.min(celebration.tier / 7, 1);
+    const strength = Math.min(celebration.tier / 9, 1);
+
+    // A hand scored while the last celebration is still ringing starts its own
+    // clean: the previous bell is cut here rather than left to sound underneath
+    // this one. Only on the way in — a tail ringing out past the end of its own
+    // stamp is the point of a deep strike.
+    if (chime.available) {
+      chime.stop();
+    }
 
     if (reduce) {
       // Still escalates: the bell is not motion, and neither is holding a
