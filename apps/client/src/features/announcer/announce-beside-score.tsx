@@ -2,6 +2,7 @@ import { SegmentedControl } from "@riichimi/ui";
 import { useEffect, useId, useState } from "react";
 
 import { neuralVoiceState, watchNeuralVoice } from "../../infrastructure/kokoro-speech";
+import { NeuralVoiceStatus } from "./neural-voice-status";
 import type { NeuralVoiceState } from "../../infrastructure/kokoro-speech";
 import { neuralVoiceOffered } from "../../infrastructure/speech-selection";
 import { useAnnouncer } from "../../state/announcer-context";
@@ -79,16 +80,7 @@ export function AnnounceBesideScore({ onSayAgain }: AnnounceBesideScoreProps) {
             ]}
             value={voice}
           />
-          {neural.kind === "loading" ? (
-            <p aria-live="polite" className={styles["voiceNote"]}>
-              {t("Fetching the voice…")}
-            </p>
-          ) : null}
-          {neural.kind === "failed" ? (
-            <p aria-live="polite" className={styles["voiceNote"]}>
-              {t("The voice could not be fetched. This device's own voice will read wins instead.")}
-            </p>
-          ) : null}
+          <NeuralVoiceStatus state={neural} />
         </div>
       ) : null}
     </div>

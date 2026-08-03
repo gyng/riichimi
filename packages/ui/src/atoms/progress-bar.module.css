@@ -1,0 +1,57 @@
+/*
+ * A ruled measure rather than a rounded pill: this sits under a line of status
+ * text in a paper ledger, and a glossy capsule would read as a different app.
+ */
+.track {
+  background-color: var(--color-canvas-deep);
+  border: 1px solid var(--color-line);
+  border-radius: 2px;
+  height: 6px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.fill {
+  background-color: var(--color-accent);
+  height: 100%;
+  /* Width is set from the value, so only its motion belongs here. */
+  transition: width 180ms linear;
+}
+
+/*
+ * Nothing to measure: a short bar travels the track instead of filling it, so
+ * it never implies an amount it does not know.
+ */
+.indeterminate {
+  animation: slide 1400ms ease-in-out infinite;
+  position: absolute;
+  width: 38%;
+}
+
+@keyframes slide {
+  from {
+    left: -38%;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+/*
+ * Motion is the only thing carrying "still working" here, so it cannot simply
+ * be removed. It becomes a still, dimmed band: present, clearly not a
+ * measurement, and not moving.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .indeterminate {
+    animation: none;
+    left: 0;
+    opacity: 0.45;
+    width: 100%;
+  }
+
+  .fill {
+    transition: none;
+  }
+}

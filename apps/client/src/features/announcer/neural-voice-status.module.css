@@ -1,0 +1,15 @@
+/* The bar sits under the line that names the work, close enough to read as one
+   statement rather than as a stray rule. */
+.status {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-x2);
+  margin-top: var(--space-x2);
+}
+
+.note {
+  color: var(--color-ink-muted);
+  font-family: var(--font-serif);
+  font-size: 0.8125rem;
+  line-height: 1.1875rem;
+}

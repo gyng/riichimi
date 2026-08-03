@@ -12,6 +12,7 @@ import { useEffect, useRef, useState, useId } from "react";
 import sampleHandImage from "../../assets/samples/guided-sample-hand.png";
 import { tileRecognition } from "../infrastructure/tile-recognition";
 import { LoadingIndicator } from "../components/loading-indicator";
+import { ProgressBar } from "@riichimi/ui";
 import { useLocale } from "../state/locale-context";
 import styles from "./scan-screen.module.css";
 import {
@@ -448,8 +449,12 @@ export function ScanScreen() {
               )}
               {recognition.kind === "running" ? (
                 <div aria-live="polite" className={styles["recognitionStatus"]}>
-                  <LoadingIndicator />
                   <p className={styles["status"]}>{t("Reading 15 tile faces offline…")}</p>
+                  {/* A bar rather than the ring: the recognizer runs one batch
+                      and finishes, and a measure that travels reads as work
+                      with an end. It cannot say how far along it is, so it
+                      does not pretend to. */}
+                  <ProgressBar label={t("Reading 15 tile faces offline")} />
                 </div>
               ) : null}
               {recognition.kind === "failure" ? (

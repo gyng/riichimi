@@ -46,7 +46,14 @@ export type NeuralVoiceState =
   | { readonly kind: "idle" }
   | { readonly kind: "loading"; readonly progress: number }
   | { readonly kind: "ready" }
-  | { readonly kind: "failed"; readonly reason: string };
+  /** Turning a line into audio. Short, but not instant, and silent until done. */
+  | { readonly kind: "generating" }
+  | {
+      readonly kind: "failed";
+      readonly reason: string;
+      /** Which step gave up: the download, or reading Japanese once it had. */
+      readonly stage: "fetch" | "japanese";
+    };
 
 type Listener = (state: NeuralVoiceState) => void;
 
@@ -111,6 +118,7 @@ export function prepareNeuralVoice(): Promise<Engine | null> {
       announce({
         kind: "failed",
         reason: error instanceof Error ? error.message : "The voice could not be loaded.",
+        stage: "fetch",
       });
       throw error;
     });
@@ -160,7 +168,8 @@ async function synthesize(ready: KokoroEngine, line: SpokenLine) {
       // announcement for a whole release.
       announce({
         kind: "failed",
-        reason: `The Japanese voice could not speak (${error instanceof Error ? error.message : "unknown"}); using the English one.`,
+        reason: error instanceof Error ? error.message : "unknown",
+        stage: "japanese",
       });
     }
   }
@@ -177,10 +186,12 @@ async function say(
   if (ready === null || output === null || token !== generation) {
     return;
   }
+  announce({ kind: "generating" });
   const audio = await synthesize(ready, line);
   if (token !== generation) {
     return;
   }
+  announce({ kind: "ready" });
   // Copy into a plainly-backed array: with threading enabled the runtime hands
   // back a SharedArrayBuffer view, which Web Audio will not take.
   const samples = new Float32Array(audio.audio);
@@ -223,7 +234,7 @@ export const kokoroSpeech: SpeechPort = {
     const token = generation;
     // Fire and forget by design: a voice must never delay or fail a score.
     void say(line, options, token).catch(() => {
-      announce({ kind: "failed", reason: "The voice could not speak." });
+      announce({ kind: "failed", reason: "The voice could not speak.", stage: "fetch" });
     });
   },
 };

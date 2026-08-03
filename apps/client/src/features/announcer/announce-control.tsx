@@ -2,6 +2,7 @@ import { Checkbox, SegmentedControl } from "@riichimi/ui";
 import { useEffect, useId, useState } from "react";
 
 import { DELIVERIES, NEURAL_SPEAKERS } from "./announcer-preference";
+import { NeuralVoiceStatus } from "./neural-voice-status";
 import { neuralVoiceState, watchNeuralVoice } from "../../infrastructure/kokoro-speech";
 import type { NeuralVoiceState } from "../../infrastructure/kokoro-speech";
 import { neuralVoiceOffered } from "../../infrastructure/speech-selection";
@@ -125,16 +126,7 @@ export function AnnounceControl() {
             {t("How long the announcer holds between the call, each yaku, and the score.")}
           </p>
 
-          {voice === "neural" && neural.kind === "loading" ? (
-            <p aria-live="polite" className={styles["note"]}>
-              {t("Fetching the voice…")}
-            </p>
-          ) : null}
-          {voice === "neural" && neural.kind === "failed" ? (
-            <p aria-live="polite" className={styles["note"]}>
-              {t("The voice could not be fetched. This device's own voice will read wins instead.")}
-            </p>
-          ) : null}
+          {voice === "neural" ? <NeuralVoiceStatus state={neural} /> : null}
         </>
       ) : null}
     </div>

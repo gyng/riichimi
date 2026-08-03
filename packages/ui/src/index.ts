@@ -1,6 +1,7 @@
 export { classNames } from "./class-names";
 export { ActionButton } from "./atoms/action-button";
 export { MahjongTile } from "./atoms/mahjong-tile";
+export { ProgressBar } from "./atoms/progress-bar";
 export { englishTileWords, tileName } from "./atoms/tile-name";
 export { TileDisplayProvider, useTileDisplay } from "./atoms/tile-display-context";
 export { SectionLabel } from "./atoms/section-label";
@@ -12,6 +13,7 @@ export { CalculatorLanding } from "./organisms/calculator-landing";
 export { TopAppBar, TopAppBarAction, TopAppBarSelect } from "./organisms/top-app-bar";
 export type { ActionButtonProps } from "./atoms/action-button";
 export type { MahjongTileProps } from "./atoms/mahjong-tile";
+export type { ProgressBarProps } from "./atoms/progress-bar";
 export type { TileWords } from "./atoms/tile-name";
 export type { SectionLabelProps } from "./atoms/section-label";
 export type { CheckboxProps } from "./molecules/checkbox";

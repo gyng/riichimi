@@ -13,6 +13,13 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "Announce wins": "和了を読み上げる",
     "Announcing wins": "和了を読み上げ中",
     "Say it again": "もう一度読み上げる",
+    "Fetching the voice… {percent}%": "音声を取得しています… {percent}%",
+    "Fetching the voice": "音声の取得",
+    "Reading the hand…": "手牌を読み上げ中…",
+    "Reading the hand": "手牌の読み上げ",
+    "Reading 15 tile faces offline": "15枚の牌をオフラインで認識",
+    "The Japanese voice could not speak. The English one will read wins instead.":
+      "日本語の音声で読み上げられませんでした。代わりに英語の音声が和了を読み上げます。",
     SPEAKER: "話者",
     DELIVERY: "読み上げ方",
     "Japanese speakers from the same download. Switching is instant.":
@@ -479,6 +486,13 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "Announce wins": "朗读和牌",
     "Announcing wins": "正在朗读和牌",
     "Say it again": "再读一次",
+    "Fetching the voice… {percent}%": "正在获取语音… {percent}%",
+    "Fetching the voice": "获取语音",
+    "Reading the hand…": "正在读出手牌…",
+    "Reading the hand": "读出手牌",
+    "Reading 15 tile faces offline": "离线识别15张牌面",
+    "The Japanese voice could not speak. The English one will read wins instead.":
+      "无法用日语语音朗读，将改用英语语音播报和牌。",
     SPEAKER: "语音",
     DELIVERY: "播报方式",
     "Japanese speakers from the same download. Switching is instant.":
@@ -932,6 +946,13 @@ const catalog: Partial<Record<Locale, Readonly<Record<string, string>>>> = {
     "Announce wins": "朗讀和牌",
     "Announcing wins": "正在朗讀和牌",
     "Say it again": "再讀一次",
+    "Fetching the voice… {percent}%": "正在取得語音… {percent}%",
+    "Fetching the voice": "取得語音",
+    "Reading the hand…": "正在讀出手牌…",
+    "Reading the hand": "讀出手牌",
+    "Reading 15 tile faces offline": "離線辨識15張牌面",
+    "The Japanese voice could not speak. The English one will read wins instead.":
+      "無法用日語語音朗讀，將改用英語語音播報和牌。",
     SPEAKER: "語音",
     DELIVERY: "播報方式",
     "Japanese speakers from the same download. Switching is instant.":

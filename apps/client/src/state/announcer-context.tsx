@@ -20,7 +20,11 @@ import {
   saveDelivery,
   saveNeuralSpeaker,
 } from "../infrastructure/announcer-preference-storage";
-import { setNeuralPace, setNeuralSpeaker } from "../infrastructure/kokoro-speech";
+import {
+  prepareNeuralVoice,
+  setNeuralPace,
+  setNeuralSpeaker,
+} from "../infrastructure/kokoro-speech";
 import { setSpeechPace } from "../infrastructure/speech";
 import { speechFor } from "../infrastructure/speech-selection";
 
@@ -152,6 +156,12 @@ export function AnnouncerProvider({ children }: { readonly children: ReactNode }
     // Whichever engine was talking should stop before the other starts.
     speechFor(voice).cancel();
     setVoiceState(next);
+    if (next === "neural") {
+      // Start the fetch on the choice rather than on the first win. Otherwise
+      // nothing happens when you pick it, there is no progress to show, and the
+      // 90 MB arrives as an unexplained delay in front of a score.
+      void prepareNeuralVoice();
+    }
     void saveAnnouncerVoice(next).catch(() => {
       // Losing the preference is not worth interrupting scoring.
     });

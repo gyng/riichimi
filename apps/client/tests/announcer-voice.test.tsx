@@ -28,6 +28,11 @@ vi.mock("../src/infrastructure/speech", () => ({ speech: browser }));
 vi.mock("../src/infrastructure/kokoro-speech", () => ({
   kokoroSpeech: neural,
   neuralVoiceState: () => ({ kind: "idle" }),
+  // Choosing the neural voice now starts the fetch, so the context reaches for
+  // these too; without them it calls undefined and the choice never lands.
+  prepareNeuralVoice: vi.fn<() => Promise<null>>().mockResolvedValue(null),
+  setNeuralPace: vi.fn<(pace: number) => void>(),
+  setNeuralSpeaker: vi.fn<(speaker: string) => void>(),
   watchNeuralVoice: (listener: (state: { kind: string }) => void) => {
     watchers.add(listener);
     return () => watchers.delete(listener);

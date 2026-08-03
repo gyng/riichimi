@@ -283,10 +283,11 @@
   padding: var(--space-x3);
 }
 
+/* The bar sits under the line it measures, so the two read as one statement. */
 .recognitionStatus {
   display: flex;
-  align-items: center;
-  flex-direction: row;
+  align-items: stretch;
+  flex-direction: column;
   gap: var(--space-x2);
   margin-bottom: var(--space-x4);
 }
